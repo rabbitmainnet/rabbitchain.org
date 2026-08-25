@@ -1,0 +1,9 @@
+import { ArrowUpRight, Code2, HeartHandshake, MessagesSquare, ShieldAlert } from 'lucide-react'
+import SectionHeader from '../components/SectionHeader'
+
+export default function Community(){return <main>
+  <section className="page-hero community-page-hero"><div className="shell page-hero-grid"><div><span className="page-kicker">RABBIT COMMUNITY</span><h1>Build the network <em>in public.</em></h1><p>Rabbit is designed as open infrastructure. Follow development, inspect the code and participate through the official project channels.</p></div><div className="community-hero-card"><img src="/rabbit-mark.png" alt="Rabbit Chain"/><strong>RABBIT CHAIN</strong><span>OPEN SOURCE · P2P · PERMISSIONLESS</span></div></div></section>
+  <section className="page-section shell"><SectionHeader eyebrow="OFFICIAL CHANNELS" title="Know where Rabbit actually lives." />
+    <div className="community-grid"><a href="https://github.com/rabbitmainnet" target="_blank" rel="noreferrer"><Code2/><span>SOURCE</span><h3>GitHub</h3><p>Code, release history and the official website repository.</p><b>github.com/rabbitmainnet <ArrowUpRight size={14}/></b></a><a href="https://x.com/rabbit_mainnet" target="_blank" rel="noreferrer"><MessagesSquare/><span>UPDATES</span><h3>X / Twitter</h3><p>Public launch updates, Testnet announcements and project communication.</p><b>@rabbit_mainnet <ArrowUpRight size={14}/></b></a><article><HeartHandshake/><span>CONTRIBUTE</span><h3>Community infrastructure</h3><p>Rabbit is designed so independent participants can run nodes, RPCs and explorers rather than depend forever on one operator.</p></article><article id="security"><ShieldAlert/><span>SECURITY</span><h3>Verify before you trust</h3><p>Use only official releases and endpoints. Never provide seed phrases or private keys to a website claiming to be Rabbit.</p></article></div>
+  </section>
+</main>}

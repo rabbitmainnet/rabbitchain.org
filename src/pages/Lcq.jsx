@@ -1,26 +1,28 @@
-import LCQVisualizer from '../components/LCQVisualizer'
-import SectionIntro from '../components/SectionIntro'
+import { Activity, ArrowRight, Blocks, Clock3, Cpu, GitBranch, Network, RefreshCcw, ShieldCheck, Users } from 'lucide-react'
+import SectionHeader from '../components/SectionHeader'
+import StatusDot from '../components/StatusDot'
 
-export default function Lcq() {
-  return <div className="page-shell">
-    <section className="page-hero">
-      <span>TECHNOLOGY / LCQ CONSENSUS</span>
-      <h1>Work proves participation.<br/><em>LCQ orders opportunity.</em></h1>
-      <p>Live Consensus Queue is Rabbit's coordination layer for converting eligible participation into deterministic block-production opportunity.</p>
-    </section>
-    <section className="section-pad light-section">
-      <SectionIntro index="01" label="CONSENSUS FLOW" title={<>From node to block, <em>one step at a time.</em></>} text="Use the interactive model to inspect the protocol flow without oversized text or clipped content."/>
-      <LCQVisualizer/>
-    </section>
-    <section className="architecture-grid" id="architecture">
-      <article><span>01</span><h3>Permissionless entry</h3><p>Participation starts by running the client and following network rules — not by requesting a producer slot.</p></article>
-      <article><span>02</span><h3>Proof + activity</h3><p>Work and protocol activity contribute to eligibility state.</p></article>
-      <article><span>03</span><h3>Deterministic ordering</h3><p>LCQ coordinates eligible participants into ordered producer opportunity.</p></article>
-      <article><span>04</span><h3>Fallback + recovery</h3><p>The consensus design includes recovery behavior so network progress does not depend on a permanent producer.</p></article>
-    </section>
-    <section className="economics-page" id="economics">
-      <div><span>CONSENSUS ECONOMICS</span><h2>Producer <em>70%</em><br/>Committee <em>30%</em></h2></div>
-      <p>Block rewards reflect two distinct consensus roles: the producer creates the block and committee participants contribute to the consensus path.</p>
-    </section>
-  </div>
-}
+const steps=[
+  ['01','Work','A participant generates valid work under the active Rabbit proof rules.',Cpu],
+  ['02','Eligibility','Protocol state determines whether the wallet can enter producer coordination.',ShieldCheck],
+  ['03','Live queue','Eligible participants are organized into LCQ under deterministic rules.',GitBranch],
+  ['04','Producer','The selected participant receives the block-production opportunity.',Blocks],
+  ['05','Committee','Committee participation completes the consensus and reward flow.',Users]
+]
+
+export default function Lcq(){return <main>
+  <section className="page-hero lcq-page-hero"><div className="shell page-hero-grid"><div><StatusDot tone="tech">CORE TECHNOLOGY</StatusDot><span className="page-kicker">LIVE CONSENSUS QUEUE</span><h1>Mining finds participation.<br/><em>LCQ coordinates production.</em></h1><p>Rabbit separates the act of producing valid work from the right to permanently dominate block production. Eligibility and producer coordination live in the protocol.</p><div className="hero-ctas"><a className="button primary" href="#flow">See the flow <ArrowRight size={15}/></a><a className="button secondary" href="#architecture">Architecture</a></div></div><div className="lcq-symbol-card"><div className="lcq-symbol-top"><span>CONSENSUS MODEL</span><b>LCQ / RABBIT</b></div><div className="lcq-symbol-orbit"><div className="lcq-ring ring-one"/><div className="lcq-ring ring-two"/><img src="/rabbit-mark.png" alt=""/><span>LIVE<br/>QUEUE</span>{['01','02','03','04','05'].map((x,i)=><i key={x} className={`lcq-dot dot-${i}`}>{x}</i>)}</div><div className="lcq-symbol-foot"><span>OPEN PARTICIPATION</span><span>DETERMINISTIC COORDINATION</span></div></div></div></section>
+  <section className="page-section shell" id="flow"><SectionHeader eyebrow="CONSENSUS FLOW" title="Five stages. One producer opportunity." text="The goal is to make the protocol understandable without reducing it to a marketing slogan." />
+    <div className="lcq-deep-flow">{steps.map(([n,title,text,Icon],i)=><article key={n}><div className="deep-flow-number"><span>{n}</span>{i<steps.length-1&&<i/>}</div><Icon size={22}/><h3>{title}</h3><p>{text}</p></article>)}</div>
+  </section>
+  <section className="architecture-section" id="architecture"><div className="shell"><SectionHeader eyebrow="ARCHITECTURE" title="Consensus sits beside familiar EVM execution." text="Rabbit keeps the application execution surface familiar while LCQ handles participation and block-production coordination." />
+    <div className="architecture-stack"><div className="stack-layer"><span>APPLICATIONS</span><strong>Wallets · dApps · contracts · explorers</strong><em>USER SURFACE</em></div><div className="stack-arrow">↓</div><div className="stack-layer"><span>EXECUTION</span><strong>EVM · transactions · state · JSON-RPC</strong><em>FAMILIAR TOOLING</em></div><div className="stack-arrow">↓</div><div className="stack-layer accent"><span>CONSENSUS</span><strong>Work · Eligibility · LCQ · Producer · Committee</strong><em>RABBIT DIFFERENTIATION</em></div><div className="stack-arrow">↓</div><div className="stack-layer"><span>NETWORK</span><strong>P2P discovery · propagation · independent nodes</strong><em>PERMISSIONLESS</em></div></div>
+  </div></section>
+  <section className="page-section shell"><SectionHeader eyebrow="OPERATING PRINCIPLES" title="The behavior Rabbit should make visible." text="These are the ideas users and operators need to understand when evaluating LCQ." />
+    <div className="principles-grid"><article><Network/><h3>Permissionless participation</h3><p>Running Rabbit should be enough to participate under protocol rules; no manual miner allowlist should be required.</p></article><article><Activity/><h3>Live eligibility</h3><p>Producer opportunities are derived from network state and valid participation, not a permanently privileged slot.</p></article><article><RefreshCcw/><h3>Fallback & recovery</h3><p>The protocol design includes fallback behavior and recovery paths so block production can continue when participants change or disappear.</p></article><article><Clock3/><h3>Target cadence</h3><p>Rabbit is designed around a target block cadence of approximately ten seconds, subject to the final network parameters.</p></article></div>
+  </section>
+  <section className="reward-section" id="rewards"><div className="shell reward-section-grid"><div><span>REWARD MODEL</span><h2>70% producer.<br/><em>30% committee.</em></h2><p>The block reward model explicitly recognizes two roles in the consensus flow.</p></div><div className="big-reward"><div className="big-reward-producer"><strong>70</strong><span>PRODUCER</span></div><div className="big-reward-committee"><strong>30</strong><span>COMMITTEE</span></div></div></div></section>
+  <section className="page-section shell"><SectionHeader eyebrow="FAQ" title="LCQ, without hand-waving." />
+    <div className="faq-grid"><details open><summary>Is Rabbit just Proof of Work?</summary><p>Work is part of participation, but LCQ is the consensus coordination layer that organizes eligible participants and determines producer opportunities.</p></details><details><summary>Does the biggest miner automatically produce every block?</summary><p>The design goal is the opposite: valid participation feeds eligibility while LCQ coordinates opportunities under deterministic protocol rules.</p></details><details><summary>Can anyone run a node?</summary><p>Rabbit is designed as a permissionless P2P network. Public release documentation will define the supported node and mining workflows.</p></details><details><summary>Why launch Testnet first?</summary><p>Because consensus, mining, node recovery, wallet integration and infrastructure should be exercised publicly before Mainnet carries real value.</p></details></div>
+  </section>
+</main>}
