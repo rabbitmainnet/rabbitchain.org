@@ -1,16 +1,38 @@
-# React + Vite
+# Rabbit Chain — Official Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Official web portal for Rabbit Chain.
 
-Currently, two official plugins are available:
+Rabbit Chain is a permissionless EVM Layer 1 powered by LCQ (Live Consensus Queue). The portal is designed around the flagship Rabbit Mainnet while providing a dedicated public Testnet environment for launch validation.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Networks
 
-## React Compiler
+- Rabbit Mainnet — Chain ID `928` — flagship production network — coming after public testnet validation
+- Rabbit Testnet — Chain ID `9280` — public launch and validation environment
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Portal
 
-## Expanding the Oxlint configuration
+- Mainnet and Testnet network hub
+- LCQ consensus overview
+- Mining and node operator guides
+- Developer portal
+- Wallet connection through EIP-6963 compatible injected wallets
+- Reserved RPC, Explorer and Faucet endpoints
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+Production build:
+
+```bash
+npm run build
+```
+
+## Official links
+
+- Website: https://rabbitchain.org
+- GitHub: https://github.com/rabbitmainnet
+- X: https://x.com/rabbit_mainnet

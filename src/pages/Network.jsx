@@ -1,6 +1,12 @@
 import NetworkPanel from '../components/NetworkPanel'
-import SectionIntro from '../components/SectionIntro'
 
 export default function Network({ walletState, onConnect, onSwitch, toast }) {
-  return <div className="page-shell"><section className="page-hero"><span>NETWORK / HUB</span><h1>One portal.<br/>Two Rabbit networks.</h1><p>Testnet and mainnet share one product experience while keeping network parameters and activation status explicit.</p></section><section className="section-pad"><SectionIntro index="01" label="NETWORKS" title={<>Choose your <em>Rabbit network.</em></>} text="Connect a wallet, inspect parameters, copy reserved endpoints and switch networks when public RPC access is activated."/><NetworkPanel onConnect={onConnect} onSwitch={onSwitch} walletState={walletState} toast={toast}/></section><section className="network-guidance"><article><span>TESTNET</span><h3>Validation before production.</h3><p>Use Rabbit Testnet to validate nodes, mining, applications, RPC integration and wallet workflows before mainnet.</p></article><article><span>MAINNET</span><h3>Prepared, not pretended.</h3><p>Mainnet information can be published in advance while live actions remain disabled until the official network is launched.</p></article></section></div>
+  return <div className="page-shell-v7">
+    <section className="page-hero-v7 network-page-hero-v7">
+      <div><span>RABBIT NETWORKS</span><h1>Mainnet is the flagship.<br/><em>Testnet gets us there.</em></h1><p>Rabbit Chain is presented around its production network first, while the public testnet provides the environment for validating mining, nodes, wallets, RPC and developer flows before mainnet launch.</p></div>
+      <div className="page-mainnet-badge"><small>PRIMARY NETWORK</small><strong>928</strong><b>Rabbit Mainnet</b><span>COMING SOON</span></div>
+    </section>
+    <section className="network-page-panel-v7"><NetworkPanel onConnect={onConnect} onSwitch={onSwitch} walletState={walletState} toast={toast}/></section>
+    <section className="network-roles-v7"><div><span>MAINNET</span><h2>Production network</h2><p>The flagship Rabbit Chain environment for real network activity after launch.</p></div><div><span>TESTNET</span><h2>Public proving ground</h2><p>Used to validate client releases, wallet integration, RPC, explorer, faucet and operational procedures first.</p></div></section>
+  </div>
 }
