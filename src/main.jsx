@@ -5,6 +5,7 @@ import App from './App'
 import './styles.css'
 import './launch-final.css'
 import './rc4-polish.css'
+import './rc5-portal.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,3 +14,4 @@ createRoot(document.getElementById('root')).render(
     </BrowserRouter>
   </StrictMode>
 )
+import './rc7-premium.css'

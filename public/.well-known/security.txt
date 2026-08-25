@@ -1,0 +1,5 @@
+Contact: https://rabbitchain.org/security
+Policy: https://rabbitchain.org/security
+Canonical: https://rabbitchain.org/.well-known/security.txt
+Expires: 2027-08-25T00:00:00Z
+Preferred-Languages: en, pt-BR
