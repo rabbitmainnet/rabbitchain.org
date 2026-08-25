@@ -1,0 +1,6 @@
+import { Code2, Database, Boxes } from 'lucide-react'
+
+export default function Developers() {
+  const cards=[[Code2,'EVM execution','Use familiar smart-contract execution concepts.'],[Database,'JSON-RPC','Connect wallets, apps and infrastructure through standard RPC interfaces.'],[Boxes,'Network configuration','Keep chain IDs, RPC endpoints and explorer URLs centrally defined.'],[Code2,'Open source','Follow Rabbit development and releases on GitHub.']]
+  return <div className="page-shell"><section className="page-hero"><span>DEVELOPERS / BUILD</span><h1>Ethereum tooling.<br/>Rabbit consensus.</h1><p>Rabbit keeps the application execution experience familiar while LCQ coordinates block production underneath.</p></section><section className="dev-card-grid">{cards.map(([Icon,title,text])=><article key={title}><Icon/><h3>{title}</h3><p>{text}</p><span>EXPLORE ↗</span></article>)}</section><section className="rpc-section" id="rpc"><div><span>JSON-RPC</span><h2>Build against one<br/><em>network configuration.</em></h2></div><pre><code><span>const</span> rabbit = {'{'}{`\n`}  name: <em>'Rabbit Testnet'</em>,{`\n`}  chainId: <b>9280</b>,{`\n`}  rpc: <em>'rpc.testnet.rabbitchain.org'</em>,{`\n`}  explorer: <em>'explorer.testnet.rabbitchain.org'</em>{`\n`}{'}'}</code></pre></section></div>
+}

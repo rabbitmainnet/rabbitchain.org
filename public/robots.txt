@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rabbitchain.org/sitemap.xml

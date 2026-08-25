@@ -1,0 +1,6 @@
+import NetworkPanel from '../components/NetworkPanel'
+import SectionIntro from '../components/SectionIntro'
+
+export default function Network({ walletState, onConnect, onSwitch, toast }) {
+  return <div className="page-shell"><section className="page-hero"><span>NETWORK / HUB</span><h1>One portal.<br/>Two Rabbit networks.</h1><p>Testnet and mainnet share one product experience while keeping network parameters and activation status explicit.</p></section><section className="section-pad"><SectionIntro index="01" label="NETWORKS" title={<>Choose your <em>Rabbit network.</em></>} text="Connect a wallet, inspect parameters, copy reserved endpoints and switch networks when public RPC access is activated."/><NetworkPanel onConnect={onConnect} onSwitch={onSwitch} walletState={walletState} toast={toast}/></section><section className="network-guidance"><article><span>TESTNET</span><h3>Validation before production.</h3><p>Use Rabbit Testnet to validate nodes, mining, applications, RPC integration and wallet workflows before mainnet.</p></article><article><span>MAINNET</span><h3>Prepared, not pretended.</h3><p>Mainnet information can be published in advance while live actions remain disabled until the official network is launched.</p></article></section></div>
+}
