@@ -88,10 +88,6 @@ export default function App(){
   }
 
   async function switchNetwork(network){
-    if(!network.publicRpcReady){
-      toast(`${network.name} can be added when the official public RPC is live.`)
-      return
-    }
     if(!provider){
       setPendingNetwork(network)
       setWalletDrawerOpen(false)
@@ -101,7 +97,7 @@ export default function App(){
     try{
       await switchOrAddNetwork(provider,network)
       setWalletState(await getWalletSnapshot(provider))
-      toast(`${network.name} ready in wallet`)
+      toast(`${network.name} added or switched in wallet`)
     }catch(e){
       toast(e?.message||'Network setup failed')
     }

@@ -62,3 +62,312 @@
 @media(max-width:1180px){.quick-start-grid-five{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.wallet-button small,.wallet-button.connected .wallet-button-copy,.wallet-button.connected>svg{display:none}.wallet-button.connected{width:40px;padding:0;justify-content:center}.drawer-primary-network{grid-template-columns:1fr}.drawer-primary-network button{width:100%}.quick-start-grid-five{grid-template-columns:1fr}.network-install-panel{grid-template-columns:1fr;gap:18px;padding:20px}.network-install-panel .button{width:100%}.back-to-top{right:14px;bottom:14px;width:46px;height:46px}}
 .back-to-top{animation:none}
+
+/* Launch RC3.1 — refinement: bare brand mark, stronger LCQ visual, translation-safe typography */
+.notranslate{translate:no}
+
+/* Brand: use the Rabbit mark itself, not a card around the mark. */
+.brand{gap:12px}
+.brand-mark{width:42px;height:42px;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
+.brand-mark img{width:39px;height:39px;object-fit:contain;filter:drop-shadow(0 8px 13px rgba(72,38,143,.10))}
+.brand-type strong{font-size:14px;letter-spacing:.065em}
+.brand-type small{font-size:8px;letter-spacing:.20em}
+
+/* Translation-safe type rhythm. Browser translations can be 20–45% longer than English. */
+.home-hero h1,.page-hero h1,.principle-copy h2,.roadmap-copy h2,.developer-home-copy h2,.final-cta-inner h2,.legal-hero h1,.not-found-inner h1{
+  line-height:1.01;
+  letter-spacing:-.052em;
+  padding-block:.035em .085em;
+  overflow:visible;
+  text-wrap:balance;
+  overflow-wrap:break-word;
+}
+.launch-center-head h2,.section-header h2,.status-launch-note-grid h2,.legal-section h2{line-height:1.08;text-wrap:balance;overflow-wrap:break-word}
+.home-hero-copy,.page-hero-grid>div,.section-header,.launch-center-head>div,.principle-copy,.roadmap-copy,.developer-home-copy{min-width:0}
+.announcement{height:auto;min-height:34px;padding-block:7px}
+.announcement>div{min-height:20px;flex-wrap:wrap;line-height:1.35}
+.button,.status-pill,.desktop-nav>a,.nav-group>button{line-height:1.2}
+
+/* LCQ hero: more depth and a clearer protocol story without fake live data. */
+.network-hero-card{border-color:#d9dbe6;box-shadow:0 34px 90px rgba(54,43,96,.15),0 3px 10px rgba(27,31,54,.04)}
+.network-hero-top{height:62px;background:linear-gradient(90deg,#fffafc 0%,#fff 52%,#f8f9ff 100%)}
+.network-hero-top span{color:#313649}
+.network-hero-top b{font-size:7px;padding:7px 9px;border:1px solid #e2e4ed;border-radius:999px;background:#fff;color:#696f80}
+.network-hero-canvas{min-height:520px;background:radial-gradient(circle at 50% 50%,#fff 0%,#fbf8ff 34%,#f3f4fb 72%,#eef0f7 100%)}
+.network-hero-canvas:after{opacity:.9;background-size:44px 44px}
+.hero-map-caption{position:absolute;z-index:5;left:24px;top:22px;display:flex;flex-direction:column;gap:5px}
+.hero-map-caption span{font-size:6px;font-weight:950;letter-spacing:.16em;color:#8d4abc}
+.hero-map-caption b{font-size:8px;color:#6d7382;font-weight:700}
+.hero-gradient-orb{width:430px;height:430px;opacity:.9;filter:blur(30px)}
+.hero-orbit.orbit-a{width:250px;height:250px;border-color:rgba(162,54,229,.22)}
+.hero-orbit.orbit-b{width:405px;height:405px;border-style:dashed;border-color:rgba(77,83,157,.13)}
+.hero-orbit.orbit-c{width:520px;height:520px;border-color:rgba(49,93,255,.07)}
+.hero-core{width:148px;height:148px;border-radius:50%;border:1px solid rgba(131,67,202,.18);background:rgba(255,255,255,.92);box-shadow:0 26px 70px rgba(76,42,121,.16),0 0 0 13px rgba(255,255,255,.56);backdrop-filter:blur(12px)}
+.hero-core-ring{position:absolute;inset:-11px;border-radius:50%;border:1px solid rgba(217,69,188,.16);box-shadow:0 0 0 9px rgba(92,71,255,.025);pointer-events:none}
+.hero-core img{width:66px;height:66px}
+.hero-core strong{font-size:13px;font-weight:950;margin-top:4px}
+.hero-core small{font-size:5px;letter-spacing:.16em;color:#8d93a3;font-weight:900}
+.queue-line{top:72%;height:2px;left:7%;right:7%;background:linear-gradient(90deg,rgba(236,42,168,.14),#e331ac 18%,#9b3af0 51%,#375eff 82%,rgba(49,93,255,.14))}
+.queue-line-glow{position:absolute;z-index:1;left:12%;right:12%;top:calc(72% - 12px);height:26px;background:linear-gradient(90deg,rgba(236,42,168,.08),rgba(151,53,243,.11),rgba(49,93,255,.08));filter:blur(18px)}
+.queue-node{width:62px;height:62px;border-radius:18px;border-color:#d9dce8;box-shadow:0 14px 35px rgba(35,37,68,.10);transition:transform .2s ease,box-shadow .2s ease}
+.queue-node span{font-size:11px}.queue-node small{margin-top:2px;font-size:5px}
+.queue-node.hot{border-color:#dc41b5;background:linear-gradient(145deg,#fff,#fff7fd);box-shadow:0 18px 45px rgba(191,55,173,.20),0 0 0 5px rgba(230,57,174,.06);transform:translateY(-11px)}
+.producer-ticket{right:4%;top:9%;width:190px;padding:17px;border-radius:18px;background:linear-gradient(145deg,#111426,#202344);box-shadow:0 22px 55px rgba(21,24,42,.23)}
+.producer-ticket>span{font-size:5px;color:#c3c8d7;letter-spacing:.14em}
+.producer-ticket>div{display:grid;grid-template-columns:auto auto 1fr;gap:9px;align-items:center;margin:8px 0 2px}
+.producer-ticket strong{font-size:31px;margin:0;color:#fff}.producer-ticket i{font-style:normal;color:#d65ac2;font-size:17px}.producer-ticket b{font-size:8px;letter-spacing:.08em;color:#e9ebf4}
+.producer-ticket small{font-size:6px;color:#979fb4}
+.hero-signal-row{position:absolute;z-index:5;left:24px;right:24px;bottom:18px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.hero-signal-row span{display:flex;align-items:center;gap:6px;padding:7px 9px;border:1px solid rgba(210,213,226,.95);border-radius:999px;background:rgba(255,255,255,.82);backdrop-filter:blur(8px);font-size:5px;font-weight:900;letter-spacing:.1em;color:#707688}
+.hero-signal-row i{width:5px;height:5px;border-radius:50%;background:linear-gradient(135deg,#e72ba9,#425cff);box-shadow:0 0 8px rgba(167,61,218,.3)}
+.network-hero-foot{height:76px;background:#fff}
+.network-hero-foot>div{padding-inline:20px}.network-hero-foot b{font-size:11px}
+
+@media(max-width:1180px){
+  .home-hero h1,.page-hero h1{font-size:clamp(54px,9vw,82px)}
+}
+@media(max-width:760px){
+  .brand-mark{width:38px;height:38px}.brand-mark img{width:36px;height:36px}
+  .home-hero h1,.page-hero h1{font-size:clamp(44px,13.2vw,64px);line-height:1.04;letter-spacing:-.045em}
+  .launch-center-head h2,.section-header h2{font-size:clamp(36px,10vw,46px);line-height:1.08}
+  .network-hero-canvas{min-height:410px}
+  .hero-map-caption{left:16px;top:16px}
+  .hero-map-caption b{display:none}
+  .hero-core{width:116px;height:116px}.hero-core img{width:51px;height:51px}
+  .producer-ticket{width:145px;right:12px;top:16px;padding:13px}.producer-ticket strong{font-size:25px}
+  .hero-signal-row{left:12px;right:12px;bottom:12px;gap:5px}.hero-signal-row span{padding:6px 7px;font-size:4px}
+}
+@media(max-width:480px){
+  .page-hero h1,.home-hero h1{font-size:clamp(40px,12vw,54px)}
+  .announcement>div{font-size:7px}.announcement a{margin-left:0}
+}
+
+
+/* RC3.2 REFINEMENT OVERRIDES */
+
+/* Header / logo */
+.brand{gap:12px}
+.brand-mark{
+  width:38px;
+  height:38px;
+  border-radius:0;
+  display:grid;
+  place-items:center;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+.brand-mark img{
+  width:30px;
+  height:30px;
+  object-fit:contain;
+  display:block;
+}
+
+/* Nav */
+.desktop-nav>a,
+.nav-group>button{
+  font-size:12px;
+}
+.desktop-nav>a:hover,
+.desktop-nav>a.active,
+.nav-group>button:hover,
+.nav-group>button.nav-open{
+  background:#f0f1f6;
+  color:#111426;
+}
+.mega-menu{
+  width:280px;
+  padding:12px;
+}
+.mega-label{
+  font-size:8px;
+}
+.mega-menu a{
+  font-size:12px;
+  padding:13px 10px;
+}
+
+/* Fix wallet/connect launch cards visual */
+.launch-action{
+  background:#fff;
+}
+.launch-action-button{
+  width:100%;
+  appearance:none;
+  font:inherit;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+  background:#fff;
+  border:0;
+  border-radius:0;
+}
+.launch-action-button:focus-visible{
+  outline:2px solid #7b49ff;
+  outline-offset:-2px;
+}
+.launch-action-copy span{
+  font-size:8px;
+  color:#8e93a0;
+}
+.launch-action-copy p{
+  font-size:12px;
+  line-height:1.68;
+  color:#6f7686;
+  max-width:300px;
+}
+
+/* Reward section smaller */
+.reward-section-grid{
+  min-height:380px;
+  padding:72px 0;
+  grid-template-columns:.68fr 1fr;
+  gap:56px;
+}
+.reward-section h2{
+  font-size:clamp(46px,4.8vw,72px);
+  line-height:.98;
+  letter-spacing:-.055em;
+  margin:14px 0;
+}
+.reward-section p{
+  color:#abb1c2;
+  font-size:14px;
+  line-height:1.7;
+  max-width:420px;
+}
+.big-reward{
+  height:220px;
+}
+.big-reward strong{
+  font-size:64px;
+  line-height:.85;
+  letter-spacing:-.05em;
+}
+.big-reward span{
+  margin-top:14px;
+  color:#c7cbdb;
+  font-size:8px;
+}
+
+/* Larger readable text across site */
+.announcement>div{
+  font-size:8px;
+}
+.announcement a{
+  font-size:8px;
+}
+.page-kicker{
+  font-size:9px;
+  letter-spacing:.16em;
+}
+.launch-center-head>p,
+.section-header>p{
+  font-size:15px;
+  line-height:1.78;
+}
+.network-detail-top>div b{
+  font-size:8px;
+  color:#8d93a2;
+}
+.network-detail-grid span{
+  font-size:8px;
+  color:#8f95a3;
+}
+.network-detail-grid strong{
+  font-size:20px;
+}
+.quick-start-grid p{
+  font-size:11px;
+  line-height:1.72;
+  color:#6f7686;
+}
+.quick-start-grid button,
+.quick-start-grid a{
+  font-size:10px;
+}
+.endpoint-row>span{
+  font-size:11px;
+}
+.endpoint-row code{
+  font-size:12px;
+}
+.endpoint-row em{
+  font-size:8px;
+}
+.validation-grid p{
+  font-size:11px;
+  line-height:1.72;
+  color:#6f7686;
+}
+.lcq-deep-flow p{
+  font-size:11px;
+  line-height:1.72;
+  color:#6f7686;
+}
+.principles-grid p{
+  font-size:11px;
+  line-height:1.74;
+  color:#6f7686;
+}
+.faq-grid details p{
+  font-size:12px;
+  line-height:1.76;
+  color:#6f7686;
+}
+.network-add-note{
+  margin-top:20px;
+  padding:16px 18px;
+  border-left:3px solid #d055ca;
+  background:#f4f3f8;
+}
+.network-add-note span{
+  font-size:8px;
+}
+.network-add-note p{
+  font-size:12px;
+  line-height:1.7;
+  color:#707687;
+}
+.drawer-info p{
+  font-size:12px;
+  line-height:1.7;
+}
+.drawer-primary-network small,
+.drawer-network small{
+  font-size:11px;
+  line-height:1.5;
+}
+.drawer-network span,
+.drawer-primary-network button{
+  font-size:10px;
+}
+.reference-grid span,
+.status-grid p{
+  font-size:10px;
+}
+.reference-grid b{
+  font-size:18px;
+}
+
+/* Better wrapping for translation */
+.home-hero h1,
+.page-hero h1,
+.section-header h2,
+.reward-section h2{
+  text-wrap:balance;
+  overflow-wrap:break-word;
+}
+.mega-menu a,
+.section-header p,
+.page-hero p,
+.home-hero-copy>p{
+  overflow-wrap:break-word;
+}
+
+.wallet-button small{
+  font-size:8px;
+  opacity:.8;
+}
+

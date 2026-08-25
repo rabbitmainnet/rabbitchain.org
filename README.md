@@ -1,4 +1,4 @@
-# Rabbit Chain Official Web Portal — Launch RC3
+# Rabbit Chain Official Web Portal — Launch RC3.1
 
 Official multi-page portal for Rabbit Chain. The brand stays above the individual networks: Rabbit Testnet (Chain ID 9280) is the first public network, and Rabbit Mainnet (Chain ID 928) follows public validation.
 

@@ -25,21 +25,21 @@ export default function WalletDrawer({ open, state, walletName, onClose, onDisco
 
       <div className="drawer-primary-network">
         <div><span>QUICK NETWORK</span><b>Rabbit Testnet</b><small>Chain ID 9280 · LCQ · EVM</small></div>
-        <button type="button" disabled={!testnet.publicRpcReady || state.chainId===testnet.chainId} onClick={()=>onSwitch(testnet)}>
-          {state.chainId===testnet.chainId?<><CheckCircle2 size={14}/> Added</>:testnet.publicRpcReady?<><Plus size={14}/> Add / switch</>:<>Available at launch</>}
+        <button type="button" disabled={state.chainId===testnet.chainId} onClick={()=>onSwitch(testnet)}>
+          {state.chainId===testnet.chainId?<><CheckCircle2 size={14}/> Added</>:<><Plus size={14}/> Add / switch</>}
         </button>
       </div>
 
       <div className="drawer-section"><span className="drawer-label">RABBIT NETWORKS</span>{NETWORK_LIST.map((network)=>{
         const current=state.chainId===network.chainId
         const ready=network.publicRpcReady
-        return <button className={`drawer-network ${current?'current':''}`} key={network.key} disabled={current || !ready} onClick={()=>onSwitch(network)}>
+        return <button className={`drawer-network ${current?'current':''}`} key={network.key} disabled={current} onClick={()=>onSwitch(network)}>
           <div><b>{network.name}</b><small>Chain ID {network.chainId}</small></div>
-          <span>{current?'CONNECTED':ready?'ADD / SWITCH':network.key==='testnet'?'AT LAUNCH':'COMING LATER'}</span>
+          <span>{current?'CONNECTED':'ADD / SWITCH'}</span>
         </button>
       })}</div>
 
-      <div className="drawer-info"><Network size={16}/><p>Add Network uses the wallet's native EVM network flow. Rabbit never asks for a seed phrase or private key.</p></div>
+      <div className="drawer-info"><Network size={16}/><p>Add Network uses the wallet's native EVM network flow. If a public RPC is still coming online, some wallets may reject the request until launch. Rabbit never asks for a seed phrase or private key.</p></div>
       <a className="drawer-link" href="https://github.com/rabbitmainnet" target="_blank" rel="noreferrer">Official GitHub <ExternalLink size={14}/></a>
 
       <div className="disconnect-zone">

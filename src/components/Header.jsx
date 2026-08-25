@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { ChevronDown, Code2, Menu, Search, Wallet, X } from 'lucide-react'
 import Brand from './Brand'
@@ -14,14 +14,31 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
   const [open,setOpen]=useState(null)
   const [mobile,setMobile]=useState(false)
   const location=useLocation()
+  const navRef=useRef(null)
   const activeNetwork=identifyRabbitNetwork(walletState.chainId)
   useEffect(()=>{setOpen(null);setMobile(false)},[location.pathname])
+  useEffect(()=>{
+    const onPointer=(e)=>{
+      if(open && navRef.current && !navRef.current.contains(e.target)) setOpen(null)
+    }
+    const onKey=(e)=>{
+      if(e.key==='Escape') setOpen(null)
+    }
+    document.addEventListener('mousedown',onPointer)
+    document.addEventListener('touchstart',onPointer)
+    document.addEventListener('keydown',onKey)
+    return ()=>{
+      document.removeEventListener('mousedown',onPointer)
+      document.removeEventListener('touchstart',onPointer)
+      document.removeEventListener('keydown',onKey)
+    }
+  },[open])
   return <>
     <div className="announcement"><div><span><i/>RABBIT TESTNET · FIRST PUBLIC LAUNCH · CHAIN ID 9280</span><b>Official launch path</b><Link to="/status">Network status →</Link></div></div>
     <header className="site-header"><div className="header-shell">
       <Brand/>
-      <nav className="desktop-nav">
-        {groups.map((group)=><div className="nav-group" key={group.label}><button onClick={()=>setOpen(open===group.label?null:group.label)}>{group.label}<ChevronDown size={13}/></button>{open===group.label&&<div className="mega-menu"><span className="mega-label">{group.label.toUpperCase()}</span>{group.links.map(([label,to])=><Link key={label} to={to}>{label}<span>→</span></Link>)}</div>}</div>)}
+      <nav className="desktop-nav" ref={navRef}>
+        {groups.map((group)=><div className="nav-group" key={group.label}><button className={open===group.label?'nav-open':''} onClick={()=>setOpen(open===group.label?null:group.label)}>{group.label}<ChevronDown size={13}/></button>{open===group.label&&<div className="mega-menu"><span className="mega-label">{group.label.toUpperCase()}</span>{group.links.map(([label,to])=><Link key={label} to={to}>{label}<span>→</span></Link>)}</div>}</div>)}
         <NavLink to="/platform">Platform</NavLink>
         <NavLink to="/community">Community</NavLink>
       </nav>

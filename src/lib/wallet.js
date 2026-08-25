@@ -56,7 +56,6 @@ export async function getWalletSnapshot(provider) {
 }
 
 export async function switchOrAddNetwork(provider, network) {
-  if (!network.publicRpcReady) throw new Error(`${network.name} public RPC is not active yet.`)
   try {
     await provider.request({
       method: 'wallet_switchEthereumChain',
