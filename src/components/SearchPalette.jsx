@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 const items = [
   ['Rabbit Platform','Swap, Launchpool, Factory, Bridge and wallet tools','/platform'],
   ['Rabbit Testnet','First public network, Chain ID 9280','/testnet'],
+  ['Network Status','Official RPC, explorer and faucet readiness','/status'],
   ['LCQ Consensus','How Rabbit coordinates block production','/lcq'],
   ['Mining','Download, verify and participate','/mining'],
   ['Run a Node','P2P and infrastructure path','/nodes'],

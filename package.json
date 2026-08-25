@@ -1,7 +1,7 @@
 {
   "name": "rabbitchain-org",
   "private": true,
-  "version": "0.9.2",
+  "version": "1.0.0-rc1",
   "type": "module",
   "scripts": {
     "dev": "vite",

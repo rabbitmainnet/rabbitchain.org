@@ -5,7 +5,7 @@ import Brand from './Brand'
 import { shortAddress } from '../lib/wallet'
 
 const groups = [
-  { label:'Network', links:[['Rabbit Testnet','/testnet'],['Rabbit Mainnet','/mainnet'],['Mining','/mining'],['Run a Node','/nodes']] },
+  { label:'Network', links:[['Rabbit Testnet','/testnet'],['Network Status','/status'],['Mining','/mining'],['Run a Node','/nodes'],['Rabbit Mainnet','/mainnet']] },
   { label:'Technology', links:[['LCQ Consensus','/lcq'],['Architecture','/lcq#architecture'],['Reward Model','/lcq#rewards'],['Whitepaper','/whitepaper']] },
   { label:'Build', links:[['Developer Portal','/developers'],['Documentation','/docs'],['Network Parameters','/developers#networks'],['JSON-RPC','/developers#rpc']] },
 ]
@@ -16,7 +16,7 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
   const location=useLocation()
   useEffect(()=>{setOpen(null);setMobile(false)},[location.pathname])
   return <>
-    <div className="announcement"><div><span><i/>RABBIT TESTNET · CHAIN ID 9280</span><b>First public network</b><Link to="/testnet">Network hub →</Link></div></div>
+    <div className="announcement"><div><span><i/>RABBIT TESTNET · FIRST PUBLIC LAUNCH · CHAIN ID 9280</span><b>Official launch path</b><Link to="/status">Network status →</Link></div></div>
     <header className="site-header"><div className="header-shell">
       <Brand/>
       <nav className="desktop-nav">
@@ -31,6 +31,6 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
         <button className="mobile-button" onClick={()=>setMobile(!mobile)}>{mobile?<X size={18}/>:<Menu size={18}/>}</button>
       </div>
     </div></header>
-    {mobile&&<div className="mobile-nav"><Link to="/platform">Platform</Link><Link to="/testnet">Testnet</Link><Link to="/lcq">LCQ Consensus</Link><Link to="/mining">Mining</Link><Link to="/nodes">Run a Node</Link><Link to="/developers">Developers</Link><Link to="/mainnet">Mainnet</Link><Link to="/docs">Docs</Link><Link to="/whitepaper">Whitepaper</Link><Link to="/community">Community</Link><button onClick={()=>{setMobile(false);onWalletClick()}}>Connect wallet</button></div>}
+    {mobile&&<div className="mobile-nav"><Link to="/testnet">Testnet</Link><Link to="/status">Network Status</Link><Link to="/platform">Platform</Link><Link to="/lcq">LCQ Consensus</Link><Link to="/mining">Mining</Link><Link to="/nodes">Run a Node</Link><Link to="/developers">Developers</Link><Link to="/mainnet">Mainnet</Link><Link to="/docs">Docs</Link><Link to="/whitepaper">Whitepaper</Link><Link to="/community">Community</Link><button onClick={()=>{setMobile(false);onWalletClick()}}>Connect wallet</button></div>}
   </>
 }

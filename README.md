@@ -35,3 +35,16 @@ Network services must only be shown as available when their configured readiness
 - Website: https://rabbitchain.org
 - GitHub: https://github.com/rabbitmainnet
 - X: https://x.com/rabbit_mainnet
+
+## Launch deployment
+
+The production build is generated with:
+
+```bash
+npm install
+npm run build
+```
+
+Deploy the `dist/` directory. For Hostinger/Apache, `public/.htaccess` is included so React Router URLs such as `/testnet`, `/lcq`, `/platform`, `/whitepaper`, and `/status` resolve through `index.html`.
+
+Before public Testnet launch, enable only services that are genuinely online in `src/config/networks.js`. Do not mark RPC, Explorer, or Faucet as ready until the public endpoints have passed launch checks.

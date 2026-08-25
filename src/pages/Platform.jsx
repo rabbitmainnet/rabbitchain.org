@@ -36,7 +36,7 @@ export default function Platform({ walletState, onConnect }){
 
     <section className="platform-modules shell">
       <SectionHeader eyebrow="RABBIT APPLICATION LAYER" title="One platform. Multiple ways to use Rabbit." text="The official site remains the protocol and network portal. Rabbit Platform is where wallet-connected applications live." />
-      <div className="platform-module-grid">{modules.map(({icon:Icon,tag,title,text})=><article className="platform-module-card" key={title}><div className="platform-module-icon"><Icon size={22}/></div><span>{tag}</span><h3>{title}</h3><p>{text}</p><div className="platform-module-status"><small>MODULE</small><b>COMING WITH NETWORK SERVICES</b></div></article>)}</div>
+      <div className="platform-module-grid">{modules.map(({icon:Icon,tag,title,text})=><article className="platform-module-card" key={title}><div className="platform-module-icon"><Icon size={22}/></div><span>{tag}</span><h3>{title}</h3><p>{text}</p><div className="platform-module-status"><small>PLATFORM ROADMAP</small><b>ACTIVATES WHEN THE SERVICE IS READY</b></div></article>)}</div>
     </section>
 
     <section className="platform-architecture">

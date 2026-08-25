@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import Brand from './Brand'
 
 const cols = [
-  ['Network',[['Testnet','/testnet'],['Mainnet','/mainnet'],['Mining','/mining'],['Run a Node','/nodes']]],
+  ['Network',[['Testnet','/testnet'],['Network Status','/status'],['Mining','/mining'],['Run a Node','/nodes'],['Mainnet','/mainnet']]],
   ['Platform',[['Rabbit Platform','/platform'],['Swap','/platform'],['Launchpool','/platform'],['Token Factory','/platform']]],
   ['Technology',[['LCQ Consensus','/lcq'],['Architecture','/lcq#architecture'],['Whitepaper','/whitepaper'],['Docs','/docs']]],
   ['Build',[['Developers','/developers'],['JSON-RPC','/developers#rpc'],['GitHub','https://github.com/rabbitmainnet'],['Community','/community']]]
