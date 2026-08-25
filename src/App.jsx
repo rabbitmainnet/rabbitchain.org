@@ -53,14 +53,103 @@ export default function App(){
   const [provider,setProvider]=useState(null)
   const [walletName,setWalletName]=useState(null)
   const [walletState,setWalletState]=useState({account:null,chainId:null,chainIdHex:null})
+  const [pendingNetwork,setPendingNetwork]=useState(null)
   const [toastMessage,setToastMessage]=useState('')
-  function toast(message){setToastMessage(message);clearTimeout(toast._t);toast._t=setTimeout(()=>setToastMessage(''),2400)}
+
+  function toast(message){setToastMessage(message);clearTimeout(toast._t);toast._t=setTimeout(()=>setToastMessage(''),2600)}
   const openWallet=()=>walletState.account?setWalletDrawerOpen(true):setWalletModalOpen(true)
-  async function selectWallet(wallet){try{const state=await connectWallet(wallet.provider);setProvider(wallet.provider);setWalletName(wallet.name);setWalletState(state);setWalletModalOpen(false);setWalletDrawerOpen(true);toast(`${wallet.name} connected`)}catch(e){toast(e?.message||'Wallet connection failed')}}
-  async function switchNetwork(network){if(!provider){setWalletDrawerOpen(false);setWalletModalOpen(true);return}try{await switchOrAddNetwork(provider,network);setWalletState(await getWalletSnapshot(provider));toast(`Switched to ${network.name}`)}catch(e){toast(e?.message||'Network switch failed')}}
-  function disconnect(){setProvider(null);setWalletName(null);setWalletState({account:null,chainId:null,chainIdHex:null});setWalletDrawerOpen(false);toast('Disconnected from this site')}
+
+  async function selectWallet(wallet){
+    try{
+      let state=await connectWallet(wallet.provider)
+      setProvider(wallet.provider)
+      setWalletName(wallet.name)
+      setWalletState(state)
+      setWalletModalOpen(false)
+
+      if(pendingNetwork){
+        const target=pendingNetwork
+        setPendingNetwork(null)
+        try{
+          await switchOrAddNetwork(wallet.provider,target)
+          state=await getWalletSnapshot(wallet.provider)
+          setWalletState(state)
+          toast(`${target.name} added to wallet`)
+        }catch(e){
+          toast(e?.message||'Network setup failed')
+        }
+      }else{
+        toast(`${wallet.name} connected`)
+      }
+      setWalletDrawerOpen(true)
+    }catch(e){
+      toast(e?.message||'Wallet connection failed')
+    }
+  }
+
+  async function switchNetwork(network){
+    if(!network.publicRpcReady){
+      toast(`${network.name} can be added when the official public RPC is live.`)
+      return
+    }
+    if(!provider){
+      setPendingNetwork(network)
+      setWalletDrawerOpen(false)
+      setWalletModalOpen(true)
+      return
+    }
+    try{
+      await switchOrAddNetwork(provider,network)
+      setWalletState(await getWalletSnapshot(provider))
+      toast(`${network.name} ready in wallet`)
+    }catch(e){
+      toast(e?.message||'Network setup failed')
+    }
+  }
+
+  async function disconnect(){
+    try{
+      await provider?.request?.({method:'wallet_revokePermissions',params:[{eth_accounts:{}}]})
+    }catch{
+      // Some injected wallets do not implement permission revocation. Local site state is still cleared.
+    }
+    setProvider(null)
+    setWalletName(null)
+    setPendingNetwork(null)
+    setWalletState({account:null,chainId:null,chainIdHex:null})
+    setWalletDrawerOpen(false)
+    toast('Wallet disconnected from RabbitChain.org')
+  }
+
   useEffect(()=>{window.scrollTo({top:0,behavior:'instant'});document.title=META[location.pathname]||'Rabbit Chain'},[location.pathname])
-  useEffect(()=>{const onKey=(e)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();setSearchOpen(true)}if(e.key==='Escape'){setSearchOpen(false);setWalletModalOpen(false)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[])
+  useEffect(()=>{const onKey=(e)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();setSearchOpen(true)}if(e.key==='Escape'){setSearchOpen(false);setWalletModalOpen(false);setWalletDrawerOpen(false)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[])
   useEffect(()=>{if(!provider)return;const onAccounts=(accounts)=>{if(!accounts?.[0])disconnect();else setWalletState((s)=>({...s,account:accounts[0]}))};const onChain=async()=>setWalletState(await getWalletSnapshot(provider));provider.on?.('accountsChanged',onAccounts);provider.on?.('chainChanged',onChain);return()=>{provider.removeListener?.('accountsChanged',onAccounts);provider.removeListener?.('chainChanged',onChain)}},[provider])
-  return <div className="app-shell"><Header walletState={walletState} onWalletClick={openWallet} onOpenSearch={()=>setSearchOpen(true)}/><AnimatePresence mode="wait"><Routes location={location} key={location.pathname}><Route path="/" element={<Page><Home walletState={walletState} onConnect={openWallet}/></Page>}/><Route path="/testnet" element={<Page><Testnet walletState={walletState} onConnect={openWallet} onSwitch={switchNetwork}/></Page>}/><Route path="/mainnet" element={<Page><Mainnet/></Page>}/><Route path="/lcq" element={<Page><Lcq/></Page>}/><Route path="/mining" element={<Page><Mining/></Page>}/><Route path="/nodes" element={<Page><Nodes/></Page>}/><Route path="/developers" element={<Page><Developers/></Page>}/><Route path="/docs" element={<Page><Docs/></Page>}/><Route path="/community" element={<Page><Community/></Page>}/><Route path="/platform" element={<Page><Platform walletState={walletState} onConnect={openWallet}/></Page>}/><Route path="/whitepaper" element={<Page><Whitepaper/></Page>}/><Route path="/status" element={<Page><Status/></Page>}/><Route path="/privacy-policy" element={<Page><PrivacyPolicy/></Page>}/><Route path="/terms-and-conditions" element={<Page><TermsConditions/></Page>}/><Route path="/risk-disclosure" element={<Page><RiskDisclosure/></Page>}/><Route path="*" element={<Page><NotFound/></Page>}/></Routes></AnimatePresence><Footer/><WalletModal open={walletModalOpen} onClose={()=>setWalletModalOpen(false)} onSelect={selectWallet}/><WalletDrawer open={walletDrawerOpen} state={walletState} walletName={walletName} onClose={()=>setWalletDrawerOpen(false)} onDisconnect={disconnect} onSwitch={switchNetwork} toast={toast}/><SearchPalette open={searchOpen} onClose={()=>setSearchOpen(false)}/>{toastMessage&&<div className="toast">{toastMessage}</div>}<BackToTop/></div>
+
+  return <div className="app-shell">
+    <Header walletState={walletState} onWalletClick={openWallet} onOpenSearch={()=>setSearchOpen(true)}/>
+    <AnimatePresence mode="wait"><Routes location={location} key={location.pathname}>
+      <Route path="/" element={<Page><Home walletState={walletState} onConnect={openWallet} onAddNetwork={switchNetwork}/></Page>}/>
+      <Route path="/testnet" element={<Page><Testnet walletState={walletState} onConnect={openWallet} onAddNetwork={switchNetwork}/></Page>}/>
+      <Route path="/mainnet" element={<Page><Mainnet/></Page>}/>
+      <Route path="/lcq" element={<Page><Lcq/></Page>}/>
+      <Route path="/mining" element={<Page><Mining/></Page>}/>
+      <Route path="/nodes" element={<Page><Nodes/></Page>}/>
+      <Route path="/developers" element={<Page><Developers/></Page>}/>
+      <Route path="/docs" element={<Page><Docs/></Page>}/>
+      <Route path="/community" element={<Page><Community/></Page>}/>
+      <Route path="/platform" element={<Page><Platform walletState={walletState} onConnect={openWallet}/></Page>}/>
+      <Route path="/whitepaper" element={<Page><Whitepaper/></Page>}/>
+      <Route path="/status" element={<Page><Status/></Page>}/>
+      <Route path="/privacy-policy" element={<Page><PrivacyPolicy/></Page>}/>
+      <Route path="/terms-and-conditions" element={<Page><TermsConditions/></Page>}/>
+      <Route path="/risk-disclosure" element={<Page><RiskDisclosure/></Page>}/>
+      <Route path="*" element={<Page><NotFound/></Page>}/>
+    </Routes></AnimatePresence>
+    <Footer/>
+    <WalletModal open={walletModalOpen} onClose={()=>{setWalletModalOpen(false);setPendingNetwork(null)}} onSelect={selectWallet}/>
+    <WalletDrawer open={walletDrawerOpen} state={walletState} walletName={walletName} onClose={()=>setWalletDrawerOpen(false)} onDisconnect={disconnect} onSwitch={switchNetwork} toast={toast}/>
+    <SearchPalette open={searchOpen} onClose={()=>setSearchOpen(false)}/>
+    {toastMessage&&<div className="toast">{toastMessage}</div>}
+    <BackToTop/>
+  </div>
 }

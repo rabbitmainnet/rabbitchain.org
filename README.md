@@ -1,4 +1,4 @@
-# Rabbit Chain Official Web Portal — V9.2
+# Rabbit Chain Official Web Portal — Launch RC3
 
 Official multi-page portal for Rabbit Chain. The brand stays above the individual networks: Rabbit Testnet (Chain ID 9280) is the first public network, and Rabbit Mainnet (Chain ID 928) follows public validation.
 
@@ -56,3 +56,14 @@ Before public Testnet launch, enable only services that are genuinely online in 
 - Dedicated Rabbit network/wallet icon
 - Back-to-top control
 - Legal sitemap and footer links
+
+## RC3 wallet and network UX
+
+- Refined circular scroll-progress Back to top control
+- Connected-wallet state in the header
+- Explicit Disconnect wallet session action
+- Best-effort EVM wallet permission revocation when supported
+- One-click Rabbit Testnet Add / Switch Network flow
+- Pending Add Network continues after wallet connection
+- Testnet quick-start now includes wallet network installation
+- Add Network remains safely disabled until the official public RPC readiness flag is enabled
