@@ -3,14 +3,15 @@ import { Search, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const items = [
-  ['Rabbit Testnet','First public launch, Chain ID 9280','/testnet'],
+  ['Rabbit Platform','Swap, Launchpool, Factory, Bridge and wallet tools','/platform'],
+  ['Rabbit Testnet','First public network, Chain ID 9280','/testnet'],
   ['LCQ Consensus','How Rabbit coordinates block production','/lcq'],
   ['Mining','Download, verify and participate','/mining'],
   ['Run a Node','P2P and infrastructure path','/nodes'],
   ['Developers','EVM, JSON-RPC and tooling','/developers'],
-  ['Rabbit Mainnet','Production network after Testnet','/mainnet'],
+  ['Rabbit Mainnet','Production network after public validation','/mainnet'],
   ['Documentation','Architecture and network references','/docs'],
-  ['Whitepaper','Technical Rabbit Chain paper in preparation','/whitepaper'],
+  ['Whitepaper','Official Rabbit Chain protocol paper','/whitepaper'],
   ['Community','GitHub, X and contribution','/community']
 ]
 

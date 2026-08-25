@@ -1,26 +1,22 @@
-# Rabbit Chain Official Web Portal — V9
+# Rabbit Chain Official Web Portal — V9.2
 
-A multi-page public portal for Rabbit Chain, built around a **Testnet-first launch path** and a **Mainnet-after-validation** roadmap.
+Official multi-page portal for Rabbit Chain. The brand stays above the individual networks: Rabbit Testnet (Chain ID 9280) is the first public network, and Rabbit Mainnet (Chain ID 928) follows public validation.
 
-## Included
+## Portal structure
 
-- Home portal
-- Rabbit Testnet hub — Chain ID 9280
-- Rabbit Mainnet roadmap — Chain ID 928
-- LCQ Consensus explainer
-- Mining portal
-- Node operator portal
-- Developer portal
-- Documentation surface
-- Community / official channel page
-- EIP-6963 injected wallet connection
-- Search / command palette (`Ctrl/Cmd + K`)
-- Official Rabbit favicon and social preview assets
-- Responsive desktop / tablet / mobile layout
-
-## Network safety
-
-The RPC, Explorer and Faucet domains are configured as reserved endpoints but stay disabled while the corresponding `public*Ready` flags are `false` in `src/config/networks.js`.
+- Home — brand, protocol, quick paths, network evolution and official resources
+- Rabbit Platform — Swap, Liquidity, Launchpool, Token Factory, Bridge and wallet surface
+- Rabbit Testnet — Chain ID 9280 network hub
+- Rabbit Mainnet — Chain ID 928 production-network path
+- LCQ Consensus — protocol architecture and reward model
+- Mining — Rabbit client and participation path
+- Nodes — independent infrastructure
+- Developers — EVM, JSON-RPC and network configuration
+- Docs — technical documentation surface
+- Whitepaper — official reserved publication route
+- Community — GitHub, X and security guidance
+- Wallet integration — EIP-6963 injected-wallet discovery and connection
+- Search palette — Ctrl/Cmd + K
 
 ## Local development
 
@@ -30,14 +26,12 @@ npm run build
 npm run dev -- --host 0.0.0.0
 ```
 
-## Launch hierarchy
+## Network safety
 
-1. Rabbit Testnet — first public launch, Chain ID 9280
-2. Public validation and hardening
-3. Rabbit Mainnet — production network, Chain ID 928
+Network services must only be shown as available when their configured readiness flags and endpoints are actually enabled. Do not display fake live metrics or fake service availability.
 
-## Official project links
+## Official links
 
-- Website: RabbitChain.org
+- Website: https://rabbitchain.org
 - GitHub: https://github.com/rabbitmainnet
 - X: https://x.com/rabbit_mainnet
