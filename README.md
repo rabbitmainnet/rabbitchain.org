@@ -48,3 +48,11 @@ npm run build
 Deploy the `dist/` directory. For Hostinger/Apache, `public/.htaccess` is included so React Router URLs such as `/testnet`, `/lcq`, `/platform`, `/whitepaper`, and `/status` resolve through `index.html`.
 
 Before public Testnet launch, enable only services that are genuinely online in `src/config/networks.js`. Do not mark RPC, Explorer, or Faucet as ready until the public endpoints have passed launch checks.
+
+## RC2 launch polish
+
+- Privacy Policy, Terms & Conditions and Risk Disclosure routes
+- Updated official favicon/app icons
+- Dedicated Rabbit network/wallet icon
+- Back-to-top control
+- Legal sitemap and footer links

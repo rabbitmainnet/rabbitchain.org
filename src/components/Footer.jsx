@@ -5,7 +5,8 @@ const cols = [
   ['Network',[['Testnet','/testnet'],['Network Status','/status'],['Mining','/mining'],['Run a Node','/nodes'],['Mainnet','/mainnet']]],
   ['Platform',[['Rabbit Platform','/platform'],['Swap','/platform'],['Launchpool','/platform'],['Token Factory','/platform']]],
   ['Technology',[['LCQ Consensus','/lcq'],['Architecture','/lcq#architecture'],['Whitepaper','/whitepaper'],['Docs','/docs']]],
-  ['Build',[['Developers','/developers'],['JSON-RPC','/developers#rpc'],['GitHub','https://github.com/rabbitmainnet'],['Community','/community']]]
+  ['Build',[['Developers','/developers'],['JSON-RPC','/developers#rpc'],['GitHub','https://github.com/rabbitmainnet'],['Community','/community']]],
+  ['Legal',[['Privacy Policy','/privacy-policy'],['Terms & Conditions','/terms-and-conditions'],['Risk Disclosure','/risk-disclosure']]]
 ]
 
 export default function Footer(){

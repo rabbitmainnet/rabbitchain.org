@@ -19,6 +19,10 @@ import Platform from './pages/Platform'
 import Whitepaper from './pages/Whitepaper'
 import Status from './pages/Status'
 import NotFound from './pages/NotFound'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsConditions from './pages/TermsConditions'
+import RiskDisclosure from './pages/RiskDisclosure'
+import BackToTop from './components/BackToTop'
 import { connectWallet, getWalletSnapshot, switchOrAddNetwork } from './lib/wallet'
 
 const META = {
@@ -33,7 +37,10 @@ const META = {
   '/platform':'Rabbit Platform',
   '/whitepaper':'Whitepaper — Rabbit Chain',
   '/community':'Community — Rabbit Chain',
-  '/status':'Network Status — Rabbit Chain'
+  '/status':'Network Status — Rabbit Chain',
+  '/privacy-policy':'Privacy Policy — Rabbit Chain',
+  '/terms-and-conditions':'Terms & Conditions — Rabbit Chain',
+  '/risk-disclosure':'Risk Disclosure — Rabbit Chain'
 }
 
 function Page({children}){return <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-5}} transition={{duration:.26,ease:[.2,.7,.2,1]}}>{children}</motion.div>}
@@ -55,5 +62,5 @@ export default function App(){
   useEffect(()=>{window.scrollTo({top:0,behavior:'instant'});document.title=META[location.pathname]||'Rabbit Chain'},[location.pathname])
   useEffect(()=>{const onKey=(e)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();setSearchOpen(true)}if(e.key==='Escape'){setSearchOpen(false);setWalletModalOpen(false)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[])
   useEffect(()=>{if(!provider)return;const onAccounts=(accounts)=>{if(!accounts?.[0])disconnect();else setWalletState((s)=>({...s,account:accounts[0]}))};const onChain=async()=>setWalletState(await getWalletSnapshot(provider));provider.on?.('accountsChanged',onAccounts);provider.on?.('chainChanged',onChain);return()=>{provider.removeListener?.('accountsChanged',onAccounts);provider.removeListener?.('chainChanged',onChain)}},[provider])
-  return <div className="app-shell"><Header walletState={walletState} onWalletClick={openWallet} onOpenSearch={()=>setSearchOpen(true)}/><AnimatePresence mode="wait"><Routes location={location} key={location.pathname}><Route path="/" element={<Page><Home walletState={walletState} onConnect={openWallet}/></Page>}/><Route path="/testnet" element={<Page><Testnet walletState={walletState} onConnect={openWallet} onSwitch={switchNetwork}/></Page>}/><Route path="/mainnet" element={<Page><Mainnet/></Page>}/><Route path="/lcq" element={<Page><Lcq/></Page>}/><Route path="/mining" element={<Page><Mining/></Page>}/><Route path="/nodes" element={<Page><Nodes/></Page>}/><Route path="/developers" element={<Page><Developers/></Page>}/><Route path="/docs" element={<Page><Docs/></Page>}/><Route path="/community" element={<Page><Community/></Page>}/><Route path="/platform" element={<Page><Platform walletState={walletState} onConnect={openWallet}/></Page>}/><Route path="/whitepaper" element={<Page><Whitepaper/></Page>}/><Route path="/status" element={<Page><Status/></Page>}/><Route path="*" element={<Page><NotFound/></Page>}/></Routes></AnimatePresence><Footer/><WalletModal open={walletModalOpen} onClose={()=>setWalletModalOpen(false)} onSelect={selectWallet}/><WalletDrawer open={walletDrawerOpen} state={walletState} walletName={walletName} onClose={()=>setWalletDrawerOpen(false)} onDisconnect={disconnect} onSwitch={switchNetwork} toast={toast}/><SearchPalette open={searchOpen} onClose={()=>setSearchOpen(false)}/>{toastMessage&&<div className="toast">{toastMessage}</div>}</div>
+  return <div className="app-shell"><Header walletState={walletState} onWalletClick={openWallet} onOpenSearch={()=>setSearchOpen(true)}/><AnimatePresence mode="wait"><Routes location={location} key={location.pathname}><Route path="/" element={<Page><Home walletState={walletState} onConnect={openWallet}/></Page>}/><Route path="/testnet" element={<Page><Testnet walletState={walletState} onConnect={openWallet} onSwitch={switchNetwork}/></Page>}/><Route path="/mainnet" element={<Page><Mainnet/></Page>}/><Route path="/lcq" element={<Page><Lcq/></Page>}/><Route path="/mining" element={<Page><Mining/></Page>}/><Route path="/nodes" element={<Page><Nodes/></Page>}/><Route path="/developers" element={<Page><Developers/></Page>}/><Route path="/docs" element={<Page><Docs/></Page>}/><Route path="/community" element={<Page><Community/></Page>}/><Route path="/platform" element={<Page><Platform walletState={walletState} onConnect={openWallet}/></Page>}/><Route path="/whitepaper" element={<Page><Whitepaper/></Page>}/><Route path="/status" element={<Page><Status/></Page>}/><Route path="/privacy-policy" element={<Page><PrivacyPolicy/></Page>}/><Route path="/terms-and-conditions" element={<Page><TermsConditions/></Page>}/><Route path="/risk-disclosure" element={<Page><RiskDisclosure/></Page>}/><Route path="*" element={<Page><NotFound/></Page>}/></Routes></AnimatePresence><Footer/><WalletModal open={walletModalOpen} onClose={()=>setWalletModalOpen(false)} onSelect={selectWallet}/><WalletDrawer open={walletDrawerOpen} state={walletState} walletName={walletName} onClose={()=>setWalletDrawerOpen(false)} onDisconnect={disconnect} onSwitch={switchNetwork} toast={toast}/><SearchPalette open={searchOpen} onClose={()=>setSearchOpen(false)}/>{toastMessage&&<div className="toast">{toastMessage}</div>}<BackToTop/></div>
 }
