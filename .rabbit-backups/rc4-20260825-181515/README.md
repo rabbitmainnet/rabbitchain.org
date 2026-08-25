@@ -67,8 +67,3 @@ Before public Testnet launch, enable only services that are genuinely online in 
 - Pending Add Network continues after wallet connection
 - Testnet quick-start now includes wallet network installation
 - Add Network remains safely disabled until the official public RPC readiness flag is enabled
-
-
-## RC4 wallet integration
-
-RabbitChain.org supports injected EVM wallets through EIP-6963 and remote/mobile wallets through WalletConnect. The public Reown project ID is configured in `src/config/walletconnect.js` and can be overridden with `VITE_REOWN_PROJECT_ID`. After applying RC4, run `npm install` so `package-lock.json` is synchronized before pushing to `main`.

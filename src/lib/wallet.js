@@ -1,4 +1,8 @@
 import { NETWORK_LIST } from '../config/networks'
+import { REOWN_PROJECT_ID, WALLETCONNECT_METADATA } from '../config/walletconnect'
+
+const LAST_WALLET_KEY = 'rabbit:last-wallet'
+let walletConnectProviderPromise = null
 
 export function detectInjectedWallets(timeout = 450) {
   return new Promise((resolve) => {
@@ -8,6 +12,7 @@ export function detectInjectedWallets(timeout = 450) {
       if (!detail?.provider) return
       const key = detail.info?.uuid || detail.info?.rdns || detail.info?.name || Math.random().toString(36)
       found.set(key, {
+        kind: 'injected',
         name: detail.info?.name || 'Browser Wallet',
         icon: detail.info?.icon || null,
         provider: detail.provider,
@@ -22,6 +27,7 @@ export function detectInjectedWallets(timeout = 450) {
       window.removeEventListener('eip6963:announceProvider', handler)
       if (window.ethereum && ![...found.values()].some((w) => w.provider === window.ethereum)) {
         found.set('legacy', {
+          kind: 'injected',
           name: window.ethereum.isMetaMask ? 'MetaMask' : 'Browser Wallet',
           icon: null,
           provider: window.ethereum,
@@ -33,13 +39,72 @@ export function detectInjectedWallets(timeout = 450) {
   })
 }
 
+async function getWalletConnectProvider() {
+  if (!walletConnectProviderPromise) {
+    walletConnectProviderPromise = import('@walletconnect/ethereum-provider').then(async ({ EthereumProvider }) => {
+      const rpcMap = Object.fromEntries(NETWORK_LIST.filter((n) => n.rpcUrl).map((n) => [n.chainId, n.rpcUrl]))
+      return EthereumProvider.init({
+        projectId: REOWN_PROJECT_ID,
+        metadata: WALLETCONNECT_METADATA,
+        showQrModal: true,
+        optionalChains: NETWORK_LIST.map((n) => n.chainId),
+        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','eth_sendTransaction','personal_sign','eth_signTypedData'],
+        optionalEvents: ['chainChanged','accountsChanged'],
+        rpcMap,
+        qrModalOptions: { themeMode: 'light' }
+      })
+    })
+  }
+  return walletConnectProviderPromise
+}
+
+export async function connectWalletConnect() {
+  const provider = await getWalletConnectProvider()
+  if (!provider.session) await provider.connect()
+  const peer = provider.session?.peer?.metadata
+  return {
+    kind: 'walletconnect',
+    name: peer?.name || 'WalletConnect',
+    icon: peer?.icons?.[0] || null,
+    provider,
+    rdns: 'walletconnect'
+  }
+}
+
+export async function restoreWalletConnect() {
+  const provider = await getWalletConnectProvider()
+  if (!provider.session) return null
+  const peer = provider.session?.peer?.metadata
+  return {
+    kind: 'walletconnect',
+    name: peer?.name || 'WalletConnect',
+    icon: peer?.icons?.[0] || null,
+    provider,
+    rdns: 'walletconnect'
+  }
+}
+
+export function saveWalletPreference(wallet) {
+  try {
+    localStorage.setItem(LAST_WALLET_KEY, JSON.stringify({ kind: wallet.kind || 'injected', rdns: wallet.rdns || '', name: wallet.name || '' }))
+  } catch {}
+}
+
+export function getWalletPreference() {
+  try { return JSON.parse(localStorage.getItem(LAST_WALLET_KEY) || 'null') } catch { return null }
+}
+
+export function clearWalletPreference() {
+  try { localStorage.removeItem(LAST_WALLET_KEY) } catch {}
+}
+
 export async function connectWallet(provider) {
   const accounts = await provider.request({ method: 'eth_requestAccounts' })
   const chainIdHex = await provider.request({ method: 'eth_chainId' })
   return {
     account: accounts?.[0] || null,
     chainIdHex,
-    chainId: parseInt(chainIdHex, 16)
+    chainId: Number.parseInt(chainIdHex, 16)
   }
 }
 
@@ -51,7 +116,7 @@ export async function getWalletSnapshot(provider) {
   return {
     account: accounts?.[0] || null,
     chainIdHex,
-    chainId: parseInt(chainIdHex, 16)
+    chainId: Number.parseInt(chainIdHex, 16)
   }
 }
 
@@ -75,6 +140,13 @@ export async function switchOrAddNetwork(provider, network) {
       }]
     })
   }
+}
+
+export function friendlyWalletError(error, fallback = 'Wallet request failed') {
+  if (error?.code === 4001) return 'Request cancelled in wallet.'
+  if (error?.code === -32002) return 'A wallet request is already open.'
+  if (/unsupported|not supported/i.test(error?.message || '')) return 'This wallet does not support that request yet.'
+  return error?.message || fallback
 }
 
 export function identifyRabbitNetwork(chainId) {

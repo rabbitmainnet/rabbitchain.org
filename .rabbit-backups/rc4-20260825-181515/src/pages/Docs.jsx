@@ -8,7 +8,6 @@ const sections=[
   {id:'mainnet',title:'Rabbit Mainnet',icon:Network,body:[['Purpose','The production Rabbit Chain network that launches after successful Testnet validation.'],['Chain ID','928 (0x3a0)'],['Native asset','RAB'],['Status','Not launched. Production endpoints remain reserved.']]},
   {id:'lcq',title:'LCQ Consensus',icon:Cpu,body:[['Flow','Work → Eligibility → Live Consensus Queue → Producer → Committee.'],['Reward model','70% producer / 30% committee.'],['Execution','EVM execution remains separate from the consensus coordination logic.']]},
   {id:'developers',title:'Developer Reference',icon:Code2,body:[['Testnet RPC',NETWORKS.testnet.rpcUrl],['Testnet Explorer',NETWORKS.testnet.explorerUrl],['Mainnet RPC',NETWORKS.mainnet.rpcUrl],['Mainnet Explorer',NETWORKS.mainnet.explorerUrl]]},
-  {id:'wallets',title:'Wallet Connection',icon:Network,body:[['Injected wallets','RabbitChain.org discovers compatible browser wallets through EIP-6963.'],['WalletConnect','QR and remote-wallet connections use the official Rabbit Reown project configuration for rabbitchain.org.'],['Network setup','Rabbit Testnet uses Chain ID 9280 (0x2440). Add/switch requests are sent through the connected wallet native EVM flow.']]},
   {id:'security',title:'Security',icon:FileCode2,body:[['Wallet safety','RabbitChain.org should never request a seed phrase or private key. Wallet connection alone does not require a signature.'],['Release safety','Verify official binaries against hashes published with the official release.']]}
 ]
 
