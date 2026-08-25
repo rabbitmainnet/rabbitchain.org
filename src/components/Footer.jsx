@@ -4,7 +4,7 @@ import Brand from './Brand'
 const cols = [
   ['Network',[['Testnet','/testnet'],['Mainnet','/mainnet'],['Mining','/mining'],['Run a Node','/nodes']]],
   ['Technology',[['LCQ Consensus','/lcq'],['Architecture','/lcq#architecture'],['Reward Model','/lcq#rewards'],['Roadmap','/mainnet']]],
-  ['Build',[['Developers','/developers'],['Docs','/docs'],['JSON-RPC','/developers#rpc'],['GitHub','https://github.com/rabbitmainnet']]],
+  ['Build',[['Developers','/developers'],['Docs','/docs'],['Whitepaper','/whitepaper'],['JSON-RPC','/developers#rpc'],['GitHub','https://github.com/rabbitmainnet']]],
   ['Community',[['X / Twitter','https://x.com/rabbit_mainnet'],['GitHub','https://github.com/rabbitmainnet'],['Contribute','/community'],['Security','/community#security']]]
 ]
 

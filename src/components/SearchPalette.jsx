@@ -10,6 +10,7 @@ const items = [
   ['Developers','EVM, JSON-RPC and tooling','/developers'],
   ['Rabbit Mainnet','Production network after Testnet','/mainnet'],
   ['Documentation','Architecture and network references','/docs'],
+  ['Whitepaper','Technical Rabbit Chain paper in preparation','/whitepaper'],
   ['Community','GitHub, X and contribution','/community']
 ]
 

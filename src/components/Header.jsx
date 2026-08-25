@@ -22,6 +22,7 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
       <Brand/>
       <nav className="desktop-nav">
         <NavLink to="/testnet">Testnet</NavLink>
+        <NavLink to="/whitepaper">Whitepaper</NavLink>
         {groups.map((group)=><div className="nav-group" key={group.label}><button onClick={()=>setOpen(open===group.label?null:group.label)}>{group.label}<ChevronDown size={13}/></button>{open===group.label&&<div className="mega-menu"><span className="mega-label">{group.label.toUpperCase()}</span>{group.links.map(([label,to])=>to.startsWith('http')?<a key={label} href={to} target="_blank" rel="noreferrer">{label}<span>↗</span></a>:<Link key={label} to={to}>{label}<span>→</span></Link>)}</div>}</div>)}
         <NavLink to="/community">Community</NavLink>
       </nav>
@@ -32,6 +33,6 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
         <button className="mobile-button" onClick={()=>setMobile(!mobile)}>{mobile?<X size={18}/>:<Menu size={18}/>}</button>
       </div>
     </div></header>
-    {mobile&&<div className="mobile-nav"><Link to="/testnet">Testnet</Link><Link to="/lcq">LCQ Consensus</Link><Link to="/mining">Mining</Link><Link to="/nodes">Run a Node</Link><Link to="/developers">Developers</Link><Link to="/mainnet">Mainnet</Link><Link to="/docs">Docs</Link><Link to="/community">Community</Link><button onClick={()=>{setMobile(false);onWalletClick()}}>Connect wallet</button></div>}
+    {mobile&&<div className="mobile-nav"><Link to="/testnet">Testnet</Link><Link to="/lcq">LCQ Consensus</Link><Link to="/mining">Mining</Link><Link to="/nodes">Run a Node</Link><Link to="/developers">Developers</Link><Link to="/mainnet">Mainnet</Link><Link to="/docs">Docs</Link><Link to="/whitepaper">Whitepaper</Link><Link to="/community">Community</Link><button onClick={()=>{setMobile(false);onWalletClick()}}>Connect wallet</button></div>}
   </>
 }
