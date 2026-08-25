@@ -1,41 +1,63 @@
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, ChevronRight } from 'lucide-react'
-import HeroEngine from '../components/HeroEngine'
-import SectionIntro from '../components/SectionIntro'
-import LCQVisualizer from '../components/LCQVisualizer'
-import NetworkPanel from '../components/NetworkPanel'
+import { ArrowRight, ArrowUpRight, BookOpen, Blocks, Code2, Cpu, FileText, FlaskConical, Globe2, Layers3, Network, Radio, Repeat2, ShieldCheck, TerminalSquare, Wallet } from 'lucide-react'
+import NetworkHero from '../components/NetworkHero'
+import SectionHeader from '../components/SectionHeader'
+import LaunchAction from '../components/LaunchAction'
+import { NETWORKS } from '../config/networks'
 
-export default function Home({ walletState, onConnect, onSwitch, toast }) {
-  return <>
-    <section className="hero home-hero">
-      <div className="hero-gradient hero-gradient-a"/><div className="hero-gradient hero-gradient-b"/>
-      <div className="hero-copy">
-        <div className="hero-kicker"><i/>RABBIT CHAIN · LAYER 1 · LCQ</div>
+const lcqFlow = [
+  ['01','WORK','A Rabbit node produces valid work under protocol rules.'],
+  ['02','ELIGIBILITY','The protocol determines eligibility for producer coordination.'],
+  ['03','QUEUE','LCQ orders eligible participants deterministically.'],
+  ['04','PRODUCER','The selected participant receives the next block opportunity.'],
+  ['05','COMMITTEE','Committee participation completes the consensus flow.']
+]
+
+const paths = [
+  { icon: Wallet, label:'USE', title:'Use Rabbit', text:'Connect a wallet and reach the network, explorer, faucet and application layer.', to:'/platform' },
+  { icon: Cpu, label:'MINE', title:'Participate in LCQ', text:'Run Rabbit, generate valid work and compete for producer opportunities.', to:'/mining' },
+  { icon: Network, label:'OPERATE', title:'Run infrastructure', text:'Join P2P, sync the chain and operate independent Rabbit infrastructure.', to:'/nodes' },
+  { icon: Code2, label:'BUILD', title:'Build with EVM', text:'Use familiar Ethereum execution tooling while Rabbit handles consensus underneath.', to:'/developers' }
+]
+
+export default function Home({ walletState, onConnect, onAddNetwork }){
+  const testnet=NETWORKS.testnet
+  return <main>
+    <section className="home-hero shell">
+      <div className="home-hero-copy">
+        <div className="hero-badge"><span>RABBIT CHAIN · LAYER 1 · LCQ CONSENSUS</span></div>
         <h1>One wallet.<br/><em>One fair chance.</em></h1>
-        <p>Rabbit Chain is a permissionless EVM Layer 1 built around <b>Live Consensus Queue</b> — rethinking how mining participation becomes block-production opportunity.</p>
-        <div className="hero-actions"><Link className="primary-cta" to="/lcq">DISCOVER LCQ <ArrowUpRight size={16}/></Link><Link className="secondary-cta" to="/network">EXPLORE NETWORK <ChevronRight size={16}/></Link><button className="tertiary-cta" onClick={onConnect}>{walletState.account?'OPEN WALLET':'CONNECT WALLET'} <span>+</span></button></div>
-        <div className="hero-specs"><div><span>CONSENSUS</span><b>LCQ</b></div><div><span>TESTNET</span><b>9280</b></div><div><span>MAINNET</span><b>928</b></div><div><span>EXECUTION</span><b>EVM</b></div></div>
+        <p>Rabbit Chain is a permissionless EVM Layer 1 powered by <strong>LCQ Consensus</strong>, built to open block-production opportunity through protocol-defined coordination.</p>
+        <div className="hero-ctas"><Link className="button primary" to="/testnet">Enter Testnet <ArrowRight size={16}/></Link><Link className="button secondary" to="/lcq">LCQ Consensus</Link><button className="button ghost" onClick={onConnect}><Wallet size={16}/>{walletState.account?'Open wallet':'Connect wallet'}</button></div>
+        <div className="hero-principle"><span>NETWORK PATH</span><strong>Testnet 9280 launches first · Mainnet 928 follows validation.</strong></div>
       </div>
-      <div className="hero-engine-wrap"><HeroEngine/></div>
-      <div className="hero-bottom-strip"><span>PROOF OF WORK</span><i/> <span>ELIGIBILITY</span><i/> <span>LIVE QUEUE</span><i/> <span>PRODUCER</span><i/> <span>COMMITTEE</span></div>
+      <div className="home-hero-visual"><NetworkHero/></div>
     </section>
 
-    <section className="positioning-section"><span className="section-number">00</span><div><small>THE PRINCIPLE</small><h2>Mining should prove participation.<br/>It should not create <em>permanent dominance.</em></h2></div><p>Rabbit is designed around open participation and deterministic coordination. LCQ turns eligible work into an ordered producer opportunity without a manually curated producer list.</p></section>
+    <section className="protocol-rail"><div className="shell protocol-rail-inner"><div><span>TESTNET</span><strong>9280</strong></div><div><span>MAINNET</span><strong>928</strong></div><div><span>CONSENSUS</span><strong>LCQ</strong></div><div><span>EXECUTION</span><strong>EVM</strong></div><div><span>BLOCK TARGET</span><strong>~10s</strong></div><div><span>NETWORK</span><strong>P2P</strong></div></div></section>
 
-    <section className="feature-marquee"><div>PERMISSIONLESS <i/> EVM <i/> LCQ CONSENSUS <i/> P2P <i/> FAIR OPPORTUNITY <i/> PRODUCER + COMMITTEE</div></section>
+    <section className="home-entry shell">
+      <div className="home-entry-head"><span>START HERE</span><h2>Choose what you want to do.</h2><p>The fastest route into Rabbit should depend on the visitor — use the network, mine, operate infrastructure or build.</p></div>
+      <div className="path-grid">{paths.map(({icon:Icon,label,title,text,to})=><Link className="path-card" to={to} key={label}><div className="path-icon"><Icon size={23}/></div><span>{label}</span><h3>{title}</h3><p>{text}</p><b>Open <ArrowUpRight size={15}/></b></Link>)}</div>
+    </section>
 
-    <section className="home-lcq section-pad" id="lcq-preview"><SectionIntro index="01" label="LCQ CONSENSUS" title={<>A consensus system you can <em>see.</em></>} text="Follow the path from running a Rabbit node to the next producer opportunity. The visualization is educational and does not claim that the public network is already live."/><LCQVisualizer/><div className="section-link-row"><Link to="/lcq">OPEN THE LCQ ARCHITECTURE <ArrowUpRight size={15}/></Link></div></section>
+    <section className="launch-center-section shell"><div className="launch-center-head"><div><span>RABBIT TESTNET · CHAIN ID 9280</span><h2>The public entry point for Rabbit.</h2></div><p>Wallet, RPC, explorer, faucet, mining and node access are organized around one official network hub.</p></div><div className="launch-grid"><LaunchAction icon={Wallet} label="WALLET" title="Connect wallet" text="Connect an installed EVM wallet without signing or giving custody." onClick={onConnect}/><LaunchAction icon={Network} label="NETWORK" title="Add Rabbit Testnet" text="Add Chain ID 9280 and the official RPC configuration directly to your wallet." onClick={()=>onAddNetwork(testnet)} badge="ADD NETWORK"/><LaunchAction icon={FlaskConical} label="FAUCET" title="Get network assets" text="RAB and RUSD faucet access through the official Testnet service." to={testnet.faucetUrl} disabled={!testnet.publicFaucetReady} badge={testnet.publicFaucetReady?'OPEN':'COMING SOON'}/><LaunchAction icon={Globe2} label="EXPLORER" title="Inspect the chain" text="Blocks, transactions, addresses and contracts through the official explorer." to={testnet.explorerUrl} disabled={!testnet.publicExplorerReady} badge={testnet.publicExplorerReady?'OPEN':'COMING SOON'}/><LaunchAction icon={Cpu} label="MINING" title="Start mining" text="Download Rabbit, verify releases and participate through LCQ." to="/mining"/><LaunchAction icon={Network} label="NODE" title="Run a node" text="Operate independent P2P infrastructure and help propagate Rabbit." to="/nodes"/></div></section>
 
-    <section className="reward-section"><div className="reward-copy"><span>02 / BLOCK ECONOMICS</span><h2>One block.<br/><em>Shared consensus roles.</em></h2><p>The reward model separates the producer role from committee participation.</p></div><div className="reward-viz"><div className="reward-70"><strong>70</strong><span>%</span><small>PRODUCER</small></div><div className="reward-30"><strong>30</strong><span>%</span><small>COMMITTEE</small></div><div className="reward-track"><i/></div></div></section>
 
-    <section className="home-network section-pad"><SectionIntro index="03" label="NETWORK HUB" title={<>Testnet first.<br/><em>Mainnet prepared.</em></>} text="The official portal is built for both networks from day one. Endpoints can be activated without redesigning the user experience."/><NetworkPanel onConnect={onConnect} onSwitch={onSwitch} walletState={walletState} toast={toast}/><div className="section-link-row"><Link to="/network">OPEN NETWORK HUB <ArrowUpRight size={15}/></Link></div></section>
+    <section className="principle-section"><div className="shell principle-grid"><div className="principle-number">01</div><div className="principle-copy"><span>WHY RABBIT</span><h2>Block-production opportunity should be <em>coordinated by protocol.</em></h2></div><div className="principle-text"><p>Rabbit is designed around a simple idea: valid participation creates an opportunity, while LCQ coordinates eligible wallets under deterministic consensus rules.</p><Link to="/lcq">Understand LCQ <ArrowUpRight size={15}/></Link></div></div></section>
 
-    <section className="run-section"><div className="run-watermark">RUN RABBIT</div><div className="run-copy"><span>04 / PARTICIPATE</span><h2>Download.<br/>Run.<br/><em>Participate.</em></h2><p>No application form. No privileged miner list. Rabbit participation starts by running the client and following the network rules.</p><Link className="primary-cta" to="/mining">START MINING <ArrowUpRight size={15}/></Link></div><div className="run-terminal"><div className="terminal-head"><span><i/><i/><i/></span><b>rabbit / testnet</b><em>9280</em></div><pre><code><span>$</span> rabbit --network rabbit-testnet{`\n`}<i>✓</i> p2p discovery enabled{`\n`}<i>✓</i> lcq consensus engine loaded{`\n`}<i>✓</i> producer identity ready{`\n`}<i>✓</i> participation state synchronized{`\n\n`}<b>waiting for producer opportunity_</b></code></pre></div></section>
+    <section className="lcq-home shell"><SectionHeader eyebrow="LIVE CONSENSUS QUEUE" title="From work to the next block, in one visible flow." text="Rabbit keeps the execution layer familiar while moving its core differentiation into consensus: work, eligibility, queue position, producer selection and committee participation."/><div className="lcq-flow-grid">{lcqFlow.map(([n,title,text],i)=><article className="lcq-flow-card" key={n}><div className="lcq-flow-top"><span>{n}</span>{i<lcqFlow.length-1&&<i/>}</div><strong>{title}</strong><p>{text}</p></article>)}</div><div className="reward-model" id="rewards"><div className="reward-copy"><span>BLOCK REWARD MODEL</span><h3>Two consensus roles. One protocol-defined split.</h3><p>Producer and committee economics remain visible and deterministic.</p></div><div className="reward-bars"><div className="reward-producer"><strong>70%</strong><span>PRODUCER</span></div><div className="reward-committee"><strong>30%</strong><span>COMMITTEE</span></div></div></div></section>
 
-    <section className="developer-teaser section-pad"><div className="developer-teaser-copy"><span>05 / DEVELOPERS</span><h2>EVM outside.<br/><em>LCQ underneath.</em></h2><p>Build with familiar Ethereum execution tooling while Rabbit coordinates block production through its own consensus architecture.</p><Link to="/developers">BUILD ON RABBIT <ArrowUpRight size={15}/></Link></div><div className="code-window"><div className="code-tabs"><span className="active">network.js</span><span>deploy.sol</span><span>rpc</span></div><pre><code><span>const</span> rabbitTestnet = {'{'}{`\n`}  chainId: <b>9280</b>,{`\n`}  currency: <em>'RAB'</em>,{`\n`}  consensus: <em>'LCQ'</em>,{`\n`}  execution: <em>'EVM'</em>{`\n`}{'}'}</code></pre></div></section>
+    <section className="platform-home">
+      <div className="shell platform-home-grid"><div className="platform-home-copy"><span>RABBIT PLATFORM</span><h2>The network is infrastructure.<br/><em>The platform is where users act.</em></h2><p>Keep protocol information and applications connected but clearly separated. Rabbit Platform is the wallet-connected application layer for trading, liquidity, launches, token creation and future network utilities.</p><div className="platform-home-actions"><Link className="button primary" to="/platform">Open Platform <ArrowRight size={15}/></Link><button className="button secondary" onClick={onConnect}><Wallet size={15}/> Connect wallet</button></div></div><div className="platform-home-modules"><Link to="/platform"><Repeat2/><span>SWAP</span><strong>Trade assets</strong></Link><Link to="/platform"><Layers3/><span>LAUNCHPOOL</span><strong>Discover launches</strong></Link><Link to="/platform"><Blocks/><span>FACTORY</span><strong>Create tokens</strong></Link><Link to="/platform"><Globe2/><span>BRIDGE</span><strong>Move assets</strong></Link></div></div>
+    </section>
 
-    <section className="portal-section section-pad"><SectionIntro index="06" label="RABBIT PORTAL" title={<>Everything needed to<br/><em>enter the network.</em></>}/><div className="portal-grid">{[['LCQ','Understand consensus','/lcq'],['NETWORK','Testnet + Mainnet','/network'],['MINING','Run Rabbit','/mining'],['DEVELOPERS','Build on Rabbit','/developers'],['DOCS','Technical guide','/docs'],['GITHUB','Open source','https://github.com/rabbitmainnet']].map(([name,desc,href],i)=>href.startsWith('http')?<a key={name} className="portal-card" href={href} target="_blank" rel="noreferrer"><span>0{i+1}</span><div><b>{name}</b><p>{desc}</p></div><i>↗</i></a>:<Link key={name} className="portal-card" to={href}><span>0{i+1}</span><div><b>{name}</b><p>{desc}</p></div><i>↗</i></Link>)}</div></section>
+    <section className="developer-home"><div className="shell developer-home-grid"><div className="developer-home-copy"><span>BUILD ON RABBIT</span><h2>Familiar EVM execution.<br/><em>LCQ underneath.</em></h2><p>Developers get network parameters, JSON-RPC, smart-contract guidance and node interfaces in one place.</p><div><Link className="button light" to="/developers">Developer portal <ArrowRight size={15}/></Link><Link className="button dark-outline" to="/docs">Read docs</Link></div></div><div className="developer-code"><div className="code-head"><span>rabbit.network.ts</span><small>NETWORKS</small></div><pre><code><span>export const</span> rabbit = {'{'}{`\n`}  testnet: {'{'} chainId: <b>9280</b>, asset: <em>'RAB'</em> {'}'},{`\n`}  mainnet: {'{'} chainId: <b>928</b>, asset: <em>'RAB'</em> {'}'},{`\n\n`}  consensus: <em>'LCQ'</em>,{`\n`}  execution: <em>'EVM'</em>{`\n`}{'}'}</code></pre><div className="code-tags"><span><TerminalSquare size={14}/> JSON-RPC</span><span><Blocks size={14}/> Solidity</span><span><ShieldCheck size={14}/> Open source</span></div></div></div></section>
 
-    <section className="final-cta"><img src="/rabbit-mark.png" alt=""/><span>RABBIT CHAIN</span><h2>The network begins with<br/><em>one fair chance.</em></h2><div><Link className="primary-cta" to="/network">EXPLORE TESTNET <ArrowUpRight size={15}/></Link><a className="secondary-cta" href="https://github.com/rabbitmainnet" target="_blank" rel="noreferrer">VIEW GITHUB <ArrowUpRight size={15}/></a></div></section>
-  </>
+    <section className="roadmap-home shell"><div className="roadmap-copy"><span>NETWORK EVOLUTION</span><h2>Testnet first.<br/><em>Mainnet after public validation.</em></h2><p>Rabbit Testnet is the first public network. Rabbit Mainnet is the production network that follows after protocol, infrastructure and tooling validation.</p><Link className="text-link" to="/mainnet">Mainnet path <ArrowRight size={15}/></Link></div><div className="roadmap-steps"><article className="roadmap-step active"><span>01</span><div><small>FIRST NETWORK</small><h3>Rabbit Testnet</h3><p>Wallets, nodes, mining, RPC, explorer, faucet and applications.</p></div></article><article className="roadmap-step"><span>02</span><div><small>PUBLIC VALIDATION</small><h3>Network hardening</h3><p>Protocol and infrastructure are exercised under public operation.</p></div></article><article className="roadmap-step"><span>03</span><div><small>PRODUCTION</small><h3>Rabbit Mainnet</h3><p>Chain ID 928 becomes the production Rabbit network.</p></div></article></div></section>
+
+    <section className="resources-home shell"><SectionHeader eyebrow="PROTOCOL RESOURCES" title="Everything official, in one place." text="The website should end with verifiable protocol resources — documentation, source code, releases and the Whitepaper location."/><div className="resource-grid"><Link to="/whitepaper"><FileText/><h3>Whitepaper</h3><p>Official protocol paper location, ready for publication when the document is finalized.</p></Link><Link to="/docs"><BookOpen/><h3>Documentation</h3><p>Network architecture, guides, parameters and technical references.</p></Link><a href="https://github.com/rabbitmainnet" target="_blank" rel="noreferrer"><Code2/><h3>GitHub</h3><p>Official source code, website history and public development repositories.</p></a></div></section>
+
+    <section className="final-cta"><div className="final-cta-glow"/><div className="shell final-cta-inner"><img src="/rabbit-mark.png" alt="Rabbit Chain"/><span>RABBIT CHAIN</span><h2>One network ecosystem.<br/><em>Built to be explored.</em></h2><p>Use the platform, understand LCQ, run Rabbit or start building.</p><div><Link className="button light" to="/platform">Explore Platform <ArrowRight size={15}/></Link><Link className="button dark-outline" to="/lcq">Understand LCQ</Link></div></div></section>
+  </main>
 }

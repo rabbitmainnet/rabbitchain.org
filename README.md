@@ -1,16 +1,69 @@
-# React + Vite
+# Rabbit Chain Official Web Portal — Launch RC3.1
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Official multi-page portal for Rabbit Chain. The brand stays above the individual networks: Rabbit Testnet (Chain ID 9280) is the first public network, and Rabbit Mainnet (Chain ID 928) follows public validation.
 
-Currently, two official plugins are available:
+## Portal structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Home — brand, protocol, quick paths, network evolution and official resources
+- Rabbit Platform — Swap, Liquidity, Launchpool, Token Factory, Bridge and wallet surface
+- Rabbit Testnet — Chain ID 9280 network hub
+- Rabbit Mainnet — Chain ID 928 production-network path
+- LCQ Consensus — protocol architecture and reward model
+- Mining — Rabbit client and participation path
+- Nodes — independent infrastructure
+- Developers — EVM, JSON-RPC and network configuration
+- Docs — technical documentation surface
+- Whitepaper — official reserved publication route
+- Community — GitHub, X and security guidance
+- Wallet integration — EIP-6963 injected-wallet discovery and connection
+- Search palette — Ctrl/Cmd + K
 
-## React Compiler
+## Local development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run build
+npm run dev -- --host 0.0.0.0
+```
 
-## Expanding the Oxlint configuration
+## Network safety
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Network services must only be shown as available when their configured readiness flags and endpoints are actually enabled. Do not display fake live metrics or fake service availability.
+
+## Official links
+
+- Website: https://rabbitchain.org
+- GitHub: https://github.com/rabbitmainnet
+- X: https://x.com/rabbit_mainnet
+
+## Launch deployment
+
+The production build is generated with:
+
+```bash
+npm install
+npm run build
+```
+
+Deploy the `dist/` directory. For Hostinger/Apache, `public/.htaccess` is included so React Router URLs such as `/testnet`, `/lcq`, `/platform`, `/whitepaper`, and `/status` resolve through `index.html`.
+
+Before public Testnet launch, enable only services that are genuinely online in `src/config/networks.js`. Do not mark RPC, Explorer, or Faucet as ready until the public endpoints have passed launch checks.
+
+## RC2 launch polish
+
+- Privacy Policy, Terms & Conditions and Risk Disclosure routes
+- Updated official favicon/app icons
+- Dedicated Rabbit network/wallet icon
+- Back-to-top control
+- Legal sitemap and footer links
+
+## RC3 wallet and network UX
+
+- Refined circular scroll-progress Back to top control
+- Connected-wallet state in the header
+- Explicit Disconnect wallet session action
+- Best-effort EVM wallet permission revocation when supported
+- One-click Rabbit Testnet Add / Switch Network flow
+- Pending Add Network continues after wallet connection
+- Testnet quick-start now includes wallet network installation
+- Add Network remains safely disabled until the official public RPC readiness flag is enabled

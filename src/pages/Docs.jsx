@@ -1,17 +1,14 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { BookOpen, ChevronRight, Code2, Cpu, FileCode2, Network, Search } from 'lucide-react'
+import { NETWORKS } from '../config/networks'
 
-const sections = {
-  'Introduction': ['Rabbit Chain', 'Rabbit Chain is a permissionless EVM Layer 1 powered by LCQ Consensus. The public documentation will separate protocol facts from launch status so preview information is never confused with a live endpoint.'],
-  'LCQ Consensus': ['Live Consensus Queue', 'LCQ coordinates eligible participants into deterministic producer opportunity. Mining, eligibility, queue ordering, producer selection, committee participation, fallback and recovery are documented as separate concepts.'],
-  'Rabbit Testnet': ['Rabbit Testnet', 'Chain ID 9280. Native asset RAB. Public RPC, explorer and faucet endpoints are reserved and should only be marked live once public validation is complete.'],
-  'Rabbit Mainnet': ['Rabbit Mainnet', 'Chain ID 928. Native asset RAB. Mainnet remains a prepared configuration until the production launch is explicitly activated.'],
-  'Run a Node': ['Run a Rabbit node', 'The node guide will contain installation, initialization, P2P, RPC, logs, upgrades, backup and troubleshooting instructions.'],
-  'Mining': ['Mining Rabbit', 'The mining guide explains client setup, wallet identity, work generation, LCQ eligibility and how producer opportunity is observed.'],
-  'Developers': ['Build on Rabbit', 'Developer documentation covers EVM execution, JSON-RPC, wallet network configuration, Solidity workflows and application integration.']
-}
+const sections=[
+  {id:'overview',title:'Overview',icon:BookOpen,body:[['Rabbit Chain','Rabbit Chain is a permissionless EVM Layer 1 powered by LCQ Consensus. The public Testnet launches first; Mainnet follows public validation.'],['Core principle','One wallet. One fair chance. The protocol is designed around open participation and deterministic producer coordination.']]},
+  {id:'testnet',title:'Rabbit Testnet',icon:Network,body:[['Purpose','The first public network for miners, nodes, wallets, applications and infrastructure.'],['Chain ID','9280 (0x2440)'],['Native asset','RAB. Testnet RUSD is planned as an additional testing asset.'],['Status','Pre-launch until the official public endpoints are activated.']]},
+  {id:'mainnet',title:'Rabbit Mainnet',icon:Network,body:[['Purpose','The production Rabbit Chain network that launches after successful Testnet validation.'],['Chain ID','928 (0x3a0)'],['Native asset','RAB'],['Status','Not launched. Production endpoints remain reserved.']]},
+  {id:'lcq',title:'LCQ Consensus',icon:Cpu,body:[['Flow','Work → Eligibility → Live Consensus Queue → Producer → Committee.'],['Reward model','70% producer / 30% committee.'],['Execution','EVM execution remains separate from the consensus coordination logic.']]},
+  {id:'developers',title:'Developer Reference',icon:Code2,body:[['Testnet RPC',NETWORKS.testnet.rpcUrl],['Testnet Explorer',NETWORKS.testnet.explorerUrl],['Mainnet RPC',NETWORKS.mainnet.rpcUrl],['Mainnet Explorer',NETWORKS.mainnet.explorerUrl]]},
+  {id:'security',title:'Security',icon:FileCode2,body:[['Wallet safety','RabbitChain.org should never request a seed phrase or private key. Wallet connection alone does not require a signature.'],['Release safety','Verify official binaries against hashes published with the official release.']]}
+]
 
-export default function Docs() {
-  const [active,setActive]=useState('Introduction')
-  const [title,text]=sections[active]
-  return <div className="docs-layout"><aside><span className="eyebrow">RABBIT DOCS</span><h2>Documentation</h2>{Object.keys(sections).map((s)=><button key={s} className={active===s?'active':''} onClick={()=>setActive(s)}>{s}<span>›</span></button>)}</aside><main><span className="eyebrow">{active.toUpperCase()}</span><h1>{title}</h1><p>{text}</p><div className="docs-note"><b>Preview documentation</b><p>This website structure is ready for the official technical content. Network endpoints remain explicitly marked as preview until activation.</p></div></main></div>
-}
+export default function Docs(){const [active,setActive]=useState('overview');const [q,setQ]=useState('');const current=sections.find((s)=>s.id===active)||sections[0];const filtered=useMemo(()=>sections.filter((s)=>s.title.toLowerCase().includes(q.toLowerCase())),[q]);return <main className="docs-page"><div className="docs-shell"><aside><div className="docs-brand"><span>RABBIT DOCS</span><h2>Documentation</h2></div><label className="docs-search"><Search size={15}/><input placeholder="Filter docs" value={q} onChange={(e)=>setQ(e.target.value)}/></label><nav>{filtered.map((s)=>{const Icon=s.icon;return <button key={s.id} className={active===s.id?'active':''} onClick={()=>setActive(s.id)}><span><Icon size={15}/>{s.title}</span><ChevronRight size={13}/></button>})}</nav><div className="docs-aside-note"><b>Launch order</b><p>Testnet first · Mainnet after validation.</p></div></aside><article className="docs-content"><span className="docs-eyebrow">RABBIT CHAIN / {current.title.toUpperCase()}</span><h1>{current.title}</h1><p className="docs-lead">Official technical reference for the Rabbit network. This portal is structured so it can grow into full release documentation without changing the public information architecture.</p>{current.body.map(([title,text])=><section key={title}><h2>{title}</h2><p>{text}</p></section>)}<div className="docs-warning"><b>Pre-launch note</b><p>Reserved RPC, explorer and faucet URLs are not presented as live until the public Testnet is activated.</p></div></article></div></main>}
