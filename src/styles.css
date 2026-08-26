@@ -1285,3 +1285,65 @@ html[lang] .protocol-v8-meta strong{
     height: 40px !important;
   }
 }
+
+/* HOME HERO CTA — FINAL */
+.home-page-v13 .hero-ctas {
+  gap: 12px !important;
+}
+
+.home-page-v13 .hero-ctas .button {
+  width: 168px !important;
+  min-width: 168px !important;
+  height: 48px !important;
+  padding: 0 18px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+
+  background: #ffffff !important;
+  color: #111426 !important;
+
+  border: 1px solid #d9dce7 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+.home-page-v13 .hero-ctas .button:hover {
+  background: #111426 !important;
+  color: #ffffff !important;
+  border-color: #111426 !important;
+}
+
+@media (max-width: 620px) {
+  .home-page-v13 .hero-ctas .button {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* HOME HERO CTA — RABBIT GRADIENT */
+.home-page-v13 .hero-ctas .button {
+  background: linear-gradient(
+    100deg,
+    #dc27bd 0%,
+    #9b3cff 48%,
+    #5264ff 100%
+  ) !important;
+
+  color: #ffffff !important;
+  border: 0 !important;
+  box-shadow: 0 8px 24px rgba(126, 72, 255, 0.16) !important;
+}
+
+.home-page-v13 .hero-ctas .button:hover {
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(126, 72, 255, 0.24) !important;
+  filter: brightness(1.05);
+}
+
+.home-page-v13 .hero-ctas .button svg {
+  color: currentColor !important;
+}
