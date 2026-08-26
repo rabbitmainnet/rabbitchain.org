@@ -1,0 +1,9 @@
+# Rabbit Chain
+
+Official website: https://rabbitchain.org
+Official GitHub: https://github.com/rabbitmainnet
+Official X: https://x.com/rabbit_mainnet
+
+Rabbit Chain is a permissionless EVM Layer 1 powered by LCQ Consensus. Rabbit Testnet (Chain ID 9280) is the first public network. Rabbit Mainnet (Chain ID 928) follows validation.
+
+Key routes: /testnet, /mainnet, /lcq, /platform, /developers, /docs, /security, /releases, /status.

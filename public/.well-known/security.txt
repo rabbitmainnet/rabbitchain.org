@@ -1,0 +1,4 @@
+Contact: https://github.com/rabbitmainnet
+Canonical: https://rabbitchain.org/.well-known/security.txt
+Policy: https://rabbitchain.org/security
+Preferred-Languages: en, pt-BR
