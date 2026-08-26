@@ -14,19 +14,19 @@ export default function ProtocolConsole({ compact = false }) {
         <div className="protocol-v3-intro">
           <span>PRODUCER COORDINATION</span>
           <strong>One protocol path from valid participation to the next block.</strong>
-          <p>Valid work can open eligibility. LCQ resolves the next producer opportunity and committee participation completes the block flow.</p>
+          <p>Valid work opens eligibility. LCQ resolves the next producer opportunity, and committee participation completes the block path.</p>
         </div>
 
         <div className="protocol-v3-flow" aria-label="Illustrative LCQ producer flow">
           <section>
-            <small>01 · WORK</small>
+            <div className="protocol-v3-step-head"><span>01</span><i /><b>WORK</b></div>
             <h3>Valid work</h3>
-            <p>Participation starts with work accepted under the active Rabbit rules.</p>
-            <b className="protocol-v3-state"><Check size={14} /> VERIFIED</b>
+            <p>Participation begins with work accepted under the active Rabbit rules.</p>
+            <div className="protocol-v3-state"><Check size={14} /><span>WORK VERIFIED</span></div>
           </section>
 
           <section>
-            <small>02 · ELIGIBILITY</small>
+            <div className="protocol-v3-step-head"><span>02</span><i /><b>ELIGIBILITY</b></div>
             <h3>Eligible set</h3>
             <p>Protocol state determines which wallets can enter producer coordination.</p>
             <div className="protocol-v3-participants" aria-label="Illustrative eligible wallets">
@@ -35,22 +35,35 @@ export default function ProtocolConsole({ compact = false }) {
           </section>
 
           <section className="focus">
-            <small>03 · LCQ</small>
+            <div className="protocol-v3-step-head"><span>03</span><i /><b>LCQ</b></div>
             <h3>Resolve next</h3>
             <p>The live consensus queue deterministically resolves the next opportunity.</p>
-            <div className="protocol-v3-position"><b>03</b><span>NEXT</span></div>
+            <div className="protocol-v3-position">
+              <small>QUEUE POSITION</small>
+              <div><b>03</b><span>NEXT</span></div>
+            </div>
           </section>
 
           <section>
-            <small>04 · BLOCK</small>
-            <h3>Produce & complete</h3>
-            <p>The selected producer builds the block and committee participation completes consensus.</p>
-            <div className="protocol-v3-roles"><span>PRODUCER</span><i /><span>COMMITTEE</span></div>
+            <div className="protocol-v3-step-head"><span>04</span><i /><b>PRODUCER</b></div>
+            <h3>Produce block</h3>
+            <p>The selected producer builds the next block under the protocol rules.</p>
+            <div className="protocol-v3-endstate"><span>SELECTED ROLE</span><b>PRODUCER</b></div>
+          </section>
+
+          <section>
+            <div className="protocol-v3-step-head"><span>05</span><i /><b>COMMITTEE</b></div>
+            <h3>Complete consensus</h3>
+            <p>Committee participation completes the consensus path for the block.</p>
+            <div className="protocol-v3-endstate complete"><Check size={14} /><b>COMPLETE</b></div>
           </section>
         </div>
 
         <div className="protocol-v3-economics">
-          <div><span>BLOCK ECONOMICS</span><strong>Two protocol roles. One reward split.</strong></div>
+          <div className="protocol-v3-economics-copy">
+            <span>BLOCK ECONOMICS</span>
+            <strong>Two protocol roles. One deterministic reward split.</strong>
+          </div>
           <div className="protocol-v3-meter" aria-label="70 percent producer and 30 percent committee reward split">
             <span className="producer"><b>70%</b><small>PRODUCER</small></span>
             <span className="committee"><b>30%</b><small>COMMITTEE</small></span>
