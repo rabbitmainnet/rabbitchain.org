@@ -105,16 +105,12 @@ export default function Home({ walletState, onConnect, onAddNetwork }) {
             <p>Rabbit keeps the application surface familiar while making producer coordination explicit inside the protocol.</p>
           </div>
 
-          <div className="consensus-rail">
-            <article><span>01</span><small>WORK</small><h3>Valid work</h3><p>Generate work under the active Rabbit proof rules.</p></article>
-            <i />
-            <article><span>02</span><small>ELIGIBILITY</small><h3>Qualify</h3><p>Protocol state determines whether the wallet can enter coordination.</p></article>
-            <i />
-            <article className="active"><span>03</span><small>LCQ</small><h3>Enter queue</h3><p>Eligible participants are ordered under deterministic consensus rules.</p></article>
-            <i />
-            <article><span>04</span><small>PRODUCER</small><h3>Produce</h3><p>The selected participant receives the next block opportunity.</p></article>
-            <i />
-            <article><span>05</span><small>COMMITTEE</small><h3>Complete</h3><p>Committee participation completes the consensus and reward flow.</p></article>
+          <div className="consensus-path-v3" aria-label="Rabbit LCQ consensus path">
+            <article><span>01</span><small>WORK</small><h3>Valid work</h3><p>Accepted work opens the participation path.</p></article>
+            <article><span>02</span><small>ELIGIBILITY</small><h3>Qualify</h3><p>Protocol state resolves who can enter coordination.</p></article>
+            <article className="active"><span>03</span><small>LCQ</small><h3>Resolve next</h3><p>The live queue orders eligible participants deterministically.</p></article>
+            <article><span>04</span><small>PRODUCER</small><h3>Produce</h3><p>The selected wallet receives the next block opportunity.</p></article>
+            <article><span>05</span><small>COMMITTEE</small><h3>Complete</h3><p>Committee participation completes consensus and rewards.</p></article>
           </div>
 
           <div className="home-v2-reward">
@@ -203,7 +199,7 @@ export default function Home({ walletState, onConnect, onAddNetwork }) {
         <div className="shell final-banner-inner">
           <div><img src="/rabbit-mark.png" alt="Rabbit Chain" /><span>RABBIT CHAIN</span></div>
           <h2>One wallet. <em>One fair chance.</em></h2>
-          <p>Testnet first. Mainnet after public validation.</p>
+          <p>Join the public Testnet, verify the network and follow the path to Mainnet.</p>
           <div className="hero-ctas"><button className="button light" onClick={() => onAddNetwork(testnet)}>Add Rabbit Testnet</button><Link className="button dark-outline" to="/platform">Explore Platform <ArrowRight size={15} /></Link></div>
         </div>
       </section>
