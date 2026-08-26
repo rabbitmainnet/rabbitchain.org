@@ -55,8 +55,16 @@ main{display:block;overflow:hidden}
 .desktop-nav>a,.nav-group>button{height:40px;border:0;background:transparent;border-radius:10px;padding:0 12px;display:flex;align-items:center;gap:5px;color:#3c4050;font-size:12px;font-weight:700;cursor:pointer}
 .desktop-nav>a:hover,.nav-group>button:hover,.nav-group>button.nav-open{background:#f2f2f7;color:#141624}
 .desktop-nav>a.active{color:#111426}
-.desktop-nav .nav-platform{border:1px solid #dedee8;background:#fafaff;padding-inline:15px}
-.desktop-nav .nav-platform.active{background:#111426;color:#fff;border-color:#111426}
+.desktop-nav .nav-platform{
+  border:0;
+  background:transparent;
+  padding:0 12px;
+}
+
+.desktop-nav .nav-platform.active{
+  background:transparent;
+  color:#111426;
+}
 .nav-group{position:relative}
 .mega-menu{position:absolute;top:50px;left:-120px;width:560px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 22px 70px rgba(25,27,49,.14);padding:18px;display:grid;grid-template-columns:180px 1fr;gap:18px;z-index:90}
 .mega-menu-intro{padding:8px 14px 8px 4px;border-right:1px solid var(--line)}
