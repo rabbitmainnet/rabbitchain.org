@@ -1222,3 +1222,66 @@ html[lang] .protocol-v8-meta strong{
   }
 }
 
+
+/* RABBIT NAVBAR FINAL LOGO */
+.rabbit-brand-image {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+  width: auto !important;
+  flex: 0 0 auto !important;
+}
+
+.rabbit-navbar-logo {
+  display: block !important;
+  width: 210px !important;
+  height: auto !important;
+  max-width: 210px !important;
+  max-height: 42px !important;
+  object-fit: contain !important;
+  object-position: left center !important;
+}
+
+@media (max-width: 1100px) {
+  .rabbit-navbar-logo {
+    width: 185px !important;
+    max-width: 185px !important;
+  }
+}
+
+@media (max-width: 820px) {
+  .rabbit-navbar-logo {
+    width: 160px !important;
+    max-width: 160px !important;
+  }
+}
+
+/* RABBIT NAVBAR — LOGO FINAL */
+.brand {
+  gap: 0 !important;
+}
+
+.brand-type {
+  display: none !important;
+}
+
+.brand-mark {
+  width: 220px !important;
+  height: 48px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background:
+    url('/rabbit-navbar-logo.png')
+    left center / contain no-repeat !important;
+}
+
+.brand-mark img {
+  display: none !important;
+}
+
+@media (max-width: 820px) {
+  .brand-mark {
+    width: 165px !important;
+    height: 40px !important;
+  }
+}
