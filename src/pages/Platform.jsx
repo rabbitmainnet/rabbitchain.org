@@ -5,6 +5,10 @@ import {
   Repeat2, Rocket, ShieldCheck, Wallet, Waves,
 } from 'lucide-react'
 import { NETWORKS } from '../config/networks'
+import { PLATFORM_NETWORKS } from '../config/platform'
+import { usePlatformNetwork } from '../hooks/usePlatformNetwork'
+import PlatformNetworkSwitch from '../components/PlatformNetworkSwitch'
+import RabbitSwapPanel from '../components/RabbitSwapPanel'
 
 const tools = {
   swap: { icon: Repeat2, label: 'SWAP', title: 'Rabbit Swap', intro: 'Trade supported Rabbit-native assets through the official wallet-connected interface.' },
@@ -24,48 +28,21 @@ const tools = {
 
 const toolOrder = ['swap', 'liquidity', 'staking', 'bridge', 'p2p', 'launchpool', 'factory', 'faucet']
 
-function PlatformNetworkSwitch({ value, onChange }) {
-  return (
-    <div className="platform-network-switch" aria-label="Rabbit Platform network">
-      <button
-        type="button"
-        className={value === 'testnet' ? 'active' : ''}
-        onClick={() => onChange('testnet')}
-      >
-        <b>TESTNET</b>
-        <small>9280</small>
-      </button>
-
-      <button
-        type="button"
-        className={value === 'mainnet' ? 'active' : ''}
-        onClick={() => onChange('mainnet')}
-      >
-        <b>MAINNET</b>
-        <small>928</small>
-      </button>
-    </div>
-  )
-}
-
 
 function ToolPanel({ tool, walletState, onConnect, networkKey }) {
   const entry = tools[tool]
   const Icon = entry.icon
-  const statusText = networkKey === 'mainnet'
-    ? 'MAINNET · COMING LATER'
-    : 'PRE-LAUNCH'
+  const statusText =
+    PLATFORM_NETWORKS[networkKey]?.status || 'PRE-LAUNCH'
 
   if (tool === 'swap') {
     return (
-      <div className="product-panel product-swap">
-        <div className="product-panel-title"><div><Icon size={20} /><span>{entry.label}</span></div><b>{statusText}</b></div>
-        <div className="swap-box"><span>YOU PAY</span><div><strong>0.00</strong><button>RAB ▾</button></div><small>Balance appears after wallet + network activation</small></div>
-        <div className="swap-switch">↓</div>
-        <div className="swap-box"><span>YOU RECEIVE</span><div><strong>0.00</strong><button>RUSD ▾</button></div><small>Testnet asset route</small></div>
-        <button className="product-action" onClick={onConnect}>{walletState?.account ? 'Trading activates with liquidity' : 'Connect wallet'}</button>
-        <p className="product-disclaimer">This interface does not imply a live market. Swaps activate only after public liquidity and contracts are intentionally released.</p>
-      </div>
+      <RabbitSwapPanel
+        networkKey={networkKey}
+        walletState={walletState}
+        onConnect={onConnect}
+        variant="platform"
+      />
     )
   }
 
@@ -249,21 +226,20 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
   const testnet = NETWORKS.testnet
   const navigate = useNavigate()
 
-  const [platformNetwork, setPlatformNetwork] = useState('testnet')
+  const {
+    platformNetwork,
+    setPlatformNetwork,
+    network: platformConfig,
+  } = usePlatformNetwork()
 
   const selectedNetwork = NETWORKS[platformNetwork]
 
-  const visibleTools = platformNetwork === 'mainnet'
-    ? toolOrder.filter((key) => key !== 'faucet')
-    : toolOrder
+  const visibleTools = platformConfig.showFaucet
+    ? toolOrder
+    : toolOrder.filter((key) => key !== 'faucet')
 
-  const networkName = platformNetwork === 'mainnet'
-    ? 'Rabbit Mainnet'
-    : 'Rabbit Testnet'
-
-  const networkChainId = platformNetwork === 'mainnet'
-    ? '928'
-    : '9280'
+  const networkName = platformConfig.name
+  const networkChainId = platformConfig.chainId
 
   function selectPlatformNetwork(key) {
     setPlatformNetwork(key)
@@ -324,7 +300,7 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
           <div className="platform-v2-copy">
             <span className="hero-eyebrow"><i /> RABBIT PLATFORM · OFFICIAL APPLICATION LAYER</span>
             <h1>Everything you use on Rabbit. <em>One product surface.</em></h1>
-            <p>Wallet, trading, liquidity, launches, token creation, bridging and portfolio context organized as one product — with every module showing its real launch state.</p>
+            <p>Wallet, swaps, liquidity, staking, bridging, P2P, launches and token creation organized as one product — with every module showing its real launch state.</p>
             <div className="hero-ctas"><button className="button primary" onClick={onConnect}><Wallet size={16} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button><button
       className="button secondary"
       disabled={platformNetwork === 'mainnet'}
@@ -352,7 +328,7 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
       </section>
 
       <section className="platform-v2-product">
-        <div className="shell platform-v2-product-head"><div><span className="section-kicker">PRODUCT SURFACE</span><h2>Six modules. One coherent interface.</h2></div><p>The Platform is a first-class part of Rabbit, while RabbitChain.org remains the source of truth for network status, releases and documentation.</p></div>
+        <div className="shell platform-v2-product-head"><div><span className="section-kicker">PRODUCT SURFACE</span><h2>One product surface. Every module in one place.</h2></div><p>The Platform is a first-class part of Rabbit, while RabbitChain.org remains the source of truth for network status, releases and documentation.</p></div>
         <div className="shell platform-v2-grid">
           {visibleTools.map((key, index) => { const Icon = tools[key].icon; return <Link to={`/platform/${key}`} key={key}><span>0{index + 1}</span><div><Icon size={21} /><em>{platformNetwork === 'mainnet' ? 'COMING LATER' : 'PRE-LAUNCH'}</em></div><h3>{tools[key].title}</h3><p>{tools[key].intro}</p><b>Open module <ArrowRight size={14} /></b></Link> })}
         </div>
@@ -361,7 +337,7 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
       <section className="platform-v2-stack">
         <div className="shell platform-v2-stack-grid">
           <div><span className="section-kicker">THE RABBIT STACK</span><h2>Applications above. Protocol below.</h2><p>Rabbit Platform uses the same wallet, RPC, EVM, LCQ and P2P surfaces documented across RabbitChain.org.</p><Link className="inline-link light-link" to="/lcq">Understand LCQ <ArrowRight size={14} /></Link></div>
-          <div className="platform-v2-stack-rail"><div><small>05</small><span>APPLICATIONS</span><strong>Swap · Liquidity · Launchpool · Factory · Bridge · Portfolio</strong></div><i /><div><small>04</small><span>WALLET & RPC</span><strong>EVM wallet · WalletConnect · JSON-RPC</strong></div><i /><div><small>03</small><span>EXECUTION</span><strong>EVM · transactions · smart contracts</strong></div><i /><div className="accent"><small>02</small><span>CONSENSUS</span><strong>LCQ · producer · committee</strong></div><i /><div><small>01</small><span>NETWORK</span><strong>P2P · nodes · mining</strong></div></div>
+          <div className="platform-v2-stack-rail"><div><small>05</small><span>APPLICATIONS</span><strong>Swap · Liquidity · Staking · Bridge · P2P · Launchpool · Factory</strong></div><i /><div><small>04</small><span>WALLET & RPC</span><strong>EVM wallet · WalletConnect · JSON-RPC</strong></div><i /><div><small>03</small><span>EXECUTION</span><strong>EVM · transactions · smart contracts</strong></div><i /><div className="accent"><small>02</small><span>CONSENSUS</span><strong>LCQ · producer · committee</strong></div><i /><div><small>01</small><span>NETWORK</span><strong>P2P · nodes · mining</strong></div></div>
         </div>
       </section>
 

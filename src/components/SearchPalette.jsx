@@ -3,7 +3,7 @@ import { Search, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const items = [
-  ['Rabbit Platform', 'Swap, liquidity, launchpool, factory, bridge and portfolio', '/platform'],
+  ['Rabbit Platform', 'Swap, liquidity, staking, bridge, P2P, launchpool, token factory and Testnet faucet', '/platform'],
   ['Rabbit Testnet', 'First public network · Chain ID 9280', '/testnet'],
   ['Network Status', 'Official RPC, explorer and faucet readiness', '/status'],
   ['LCQ Consensus', 'Work, eligibility and producer coordination', '/lcq'],

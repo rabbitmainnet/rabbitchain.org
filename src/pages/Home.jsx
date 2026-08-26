@@ -5,15 +5,10 @@ import {
   Layers3, Network, Repeat2, Rocket, ShieldCheck, TerminalSquare, Wallet, Waves,
 } from 'lucide-react'
 import { NETWORKS } from '../config/networks'
+import { usePlatformNetwork } from '../hooks/usePlatformNetwork'
+import PlatformNetworkSwitch from '../components/PlatformNetworkSwitch'
+import RabbitSwapPanel from '../components/RabbitSwapPanel'
 
-const platformModules = [
-  [Repeat2, 'Swap', 'Trade supported Rabbit-native assets.', '/platform/swap'],
-  [Waves, 'Liquidity', 'Create and manage supported liquidity positions.', '/platform/liquidity'],
-  [Rocket, 'Launchpool', 'Official launch campaigns and participation windows.', '/platform/launchpool'],
-  [Factory, 'Token Factory', 'Guided standard EVM token deployment.', '/platform/factory'],
-  [Layers3, 'Bridge', 'Verified routes when bridge infrastructure is active.', '/platform/bridge'],
-  [Wallet, 'Portfolio', 'Connected-wallet network context in one place.', '/platform/portfolio'],
-]
 
 const paths = [
   ['01', Wallet, 'Use Rabbit', 'Connect a wallet, add Testnet and reach official network services.', '/testnet'],
@@ -31,6 +26,11 @@ const verifyRows = [
 
 export default function Home({ walletState, onConnect, onAddNetwork }) {
   const testnet = NETWORKS.testnet
+  const {
+    platformNetwork,
+    setPlatformNetwork,
+  } = usePlatformNetwork()
+
   return (
     <main className="home-page-v13">
       <section className="home-v2-hero">
@@ -121,31 +121,53 @@ export default function Home({ walletState, onConnect, onAddNetwork }) {
         </div>
       </section>
 
-      <section className="home-v2-platform">
-        <div className="shell home-v2-platform-head">
-          <div><span className="section-kicker">RABBIT PLATFORM</span><h2>One network. One official application layer.</h2></div>
-          <div><p>Wallet-connected network utilities live in one coherent product surface. Modules remain explicit about readiness until their contracts and services are public.</p><Link className="button primary" to="/platform">Explore Platform <ArrowRight size={15} /></Link></div>
-        </div>
+      <section className="home-platform-final home-platform-swap-only">
+        <div className="shell">
 
-        <div className="shell platform-stage">
-          <div className="platform-stage-bar">
-            <div><img src="/rabbit-mark.png" alt="" /><span><b>RABBIT PLATFORM</b><small>TESTNET WORKSPACE · 9280</small></span></div>
-            <button onClick={onConnect}>{walletState.account ? `${walletState.account.slice(0, 6)}…${walletState.account.slice(-4)}` : 'Connect wallet'}</button>
-          </div>
-          <div className="platform-stage-body">
-            <aside><span className="active">Overview</span>{platformModules.map(([, title]) => <span key={title}>{title}</span>)}</aside>
-            <div className="platform-stage-main">
-              <div className="platform-stage-summary"><span>CONNECTED WALLET</span><strong>{walletState.account ? 'Wallet connected' : 'Not connected'}</strong><p>Network context and application actions appear here without custodying user funds.</p></div>
-              <div className="platform-stage-modules">
-                {platformModules.map(([Icon, title, text, to], index) => (
-                  <Link to={to} key={title} className={index === 0 ? 'featured' : ''}>
-                    <div><Icon size={20} /><span>PRE-LAUNCH</span></div>
-                    <h3>{title}</h3><p>{text}</p><b>Open module <ArrowUpRight size={14} /></b>
-                  </Link>
-                ))}
-              </div>
+          <div className="home-platform-final-head">
+            <div>
+              <span className="section-kicker">
+                RABBIT PLATFORM
+              </span>
+
+              <h2>
+                One network. One official application layer.
+              </h2>
+            </div>
+
+            <div className="home-platform-final-intro">
+              <p>
+                Wallet-connected network utilities in one coherent
+                product surface. The same official Swap interface is
+                available here and inside Rabbit Platform.
+              </p>
+
+              <Link className="button primary" to="/platform">
+                Explore Platform <span>→</span>
+              </Link>
             </div>
           </div>
+
+          <div className="home-platform-swap-stage">
+
+            <div className="home-platform-swap-network">
+              <span>APPLICATION NETWORK</span>
+
+              <PlatformNetworkSwitch
+                value={platformNetwork}
+                onChange={setPlatformNetwork}
+              />
+            </div>
+
+            <RabbitSwapPanel
+              networkKey={platformNetwork}
+              walletState={walletState}
+              onConnect={onConnect}
+              variant="home"
+            />
+
+          </div>
+
         </div>
       </section>
 
