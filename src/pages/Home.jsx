@@ -4,7 +4,6 @@ import {
   Cpu, Database, Factory, FileCheck2, FlaskConical, GitBranch, Globe2,
   Layers3, Network, Repeat2, Rocket, ShieldCheck, TerminalSquare, Wallet, Waves,
 } from 'lucide-react'
-import ProtocolConsole from '../components/ProtocolConsole'
 import { NETWORKS } from '../config/networks'
 
 const platformModules = [
@@ -33,7 +32,7 @@ const verifyRows = [
 export default function Home({ walletState, onConnect, onAddNetwork }) {
   const testnet = NETWORKS.testnet
   return (
-    <main>
+    <main className="home-page-v13">
       <section className="home-v2-hero">
         <div className="shell home-v2-hero-grid">
           <div className="home-v2-copy">
@@ -44,8 +43,7 @@ export default function Home({ walletState, onConnect, onAddNetwork }) {
             <div className="hero-ctas">
               <Link className="button primary" to="/testnet">Enter Testnet <ArrowRight size={16} /></Link>
               <Link className="button secondary" to="/platform">Open Platform <ArrowRight size={16} /></Link>
-              <Link className="button ghost" to="/lcq">Explore LCQ</Link>
-              <button className="button ghost" onClick={onConnect}><Wallet size={16} />{walletState.account ? 'Open wallet' : 'Connect wallet'}</button>
+              <Link className="button ghost home-v12-text-link" to="/lcq">Explore LCQ <ArrowRight size={14} /></Link>
             </div>
             <div className="home-v2-facts">
               <div><span>TESTNET</span><strong>9280</strong><small>FIRST PUBLIC NETWORK</small></div>
@@ -54,7 +52,6 @@ export default function Home({ walletState, onConnect, onAddNetwork }) {
               <div><span>REWARD</span><strong>70 / 30</strong><small>PRODUCER / COMMITTEE</small></div>
             </div>
           </div>
-          <div className="home-v2-console"><ProtocolConsole /></div>
         </div>
       </section>
 
