@@ -126,7 +126,7 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
               </div>
             ))}
             <NavLink className="nav-platform" to="/platform">Platform</NavLink>
-            <NavLink to="/community">Community</NavLink>
+            <NavLink to="/community">Community</NavLink><NavLink to="/whitepaper">Whitepaper</NavLink>
           </nav>
 
           <div className="header-actions">
@@ -160,7 +160,7 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
             <span className="mobile-nav-label">TECHNOLOGY</span>
             <Link to="/lcq">LCQ Consensus</Link><Link to="/mining">Mining</Link><Link to="/nodes">Run a Node</Link><Link to="/security">Security</Link>
             <span className="mobile-nav-label">BUILD</span>
-            <Link to="/developers">Developers</Link><Link to="/docs">Documentation</Link><Link to="/releases">Releases</Link><Link to="/community">Community</Link>
+            <Link to="/developers">Developers</Link><Link to="/docs">Documentation</Link><Link to="/releases">Releases</Link><Link to="/community">Community</Link><Link to="/whitepaper">Whitepaper</Link>
             <button className="mobile-wallet" onClick={() => { setMobile(false); onWalletClick() }}>
               {walletState.account ? `Wallet · ${shortAddress(walletState.account)}` : 'Connect wallet'}
             </button>
