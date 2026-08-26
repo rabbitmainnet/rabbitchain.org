@@ -32,6 +32,36 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <title>Rabbit Chain — LCQ Consensus</title>
+  
+    <script type="application/ld+json" id="rabbit-structured-data">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://rabbitchain.org/#organization",
+          "name": "Rabbit Chain",
+          "url": "https://rabbitchain.org/",
+          "description": "Rabbit Chain is a permissionless EVM Layer 1 powered by LCQ Consensus.",
+          "sameAs": [
+            "https://x.com/rabbit_mainnet",
+            "https://github.com/rabbitmainnet"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://rabbitchain.org/#website",
+          "url": "https://rabbitchain.org/",
+          "name": "Rabbit Chain",
+          "publisher": {
+            "@id": "https://rabbitchain.org/#organization"
+          },
+          "inLanguage": "en"
+        }
+      ]
+    }
+    </script>
+
   </head>
   <body>
     <div id="root"></div>
