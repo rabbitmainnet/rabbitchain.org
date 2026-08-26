@@ -2470,3 +2470,10 @@ html[lang] .protocol-v8-meta strong{
   }
 }
 
+
+
+/* RABBIT FOOTER TOP DIVIDER */
+footer {
+  border-top: 1px solid #e3e5ec !important;
+}
+
