@@ -163,6 +163,7 @@ export default function Home({ walletState, onConnect, onAddNetwork }) {
               networkKey={platformNetwork}
               walletState={walletState}
               onConnect={onConnect}
+              onSwitchNetwork={onAddNetwork}
               variant="home"
             />
 

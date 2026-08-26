@@ -1,3 +1,6 @@
+export const TESTNET_LIVE = false
+export const MAINNET_LIVE = false
+
 export const NETWORKS = {
   testnet: {
     key: 'testnet',
@@ -9,17 +12,33 @@ export const NETWORKS = {
     consensus: 'LCQ',
     execution: 'EVM',
     role: 'First public launch',
-    status: 'PRE-LAUNCH',
+    status: TESTNET_LIVE ? 'LIVE' : 'PRE-LAUNCH',
     statusTone: 'launch',
     description: 'The first public Rabbit network for mining, nodes, wallet integrations, applications and protocol validation before Mainnet.',
     rpcUrl: 'https://rpc.testnet.rabbitchain.org',
     wsUrl: 'wss://ws.testnet.rabbitchain.org',
     explorerUrl: 'https://explorer.testnet.rabbitchain.org',
     faucetUrl: 'https://faucet.testnet.rabbitchain.org',
+
+    // Launch/readiness source of truth.
+    networkLive: TESTNET_LIVE,
+    walletEnabled: true,
     publicRpcReady: false,
+    publicWsReady: false,
     publicExplorerReady: false,
-    publicFaucetReady: false
+    publicFaucetReady: false,
+
+    platform: {
+      swapLive: false,
+      liquidityLive: false,
+      stakingLive: false,
+      bridgeLive: false,
+      p2pLive: false,
+      launchpoolLive: false,
+      factoryLive: false,
+    },
   },
+
   mainnet: {
     key: 'mainnet',
     name: 'Rabbit Mainnet',
@@ -30,17 +49,33 @@ export const NETWORKS = {
     consensus: 'LCQ',
     execution: 'EVM',
     role: 'Production network',
-    status: 'AFTER TESTNET',
+    status: MAINNET_LIVE ? 'LIVE' : 'AFTER TESTNET',
     statusTone: 'future',
     description: 'The production Rabbit Chain network that follows successful public Testnet validation and final launch gates.',
     rpcUrl: 'https://rpc.rabbitchain.org',
     wsUrl: 'wss://ws.rabbitchain.org',
     explorerUrl: 'https://explorer.rabbitchain.org',
     faucetUrl: null,
+
+    // Mainnet remains unavailable until its own launch gate is complete.
+    networkLive: MAINNET_LIVE,
+    walletEnabled: MAINNET_LIVE,
     publicRpcReady: false,
+    publicWsReady: false,
     publicExplorerReady: false,
-    publicFaucetReady: false
-  }
+    publicFaucetReady: false,
+
+    platform: {
+      swapLive: false,
+      liquidityLive: false,
+      stakingLive: false,
+      bridgeLive: false,
+      p2pLive: false,
+      launchpoolLive: false,
+      factoryLive: false,
+    },
+  },
 }
 
 export const NETWORK_LIST = [NETWORKS.testnet, NETWORKS.mainnet]
+export const WALLET_NETWORK_LIST = NETWORK_LIST.filter((network) => network.walletEnabled)

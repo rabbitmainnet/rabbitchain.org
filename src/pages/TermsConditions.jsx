@@ -15,7 +15,7 @@ const sections=[
     'Official websites, RPC endpoints, explorers, faucets, downloads and application modules may be rate-limited, changed, temporarily unavailable or discontinued. Users operating critical infrastructure should not depend on a single hosted endpoint.'
   ]},
   {id:'platform',title:'Rabbit Platform and future modules',paragraphs:[
-    'Rabbit Platform may present modules such as Swap, Liquidity, Launchpool, Token Factory, Bridge or Portfolio. A module shown as preview, planned, reserved or coming soon is not an active service and should not be relied on as available functionality.',
+    'Rabbit Platform may present modules such as Swap, Liquidity, Staking, Bridge, P2P, Launchpool, Token Factory or the Testnet Faucet. A module shown as preview, planned, reserved or coming soon is not an active service and should not be relied on as available functionality.',
     'When application modules become active, additional module-specific terms, smart-contract disclosures or transaction confirmations may apply.'
   ]},
   {id:'risks',title:'Risks and no guarantees',paragraphs:['Use of blockchain infrastructure involves technical, wallet, software, smart-contract, network, economic, legal and third-party risks. Nothing on the website guarantees uninterrupted service, profitability, token price, liquidity, exchange listing, mining rewards, future adoption or Mainnet launch on a specific date.']},

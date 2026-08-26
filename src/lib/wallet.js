@@ -1,4 +1,4 @@
-import { NETWORK_LIST } from '../config/networks'
+import { NETWORK_LIST, WALLET_NETWORK_LIST } from '../config/networks'
 import { REOWN_PROJECT_ID, WALLETCONNECT_METADATA } from '../config/walletconnect'
 
 const LAST_WALLET_KEY = 'rabbit:last-wallet'
@@ -42,12 +42,12 @@ export function detectInjectedWallets(timeout = 450) {
 async function getWalletConnectProvider() {
   if (!walletConnectProviderPromise) {
     walletConnectProviderPromise = import('@walletconnect/ethereum-provider').then(async ({ EthereumProvider }) => {
-      const rpcMap = Object.fromEntries(NETWORK_LIST.filter((n) => n.rpcUrl).map((n) => [n.chainId, n.rpcUrl]))
+      const rpcMap = Object.fromEntries(WALLET_NETWORK_LIST.filter((n) => n.rpcUrl).map((n) => [n.chainId, n.rpcUrl]))
       return EthereumProvider.init({
         projectId: REOWN_PROJECT_ID,
         metadata: WALLETCONNECT_METADATA,
         showQrModal: true,
-        optionalChains: NETWORK_LIST.map((n) => n.chainId),
+        optionalChains: WALLET_NETWORK_LIST.map((n) => n.chainId),
         optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','eth_sendTransaction','personal_sign','eth_signTypedData'],
         optionalEvents: ['chainChanged','accountsChanged'],
         rpcMap,

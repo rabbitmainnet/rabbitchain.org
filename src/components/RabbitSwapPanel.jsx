@@ -6,6 +6,7 @@ import {
   Wallet,
 } from 'lucide-react'
 import { PLATFORM_NETWORKS } from '../config/platform'
+import { NETWORKS } from '../config/networks'
 
 function TokenLogo({ token }) {
   if (!token) {
@@ -98,6 +99,7 @@ export default function RabbitSwapPanel({
   networkKey = 'testnet',
   walletState,
   onConnect,
+  onSwitchNetwork,
   variant = 'platform',
 }) {
   const network =
@@ -132,12 +134,27 @@ export default function RabbitSwapPanel({
     null
 
   const connected = Boolean(walletState?.account)
+  const expectedChainId = Number(network.chainId)
+  const wrongNetwork = connected && walletState?.chainId !== expectedChainId
 
   const actionLabel = !connected
     ? 'Connect wallet'
-    : network.swapLive
-      ? 'Review swap'
-      : 'Swap activates after contracts'
+    : wrongNetwork
+      ? `Switch to ${network.name}`
+      : network.swapLive
+        ? 'Review swap'
+        : 'Swap activates after contracts'
+
+  function handleAction() {
+    if (!connected) {
+      onConnect?.()
+      return
+    }
+
+    if (wrongNetwork) {
+      onSwitchNetwork?.(NETWORKS[networkKey])
+    }
+  }
 
   function switchTokens() {
     if (!fromToken || !toToken) return
@@ -208,7 +225,7 @@ export default function RabbitSwapPanel({
           onClick={switchTokens}
           aria-label="Switch tokens"
         >
-          <ArrowDown size={17} />
+          <ArrowDown size={16} />
         </button>
       </div>
 
@@ -257,8 +274,8 @@ export default function RabbitSwapPanel({
       <button
         type="button"
         className="rabbit-swap-action"
-        onClick={!connected ? onConnect : undefined}
-        disabled={connected && !network.swapLive}
+        onClick={handleAction}
+        disabled={connected && !wrongNetwork && !network.swapLive}
       >
         <Wallet size={16} />
         {actionLabel}

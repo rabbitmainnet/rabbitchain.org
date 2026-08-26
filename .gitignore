@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .rabbit-backups/
+# Local one-off edit backups
+*.before-*
+*.navbar-backup
+*.backup

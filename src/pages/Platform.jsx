@@ -1,18 +1,18 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   ArrowRight, ArrowUpRight, Coins, Droplets, Factory, Flame, Layers3, Network,
   Repeat2, Rocket, ShieldCheck, Wallet, Waves,
 } from 'lucide-react'
 import { NETWORKS } from '../config/networks'
-import { PLATFORM_NETWORKS } from '../config/platform'
+import { PLATFORM_NETWORKS, platformModuleStatus } from '../config/platform'
 import { usePlatformNetwork } from '../hooks/usePlatformNetwork'
 import PlatformNetworkSwitch from '../components/PlatformNetworkSwitch'
 import RabbitSwapPanel from '../components/RabbitSwapPanel'
 
 const tools = {
   swap: { icon: Repeat2, label: 'SWAP', title: 'Rabbit Swap', intro: 'Trade supported Rabbit-native assets through the official wallet-connected interface.' },
-  liquidity: { icon: Waves, label: 'LIQUIDITY', title: 'Liquidity', intro: 'Create and manage supported liquidity positions when Testnet markets are activated.' },
+  liquidity: { icon: Waves, label: 'LIQUIDITY', title: 'Liquidity', intro: 'Create and manage supported liquidity positions when markets are activated for the selected Rabbit network.' },
   launchpool: { icon: Flame, label: 'LAUNCHPOOL', title: 'Launchpool', intro: 'Discover official launch campaigns and participation windows in one place.' },
   factory: { icon: Factory, label: 'TOKEN FACTORY', title: 'Token Factory', intro: 'Deploy standard EVM tokens through a guided interface with transparent parameters.' },
   bridge: { icon: Layers3, label: 'BRIDGE', title: 'Bridge', intro: 'Move supported assets through official routes when bridge infrastructure is available.' },
@@ -22,18 +22,18 @@ const tools = {
     icon: Droplets,
     label: 'FAUCET',
     title: 'Faucet',
-    intro: 'Request test RAB and RUSD for Rabbit Testnet development and network testing.'
+    intro: 'Request verified test assets for Rabbit Testnet development and network testing.'
   },
 }
 
 const toolOrder = ['swap', 'liquidity', 'staking', 'bridge', 'p2p', 'launchpool', 'factory', 'faucet']
 
 
-function ToolPanel({ tool, walletState, onConnect, networkKey }) {
+function ToolPanel({ tool, walletState, onConnect, onSwitchNetwork, networkKey }) {
   const entry = tools[tool]
   const Icon = entry.icon
-  const statusText =
-    PLATFORM_NETWORKS[networkKey]?.status || 'PRE-LAUNCH'
+  const network = PLATFORM_NETWORKS[networkKey] || PLATFORM_NETWORKS.testnet
+  const statusText = platformModuleStatus(networkKey, tool)
 
   if (tool === 'swap') {
     return (
@@ -41,6 +41,7 @@ function ToolPanel({ tool, walletState, onConnect, networkKey }) {
         networkKey={networkKey}
         walletState={walletState}
         onConnect={onConnect}
+        onSwitchNetwork={onSwitchNetwork}
         variant="platform"
       />
     )
@@ -50,7 +51,7 @@ function ToolPanel({ tool, walletState, onConnect, networkKey }) {
     return (
       <div className="product-panel">
         <div className="product-panel-title"><div><Icon size={20} /><span>{entry.label}</span></div><b>{statusText}</b></div>
-        <div className="product-empty"><Waves size={34} /><h3>No public pools yet.</h3><p>Official Rabbit markets will appear here after contracts and Testnet liquidity are activated.</p><button onClick={onConnect}>{walletState?.account ? 'Wallet connected' : 'Connect wallet'}</button></div>
+        <div className="product-empty"><Waves size={34} /><h3>No public pools yet.</h3><p>Official {network.name} markets will appear here after contracts and liquidity are activated for this network.</p><button onClick={onConnect}>{walletState?.account ? 'Wallet connected' : 'Connect wallet'}</button></div>
       </div>
     )
   }
@@ -82,7 +83,7 @@ function ToolPanel({ tool, walletState, onConnect, networkKey }) {
     return (
       <div className="product-panel">
         <div className="product-panel-title"><div><Icon size={20} /><span>{entry.label}</span></div><b>{statusText}</b></div>
-        <div className="bridge-route"><div><span>FROM</span><strong>External network</strong><small>Official route not published</small></div><ArrowRight size={20} /><div><span>TO</span><strong>Rabbit Testnet</strong><small>Chain ID 9280</small></div></div>
+        <div className="bridge-route"><div><span>FROM</span><strong>External network</strong><small>Official route not published</small></div><ArrowRight size={20} /><div><span>TO</span><strong>{network.name}</strong><small>Chain ID {network.chainId}</small></div></div>
         <div className="product-empty compact"><Layers3 size={30} /><h3>No official bridge route is live.</h3><p>The portal will expose only supported routes with verified contracts.</p></div>
       </div>
     )
@@ -98,9 +99,9 @@ function ToolPanel({ tool, walletState, onConnect, networkKey }) {
 
         <div className="product-empty">
           <Network size={34} />
-          <h3>P2P is preparing for public Testnet.</h3>
+          <h3>P2P is not public on {network.name} yet.</h3>
           <p>
-            The peer-to-peer application will appear here only after its
+            The peer-to-peer application will appear here only after this network's
             public service and release checks are complete.
           </p>
           <button onClick={onConnect}>
@@ -137,13 +138,13 @@ function ToolPanel({ tool, walletState, onConnect, networkKey }) {
 
           <div>
             <span>NETWORK</span>
-            <strong>{networkKey === 'mainnet' ? 'Mainnet' : 'Testnet'}</strong>
-            <small>{networkKey === 'mainnet' ? 'Chain ID 928' : 'Chain ID 9280'}</small>
+            <strong>{network.name}</strong>
+            <small>Chain ID {network.chainId}</small>
           </div>
 
           <div>
             <span>STATUS</span>
-            <strong>{networkKey === 'mainnet' ? 'Coming later' : 'Pre-launch'}</strong>
+            <strong>{statusText === 'LIVE' ? 'Live' : statusText === 'COMING LATER' ? 'Coming later' : 'Pre-launch'}</strong>
             <small>Contracts not published yet</small>
           </div>
         </div>
@@ -173,33 +174,14 @@ function ToolPanel({ tool, walletState, onConnect, networkKey }) {
         </div>
 
         <div className="faucet-assets">
-          <div>
-            <span>TEST ASSET</span>
-            <strong>RAB</strong>
-            <small>Rabbit Testnet native asset</small>
-            <button disabled>Available when Faucet is live</button>
-          </div>
-
-          <div>
-            <span>TEST ASSET</span>
-            <strong>RUSD</strong>
-            <small>Rabbit Testnet testing asset</small>
-            <button disabled>Available when Faucet is live</button>
-          </div>
-
-          <div>
-            <span>TEST ASSET</span>
-            <strong>tUSDT</strong>
-            <small>Test token for USDT-compatible flows</small>
-            <button disabled>Available when Faucet is live</button>
-          </div>
-
-          <div>
-            <span>TEST ASSET</span>
-            <strong>tUSDC</strong>
-            <small>Test token for USDC-compatible flows</small>
-            <button disabled>Available when Faucet is live</button>
-          </div>
+          {network.tokens.filter((token) => token.faucet).map((token) => (
+            <div key={token.symbol}>
+              <span>TEST ASSET</span>
+              <strong>{token.symbol}</strong>
+              <small>{token.description}</small>
+              <button disabled>Available when Faucet is live</button>
+            </div>
+          ))}
         </div>
 
         <p className="product-disclaimer">
@@ -212,10 +194,8 @@ function ToolPanel({ tool, walletState, onConnect, networkKey }) {
 
   return (
     <div className="product-panel">
-      <div className="product-panel-title"><div><Icon size={20} /><span>{entry.label}</span></div><b>{walletState?.account ? 'CONNECTED' : 'WALLET READY'}</b></div>
-      <div className="portfolio-identity"><div className="portfolio-mark"><img src="/rabbit-mark.png" alt="" /></div><div><span>WALLET</span><strong>{walletState?.account ? `${walletState.account.slice(0, 8)}…${walletState.account.slice(-6)}` : 'Not connected'}</strong><small>Public address only · no custody</small></div></div>
-      <div className="portfolio-grid"><div><span>NETWORK</span><strong>Rabbit Testnet</strong></div><div><span>CHAIN ID</span><strong>9280</strong></div><div><span>NATIVE ASSET</span><strong>RAB</strong></div><div><span>DATA</span><strong>Available with public RPC</strong></div></div>
-      <button className="product-action" onClick={onConnect}>{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button>
+      <div className="product-panel-title"><div><Icon size={20} /><span>{entry.label}</span></div><b>{statusText}</b></div>
+      <div className="product-empty"><h3>Module not available yet.</h3><p>This Rabbit Platform module will activate only after its public release gate is complete.</p></div>
     </div>
   )
 }
@@ -223,7 +203,6 @@ function ToolPanel({ tool, walletState, onConnect, networkKey }) {
 export default function Platform({ walletState, onConnect, onAddNetwork }) {
   const { tool } = useParams()
   const activeTool = tools[tool] ? tool : null
-  const testnet = NETWORKS.testnet
   const navigate = useNavigate()
 
   const {
@@ -241,13 +220,21 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
   const networkName = platformConfig.name
   const networkChainId = platformConfig.chainId
 
+  useEffect(() => {
+    if (tool === 'faucet' && !platformConfig.showFaucet) {
+      navigate('/platform/swap', { replace: true })
+    }
+  }, [tool, platformConfig.showFaucet, navigate])
+
   function selectPlatformNetwork(key) {
     setPlatformNetwork(key)
 
-    if (key === 'mainnet' && activeTool === 'faucet') {
+    if (!PLATFORM_NETWORKS[key]?.showFaucet && activeTool === 'faucet') {
       navigate('/platform/swap')
     }
   }
+
+  if (activeTool === 'faucet' && !platformConfig.showFaucet) return null
 
   if (activeTool) {
     const entry = tools[activeTool]
@@ -280,12 +267,12 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
 
           <section className="platform-workspace">
             <div className="platform-workspace-head"><div><span>{entry.label}</span><h1>{entry.title}</h1><p>{entry.intro}</p></div><button className="button secondary" onClick={onConnect}><Wallet size={15} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button></div>
-            <div className="platform-product-grid"><ToolPanel tool={activeTool} walletState={walletState} onConnect={onConnect} networkKey={platformNetwork} /><aside className="product-context"><span>RABBIT PLATFORM</span><h3>Product interface first. Services only when verified.</h3><p>These screens are the official application surface, but they stay explicit about availability. No market, bridge or contract is presented as live before its release gate is complete.</p><div><ShieldCheck size={17} /><span><b>No seed phrase</b><small>Wallet connection uses the public account only.</small></span></div><div><Network size={17} /><span><b>{platformNetwork === 'mainnet' ? 'Mainnet reserved' : 'Testnet first'}</b><small>{platformNetwork === 'mainnet' ? 'Chain ID 928 follows public Testnet validation.' : 'Chain ID 9280 is the first public application environment.'}</small></span></div><button
+            <div className="platform-product-grid"><ToolPanel tool={activeTool} walletState={walletState} onConnect={onConnect} onSwitchNetwork={onAddNetwork} networkKey={platformNetwork} /><aside className="product-context"><span>RABBIT PLATFORM</span><h3>Product interface first. Services only when verified.</h3><p>These screens are the official application surface, but they stay explicit about availability. No market, bridge or contract is presented as live before its release gate is complete.</p><div><ShieldCheck size={17} /><span><b>No seed phrase</b><small>Wallet connection uses the public account only.</small></span></div><div><Network size={17} /><span><b>{networkName}</b><small>Chain ID {networkChainId} · {platformConfig.status}</small></span></div><button
       className="button primary"
-      disabled={platformNetwork === 'mainnet'}
-      onClick={() => platformNetwork === 'testnet' && onAddNetwork?.(selectedNetwork)}
+      disabled={!selectedNetwork?.walletEnabled}
+      onClick={() => selectedNetwork?.walletEnabled && onAddNetwork?.(selectedNetwork)}
     >
-      {platformNetwork === 'mainnet' ? 'Mainnet after Testnet' : 'Add Rabbit Testnet'}
+      {selectedNetwork?.walletEnabled ? `Add / switch ${selectedNetwork.shortName}` : `${selectedNetwork.shortName} coming later`}
     </button></aside></div>
           </section>
         </section>
@@ -303,10 +290,10 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
             <p>Wallet, swaps, liquidity, staking, bridging, P2P, launches and token creation organized as one product — with every module showing its real launch state.</p>
             <div className="hero-ctas"><button className="button primary" onClick={onConnect}><Wallet size={16} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button><button
       className="button secondary"
-      disabled={platformNetwork === 'mainnet'}
-      onClick={() => platformNetwork === 'testnet' && onAddNetwork?.(selectedNetwork)}
+      disabled={!selectedNetwork?.walletEnabled}
+      onClick={() => selectedNetwork?.walletEnabled && onAddNetwork?.(selectedNetwork)}
     >
-      {platformNetwork === 'mainnet' ? 'Mainnet after Testnet' : 'Add Rabbit Testnet'}
+      {selectedNetwork?.walletEnabled ? `Add / switch ${selectedNetwork.shortName}` : `${selectedNetwork.shortName} coming later`}
     </button></div>
             <div className="platform-overview-network">
               <span>APPLICATION NETWORK</span>
@@ -316,13 +303,13 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
               />
             </div>
 
-            <div className="platform-principles"><span><ShieldCheck size={15} />Non-custodial wallet connection</span><span><Network size={15} />Testnet-first product surface</span></div>
+            <div className="platform-principles"><span><ShieldCheck size={15} />Non-custodial wallet connection</span><span><Network size={15} />{networkName} selected</span></div>
           </div>
 
           <div className="platform-v2-window">
-            <div className="platform-v2-window-head"><div><img src="/rabbit-mark.png" alt="" /><span><b>RABBIT PLATFORM</b><small>{networkName.toUpperCase()} WORKSPACE · CHAIN ID {networkChainId}</small></span></div><b>{platformNetwork === 'mainnet' ? 'COMING LATER' : 'PRE-LAUNCH'}</b></div>
+            <div className="platform-v2-window-head"><div><img src="/rabbit-mark.png" alt="" /><span><b>RABBIT PLATFORM</b><small>{networkName.toUpperCase()} WORKSPACE · CHAIN ID {networkChainId}</small></span></div><b>{platformConfig.status}</b></div>
             <div className="platform-v2-wallet"><div><span>CONNECTED WALLET</span><strong>{walletState?.account ? `${walletState.account.slice(0, 8)}…${walletState.account.slice(-6)}` : 'Not connected'}</strong></div><button onClick={onConnect}>{walletState?.account ? 'Manage' : 'Connect'}</button></div>
-            <div className="platform-v2-module-list">{visibleTools.map((key, index) => { const Icon = tools[key].icon; return <Link to={`/platform/${key}`} key={key}><span>0{index + 1}</span><Icon size={18} /><div><b>{tools[key].title}</b><small>{tools[key].intro}</small></div><em>{platformNetwork === 'mainnet' ? 'COMING LATER' : 'PRE-LAUNCH'}</em><ArrowUpRight size={15} /></Link> })}</div>
+            <div className="platform-v2-module-list">{visibleTools.map((key, index) => { const Icon = tools[key].icon; return <Link to={`/platform/${key}`} key={key}><span>0{index + 1}</span><Icon size={18} /><div><b>{tools[key].title}</b><small>{tools[key].intro}</small></div><em>{platformModuleStatus(platformNetwork, key)}</em><ArrowUpRight size={15} /></Link> })}</div>
           </div>
         </div>
       </section>
@@ -330,7 +317,7 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
       <section className="platform-v2-product">
         <div className="shell platform-v2-product-head"><div><span className="section-kicker">PRODUCT SURFACE</span><h2>One product surface. Every module in one place.</h2></div><p>The Platform is a first-class part of Rabbit, while RabbitChain.org remains the source of truth for network status, releases and documentation.</p></div>
         <div className="shell platform-v2-grid">
-          {visibleTools.map((key, index) => { const Icon = tools[key].icon; return <Link to={`/platform/${key}`} key={key}><span>0{index + 1}</span><div><Icon size={21} /><em>{platformNetwork === 'mainnet' ? 'COMING LATER' : 'PRE-LAUNCH'}</em></div><h3>{tools[key].title}</h3><p>{tools[key].intro}</p><b>Open module <ArrowRight size={14} /></b></Link> })}
+          {visibleTools.map((key, index) => { const Icon = tools[key].icon; return <Link to={`/platform/${key}`} key={key}><span>0{index + 1}</span><div><Icon size={21} /><em>{platformModuleStatus(platformNetwork, key)}</em></div><h3>{tools[key].title}</h3><p>{tools[key].intro}</p><b>Open module <ArrowRight size={14} /></b></Link> })}
         </div>
       </section>
 

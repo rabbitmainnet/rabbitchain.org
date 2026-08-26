@@ -7,7 +7,7 @@ export default function ProtocolConsole({ compact = false }) {
     <div className={`protocol-map protocol-map-v8 ${compact ? 'compact' : ''}`}>
       <div className="protocol-map-head">
         <div><span className="status-pulse" /><b>LCQ CONSENSUS</b></div>
-        <span>ILLUSTRATIVE · PRE-LAUNCH</span>
+        <span>ILLUSTRATIVE · PROTOCOL FLOW</span>
       </div>
 
       <div className="protocol-v8-body">

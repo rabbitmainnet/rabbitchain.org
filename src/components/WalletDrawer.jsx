@@ -32,11 +32,10 @@ export default function WalletDrawer({ open, state, walletName, onClose, onDisco
 
       <div className="drawer-section"><span className="drawer-label">RABBIT NETWORKS</span>{NETWORK_LIST.map((network)=>{
         const current=state.chainId===network.chainId
-        const ready=network.publicRpcReady
-        const available=current || network.key==='testnet' || ready
+        const available=current || network.walletEnabled
         return <button className={`drawer-network ${current?'current':''}`} key={network.key} disabled={current || !available} onClick={()=>onSwitch(network)}>
           <div><b>{network.name}</b><small>Chain ID {network.chainId}</small></div>
-          <span>{current?'CONNECTED':network.key==='testnet'?'ADD / SWITCH':ready?'ADD / SWITCH':'COMING LATER'}</span>
+          <span>{current?'CONNECTED':network.walletEnabled?'ADD / SWITCH':'COMING LATER'}</span>
         </button>
       })}</div>
 

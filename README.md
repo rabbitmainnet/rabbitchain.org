@@ -4,7 +4,7 @@ Consolidated production portal for RabbitChain.org.
 
 ## Principles
 - One coherent visual system and one imported stylesheet (`src/styles.css`).
-- Rabbit Platform is a first-class product surface: Swap, Liquidity, Launchpool, Token Factory, Bridge and Portfolio.
+- Rabbit Platform is a first-class product surface: Swap, Liquidity, Staking, Bridge, P2P, Launchpool, Token Factory and a Testnet-only Faucet.
 - Wallet connection supports EIP-6963 injected wallets and WalletConnect/Reown.
 - Testnet is Chain ID 9280; Mainnet is Chain ID 928.
 - RPC, explorer, faucet, releases and application services are never presented as live before their readiness flags are enabled.

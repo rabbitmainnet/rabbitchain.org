@@ -13,7 +13,7 @@ const sections=[
     'Rabbit Mainnet, Chain ID 928, is a separate production network planned to follow successful validation and launch gates. Testnet participation does not guarantee Mainnet allocations, balances, rewards, access or economic rights unless explicitly stated in a future official specification.'
   ]},
   {id:'contracts',title:'Smart-contract and Platform risk',paragraphs:[
-    'If Rabbit Platform modules such as Swap, Liquidity, Launchpool, Token Factory or Bridge are activated, they may introduce smart-contract, liquidity, integration, oracle, accounting and user-interface risks.',
+    'If Rabbit Platform modules such as Swap, Liquidity, Staking, Bridge, P2P, Launchpool, Token Factory or Faucet are activated, they may introduce smart-contract, liquidity, integration, oracle, accounting and user-interface risks.',
     'A module displayed as planned, preview or coming soon should not be interpreted as audited, deployed or available. Users should independently verify contract addresses and official release information before interacting.'
   ]},
   {id:'market',title:'Market, liquidity and asset risk',paragraphs:['Digital assets can be highly volatile and may lose some or all of their value. Markets may be illiquid, fragmented or unavailable. Nothing on Rabbit Chain guarantees price support, exchange listing, liquidity, demand or an exit opportunity. Testnet assets should not be treated as having guaranteed monetary value.']},

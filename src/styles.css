@@ -3538,14 +3538,173 @@ footer {
 }
 
 
-/* RABBIT SWAP — TOKEN SWITCH SPACING */
+
+
+/* =========================================================
+   RABBIT SWAP — FINAL COMPACT TOKEN SWITCH
+   ========================================================= */
+
 .rabbit-swap-direction{
-  height:52px !important;
+  position:relative !important;
+  z-index:8 !important;
+
+  height:24px !important;
+
   margin:0 !important;
+
+  display:grid !important;
+  place-items:center !important;
 }
 
 .rabbit-swap-direction button{
   position:relative !important;
+
+  width:36px !important;
+  height:36px !important;
+
   margin:0 !important;
+
+  display:grid !important;
+  place-items:center !important;
+
+  border:1px solid rgba(111,86,230,.20) !important;
+  border-radius:11px !important;
+
+  background:#ffffff !important;
+
+  color:#7657f5 !important;
+
+  box-shadow:
+    0 5px 14px rgba(40,31,83,.09) !important;
+
+  cursor:pointer !important;
+
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease !important;
+}
+
+.rabbit-swap-direction button:hover{
+  transform:scale(1.04) !important;
+
+  box-shadow:
+    0 7px 18px rgba(40,31,83,.13) !important;
+}
+
+.rabbit-swap-direction button svg{
+  width:16px !important;
+  height:16px !important;
+
+  stroke-width:2.2 !important;
+}
+
+@media(max-width:620px){
+
+  .rabbit-swap-direction{
+    height:22px !important;
+  }
+
+  .rabbit-swap-direction button{
+    width:34px !important;
+    height:34px !important;
+
+    border-radius:10px !important;
+  }
+
+  .rabbit-swap-direction button svg{
+    width:15px !important;
+    height:15px !important;
+  }
+}
+
+
+/* RABBIT SWAP — FINAL TOKEN SWITCH POSITION */
+.rabbit-swap-direction{
+  position:relative !important;
+  z-index:8 !important;
+
+  height:42px !important;
+  margin:0 !important;
+
+  display:grid !important;
+  place-items:center !important;
+}
+
+.rabbit-swap-direction button{
+  position:relative !important;
+
+  width:34px !important;
+  height:34px !important;
+
+  margin:0 !important;
+
+  display:grid !important;
+  place-items:center !important;
+
+  border:1px solid rgba(111,86,230,.18) !important;
+  border-radius:10px !important;
+
+  background:#fff !important;
+  color:#7657f5 !important;
+
+  box-shadow:0 4px 12px rgba(40,31,83,.08) !important;
+}
+
+.rabbit-swap-direction button svg{
+  width:16px !important;
+  height:16px !important;
+  stroke-width:2.2 !important;
+}
+
+@media(max-width:620px){
+  .rabbit-swap-direction{
+    height:38px !important;
+  }
+
+  .rabbit-swap-direction button{
+    width:32px !important;
+    height:32px !important;
+  }
+}
+
+
+/* RABBIT SWAP — FINAL TOKEN DROPDOWN CHEVRON POSITION */
+.rabbit-token-button{
+  width:max-content !important;
+  max-width:100% !important;
+
+  grid-template-columns:
+    38px
+    max-content
+    16px !important;
+
+  justify-content:start !important;
+  column-gap:9px !important;
+}
+
+.rabbit-token-button > span:not(.rabbit-token-logo){
+  width:max-content !important;
+  max-width:180px !important;
+}
+
+.rabbit-token-button > svg{
+  margin-left:2px !important;
+  justify-self:start !important;
+}
+
+@media(max-width:620px){
+
+  .rabbit-token-button{
+    grid-template-columns:
+      34px
+      max-content
+      14px !important;
+
+    column-gap:7px !important;
+  }
+
+  .rabbit-token-button > span:not(.rabbit-token-logo){
+    max-width:145px !important;
+  }
 }
 

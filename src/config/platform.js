@@ -1,77 +1,103 @@
+import { NETWORKS } from './networks'
+
 export const PLATFORM_DEFAULT_NETWORK = 'testnet'
 
-export const PLATFORM_NETWORKS = {
-  testnet: {
-    key: 'testnet',
-    label: 'TESTNET',
-    name: 'Rabbit Testnet',
-    chainId: '9280',
+const TOKENS = {
+  testnet: [
+    {
+      symbol: 'RAB',
+      name: 'Rabbit',
+      description: 'Rabbit Testnet native asset',
+      decimals: 18,
+      native: true,
+      address: null,
+      logo: '/rabbit-mark.png',
+      faucet: true,
+    },
+    {
+      symbol: 'RUSD',
+      name: 'Rabbit USD Test Asset',
+      description: 'Rabbit Testnet testing asset',
+      decimals: 18,
+      native: false,
+      address: null,
+      logo: null,
+      faucet: true,
+    },
+    {
+      symbol: 'tUSDT',
+      name: 'Test USDT',
+      description: 'Test token for USDT-compatible flows',
+      decimals: 6,
+      native: false,
+      address: null,
+      logo: null,
+      faucet: true,
+    },
+    {
+      symbol: 'tUSDC',
+      name: 'Test USDC',
+      description: 'Test token for USDC-compatible flows',
+      decimals: 6,
+      native: false,
+      address: null,
+      logo: null,
+      faucet: true,
+    },
+  ],
 
-    status: 'PRE-LAUNCH',
-    swapLive: false,
-    showFaucet: true,
+  mainnet: [
+    {
+      symbol: 'RAB',
+      name: 'Rabbit',
+      description: 'Rabbit Mainnet native asset',
+      decimals: 18,
+      native: true,
+      address: null,
+      logo: '/rabbit-mark.png',
+      faucet: false,
+    },
+  ],
+}
 
-    defaultFrom: 'RAB',
-    defaultTo: 'RUSD',
+function networkStatus(network) {
+  if (network.networkLive) return 'LIVE'
+  return network.key === 'mainnet' ? 'COMING LATER' : 'PRE-LAUNCH'
+}
 
-    tokens: [
-      {
-        symbol: 'RAB',
-        name: 'Rabbit',
-        decimals: 18,
-        native: true,
-        address: null,
-        logo: '/rabbit-mark.png',
-      },
-      {
-        symbol: 'RUSD',
-        name: 'Rabbit USD Test Asset',
-        decimals: 18,
-        native: false,
-        address: null,
-        logo: null,
-      },
-      {
-        symbol: 'tUSDT',
-        name: 'Test USDT',
-        decimals: 6,
-        native: false,
-        address: null,
-        logo: null,
-      },
-      {
-        symbol: 'tUSDC',
-        name: 'Test USDC',
-        decimals: 6,
-        native: false,
-        address: null,
-        logo: null,
-      },
-    ],
-  },
+export const PLATFORM_NETWORKS = Object.fromEntries(
+  Object.entries(NETWORKS).map(([key, network]) => [
+    key,
+    {
+      key,
+      label: network.shortName.toUpperCase(),
+      name: network.name,
+      chainId: String(network.chainId),
+      networkLive: network.networkLive,
+      walletEnabled: network.walletEnabled,
+      status: networkStatus(network),
+      showFaucet: Boolean(network.faucetUrl),
+      faucetLive: network.publicFaucetReady,
+      swapLive: network.platform.swapLive,
+      modules: network.platform,
+      defaultFrom: 'RAB',
+      defaultTo: key === 'testnet' ? 'RUSD' : null,
+      tokens: TOKENS[key],
+    },
+  ])
+)
 
-  mainnet: {
-    key: 'mainnet',
-    label: 'MAINNET',
-    name: 'Rabbit Mainnet',
-    chainId: '928',
+export function platformModuleLive(networkKey, tool) {
+  const network = PLATFORM_NETWORKS[networkKey]
+  if (!network) return false
+  if (tool === 'faucet') return network.showFaucet && network.faucetLive
+  return Boolean(network.modules?.[`${tool}Live`])
+}
 
-    status: 'COMING LATER',
-    swapLive: false,
-    showFaucet: false,
-
-    defaultFrom: 'RAB',
-    defaultTo: null,
-
-    tokens: [
-      {
-        symbol: 'RAB',
-        name: 'Rabbit',
-        decimals: 18,
-        native: true,
-        address: null,
-        logo: '/rabbit-mark.png',
-      },
-    ],
-  },
+export function platformModuleStatus(networkKey, tool) {
+  const network = PLATFORM_NETWORKS[networkKey]
+  if (!network) return 'UNAVAILABLE'
+  if (platformModuleLive(networkKey, tool)) return 'LIVE'
+  if (networkKey === 'mainnet' && !network.networkLive) return 'COMING LATER'
+  return 'PRE-LAUNCH'
 }

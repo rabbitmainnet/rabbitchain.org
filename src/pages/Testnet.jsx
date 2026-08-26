@@ -18,7 +18,7 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
             <div className="wallet-note"><ShieldCheck size={16} /><span>The site uses your wallet's native EVM add/switch flow. Rabbit never asks for a seed phrase or private key.</span></div>
           </div>
           <div className="network-summary-card">
-            <div className="network-summary-head"><div><img src="/rabbit-mark.png" alt="" /><span><b>RABBIT TESTNET</b><small>FIRST PUBLIC NETWORK</small></span></div><em>PRE-LAUNCH</em></div>
+            <div className="network-summary-head"><div><img src="/rabbit-mark.png" alt="" /><span><b>RABBIT TESTNET</b><small>FIRST PUBLIC NETWORK</small></span></div><em>{n.networkLive ? 'LIVE' : 'PRE-LAUNCH'}</em></div>
             <div className="network-summary-grid"><div><span>CHAIN ID</span><strong>9280</strong></div><div><span>HEX</span><strong>0x2440</strong></div><div><span>CONSENSUS</span><strong>LCQ</strong></div><div><span>EXECUTION</span><strong>EVM</strong></div><div><span>NATIVE ASSET</span><strong>RAB</strong></div><div><span>TEST ASSET</span><strong>RUSD</strong></div></div>
             <div className="network-summary-foot"><span><i className="dot-ready" /> Wallet integration ready</span><span><i /> Public services activate separately</span></div>
           </div>
@@ -41,7 +41,7 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
           <SectionHeader eyebrow="OFFICIAL ENDPOINTS" title="Reserved domains, explicit readiness." text="The domain names can be published before the services are live. Every endpoint keeps its real status visible." />
           <div className="endpoint-table">
             <div className="endpoint-row"><span><Radio size={16} />JSON-RPC</span><code>{n.rpcUrl}</code><em>{n.publicRpcReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.rpcUrl} /></div>
-            <div className="endpoint-row"><span><Network size={16} />WebSocket</span><code>{n.wsUrl}</code><em>{n.publicRpcReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.wsUrl} /></div>
+            <div className="endpoint-row"><span><Network size={16} />WebSocket</span><code>{n.wsUrl}</code><em>{n.publicWsReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.wsUrl} /></div>
             <div className="endpoint-row"><span><Globe2 size={16} />Explorer</span><code>{n.explorerUrl}</code><em>{n.publicExplorerReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.explorerUrl} /></div>
             <div className="endpoint-row"><span><FlaskConical size={16} />Faucet</span><code>{n.faucetUrl}</code><em>{n.publicFaucetReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.faucetUrl} /></div>
           </div>
