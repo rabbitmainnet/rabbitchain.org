@@ -112,40 +112,44 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
 
   return (
     <main>
-      <section className="platform-hero">
-        <div className="shell platform-hero-grid">
-          <div className="platform-hero-copy">
+      <section className="platform-v2-hero">
+        <div className="shell platform-v2-hero-grid">
+          <div className="platform-v2-copy">
             <span className="hero-eyebrow"><i /> RABBIT PLATFORM · OFFICIAL APPLICATION LAYER</span>
-            <h1>Use Rabbit from <em>one place.</em></h1>
+            <h1>Everything you use on Rabbit. <em>One product surface.</em></h1>
             <p>Wallet, trading, liquidity, launches, token creation, bridging and portfolio context organized as one product — with every module showing its real launch state.</p>
-            <div className="hero-ctas"><button className="button primary" onClick={onConnect}><Wallet size={16} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button><button className="button secondary" onClick={() => onAddNetwork?.(testnet)}>Add Testnet</button></div>
+            <div className="hero-ctas"><button className="button primary" onClick={onConnect}><Wallet size={16} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button><button className="button secondary" onClick={() => onAddNetwork?.(testnet)}>Add Rabbit Testnet</button></div>
             <div className="platform-principles"><span><ShieldCheck size={15} />Non-custodial wallet connection</span><span><Network size={15} />Testnet-first product surface</span></div>
           </div>
 
-          <div className="platform-dashboard-card">
-            <div className="platform-dashboard-head"><div><img src="/rabbit-mark.png" alt="" /><span><b>RABBIT PLATFORM</b><small>TESTNET WORKSPACE</small></span></div><b className="prelaunch-badge">PRE-LAUNCH</b></div>
-            <div className="dashboard-wallet"><span>CONNECTED WALLET</span><strong>{walletState?.account ? `${walletState.account.slice(0, 8)}…${walletState.account.slice(-6)}` : 'Not connected'}</strong><button onClick={onConnect}>{walletState?.account ? 'Manage' : 'Connect'}</button></div>
-            <div className="dashboard-modules">{toolOrder.map((key) => { const Icon = tools[key].icon; return <Link to={`/platform/${key}`} key={key}><Icon size={18} /><span><b>{tools[key].title}</b><small>PRE-LAUNCH</small></span><ArrowUpRight size={14} /></Link> })}</div>
+          <div className="platform-v2-window">
+            <div className="platform-v2-window-head"><div><img src="/rabbit-mark.png" alt="" /><span><b>RABBIT PLATFORM</b><small>TESTNET WORKSPACE · CHAIN ID 9280</small></span></div><b>PRE-LAUNCH</b></div>
+            <div className="platform-v2-wallet"><div><span>CONNECTED WALLET</span><strong>{walletState?.account ? `${walletState.account.slice(0, 8)}…${walletState.account.slice(-6)}` : 'Not connected'}</strong></div><button onClick={onConnect}>{walletState?.account ? 'Manage' : 'Connect'}</button></div>
+            <div className="platform-v2-module-list">{toolOrder.map((key, index) => { const Icon = tools[key].icon; return <Link className={index === 0 ? 'featured' : ''} to={`/platform/${key}`} key={key}><span>0{index + 1}</span><Icon size={18} /><div><b>{tools[key].title}</b><small>{tools[key].intro}</small></div><em>PRE-LAUNCH</em><ArrowUpRight size={15} /></Link> })}</div>
           </div>
         </div>
       </section>
 
-      <section className="section shell">
-        <div className="section-header section-header-split"><div><span className="section-kicker">PRODUCT SURFACE</span><h2>Six modules. One coherent interface.</h2></div><p>The platform is not hidden in the footer. It is a first-class part of the Rabbit ecosystem, while the protocol website remains the source of truth for network status and documentation.</p></div>
-        <div className="platform-module-grid">
-          {toolOrder.map((key, index) => { const Icon = tools[key].icon; return <Link to={`/platform/${key}`} key={key}><div className="platform-module-number">0{index + 1}</div><div className="platform-module-icon"><Icon size={21} /></div><span>{tools[key].label}</span><h3>{tools[key].title}</h3><p>{tools[key].intro}</p><b>Open module <ArrowRight size={14} /></b></Link> })}
+      <section className="platform-v2-product">
+        <div className="shell platform-v2-product-head"><div><span className="section-kicker">PRODUCT SURFACE</span><h2>Six modules. One coherent interface.</h2></div><p>The Platform is a first-class part of Rabbit, while RabbitChain.org remains the source of truth for network status, releases and documentation.</p></div>
+        <div className="shell platform-v2-grid">
+          {toolOrder.map((key, index) => { const Icon = tools[key].icon; return <Link to={`/platform/${key}`} key={key}><span>0{index + 1}</span><div><Icon size={21} /><em>PRE-LAUNCH</em></div><h3>{tools[key].title}</h3><p>{tools[key].intro}</p><b>Open module <ArrowRight size={14} /></b></Link> })}
         </div>
       </section>
 
-      <section className="platform-stack-section">
-        <div className="shell platform-stack-grid">
-          <div><span className="section-kicker">HOW IT FITS TOGETHER</span><h2>Applications above. Protocol below.</h2><p>Rabbit Platform sits on top of the same EVM, RPC, LCQ and P2P network surfaces documented across RabbitChain.org.</p><Link className="inline-link light-link" to="/lcq">Understand LCQ <ArrowRight size={14} /></Link></div>
-          <div className="platform-stack"><div><small>APPLICATIONS</small><strong>Swap · Liquidity · Launchpool · Factory · Bridge · Portfolio</strong></div><i /><div><small>WALLET & RPC</small><strong>EVM wallet · WalletConnect · JSON-RPC</strong></div><i /><div><small>EXECUTION</small><strong>EVM · transactions · smart contracts</strong></div><i /><div className="accent"><small>CONSENSUS</small><strong>LCQ · producer · committee</strong></div><i /><div><small>NETWORK</small><strong>P2P · nodes · mining</strong></div></div>
+      <section className="platform-v2-stack">
+        <div className="shell platform-v2-stack-grid">
+          <div><span className="section-kicker">THE RABBIT STACK</span><h2>Applications above. Protocol below.</h2><p>Rabbit Platform uses the same wallet, RPC, EVM, LCQ and P2P surfaces documented across RabbitChain.org.</p><Link className="inline-link light-link" to="/lcq">Understand LCQ <ArrowRight size={14} /></Link></div>
+          <div className="platform-v2-stack-rail"><div><small>05</small><span>APPLICATIONS</span><strong>Swap · Liquidity · Launchpool · Factory · Bridge · Portfolio</strong></div><i /><div><small>04</small><span>WALLET & RPC</span><strong>EVM wallet · WalletConnect · JSON-RPC</strong></div><i /><div><small>03</small><span>EXECUTION</span><strong>EVM · transactions · smart contracts</strong></div><i /><div className="accent"><small>02</small><span>CONSENSUS</span><strong>LCQ · producer · committee</strong></div><i /><div><small>01</small><span>NETWORK</span><strong>P2P · nodes · mining</strong></div></div>
         </div>
       </section>
 
-      <section className="section shell">
-        <div className="platform-bottom-grid"><div><Rocket size={22} /><span>BUILD</span><h3>Integrate the platform</h3><p>Use Rabbit network parameters, JSON-RPC and EVM contracts.</p><Link to="/developers">Developer portal <ArrowRight size={14} /></Link></div><div><ShieldCheck size={22} /><span>VERIFY</span><h3>Know what is live</h3><p>Network and product services remain explicitly labeled by readiness.</p><Link to="/status">Network status <ArrowRight size={14} /></Link></div><div><Wallet size={22} /><span>CONNECT</span><h3>Wallet-first access</h3><p>Injected wallets and WalletConnect are already integrated.</p><button onClick={onConnect}>Connect wallet <ArrowRight size={14} /></button></div></div>
+      <section className="platform-v2-actions">
+        <div className="shell">
+          <Link to="/developers"><Rocket size={21} /><span><small>BUILD</small><b>Integrate with Rabbit</b><em>EVM, JSON-RPC and network parameters.</em></span><ArrowRight size={17} /></Link>
+          <Link to="/status"><ShieldCheck size={21} /><span><small>VERIFY</small><b>Know what is live</b><em>Every service keeps an explicit readiness state.</em></span><ArrowRight size={17} /></Link>
+          <button onClick={onConnect}><Wallet size={21} /><span><small>CONNECT</small><b>Wallet-first access</b><em>Injected wallets and WalletConnect.</em></span><ArrowRight size={17} /></button>
+        </div>
       </section>
     </main>
   )
