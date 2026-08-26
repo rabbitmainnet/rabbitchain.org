@@ -48,10 +48,12 @@ jobs:
             platform
             platform/swap
             platform/liquidity
+            platform/staking
             platform/launchpool
             platform/factory
             platform/bridge
-            platform/portfolio
+            platform/p2p
+            platform/faucet
             rab
             security
             releases

@@ -1347,3 +1347,1126 @@ html[lang] .protocol-v8-meta strong{
 .home-page-v13 .hero-ctas .button svg {
   color: currentColor !important;
 }
+
+/* =========================================================
+   RABBIT PLATFORM — FULL APP EXPERIENCE
+   ========================================================= */
+
+.platform-product-page{
+  padding:0 !important;
+  margin:0 !important;
+  width:100% !important;
+  max-width:none !important;
+  background:#f5f6fa !important;
+  min-height:calc(100dvh - 108px) !important;
+}
+
+.platform-product-shell,
+.platform-product-shell.shell{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+
+  display:grid !important;
+  grid-template-columns:240px minmax(0,1fr) !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+
+  min-height:calc(100dvh - 108px) !important;
+  overflow:visible !important;
+}
+
+.platform-sidebar{
+  min-height:calc(100dvh - 108px) !important;
+  padding:24px 16px !important;
+  border-radius:0 !important;
+}
+
+.platform-workspace{
+  width:100% !important;
+  min-width:0 !important;
+  padding:34px 38px 48px !important;
+  overflow:hidden !important;
+}
+
+.platform-product-grid{
+  width:100% !important;
+  grid-template-columns:minmax(0,1fr) minmax(280px,340px) !important;
+  gap:22px !important;
+}
+
+.product-panel{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:520px !important;
+}
+
+.product-context{
+  width:100% !important;
+  min-width:0 !important;
+}
+
+/* TABLET */
+@media (max-width:1100px){
+
+  .platform-product-shell,
+  .platform-product-shell.shell{
+    grid-template-columns:200px minmax(0,1fr) !important;
+  }
+
+  .platform-workspace{
+    padding:26px 24px 40px !important;
+  }
+
+  .platform-product-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .product-context{
+    align-self:stretch !important;
+  }
+}
+
+/* MOBILE */
+@media (max-width:760px){
+
+  .platform-product-page{
+    min-height:calc(100dvh - 96px) !important;
+  }
+
+  .platform-product-shell,
+  .platform-product-shell.shell{
+    display:block !important;
+    min-height:calc(100dvh - 96px) !important;
+  }
+
+  .platform-sidebar{
+    min-height:0 !important;
+    width:100% !important;
+    padding:12px 14px !important;
+  }
+
+  .platform-sidebar-brand{
+    padding:4px 4px 11px !important;
+  }
+
+  .platform-sidebar nav{
+    display:flex !important;
+    gap:6px !important;
+    margin-top:10px !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    padding-bottom:4px !important;
+    scrollbar-width:none;
+  }
+
+  .platform-sidebar nav::-webkit-scrollbar{
+    display:none;
+  }
+
+  .platform-sidebar nav a{
+    flex:0 0 auto !important;
+    white-space:nowrap !important;
+    min-height:44px !important;
+    padding:0 13px !important;
+  }
+
+  .platform-sidebar-foot{
+    display:none !important;
+  }
+
+  .platform-workspace{
+    padding:20px 14px 32px !important;
+  }
+
+  .platform-workspace-head{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:16px !important;
+  }
+
+  .platform-workspace-head h1{
+    font-size:32px !important;
+  }
+
+  .platform-workspace-head .button{
+    width:100% !important;
+    min-height:46px !important;
+    justify-content:center !important;
+  }
+
+  .platform-product-grid{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:14px !important;
+    margin-top:18px !important;
+  }
+
+  .product-panel,
+  .product-context{
+    width:100% !important;
+    min-width:0 !important;
+    border-radius:14px !important;
+  }
+
+  .product-panel{
+    padding:14px !important;
+    min-height:0 !important;
+  }
+
+  .swap-box{
+    padding:15px !important;
+  }
+
+  .swap-box strong{
+    font-size:25px !important;
+  }
+
+  .product-action{
+    min-height:46px !important;
+  }
+
+  .bridge-route{
+    grid-template-columns:1fr !important;
+  }
+
+  .bridge-route > svg{
+    justify-self:center !important;
+    transform:rotate(90deg) !important;
+  }
+
+  .factory-form > div,
+  .portfolio-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+
+
+/* =========================================================
+   RABBIT PLATFORM — PROFESSIONAL APP V2
+   Inspired by modern DEX interaction patterns
+   ========================================================= */
+
+/* ---------- APP STRUCTURE ---------- */
+
+.platform-product-page{
+  min-height:calc(100dvh - 108px) !important;
+  background:#f7f7fb !important;
+}
+
+.platform-product-shell,
+.platform-product-shell.shell{
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  min-height:calc(100dvh - 108px) !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  overflow:visible !important;
+}
+
+
+/* =========================================================
+   PLATFORM MODULE NAV
+   sidebar becomes horizontal product navigation
+   ========================================================= */
+
+.platform-sidebar{
+  width:100% !important;
+  min-height:0 !important;
+
+  padding:0 32px !important;
+
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+
+  background:rgba(255,255,255,.96) !important;
+  color:#111426 !important;
+
+  border-bottom:1px solid #e4e5ec !important;
+}
+
+/* Global Rabbit header already owns the brand */
+.platform-sidebar-brand{
+  display:none !important;
+}
+
+.platform-sidebar nav{
+  display:flex !important;
+  align-items:center !important;
+
+  gap:4px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+
+  scrollbar-width:none;
+}
+
+.platform-sidebar nav::-webkit-scrollbar{
+  display:none;
+}
+
+.platform-sidebar nav a{
+  position:relative !important;
+
+  display:flex !important;
+  align-items:center !important;
+  gap:7px !important;
+
+  min-height:60px !important;
+  padding:0 15px !important;
+
+  white-space:nowrap !important;
+
+  border-radius:0 !important;
+
+  background:transparent !important;
+  color:#737887 !important;
+
+  font-size:12px !important;
+  font-weight:750 !important;
+
+  transition:
+    color .18s ease,
+    background .18s ease !important;
+}
+
+.platform-sidebar nav a:hover{
+  background:transparent !important;
+  color:#111426 !important;
+}
+
+.platform-sidebar nav a.active{
+  background:transparent !important;
+  color:#111426 !important;
+}
+
+/* Active module = subtle Rabbit gradient line, not a dark rectangle */
+.platform-sidebar nav a.active::after{
+  content:"";
+  position:absolute;
+
+  left:14px;
+  right:14px;
+  bottom:0;
+
+  height:3px;
+
+  border-radius:999px 999px 0 0;
+
+  background:linear-gradient(
+    90deg,
+    #dc27bd 0%,
+    #9b3cff 48%,
+    #5264ff 100%
+  );
+}
+
+
+/* Network context on right side of secondary nav */
+
+.platform-sidebar-foot{
+  margin:0 0 0 auto !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  display:flex !important;
+  align-items:center !important;
+  gap:7px !important;
+
+  white-space:nowrap !important;
+}
+
+.platform-sidebar-foot > span{
+  display:none !important;
+}
+
+.platform-sidebar-foot strong{
+  font-size:11px !important;
+  color:#111426 !important;
+}
+
+.platform-sidebar-foot small{
+  font-size:10px !important;
+  color:#9296a5 !important;
+}
+
+
+/* =========================================================
+   WORKSPACE
+   ========================================================= */
+
+.platform-workspace{
+  width:100% !important;
+  max-width:1500px !important;
+
+  margin:0 auto !important;
+
+  padding:
+    36px
+    clamp(22px,4vw,64px)
+    64px !important;
+
+  overflow:visible !important;
+}
+
+.platform-workspace-head{
+  width:100% !important;
+  max-width:1180px !important;
+
+  margin:0 auto !important;
+
+  padding-bottom:24px !important;
+}
+
+.platform-workspace-head h1{
+  font-size:34px !important;
+}
+
+/* Connect already exists in the global header */
+.platform-workspace-head > .button{
+  display:none !important;
+}
+
+.platform-product-grid{
+  width:100% !important;
+  max-width:1180px !important;
+
+  margin:28px auto 0 !important;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    310px !important;
+}
+
+
+/* =========================================================
+   SWAP — TASK FIRST
+   ========================================================= */
+
+/* Swap page does not need a second large page heading */
+.platform-workspace:has(.product-swap)
+.platform-workspace-head{
+  display:none !important;
+}
+
+.platform-workspace:has(.product-swap)
+.platform-product-grid{
+  display:block !important;
+
+  width:100% !important;
+  max-width:570px !important;
+
+  margin:44px auto 0 !important;
+}
+
+/* Trust/context information lives elsewhere in Rabbit.
+   The swap screen stays focused on the task. */
+.platform-workspace:has(.product-swap)
+.product-context{
+  display:none !important;
+}
+
+
+/* Main swap surface */
+
+.product-swap{
+  width:100% !important;
+
+  min-height:0 !important;
+
+  padding:20px !important;
+
+  background:#fff !important;
+
+  border:1px solid #e3e4eb !important;
+  border-radius:24px !important;
+
+  box-shadow:
+    0 20px 60px rgba(26,23,48,.07) !important;
+}
+
+.product-swap .product-panel-title{
+  padding:
+    4px
+    3px
+    18px !important;
+}
+
+
+/* Token input blocks */
+
+.product-swap .swap-box{
+  margin-top:10px !important;
+
+  padding:18px !important;
+
+  background:#f7f7fb !important;
+
+  border:1px solid transparent !important;
+  border-radius:18px !important;
+
+  transition:
+    border-color .18s ease,
+    background .18s ease !important;
+}
+
+.product-swap .swap-box:hover{
+  border-color:#dfdfea !important;
+  background:#f9f9fc !important;
+}
+
+.product-swap .swap-box strong{
+  font-size:34px !important;
+  letter-spacing:-.035em !important;
+}
+
+.product-swap .swap-box button{
+  min-height:40px !important;
+
+  padding:0 13px !important;
+
+  background:#fff !important;
+
+  border:1px solid #dedfe7 !important;
+  border-radius:14px !important;
+}
+
+
+/* Swap direction */
+
+.product-swap .swap-switch{
+  width:38px !important;
+  height:38px !important;
+
+  margin:-5px auto !important;
+
+  border-radius:12px !important;
+
+  background:#fff !important;
+
+  box-shadow:0 3px 10px rgba(30,30,50,.05) !important;
+}
+
+
+/* Main interaction */
+
+.product-swap .product-action{
+  height:52px !important;
+
+  margin-top:12px !important;
+
+  border-radius:16px !important;
+
+  background:linear-gradient(
+    100deg,
+    #dc27bd 0%,
+    #9b3cff 48%,
+    #5264ff 100%
+  ) !important;
+
+  box-shadow:
+    0 10px 24px rgba(126,72,255,.16) !important;
+
+  font-size:13px !important;
+}
+
+.product-swap .product-disclaimer{
+  margin:13px 5px 2px !important;
+
+  text-align:center !important;
+
+  font-size:10px !important;
+  line-height:1.55 !important;
+}
+
+
+/* =========================================================
+   OTHER PLATFORM MODULES
+   ========================================================= */
+
+.platform-product-grid:not(:has(.product-swap)){
+  align-items:start !important;
+}
+
+.platform-product-grid:not(:has(.product-swap))
+.product-panel{
+  background:#fff !important;
+
+  border-radius:20px !important;
+
+  box-shadow:
+    0 14px 44px rgba(26,23,48,.045) !important;
+}
+
+.platform-product-grid:not(:has(.product-swap))
+.product-context{
+  border-radius:20px !important;
+
+  box-shadow:
+    0 14px 44px rgba(26,23,48,.035) !important;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media(max-width:1100px){
+
+  .platform-sidebar{
+    padding:0 18px !important;
+  }
+
+  .platform-sidebar-foot{
+    display:none !important;
+  }
+
+  .platform-product-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .product-context{
+    width:100% !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media(max-width:760px){
+
+  .platform-product-page{
+    min-height:calc(100dvh - 96px) !important;
+  }
+
+  .platform-sidebar{
+    padding:0 10px !important;
+  }
+
+  .platform-sidebar nav{
+    width:100% !important;
+  }
+
+  .platform-sidebar nav a{
+    min-height:52px !important;
+
+    padding:0 12px !important;
+
+    font-size:11px !important;
+  }
+
+  .platform-sidebar nav a.active::after{
+    left:11px !important;
+    right:11px !important;
+  }
+
+  .platform-workspace{
+    padding:
+      22px
+      14px
+      40px !important;
+  }
+
+  .platform-workspace-head{
+    padding-bottom:18px !important;
+  }
+
+  .platform-workspace-head h1{
+    font-size:30px !important;
+  }
+
+  .platform-workspace:has(.product-swap)
+  .platform-product-grid{
+    margin-top:18px !important;
+  }
+
+  .product-swap{
+    padding:12px !important;
+
+    border-radius:18px !important;
+
+    box-shadow:none !important;
+  }
+
+  .product-swap .swap-box{
+    padding:15px !important;
+    border-radius:16px !important;
+  }
+
+  .product-swap .swap-box strong{
+    font-size:29px !important;
+  }
+
+  .product-swap .product-action{
+    height:50px !important;
+  }
+
+  .platform-product-grid:not(:has(.product-swap))
+  .product-panel,
+
+  .platform-product-grid:not(:has(.product-swap))
+  .product-context{
+    border-radius:16px !important;
+    box-shadow:none !important;
+  }
+}
+
+
+/* =========================================================
+   RABBIT PLATFORM — NAV FINAL
+   ========================================================= */
+
+@media (min-width: 761px) {
+
+  .platform-sidebar {
+    justify-content: center !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  .platform-sidebar nav {
+    width: auto !important;
+    max-width: 100% !important;
+
+    flex: 0 1 auto !important;
+
+    justify-content: center !important;
+
+    margin: 0 auto !important;
+
+    gap: 5px !important;
+  }
+
+  .platform-sidebar nav a {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .platform-sidebar-foot {
+    display: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+
+  .platform-sidebar {
+    justify-content: flex-start !important;
+  }
+
+  .platform-sidebar nav {
+    justify-content: flex-start !important;
+    width: 100% !important;
+  }
+}
+
+
+/* =========================================================
+   RABBIT PLATFORM — NETWORK + NAV FINAL
+   ========================================================= */
+
+.platform-sidebar{
+  position:relative !important;
+
+  min-height:62px !important;
+
+  justify-content:center !important;
+
+  padding:
+    0
+    28px !important;
+
+  border-bottom:0 !important;
+}
+
+
+/* MENU LINE ONLY MATCHES THE OPTIONS WIDTH */
+
+.platform-sidebar nav{
+  width:max-content !important;
+  max-width:100% !important;
+
+  flex:0 1 auto !important;
+
+  justify-content:center !important;
+
+  margin:0 auto !important;
+
+  border-bottom:1px solid #e2e3ea !important;
+}
+
+
+/* FAUCET IS A TESTNET UTILITY */
+
+.platform-sidebar nav a[href="/platform/faucet"]{
+  margin-left:8px !important;
+
+  padding-left:20px !important;
+
+  border-left:1px solid #e1e2e9 !important;
+}
+
+
+/* =========================================================
+   NETWORK SWITCH
+   ========================================================= */
+
+.platform-network-switch{
+  display:inline-flex;
+
+  align-items:center;
+
+  gap:3px;
+
+  padding:4px;
+
+  background:#f1f2f6;
+
+  border:1px solid #e1e2e8;
+  border-radius:12px;
+}
+
+.platform-network-switch button{
+  min-width:82px;
+  min-height:36px;
+
+  padding:5px 10px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  gap:6px;
+
+  border:0;
+  border-radius:9px;
+
+  background:transparent;
+
+  color:#797e8c;
+
+  cursor:pointer;
+}
+
+.platform-network-switch button b{
+  font-size:10px;
+
+  letter-spacing:.06em;
+}
+
+.platform-network-switch button small{
+  font-size:9px;
+
+  opacity:.7;
+}
+
+.platform-network-switch button.active{
+  background:#111426;
+
+  color:#fff;
+
+  box-shadow:
+    0 4px 12px rgba(17,20,38,.12);
+}
+
+
+/* True center: network control stays on the right */
+
+@media(min-width:1280px){
+
+  .platform-sidebar .platform-network-switch{
+    position:absolute;
+
+    right:28px;
+    top:50%;
+
+    transform:translateY(-50%);
+  }
+
+  .platform-sidebar nav{
+    max-width:calc(100% - 260px) !important;
+  }
+}
+
+
+/* =========================================================
+   OVERVIEW NETWORK CONTROL
+   ========================================================= */
+
+.platform-overview-network{
+  margin-top:22px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:13px;
+}
+
+.platform-overview-network > span{
+  font-size:9px;
+
+  font-weight:850;
+
+  letter-spacing:.12em;
+
+  color:#9296a5;
+}
+
+
+/* =========================================================
+   FAUCET
+   ========================================================= */
+
+.faucet-intro{
+  padding:25px 4px 15px;
+}
+
+.faucet-intro h3{
+  margin:0 0 7px;
+
+  font-size:25px;
+
+  letter-spacing:-.03em;
+}
+
+.faucet-intro p{
+  max-width:520px;
+
+  margin:0;
+
+  color:#7c808e;
+
+  font-size:12px;
+
+  line-height:1.65;
+}
+
+.faucet-assets{
+  display:grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap:12px;
+}
+
+.faucet-assets > div{
+  padding:19px;
+
+  display:grid;
+
+  gap:6px;
+
+  background:#fff;
+
+  border:1px solid #e2e3ea;
+
+  border-radius:16px;
+}
+
+.faucet-assets span{
+  font-size:9px;
+
+  font-weight:850;
+
+  letter-spacing:.1em;
+
+  color:#9b3cff;
+}
+
+.faucet-assets strong{
+  font-size:27px;
+}
+
+.faucet-assets small{
+  color:#9296a5;
+
+  font-size:11px;
+}
+
+.faucet-assets button{
+  min-height:42px;
+
+  margin-top:11px;
+
+  border:0;
+  border-radius:11px;
+
+  background:#f1f2f6;
+
+  color:#969aa8;
+
+  font-size:11px;
+
+  font-weight:800;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media(max-width:1279px){
+
+  .platform-sidebar{
+    justify-content:flex-start !important;
+
+    gap:15px !important;
+  }
+
+  .platform-sidebar .platform-network-switch{
+    flex:none;
+  }
+
+  .platform-sidebar nav{
+    justify-content:flex-start !important;
+
+    overflow-x:auto !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media(max-width:760px){
+
+  .platform-sidebar{
+    padding:
+      9px
+      10px
+      0 !important;
+
+    display:flex !important;
+
+    flex-direction:column !important;
+
+    align-items:stretch !important;
+
+    gap:5px !important;
+  }
+
+  .platform-sidebar .platform-network-switch{
+    align-self:center;
+  }
+
+  .platform-sidebar nav{
+    width:100% !important;
+
+    max-width:100% !important;
+
+    justify-content:flex-start !important;
+  }
+
+  .platform-sidebar nav a[href="/platform/faucet"]{
+    margin-left:4px !important;
+
+    padding-left:15px !important;
+  }
+
+  .platform-overview-network{
+    align-items:flex-start;
+
+    flex-direction:column;
+  }
+
+  .faucet-assets{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* PLATFORM FAUCET — FINAL NAV + 4 TEST ASSETS */
+
+.platform-sidebar nav a[href="/platform/faucet"]{
+  margin-left:0 !important;
+  padding-left:14px !important;
+  border-left:0 !important;
+}
+
+
+/* =========================================================
+   RABBIT PLATFORM — STAKING
+   ========================================================= */
+
+.staking-product-intro{
+  padding:28px 4px 22px;
+}
+
+.staking-product-intro > span{
+  color:#9b3cff;
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.12em;
+}
+
+.staking-product-intro h3{
+  margin:8px 0;
+  font-size:27px;
+  letter-spacing:-.035em;
+}
+
+.staking-product-intro p{
+  max-width:600px;
+  margin:0;
+  color:#7c808e;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.staking-product-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:11px;
+}
+
+.staking-product-grid > div{
+  padding:18px;
+  background:#fff;
+  border:1px solid #e2e3ea;
+  border-radius:15px;
+}
+
+.staking-product-grid span{
+  display:block;
+  color:#969aa8;
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.1em;
+}
+
+.staking-product-grid strong{
+  display:block;
+  margin:7px 0 4px;
+  font-size:18px;
+}
+
+.staking-product-grid small{
+  color:#969aa8;
+  font-size:10px;
+}
+
+@media(max-width:760px){
+  .staking-product-grid{
+    grid-template-columns:1fr;
+  }
+}
+
