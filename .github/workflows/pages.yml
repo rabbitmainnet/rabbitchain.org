@@ -35,8 +35,41 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: SPA fallback
-        run: cp dist/index.html dist/404.html
+      - name: Generate static route entrypoints
+        run: |
+          routes=(
+            testnet
+            mainnet
+            lcq
+            mining
+            nodes
+            developers
+            docs
+            platform
+            platform/swap
+            platform/liquidity
+            platform/launchpool
+            platform/factory
+            platform/bridge
+            platform/portfolio
+            rab
+            security
+            releases
+            status
+            community
+            about
+            whitepaper
+            privacy-policy
+            terms-and-conditions
+            risk-disclosure
+          )
+
+          for route in "${routes[@]}"; do
+            mkdir -p "dist/$route"
+            cp dist/index.html "dist/$route/index.html"
+          done
+
+          cp dist/index.html dist/404.html
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

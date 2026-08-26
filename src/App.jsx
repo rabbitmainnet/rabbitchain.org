@@ -71,7 +71,8 @@ function metaFor(pathname) {
 function updateMeta(pathname) {
   const [title, description] = metaFor(pathname)
   document.title = title
-  const canonical = `https://rabbitchain.org${pathname === '/' ? '' : pathname}`
+  const canonicalPath = pathname === '/' ? '/' : `${pathname.endsWith('/') ? pathname.slice(0, -1) : pathname}/`
+  const canonical = `https://rabbitchain.org${canonicalPath}`
   const set = (selector, attr, value) => { const element = document.querySelector(selector); if (element) element.setAttribute(attr, value) }
   set('meta[name="description"]', 'content', description)
   set('meta[property="og:title"]', 'content', title)
