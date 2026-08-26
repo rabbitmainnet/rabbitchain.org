@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Header from './components/Header'
@@ -6,39 +6,27 @@ import Footer from './components/Footer'
 import WalletModal from './components/WalletModal'
 import WalletDrawer from './components/WalletDrawer'
 import SearchPalette from './components/SearchPalette'
-const Home = lazy(() => import('./pages/Home'))
-const Testnet = lazy(() => import('./pages/Testnet'))
-const Mainnet = lazy(() => import('./pages/Mainnet'))
-const Lcq = lazy(() => import('./pages/Lcq'))
-const Mining = lazy(() => import('./pages/Mining'))
-const Nodes = lazy(() => import('./pages/Nodes'))
-const Developers = lazy(() => import('./pages/Developers'))
-const Docs = lazy(() => import('./pages/Docs'))
-const Community = lazy(() => import('./pages/Community'))
-const Platform = lazy(() => import('./pages/Platform'))
-const Whitepaper = lazy(() => import('./pages/Whitepaper'))
-const Status = lazy(() => import('./pages/Status'))
-const NotFound = lazy(() => import('./pages/NotFound'))
-const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
-const TermsConditions = lazy(() => import('./pages/TermsConditions'))
-const RiskDisclosure = lazy(() => import('./pages/RiskDisclosure'))
-const NetworkOverview = lazy(() => import('./pages/Network'))
-const Rab = lazy(() => import('./pages/Rab'))
-const Security = lazy(() => import('./pages/Security'))
-const Releases = lazy(() => import('./pages/Releases'))
-const Ecosystem = lazy(() => import('./pages/Ecosystem'))
-const About = lazy(() => import('./pages/About'))
+import Home from './pages/Home'
+import Testnet from './pages/Testnet'
+import Mainnet from './pages/Mainnet'
+import Lcq from './pages/Lcq'
+import Mining from './pages/Mining'
+import Nodes from './pages/Nodes'
+import Developers from './pages/Developers'
+import Docs from './pages/Docs'
+import Community from './pages/Community'
+import Platform from './pages/Platform'
+import Whitepaper from './pages/Whitepaper'
+import Status from './pages/Status'
+import NotFound from './pages/NotFound'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsConditions from './pages/TermsConditions'
+import RiskDisclosure from './pages/RiskDisclosure'
 import BackToTop from './components/BackToTop'
 import { clearWalletPreference, connectWallet, connectWalletConnect, detectInjectedWallets, friendlyWalletError, getWalletPreference, getWalletSnapshot, restoreWalletConnect, saveWalletPreference, switchOrAddNetwork } from './lib/wallet'
 
 const META = {
   '/': ['Rabbit Chain — LCQ Layer 1','Rabbit Chain is a permissionless EVM Layer 1 powered by LCQ Consensus. One wallet. One fair chance.'],
-  '/network': ['Rabbit Network — LCQ, EVM and P2P','Explore Rabbit Chain network architecture, Testnet/Mainnet identities, public telemetry and participation paths.'],
-  '/rab': ['RAB — Native Asset of Rabbit Chain','Learn how RAB is used for Rabbit network fees and LCQ protocol rewards, with a clear separation between Testnet and Mainnet.'],
-  '/security': ['Security Center — Rabbit Chain','Verify official Rabbit domains, wallet safety, release integrity and public network surfaces.'],
-  '/releases': ['Official Releases — Rabbit Chain','Rabbit Chain release center for verified binaries, versions, checksums and network compatibility.'],
-  '/ecosystem': ['Rabbit Ecosystem','Explore official Rabbit network services, application modules, infrastructure and community participation.'],
-  '/about': ['About Rabbit Chain','Rabbit Chain mission, design principles and public Testnet-first launch philosophy.'],
   '/testnet': ['Rabbit Testnet — Chain ID 9280','Enter Rabbit Testnet: wallet setup, Chain ID 9280, network endpoints, mining, nodes and developer resources.'],
   '/mainnet': ['Rabbit Mainnet — Chain ID 928','Rabbit Mainnet is the production Rabbit Chain network planned after public Testnet validation.'],
   '/lcq': ['LCQ Consensus — Rabbit Chain','Learn how LCQ coordinates work, eligibility, queue position, producer opportunities and committee participation.'],
@@ -222,14 +210,8 @@ export default function App(){
 
   return <div className="app-shell">
     <Header walletState={walletState} onWalletClick={openWallet} onOpenSearch={()=>setSearchOpen(true)}/>
-    <Suspense fallback={<div className="rc7-route-loading"><span/><b>RABBIT CHAIN</b></div>}><AnimatePresence mode="wait"><Routes location={location} key={location.pathname}>
+    <AnimatePresence mode="wait"><Routes location={location} key={location.pathname}>
       <Route path="/" element={<Page><Home walletState={walletState} onConnect={openWallet} onAddNetwork={switchNetwork}/></Page>}/>
-      <Route path="/network" element={<Page><NetworkOverview/></Page>}/>
-      <Route path="/rab" element={<Page><Rab/></Page>}/>
-      <Route path="/security" element={<Page><Security/></Page>}/>
-      <Route path="/releases" element={<Page><Releases/></Page>}/>
-      <Route path="/ecosystem" element={<Page><Ecosystem/></Page>}/>
-      <Route path="/about" element={<Page><About/></Page>}/>
       <Route path="/testnet" element={<Page><Testnet walletState={walletState} onConnect={openWallet} onAddNetwork={switchNetwork}/></Page>}/>
       <Route path="/mainnet" element={<Page><Mainnet/></Page>}/>
       <Route path="/lcq" element={<Page><Lcq/></Page>}/>
@@ -245,7 +227,7 @@ export default function App(){
       <Route path="/terms-and-conditions" element={<Page><TermsConditions/></Page>}/>
       <Route path="/risk-disclosure" element={<Page><RiskDisclosure/></Page>}/>
       <Route path="*" element={<Page><NotFound/></Page>}/>
-    </Routes></AnimatePresence></Suspense>
+    </Routes></AnimatePresence>
     <Footer/>
     <WalletModal open={walletModalOpen} onClose={()=>{setWalletModalOpen(false);setPendingNetwork(null)}} onSelect={selectWallet} onWalletConnect={selectWalletConnect}/>
     <WalletDrawer open={walletDrawerOpen} state={walletState} walletName={walletName} onClose={()=>setWalletDrawerOpen(false)} onDisconnect={disconnect} onSwitch={switchNetwork} toast={toast}/>
