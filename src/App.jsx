@@ -205,6 +205,15 @@ export default function App() {
   }, [location.pathname, location.hash])
 
   useEffect(() => {
+    if (typeof window.gtag !== 'function') return
+    window.gtag('event', 'page_view', {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: `${location.pathname}${location.search}`,
+    })
+  }, [location.pathname, location.search])
+
+  useEffect(() => {
     let cancelled = false
     ;(async () => {
       const saved = getWalletPreference()
