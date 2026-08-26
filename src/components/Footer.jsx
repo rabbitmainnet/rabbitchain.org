@@ -5,7 +5,16 @@ const columns = [
   ['Network', [['Testnet', '/testnet'], ['Mainnet', '/mainnet'], ['Status', '/status'], ['RAB', '/rab'], ['Mining', '/mining']]],
   ['Technology', [['LCQ Consensus', '/lcq'], ['Run a Node', '/nodes'], ['Security', '/security'], ['Whitepaper', '/whitepaper']]],
   ['Build', [['Developers', '/developers'], ['Documentation', '/docs'], ['Releases', '/releases'], ['GitHub', 'https://github.com/rabbitmainnet']]],
-  ['Platform', [['Overview', '/platform'], ['Swap', '/platform/swap'], ['Liquidity', '/platform/liquidity'], ['Launchpool', '/platform/launchpool'], ['Token Factory', '/platform/factory'], ['Bridge', '/platform/bridge']]],
+  ['Platform', [
+    ['Swap', '/platform/swap'],
+    ['Liquidity', '/platform/liquidity'],
+    ['Staking', '/platform/staking'],
+    ['Bridge', '/platform/bridge'],
+    ['P2P', '/platform/p2p'],
+    ['Launchpool', '/platform/launchpool'],
+    ['Token Factory', '/platform/factory'],
+    ['Testnet Faucet', '/platform/faucet']
+  ]],
   ['Project', [['Community', '/community'], ['About', '/about'], ['Privacy Policy', '/privacy-policy'], ['Terms & Conditions', '/terms-and-conditions'], ['Risk Disclosure', '/risk-disclosure']]],
 ]
 
