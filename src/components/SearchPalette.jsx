@@ -16,7 +16,7 @@ const items = [
   ['Releases', 'Official Rabbit binaries', '/releases'],
   ['Documentation', 'Protocol and network references', '/docs'],
   ['Whitepaper', 'Official protocol paper location', '/whitepaper'],
-  ['Community', 'GitHub, X and contribution', '/community'],
+  ['Community', 'GitHub, X, Discord and participation', '/community'],
   ['About', 'Rabbit Chain project principles', '/about'],
 ]
 

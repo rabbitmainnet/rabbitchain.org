@@ -56,7 +56,7 @@ const META = {
   '/releases': ['Releases — Rabbit Chain', 'Official Rabbit Chain software release center.'],
   '/about': ['About Rabbit Chain', 'Rabbit Chain project principles, architecture and public launch model.'],
   '/whitepaper': ['Whitepaper — Rabbit Chain', 'Official Rabbit Chain technical whitepaper status.'],
-  '/community': ['Community — Rabbit Chain', 'Official Rabbit Chain GitHub, X and community resources.'],
+  '/community': ['Community — Rabbit Chain', 'Official Rabbit Chain GitHub, X, Discord and community resources.'],
   '/status': ['Network Status — Rabbit Chain', 'Official Rabbit Testnet RPC, explorer, faucet and service readiness.'],
   '/privacy-policy': ['Privacy Policy — Rabbit Chain', 'Rabbit Chain privacy policy.'],
   '/terms-and-conditions': ['Terms & Conditions — Rabbit Chain', 'Rabbit Chain terms and conditions.'],
