@@ -5,8 +5,8 @@ export const PLATFORM_DEFAULT_NETWORK = 'testnet'
 const TOKENS = {
   testnet: [
     {
-      symbol: 'RAB',
-      name: 'Rabbit',
+      symbol: 'tRAB',
+      name: 'Test RAB',
       description: 'Rabbit Testnet native asset',
       decimals: 18,
       native: true,

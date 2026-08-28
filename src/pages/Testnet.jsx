@@ -58,7 +58,7 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
         </div>
       </section>
 
-      <section className="safety-section"><div className="shell safety-grid"><div><ShieldCheck size={28} /><span>TESTNET SAFETY</span><h2>Test assets are not Mainnet assets.</h2></div><div><p>Rabbit Testnet RAB and RUSD are for testing only. Verify software and endpoints from rabbitchain.org and the official Rabbit GitHub.</p><div className="safety-points"><span><CheckCircle2 size={15} />No seed phrase requested</span><span><CheckCircle2 size={15} />No Mainnet value on faucet</span><span><CheckCircle2 size={15} />Service status shown explicitly</span></div></div></div></section>
+      <section className="safety-section"><div className="shell safety-grid"><div><ShieldCheck size={28} /><span>TESTNET SAFETY</span><h2>Test assets are not Mainnet assets.</h2></div><div><p>tRAB and RUSD are for testing only. Verify software and endpoints from rabbitchain.org and the official Rabbit GitHub.</p><div className="safety-points"><span><CheckCircle2 size={15} />No seed phrase requested</span><span><CheckCircle2 size={15} />No Mainnet value on faucet</span><span><CheckCircle2 size={15} />Service status shown explicitly</span></div></div></div></section>
     </main>
   )
 }

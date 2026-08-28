@@ -133,7 +133,7 @@ export async function switchOrAddNetwork(provider, network) {
       params: [{
         chainId: network.chainIdHex,
         chainName: network.name,
-        nativeCurrency: { name: network.currency, symbol: network.currency, decimals: 18 },
+        nativeCurrency: { name: network.currencyName || network.currency, symbol: network.currency, decimals: 18 },
         rpcUrls: [network.rpcUrl],
         blockExplorerUrls: network.explorerUrl ? [network.explorerUrl] : [],
         iconUrls: ['https://rabbitchain.org/rabbit-wallet-icon.png']
