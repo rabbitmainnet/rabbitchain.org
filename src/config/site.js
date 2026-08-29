@@ -5,5 +5,7 @@ export const SITE = {
   github: 'https://github.com/rabbitmainnet',
   x: 'https://x.com/rabbit_mainnet',
   discord: 'https://discord.gg/TBWspuEZss',
+  reddit: 'https://www.reddit.com/user/RabbitMainnet/',
+  whitepaper: 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper',
   domain: 'rabbitchain.org'
 }
