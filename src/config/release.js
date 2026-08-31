@@ -14,7 +14,7 @@ export const DOWNLOADS = [
     architecture: 'AMD64',
     format: 'ZIP',
     filename: 'rabbit-core-testnet-v1-windows-amd64.zip',
-    sha256: '6ffe993530e788e2da042ee6c034249ca9286e0cd706d802f89e79b8a1a8869f',
+    sha256: 'e0c0cbb20a89336245cff0f17d570fbf62341aaf91ab70d46d917026c38ac376',
   },
   {
     key: 'linux-amd64',
@@ -22,7 +22,7 @@ export const DOWNLOADS = [
     architecture: 'AMD64',
     format: 'tar.gz',
     filename: 'rabbit-core-testnet-v1-linux-amd64.tar.gz',
-    sha256: '8e6790c22d42dd9436f56cb03a33bff1517abf3b2b0134359be654ad723ed8d7',
+    sha256: '54a3e5e0d2271d056bd171ec09b1fb04342e8fb2551baa53d6eba2da6ac64961',
   },
 ].map((download) => ({
   ...download,
