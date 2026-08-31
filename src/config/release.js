@@ -22,7 +22,7 @@ export const DOWNLOADS = [
     architecture: 'AMD64',
     format: 'tar.gz',
     filename: 'rabbit-core-testnet-v1-linux-amd64.tar.gz',
-    sha256: '2c726d8678a59df9fa148b57df1f601dd6fd727c6a64eb5dd5a89cdf74b4ce90',
+    sha256: '8e6790c22d42dd9436f56cb03a33bff1517abf3b2b0134359be654ad723ed8d7',
   },
 ].map((download) => ({
   ...download,
