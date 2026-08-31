@@ -12,8 +12,8 @@ const groups = [
     links: [
       ['Rabbit Testnet', 'First public network · Chain ID 9280', '/testnet'],
       ['Rabbit Mainnet', 'Production network after validation', '/mainnet'],
-      ['Network Status', 'RPC, explorer and faucet readiness', '/status'],
-      ['RAB', 'Native asset and consensus rewards', '/rab'],
+      ['Network Status', 'Live RPC, WebSocket, explorer and planned services', '/status'],
+      ['RAB / tRAB', 'Mainnet and Testnet native assets', '/rab'],
     ],
   },
   {

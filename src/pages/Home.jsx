@@ -21,7 +21,7 @@ const verifyRows = [
   [BookOpen, 'Protocol & network docs', 'Network configuration, LCQ, wallets and operator references.', '/docs', false],
   [Code2, 'Official GitHub', 'Source code, project history and public repositories.', 'https://github.com/rabbitmainnet', true],
   [ShieldCheck, 'Security center', 'Official domains, wallet safety and verification guidance.', '/security', false],
-  [FileCheck2, 'Release center', 'Windows, Linux and macOS release tracks with hashes when public.', '/releases', false],
+  [FileCheck2, 'Release center', 'Verified Windows and Linux Rabbit Core packages with published SHA-256 hashes.', '/releases', false],
 ]
 
 export default function Home({ walletState, onConnect, onAddNetwork }) {
@@ -188,14 +188,14 @@ export default function Home({ walletState, onConnect, onAddNetwork }) {
       <section className="home-v2-testnet">
         <div className="shell home-v2-testnet-grid">
           <div className="testnet-number"><span>FIRST PUBLIC NETWORK</span><strong>9280</strong><small>RABBIT TESTNET</small></div>
-          <div className="testnet-copy"><span className="section-kicker">PUBLIC LAUNCH</span><h2>Show what is ready. Never guess.</h2><p>Wallet connection is live. RPC, explorer, faucet and release services remain clearly labeled until each public launch gate is complete.</p><div className="hero-ctas"><Link className="button primary" to="/testnet">Testnet hub <ArrowRight size={15} /></Link><button className="button secondary" onClick={() => onAddNetwork(testnet)}>Add Testnet</button></div></div>
+          <div className="testnet-copy"><span className="section-kicker">PUBLIC TESTNET LIVE</span><h2>Connect, build, run a node and mine.</h2><p>Rabbit Testnet provides public P2P discovery, HTTPS RPC, WebSocket RPC, the official explorer and verified Rabbit Core downloads. The faucet remains planned.</p><div className="hero-ctas"><Link className="button primary" to="/testnet">Testnet hub <ArrowRight size={15} /></Link><button className="button secondary" onClick={() => onAddNetwork(testnet)}>Add Testnet</button></div></div>
           <div className="testnet-status-table">
             <div><Wallet size={17} /><span>Wallet connection</span><b className="ready">LIVE</b></div>
             <div><Network size={17} /><span>Chain configuration</span><b className="ready">9280</b></div>
             <div><TerminalSquare size={17} /><span>Official RPC</span><b>{testnet.publicRpcReady ? 'LIVE' : 'RESERVED'}</b></div>
             <div><Globe2 size={17} /><span>Explorer</span><b>{testnet.publicExplorerReady ? 'LIVE' : 'RESERVED'}</b></div>
-            <div><FlaskConical size={17} /><span>Faucet RAB / RUSD</span><b>{testnet.publicFaucetReady ? 'LIVE' : 'RESERVED'}</b></div>
-            <div><Cpu size={17} /><span>Mining binaries</span><b>RELEASE GATE</b></div>
+            <div><FlaskConical size={17} /><span>Faucet</span><b>PLANNED</b></div>
+            <div><Cpu size={17} /><span>Rabbit Core downloads</span><b>LIVE</b></div>
           </div>
         </div>
       </section>

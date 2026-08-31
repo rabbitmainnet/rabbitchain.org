@@ -170,23 +170,16 @@ function ToolPanel({ tool, walletState, onConnect, onSwitchNetwork, networkKey }
 
         <div className="faucet-intro">
           <h3>Rabbit Testnet Faucet</h3>
-          <p>Test assets for development, wallet testing and Rabbit Testnet participation.</p>
+          <p>The faucet is planned and has no official endpoint or distribution contract yet.</p>
         </div>
 
-        <div className="faucet-assets">
-          {network.tokens.filter((token) => token.faucet).map((token) => (
-            <div key={token.symbol}>
-              <span>TEST ASSET</span>
-              <strong>{token.symbol}</strong>
-              <small>{token.description}</small>
-              <button disabled>Available when Faucet is live</button>
-            </div>
-          ))}
+        <div className="product-empty">
+          <h3>Faucet not published.</h3>
+          <p>Funding rules, abuse controls and contract details will be published after deployment and validation.</p>
         </div>
 
         <p className="product-disclaimer">
-          Test assets have no monetary value. tUSDT and tUSDC are Rabbit Testnet
-          testing tokens and are not official Tether or Circle assets.
+          tRAB is the native Testnet asset. No ERC-20 test asset is currently presented as official.
         </p>
       </div>
     )

@@ -71,7 +71,7 @@ export default function NetworkHero() {
       <div><span>CONSENSUS</span><b>LCQ</b></div>
       <div><span>EXECUTION</span><b>EVM</b></div>
       <div><span>NETWORK</span><b>P2P</b></div>
-      <div><span>STATUS</span><b>PRE-LAUNCH</b></div>
+      <div><span>STATUS</span><b>LIVE</b></div>
     </div>
   </div>
 }

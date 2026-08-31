@@ -1,4 +1,4 @@
-export const TESTNET_LIVE = false
+export const TESTNET_LIVE = true
 export const MAINNET_LIVE = false
 
 export const NETWORKS = {
@@ -14,19 +14,19 @@ export const NETWORKS = {
     execution: 'EVM',
     role: 'First public launch',
     status: TESTNET_LIVE ? 'LIVE' : 'PRE-LAUNCH',
-    statusTone: 'launch',
+    statusTone: 'live',
     description: 'The first public Rabbit network for mining, nodes, wallet integrations, applications and protocol validation before Mainnet.',
-    rpcUrl: 'https://rpc.testnet.rabbitchain.org',
-    wsUrl: 'wss://ws.testnet.rabbitchain.org',
-    explorerUrl: 'https://explorer.testnet.rabbitchain.org',
-    faucetUrl: 'https://faucet.testnet.rabbitchain.org',
+    rpcUrl: 'https://rpc-testnet.rabbitchain.org',
+    wsUrl: 'wss://rpc-testnet.rabbitchain.org/ws',
+    explorerUrl: 'https://explorer-testnet.rabbitchain.org',
+    faucetUrl: null,
 
     // Launch/readiness source of truth.
     networkLive: TESTNET_LIVE,
     walletEnabled: true,
-    publicRpcReady: false,
-    publicWsReady: false,
-    publicExplorerReady: false,
+    publicRpcReady: true,
+    publicWsReady: true,
+    publicExplorerReady: true,
     publicFaucetReady: false,
 
     platform: {

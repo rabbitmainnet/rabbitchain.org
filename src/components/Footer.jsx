@@ -13,7 +13,6 @@ const columns = [
     ['P2P', '/platform/p2p'],
     ['Launchpool', '/platform/launchpool'],
     ['Token Factory', '/platform/factory'],
-    ['Testnet Faucet', '/platform/faucet']
   ]],
   ['Project', [['Community', '/community'], ['About', '/about'], ['Privacy Policy', '/privacy-policy'], ['Terms & Conditions', '/terms-and-conditions'], ['Risk Disclosure', '/risk-disclosure']]],
 ]

@@ -19,7 +19,7 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
           </div>
           <div className="network-summary-card">
             <div className="network-summary-head"><div><img src="/rabbit-mark.png" alt="" /><span><b>RABBIT TESTNET</b><small>FIRST PUBLIC NETWORK</small></span></div><em>{n.networkLive ? 'LIVE' : 'PRE-LAUNCH'}</em></div>
-            <div className="network-summary-grid"><div><span>CHAIN ID</span><strong>9280</strong></div><div><span>HEX</span><strong>0x2440</strong></div><div><span>CONSENSUS</span><strong>LCQ</strong></div><div><span>EXECUTION</span><strong>EVM</strong></div><div><span>NATIVE ASSET</span><strong>RAB</strong></div><div><span>TEST ASSET</span><strong>RUSD</strong></div></div>
+            <div className="network-summary-grid"><div><span>CHAIN ID</span><strong>9280</strong></div><div><span>HEX</span><strong>0x2440</strong></div><div><span>CONSENSUS</span><strong>LCQ</strong></div><div><span>EXECUTION</span><strong>EVM</strong></div><div><span>NATIVE ASSET</span><strong>tRAB</strong></div><div><span>NETWORK</span><strong>PUBLIC P2P</strong></div></div>
             <div className="network-summary-foot"><span><i className="dot-ready" /> Wallet integration ready</span><span><i /> Public services activate separately</span></div>
           </div>
         </div>
@@ -30,7 +30,7 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
         <div className="quick-start-grid">
           <article><span>01</span><Wallet size={21} /><h3>Connect wallet</h3><p>Use an installed EVM wallet or WalletConnect. Connection alone requests no signature.</p><button onClick={onConnect}>{walletState.account ? 'Manage wallet' : 'Connect wallet'} <ArrowRight size={14} /></button></article>
           <article><span>02</span><Plus size={21} /><h3>Add Testnet</h3><p>Add Chain ID 9280 and the official Rabbit RPC configuration through your wallet.</p><button onClick={() => onAddNetwork(n)}>Add network <ArrowRight size={14} /></button></article>
-          <article><span>03</span><FlaskConical size={21} /><h3>Get RAB / RUSD</h3><p>Test assets come from the official faucet after the service is activated.</p>{n.publicFaucetReady ? <a href={n.faucetUrl} target="_blank" rel="noreferrer">Open faucet <ArrowRight size={14} /></a> : <button disabled>Faucet reserved</button>}</article>
+          <article><span>03</span><FlaskConical size={21} /><h3>Get testnet tRAB</h3><p>The official faucet is planned and has no published endpoint yet.</p><button disabled>Faucet planned</button></article>
           <article><span>04</span><Globe2 size={21} /><h3>Inspect the chain</h3><p>Blocks, transactions, addresses and contracts appear in the official explorer.</p>{n.publicExplorerReady ? <a href={n.explorerUrl} target="_blank" rel="noreferrer">Open explorer <ArrowRight size={14} /></a> : <button disabled>Explorer reserved</button>}</article>
           <article><span>05</span><Cpu size={21} /><h3>Mine or operate</h3><p>Verify official releases, run Rabbit and participate in the public network.</p><Link to="/mining">Mining path <ArrowRight size={14} /></Link></article>
         </div>
@@ -38,12 +38,12 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
 
       <section className="endpoint-section">
         <div className="shell">
-          <SectionHeader eyebrow="OFFICIAL ENDPOINTS" title="Reserved domains, explicit readiness." text="The domain names can be published before the services are live. Every endpoint keeps its real status visible." />
+          <SectionHeader eyebrow="OFFICIAL ENDPOINTS" title="Live public Testnet services." text="The HTTPS RPC, WebSocket RPC and explorer are deployed and publicly available." />
           <div className="endpoint-table">
             <div className="endpoint-row"><span><Radio size={16} />JSON-RPC</span><code>{n.rpcUrl}</code><em>{n.publicRpcReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.rpcUrl} /></div>
             <div className="endpoint-row"><span><Network size={16} />WebSocket</span><code>{n.wsUrl}</code><em>{n.publicWsReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.wsUrl} /></div>
             <div className="endpoint-row"><span><Globe2 size={16} />Explorer</span><code>{n.explorerUrl}</code><em>{n.publicExplorerReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.explorerUrl} /></div>
-            <div className="endpoint-row"><span><FlaskConical size={16} />Faucet</span><code>{n.faucetUrl}</code><em>{n.publicFaucetReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.faucetUrl} /></div>
+            <div className="endpoint-row"><span><FlaskConical size={16} />Faucet</span><code>Not published</code><em>PLANNED</em></div>
           </div>
         </div>
       </section>
@@ -58,7 +58,7 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
         </div>
       </section>
 
-      <section className="safety-section"><div className="shell safety-grid"><div><ShieldCheck size={28} /><span>TESTNET SAFETY</span><h2>Test assets are not Mainnet assets.</h2></div><div><p>tRAB and RUSD are for testing only. Verify software and endpoints from rabbitchain.org and the official Rabbit GitHub.</p><div className="safety-points"><span><CheckCircle2 size={15} />No seed phrase requested</span><span><CheckCircle2 size={15} />No Mainnet value on faucet</span><span><CheckCircle2 size={15} />Service status shown explicitly</span></div></div></div></section>
+      <section className="safety-section"><div className="shell safety-grid"><div><ShieldCheck size={28} /><span>TESTNET SAFETY</span><h2>Test assets are not Mainnet assets.</h2></div><div><p>tRAB is the native Rabbit Testnet asset and has no Mainnet value. Verify software and endpoints through rabbitchain.org and the official Rabbit GitHub.</p><div className="safety-points"><span><CheckCircle2 size={15} />No seed phrase requested</span><span><CheckCircle2 size={15} />No guaranteed monetary value</span><span><CheckCircle2 size={15} />Service status shown explicitly</span></div></div></div></section>
     </main>
   )
 }

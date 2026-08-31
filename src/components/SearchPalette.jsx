@@ -3,15 +3,15 @@ import { Search, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const items = [
-  ['Rabbit Platform', 'Swap, liquidity, staking, bridge, P2P, launchpool, token factory and Testnet faucet', '/platform'],
+  ['Rabbit Platform', 'Planned swap, liquidity, staking, bridge, P2P, launchpool and token factory modules', '/platform'],
   ['Rabbit Testnet', 'First public network · Chain ID 9280', '/testnet'],
-  ['Network Status', 'Official RPC, explorer and faucet readiness', '/status'],
+  ['Network Status', 'Live RPC, WebSocket, explorer and planned services', '/status'],
   ['LCQ Consensus', 'Work, eligibility and producer coordination', '/lcq'],
   ['Mining', 'Download, verify and participate', '/mining'],
   ['Run a Node', 'P2P and independent infrastructure', '/nodes'],
   ['Developers', 'EVM, JSON-RPC and tooling', '/developers'],
   ['Rabbit Mainnet', 'Production network after public validation', '/mainnet'],
-  ['RAB', 'Native asset and reward role', '/rab'],
+  ['RAB / tRAB', 'Mainnet and Testnet native assets', '/rab'],
   ['Security', 'Official domains, wallets and release verification', '/security'],
   ['Releases', 'Official Rabbit binaries', '/releases'],
   ['Documentation', 'Protocol and network references', '/docs'],
