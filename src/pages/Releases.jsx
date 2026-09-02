@@ -14,12 +14,12 @@ export default function Releases() {
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
             <span className="hero-eyebrow"><i /> OFFICIAL SOFTWARE</span>
-            <h1>Rabbit Core Testnet v1 is <em>ready to verify.</em></h1>
+            <h1>Rabbit Core Testnet V2 is <em>ready to verify.</em></h1>
             <p>Official Windows and Linux packages built from the published source commit, with archive and internal SHA-256 verification.</p>
           </div>
           <div className="release-check-card">
             <FileCheck2 size={28} />
-            <span>PUBLIC TESTNET V1</span>
+            <span>PUBLIC TESTNET V2</span>
             <strong>Windows + Linux verified</strong>
             <p>Source commit: <code>{RELEASE.commit}</code></p>
             <a href={RELEASE.url} target="_blank" rel="noreferrer">Open official GitHub release</a>
@@ -44,7 +44,7 @@ export default function Releases() {
                 <p>{download.format} package</p>
                 <div className="download-meta">
                   <small>VERSION</small>
-                  <b>Testnet v1</b>
+                  <b>Testnet V2</b>
                   <small>SHA-256</small>
                   <code>{download.sha256}</code>
                 </div>
