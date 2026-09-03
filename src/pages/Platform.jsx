@@ -40,6 +40,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
   if (tool === 'swap') {
     return (
       <RabbitSwapPanel
+        key={`rabbit-swap-${networkKey}`}
         networkKey={networkKey}
         walletState={walletState}
         walletProvider={walletProvider}

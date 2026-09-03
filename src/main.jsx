@@ -4,6 +4,11 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import './styles.css'
 
+window.addEventListener('vite:preloadError', (event) => {
+  event.preventDefault()
+  window.location.reload()
+})
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>

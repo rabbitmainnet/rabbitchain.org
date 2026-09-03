@@ -104,9 +104,9 @@ export default function RabbitSwapPanel({
   const network = PLATFORM_NETWORKS[networkKey] || PLATFORM_NETWORKS.testnet
   const testnetBeta = networkKey === 'testnet' && network.swapLive
   const connected = Boolean(walletState?.account)
-  const correctNetwork = connected && walletState?.chainId === RABBIT_SWAP_TESTNET.chainId
-  const wrongNetwork = connected && walletState?.chainId !== Number(network.chainId)
-  const provider = correctNetwork && walletProvider?.request ? walletProvider : null
+  const correctNetwork = connected && walletState?.chainId === Number(network.chainId)
+  const wrongNetwork = connected && !correctNetwork
+  const provider = testnetBeta && correctNetwork && walletProvider?.request ? walletProvider : null
   const { tokens: testnetTokens, importToken } = useRabbitSwapTokens(provider)
   const protocolFee = useRabbitSwapProtocolFee(provider)
   const { slippageBps, slippageLabel, setSlippageBps } = useRabbitSlippage()
@@ -211,7 +211,7 @@ export default function RabbitSwapPanel({
   }, [testnetBeta, path, amountIn, provider, slippageBps])
 
   const priceImpact = useMemo(() => {
-    if (!quote || !reserves || amountIn <= 0n || reserves[0] <= 0n || reserves[1] <= 0n) return null
+    if (!fromToken || !toToken || !quote || !reserves || amountIn <= 0n || reserves[0] <= 0n || reserves[1] <= 0n) return null
     const input = numberFromUnits(amountIn, fromToken.decimals)
     const output = numberFromUnits(quote, toToken.decimals)
     const reserveIn = numberFromUnits(reserves[0], fromToken.decimals)
@@ -377,7 +377,7 @@ export default function RabbitSwapPanel({
         </div>
       </div>
 
-      {testnetBeta && quote !== null && (
+      {testnetBeta && quote !== null && toToken && (
         <div className="rabbit-swap-details">
           <div><span>Minimum received</span><b>{formatTokenAmount(minimumOut, toToken.decimals, 8)} {toToken.symbol}</b></div>
           <div><span>Total swap fee</span><b>0.30%</b></div>
