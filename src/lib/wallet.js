@@ -48,7 +48,7 @@ async function getWalletConnectProvider() {
         metadata: WALLETCONNECT_METADATA,
         showQrModal: true,
         optionalChains: WALLET_NETWORK_LIST.map((n) => n.chainId),
-        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','eth_sendTransaction','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
+        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','eth_sendTransaction','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
         optionalEvents: ['chainChanged','accountsChanged'],
         rpcMap,
         qrModalOptions: { themeMode: 'light' }

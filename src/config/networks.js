@@ -36,7 +36,7 @@ export const NETWORKS = {
       bridgeLive: false,
       p2pLive: false,
       launchpoolLive: false,
-      factoryLive: false,
+      factoryLive: true,
     },
   },
 

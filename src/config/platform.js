@@ -57,7 +57,7 @@ export function platformModuleLive(networkKey, tool) {
 export function platformModuleStatus(networkKey, tool) {
   const network = PLATFORM_NETWORKS[networkKey]
   if (!network) return 'UNAVAILABLE'
-  if (networkKey === 'testnet' && platformModuleLive(networkKey, tool) && (tool === 'swap' || tool === 'liquidity')) return 'TESTNET BETA'
+  if (networkKey === 'testnet' && platformModuleLive(networkKey, tool) && (tool === 'swap' || tool === 'liquidity' || tool === 'factory')) return 'TESTNET BETA'
   if (platformModuleLive(networkKey, tool)) return 'LIVE'
   if (networkKey === 'mainnet' && !network.networkLive) return 'COMING LATER'
   return 'PRE-LAUNCH'

@@ -11,12 +11,13 @@ import PlatformNetworkSwitch from '../components/PlatformNetworkSwitch'
 import RabbitSwapPanel from '../components/RabbitSwapPanel'
 import RabbitFaucetPanel from '../components/RabbitFaucetPanel'
 import RabbitLiquidityPanel from '../components/RabbitLiquidityPanel'
+import RabbitTokenFactoryPanel from '../components/RabbitTokenFactoryPanel'
 
 const tools = {
   swap: { icon: Repeat2, label: 'SWAP', title: 'Rabbit Swap', intro: 'Trade Rabbit Testnet assets through the verified RabbitSwap Router and live liquidity pools.' },
   liquidity: { icon: Waves, label: 'LIQUIDITY', title: 'Liquidity', intro: 'Create and manage RabbitSwap liquidity positions. Permissionless pairs are supported by the Testnet contracts.' },
   launchpool: { icon: Flame, label: 'LAUNCHPOOL', title: 'Launchpool', intro: 'Discover official launch campaigns and participation windows in one place.' },
-  factory: { icon: Factory, label: 'TOKEN FACTORY', title: 'Token Factory', intro: 'Deploy standard EVM tokens through a guided interface with transparent parameters.' },
+  factory: { icon: Factory, label: 'TOKEN FACTORY', title: 'Token Factory', intro: 'Create fixed-supply Rabbit Testnet ERC-20 tokens with transparent rules and TWAP-priced fees.' },
   bridge: { icon: Layers3, label: 'BRIDGE', title: 'Bridge', intro: 'Move supported assets through official routes when bridge infrastructure is available.' },
   staking: { icon: Coins, label: 'STAKING', title: 'Staking', intro: 'Stake supported Rabbit assets through the official non-custodial application interface when staking contracts are released.' },
   p2p: { icon: Network, label: 'P2P', title: 'P2P', intro: 'Direct peer-to-peer interaction through the Rabbit application layer when the public service is released.' },
@@ -83,6 +84,18 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
   }
 
   if (tool === 'factory') {
+    if (networkKey === 'testnet' && network.modules?.factoryLive) {
+      return (
+        <RabbitTokenFactoryPanel
+          walletState={walletState}
+          walletProvider={walletProvider}
+          onConnect={onConnect}
+          onSwitchNetwork={onSwitchNetwork}
+          toast={toast}
+        />
+      )
+    }
+
     return (
       <div className="product-panel">
         <div className="product-panel-title"><div><Icon size={20} /><span>{entry.label}</span></div><b>{statusText}</b></div>

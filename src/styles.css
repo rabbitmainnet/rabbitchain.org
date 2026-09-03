@@ -4780,3 +4780,553 @@ footer {
     max-width:76%;
   }
 }
+
+/* ---------- RABBIT TOKEN FACTORY TESTNET BETA ---------- */
+.rabbit-factory{
+  display:grid;
+  gap:18px;
+  min-width:0;
+}
+.rabbit-factory-topline{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:14px 16px;
+  border:1px solid #ddd8ff;
+  background:linear-gradient(135deg,#fbfaff 0%,#f5f2ff 100%);
+  border-radius:16px;
+}
+.rabbit-factory-topline>div{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.rabbit-factory-topline span{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:#7355d7;
+}
+.rabbit-factory-topline strong{
+  font-size:12px;
+  color:#373548;
+}
+.rabbit-factory-topline>b{
+  flex:0 0 auto;
+  padding:7px 10px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid #dfd9ff;
+  color:#9c3fc9;
+  font-size:9px;
+  letter-spacing:.08em;
+}
+.rabbit-factory-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);
+  gap:16px;
+}
+.rabbit-factory-card{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 16px 38px rgba(28,23,54,.06);
+}
+.rabbit-factory-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom:15px;
+  margin-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.rabbit-factory-card-head>div{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#6f4ed4;
+}
+.rabbit-factory-card-head span{
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.09em;
+}
+.rabbit-factory-card-head small{
+  color:#8a8797;
+  font-size:10px;
+}
+.rabbit-factory-field{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:7px 12px;
+  margin-bottom:15px;
+}
+.rabbit-factory-field>span,
+.rabbit-factory-decimals>span{
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:#858292;
+}
+.rabbit-factory-field input{
+  grid-column:1/-1;
+  width:100%;
+  min-width:0;
+  border:1px solid #e2deed;
+  background:#faf9fd;
+  border-radius:13px;
+  padding:13px 14px;
+  outline:none;
+  font:inherit;
+  font-size:14px;
+  color:#211f2b;
+  transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.rabbit-factory-field input:focus{
+  border-color:#9b80ee;
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(132,96,229,.09);
+}
+.rabbit-factory-field small{
+  grid-column:1/-1;
+  color:#9a97a5;
+  font-size:9px;
+}
+.rabbit-factory-decimals{
+  margin-top:2px;
+}
+.rabbit-factory-decimals>div{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:8px;
+}
+.rabbit-factory-decimals button{
+  border:1px solid #e2deed;
+  background:#faf9fd;
+  border-radius:11px;
+  padding:10px 6px;
+  font-weight:850;
+  color:#6d697b;
+  cursor:pointer;
+}
+.rabbit-factory-decimals button.active{
+  border-color:#8f70e7;
+  background:#f2edff;
+  color:#6843d7;
+  box-shadow:inset 0 0 0 1px #c9baf6;
+}
+.rabbit-factory-profile{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:17px;
+  padding-top:15px;
+  border-top:1px solid var(--line);
+}
+.rabbit-factory-profile span{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:6px 8px;
+  border-radius:999px;
+  background:#f6f8f7;
+  color:#4d665b;
+  font-size:9px;
+  font-weight:800;
+}
+.rabbit-factory-payment-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.rabbit-factory-payment-tabs button{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+  min-height:96px;
+  padding:14px;
+  border:1px solid #e3dfed;
+  border-radius:15px;
+  background:#fbfafd;
+  cursor:pointer;
+  text-align:left;
+}
+.rabbit-factory-payment-tabs button.active{
+  border-color:#8c6be7;
+  background:linear-gradient(145deg,#f7f3ff,#fff);
+  box-shadow:0 0 0 2px rgba(119,84,215,.08);
+}
+.rabbit-factory-payment-tabs span{
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:#817d8d;
+}
+.rabbit-factory-payment-tabs strong{
+  font-size:17px;
+  color:#211e2b;
+}
+.rabbit-factory-payment-tabs small{
+  font-size:9px;
+  color:#9692a1;
+}
+.rabbit-factory-fee-meta{
+  display:grid;
+  gap:0;
+  margin:14px 0;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+}
+.rabbit-factory-fee-meta>div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px;
+  border-bottom:1px solid var(--line);
+}
+.rabbit-factory-fee-meta>div:last-child{border-bottom:0}
+.rabbit-factory-fee-meta span{
+  font-size:10px;
+  color:#92909c;
+}
+.rabbit-factory-fee-meta b{
+  text-align:right;
+  font-size:10px;
+  color:#3f3c49;
+}
+.rabbit-factory-fee-meta b.fresh{color:#18895d}
+.rabbit-factory-action{
+  width:100%;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border:0;
+  border-radius:14px;
+  background:linear-gradient(100deg,#d953c2 0%,#9f63ed 48%,#7a88f2 100%);
+  color:#fff;
+  font-weight:900;
+  font-size:12px;
+  cursor:pointer;
+  box-shadow:0 12px 25px rgba(129,83,213,.18);
+}
+.rabbit-factory-action:disabled{
+  cursor:not-allowed;
+  opacity:.55;
+  box-shadow:none;
+}
+.rabbit-factory-flow-note{
+  margin:11px 2px 0;
+  color:#908d9b;
+  font-size:9px;
+  line-height:1.65;
+}
+.rabbit-factory-created{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  border:1px solid #cfe8dd;
+  background:#f7fcf9;
+  border-radius:18px;
+  padding:18px;
+}
+.rabbit-factory-created>div:first-child>svg{color:#1f9d69}
+.rabbit-factory-created span{
+  display:block;
+  margin-top:6px;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:#318765;
+}
+.rabbit-factory-created h3{
+  margin:5px 0;
+  font-size:19px;
+}
+.rabbit-factory-created h3 em{
+  font-style:normal;
+  color:#7d6a98;
+}
+.rabbit-factory-created code{
+  display:block;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:10px;
+  color:#686474;
+}
+.rabbit-factory-created p{
+  margin:7px 0 0;
+  font-size:10px;
+  color:#777481;
+}
+.rabbit-factory-created-actions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:7px;
+}
+.rabbit-factory-created-actions a{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid #d9d5e4;
+  background:#fff;
+  color:#5e4d8d;
+  font-size:10px;
+  font-weight:800;
+  text-decoration:none;
+}
+.rabbit-factory-registry{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:18px;
+  overflow:hidden;
+}
+.rabbit-factory-registry-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--line);
+}
+.rabbit-factory-registry-head>div{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.rabbit-factory-registry-head span{
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:#8b8796;
+}
+.rabbit-factory-registry-head strong{
+  font-size:12px;
+}
+.rabbit-factory-registry-head button{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  border:1px solid #ded9e9;
+  background:#faf9fc;
+  border-radius:9px;
+  padding:7px 9px;
+  color:#665d75;
+  font-size:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+.rabbit-factory-token-list{
+  display:grid;
+}
+.rabbit-factory-token-list article{
+  display:grid;
+  grid-template-columns:36px minmax(110px,1fr) auto auto auto;
+  align-items:center;
+  gap:10px;
+  padding:11px 15px;
+  border-bottom:1px solid var(--line);
+}
+.rabbit-factory-token-list article:last-child{border-bottom:0}
+.rabbit-factory-token-mark{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#f1edfb;
+  color:#6d4cd1;
+  font-size:9px;
+  font-weight:900;
+}
+.rabbit-factory-token-list span{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.rabbit-factory-token-list b{
+  font-size:11px;
+}
+.rabbit-factory-token-list small{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#92909c;
+  font-size:9px;
+}
+.rabbit-factory-token-list em{
+  font-style:normal;
+  color:#8c8997;
+  font-size:9px;
+}
+.rabbit-factory-token-list a{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  color:#7755d2;
+  font-size:9px;
+  font-weight:800;
+  text-decoration:none;
+}
+.rabbit-factory-empty{
+  padding:18px 16px;
+  color:#96939f;
+  font-size:10px;
+}
+.rabbit-factory-contracts{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px 18px;
+  padding:0 2px;
+}
+.rabbit-factory-contracts span{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.07em;
+  color:#9995a2;
+}
+.rabbit-factory-contracts a{
+  display:flex;
+  align-items:center;
+  gap:3px;
+  color:#7155c5;
+  text-decoration:none;
+}
+@media (max-width:980px){
+  .rabbit-factory-grid{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  .rabbit-factory-topline,
+  .rabbit-factory-created{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .rabbit-factory-created-actions{justify-content:flex-start}
+  .rabbit-factory-payment-tabs{grid-template-columns:1fr}
+  .rabbit-factory-token-list article{
+    grid-template-columns:36px minmax(0,1fr) auto;
+  }
+  .rabbit-factory-token-list article em{display:none}
+  .rabbit-factory-contracts{display:grid}
+}
+
+/* RABBIT_FACTORY_WATCH_ASSET_V4 */
+.rabbit-factory-wallet-add{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid #d9d5e4;
+  background:#fff;
+  color:#5e4d8d;
+  font:inherit;
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+.rabbit-factory-wallet-add:hover{
+  border-color:#aa96df;
+  background:#f8f5ff;
+  color:#6747c6;
+}
+.rabbit-factory-wallet-add.compact{
+  padding:6px 8px;
+  font-size:9px;
+  white-space:nowrap;
+}
+@media (max-width:720px){
+  .rabbit-factory-token-list article{
+    grid-template-columns:36px minmax(0,1fr) auto;
+  }
+  .rabbit-factory-token-list article em{
+    display:none;
+  }
+  .rabbit-factory-token-list article .rabbit-factory-wallet-add{
+    grid-column:2;
+    justify-self:start;
+  }
+}
+
+/* RABBIT_FACTORY_SWAP_ASSET_LOGOS_V6 */
+/* These are presentation wrappers only. Image sources come from the same
+   RABBIT_SWAP_TESTNET token configuration already used by Swap/Liquidity. */
+.rabbit-factory-asset-logo{
+  width:30px;
+  height:30px;
+  flex:0 0 30px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:#fff;
+  border:1px solid #dedfe8;
+  border-radius:50%;
+  box-shadow:0 3px 10px rgba(30,25,50,.05);
+}
+.rabbit-factory-asset-logo img{
+  width:21px;
+  height:21px;
+  object-fit:contain;
+}
+.rabbit-factory-asset-logo.small{
+  width:20px;
+  height:20px;
+  flex-basis:20px;
+  box-shadow:none;
+}
+.rabbit-factory-asset-logo.small img{
+  width:14px;
+  height:14px;
+}
+.rabbit-factory-asset-name{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  gap:8px !important;
+  font-size:10px !important;
+  font-weight:900 !important;
+  letter-spacing:.08em;
+  color:#817d8d !important;
+}
+.rabbit-factory-asset-name.compact{
+  gap:6px !important;
+  font-size:10px !important;
+  font-weight:700 !important;
+  letter-spacing:0;
+  color:#92909c !important;
+}
+.rabbit-factory-fee-meta>div>span{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.rabbit-factory-fee-with-logo{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:6px;
+}
+.rabbit-factory-payment-tabs button .rabbit-factory-asset-name{
+  min-height:30px;
+}

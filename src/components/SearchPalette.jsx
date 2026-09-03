@@ -7,6 +7,7 @@ const items = [
   ['Rabbit Testnet', 'First public network · Chain ID 9280', '/testnet'],
   ['Rabbit Swap', 'Testnet Beta · tRAB, tWRAB and tRUSD', '/platform/swap'],
   ['Liquidity', 'Testnet Beta · create and manage RabbitSwap pools', '/platform/liquidity'],
+  ['Token Factory', 'Testnet Beta · fixed-supply ERC-20 creation with TWAP pricing', '/platform/factory'],
   ['Testnet Faucet', 'Participant faucet for tRAB and tRUSD test assets', '/platform/faucet'],
   ['Network Status', 'Live RPC, WebSocket, explorer and faucet services', '/status'],
   ['LCQ Consensus', 'Work, eligibility and producer coordination', '/lcq'],
