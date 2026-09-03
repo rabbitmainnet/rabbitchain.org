@@ -5335,15 +5335,16 @@ footer {
    Live Rabbit Testnet producer count - intentionally subtle beneath hero facts. */
 .home-active-miners{
   width:100%;
-  margin-top:16px;
-  padding-top:13px;
+  margin:18px auto 0;
+  padding-top:14px;
   border-top:1px solid rgba(35,31,63,.09);
   display:flex;
   align-items:center;
-  gap:8px;
-  min-height:28px;
+  justify-content:center;
+  gap:10px;
+  min-height:32px;
   color:#8c90a0;
-  font-size:9px;
+  font-size:10px;
   line-height:1;
   font-weight:850;
   letter-spacing:.105em;
@@ -5365,7 +5366,7 @@ footer {
 .home-active-miners>strong{
   margin-left:1px;
   color:#22212b;
-  font-size:13px;
+  font-size:16px;
   line-height:1;
   letter-spacing:-.02em;
   font-weight:900;
@@ -5373,7 +5374,7 @@ footer {
 .home-active-miners>small{
   margin-left:2px;
   color:#a0a3ae;
-  font-size:8px;
+  font-size:9px;
   line-height:1.2;
   letter-spacing:.095em;
   font-weight:800;
@@ -5381,4 +5382,61 @@ footer {
 @media(max-width:640px){
   .home-active-miners{flex-wrap:wrap;row-gap:7px}
   .home-active-miners>small{flex-basis:100%;margin-left:14px}
+}
+
+
+/* RABBIT_PLATFORM_STICKY_BAR_V1
+   Product routes only: keep the complete Platform module/network bar
+   attached immediately below the main Rabbit header while scrolling. */
+
+.platform-product-page .platform-product-shell{
+  overflow:visible !important;
+}
+
+.platform-product-page .platform-sidebar{
+  position:sticky !important;
+  top:76px !important;
+  z-index:80 !important;
+
+  background:rgba(255,255,255,.96) !important;
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+
+  box-shadow:
+    0 1px 0 rgba(23,22,38,.08),
+    0 8px 24px rgba(38,31,78,.05);
+
+  isolation:isolate;
+}
+
+/* Keep the horizontal Platform choices usable while the bar is sticky. */
+.platform-product-page .platform-sidebar nav{
+  scrollbar-width:none;
+}
+
+.platform-product-page .platform-sidebar nav::-webkit-scrollbar{
+  display:none;
+}
+
+.platform-product-page .platform-sidebar nav a{
+  flex:0 0 auto;
+}
+
+/* Tablet / mobile header is shorter. */
+@media(max-width:820px){
+  .platform-product-page .platform-sidebar{
+    top:64px !important;
+  }
+}
+
+/* Small phones: keep all modules horizontally scrollable. */
+@media(max-width:640px){
+  .platform-product-page .platform-sidebar{
+    top:60px !important;
+  }
+
+  .platform-product-page .platform-sidebar nav{
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+  }
 }

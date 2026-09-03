@@ -100,11 +100,11 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
             <div
               className={`home-active-miners${activeMiners !== null ? ' is-live' : ''}`}
               aria-label={activeMiners !== null
-                ? `${activeMiners} active miners, unique producers in the last ${activeMinersWindow} blocks`
-                : 'Active miner count loading'}
+                ? `${activeMiners} Rabbit Testnet active miners, unique producers in the last ${activeMinersWindow} blocks`
+                : 'Rabbit Testnet active miner count loading'}
             >
               <i aria-hidden="true" />
-              <span>ACTIVE MINERS</span>
+              <span>TESTNET ACTIVE MINERS</span>
               <strong>{activeMiners ?? '—'}</strong>
               <small>UNIQUE PRODUCERS · LAST {activeMinersWindow} BLOCKS</small>
             </div>
