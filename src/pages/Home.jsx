@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ArrowRight, ArrowUpRight, BookOpen, Braces, CheckCircle2, Code2,
@@ -8,6 +9,9 @@ import { NETWORKS } from '../config/networks'
 import { usePlatformNetwork } from '../hooks/usePlatformNetwork'
 import PlatformNetworkSwitch from '../components/PlatformNetworkSwitch'
 import RabbitSwapPanel from '../components/RabbitSwapPanel'
+
+const RABBIT_ACTIVE_MINERS_URL = 'https://explorer-testnet.rabbitchain.org/api/rabbit/active-miners.json'
+const RABBIT_ACTIVE_MINERS_WINDOW = 128
 
 
 const paths = [
@@ -31,6 +35,48 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
     setPlatformNetwork,
   } = usePlatformNetwork()
 
+  // RABBIT_ACTIVE_MINERS_HOME_V1
+  const [activeMiners, setActiveMiners] = useState(null)
+  const [activeMinersWindow, setActiveMinersWindow] = useState(RABBIT_ACTIVE_MINERS_WINDOW)
+
+  useEffect(() => {
+    let cancelled = false
+
+    const refreshActiveMiners = async () => {
+      try {
+        const response = await fetch(RABBIT_ACTIVE_MINERS_URL, {
+          method: 'GET',
+          cache: 'no-store',
+          headers: { Accept: 'application/json' },
+        })
+
+        if (!response.ok) return
+
+        const data = await response.json()
+        const count = Number(data?.active_miners)
+        const windowBlocks = Number(data?.window_blocks)
+        const chainId = Number(data?.chain_id)
+
+        if (!cancelled && chainId === 9280 && Number.isInteger(count) && count >= 0) {
+          setActiveMiners(count)
+          if (Number.isInteger(windowBlocks) && windowBlocks > 0) {
+            setActiveMinersWindow(windowBlocks)
+          }
+        }
+      } catch {
+        // Preserve the last known valid value during temporary endpoint/network errors.
+      }
+    }
+
+    refreshActiveMiners()
+    const timer = window.setInterval(refreshActiveMiners, 30000)
+
+    return () => {
+      cancelled = true
+      window.clearInterval(timer)
+    }
+  }, [])
+
   return (
     <main className="home-page-v13">
       <section className="home-v2-hero">
@@ -50,6 +96,17 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
               <div><span>CONSENSUS</span><strong>LCQ</strong><small>LIVE CONSENSUS QUEUE</small></div>
               <div><span>EXECUTION</span><strong>EVM</strong><small>FAMILIAR TOOLING</small></div>
               <div><span>REWARD</span><strong>70 / 30</strong><small>PRODUCER / COMMITTEE</small></div>
+            </div>
+            <div
+              className={`home-active-miners${activeMiners !== null ? ' is-live' : ''}`}
+              aria-label={activeMiners !== null
+                ? `${activeMiners} active miners, unique producers in the last ${activeMinersWindow} blocks`
+                : 'Active miner count loading'}
+            >
+              <i aria-hidden="true" />
+              <span>ACTIVE MINERS</span>
+              <strong>{activeMiners ?? '—'}</strong>
+              <small>UNIQUE PRODUCERS · LAST {activeMinersWindow} BLOCKS</small>
             </div>
           </div>
         </div>

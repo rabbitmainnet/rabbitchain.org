@@ -5330,3 +5330,55 @@ footer {
 .rabbit-factory-payment-tabs button .rabbit-factory-asset-name{
   min-height:30px;
 }
+
+/* RABBIT_ACTIVE_MINERS_HOME_V1
+   Live Rabbit Testnet producer count - intentionally subtle beneath hero facts. */
+.home-active-miners{
+  width:100%;
+  margin-top:16px;
+  padding-top:13px;
+  border-top:1px solid rgba(35,31,63,.09);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-height:28px;
+  color:#8c90a0;
+  font-size:9px;
+  line-height:1;
+  font-weight:850;
+  letter-spacing:.105em;
+  text-transform:uppercase;
+}
+.home-active-miners>i{
+  width:6px;
+  height:6px;
+  border-radius:999px;
+  flex:0 0 6px;
+  background:#b6b8c2;
+  box-shadow:0 0 0 3px rgba(182,184,194,.12);
+}
+.home-active-miners.is-live>i{
+  background:#159862;
+  box-shadow:0 0 0 3px rgba(21,152,98,.10);
+}
+.home-active-miners>span{color:#777b89}
+.home-active-miners>strong{
+  margin-left:1px;
+  color:#22212b;
+  font-size:13px;
+  line-height:1;
+  letter-spacing:-.02em;
+  font-weight:900;
+}
+.home-active-miners>small{
+  margin-left:2px;
+  color:#a0a3ae;
+  font-size:8px;
+  line-height:1.2;
+  letter-spacing:.095em;
+  font-weight:800;
+}
+@media(max-width:640px){
+  .home-active-miners{flex-wrap:wrap;row-gap:7px}
+  .home-active-miners>small{flex-basis:100%;margin-left:14px}
+}
