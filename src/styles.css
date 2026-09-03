@@ -5469,3 +5469,17 @@ footer {
     margin-top:0 !important;
   }
 }
+
+
+/* RABBIT_PLATFORM_DESKTOP_FLUSH_V3
+   Desktop only: keep Platform navigation flush with the main header
+   both before and after scrolling. */
+@media(min-width:821px){
+  main.platform-product-page{
+    padding-top:0 !important;
+  }
+
+  .platform-product-page .platform-product-shell{
+    margin-top:0 !important;
+  }
+}
