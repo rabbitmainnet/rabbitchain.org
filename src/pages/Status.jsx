@@ -21,14 +21,14 @@ export default function Status() {
         <SectionHeader
           eyebrow="PUBLIC SERVICES"
           title="Rabbit Testnet public service status."
-          text="HTTPS RPC, WebSocket RPC and explorer are live. The faucet is planned and has no official endpoint."
+          text="HTTPS RPC, WebSocket RPC, explorer and the participant tRAB + tRUSD faucet is live. New wallets mine tRAB first for gas."
         />
         <div className="status-service-grid">
           <Service Icon={Wallet} label="Wallet connection" value="Injected + WalletConnect" status="LIVE" />
           <Service Icon={Radio} label="JSON-RPC" value={t.rpcUrl} status={t.publicRpcReady ? 'LIVE' : 'OFFLINE'} />
           <Service Icon={Radio} label="WebSocket" value={t.wsUrl} status={t.publicWsReady ? 'LIVE' : 'OFFLINE'} />
           <Service Icon={Globe2} label="Explorer" value={t.explorerUrl} status={t.publicExplorerReady ? 'LIVE' : 'OFFLINE'} />
-          <Service Icon={FlaskConical} label="Faucet" value="Not published" status="PLANNED" />
+          <Service Icon={FlaskConical} label="Faucet" value="tRAB + tRUSD" status={t.publicFaucetReady ? 'LIVE' : 'OFFLINE'} />
         </div>
       </section>
       <section className="status-launch-note"><div className="shell status-launch-note-grid"><div><Clock3 size={26} /><span>LAUNCH MODEL</span><h2>Testnet first. Mainnet after validation.</h2></div><div><p>Rabbit Mainnet, Chain ID 928, remains a separate production milestone and is not presented as live until its own release gates are completed.</p><Link to="/mainnet">View Mainnet path <ArrowRight size={14} /></Link></div></div></section>

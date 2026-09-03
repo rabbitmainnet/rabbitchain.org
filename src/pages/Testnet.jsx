@@ -30,7 +30,7 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
         <div className="quick-start-grid">
           <article><span>01</span><Wallet size={21} /><h3>Connect wallet</h3><p>Use an installed EVM wallet or WalletConnect. Connection alone requests no signature.</p><button onClick={onConnect}>{walletState.account ? 'Manage wallet' : 'Connect wallet'} <ArrowRight size={14} /></button></article>
           <article><span>02</span><Plus size={21} /><h3>Add Testnet</h3><p>Add Chain ID 9280 and the official Rabbit RPC configuration through your wallet.</p><button onClick={() => onAddNetwork(n)}>Add network <ArrowRight size={14} /></button></article>
-          <article><span>03</span><FlaskConical size={21} /><h3>Get testnet tRAB</h3><p>The official faucet is planned and has no published endpoint yet.</p><button disabled>Faucet planned</button></article>
+          <article><span>03</span><FlaskConical size={21} /><h3>Participate, then test</h3><p>Mine your first tRAB for network gas, then use the participant faucet to claim 10 tRAB or 1,000 tRUSD every 24 hours for continued testing.</p><Link to="/platform/faucet">Open faucet <ArrowRight size={14} /></Link></article>
           <article><span>04</span><Globe2 size={21} /><h3>Inspect the chain</h3><p>Blocks, transactions, addresses and contracts appear in the official explorer.</p>{n.publicExplorerReady ? <a href={n.explorerUrl} target="_blank" rel="noreferrer">Open explorer <ArrowRight size={14} /></a> : <button disabled>Explorer reserved</button>}</article>
           <article><span>05</span><Cpu size={21} /><h3>Mine or operate</h3><p>Verify official releases, run Rabbit and participate in the public network.</p><Link to="/mining">Mining path <ArrowRight size={14} /></Link></article>
         </div>
@@ -38,12 +38,12 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
 
       <section className="endpoint-section">
         <div className="shell">
-          <SectionHeader eyebrow="OFFICIAL ENDPOINTS" title="Live public Testnet services." text="The HTTPS RPC, WebSocket RPC and explorer are deployed and publicly available." />
+          <SectionHeader eyebrow="OFFICIAL ENDPOINTS" title="Live public Testnet services." text="The HTTPS RPC, WebSocket RPC, explorer and participant faucet are deployed and publicly available. New wallets should mine tRAB first for gas." />
           <div className="endpoint-table">
             <div className="endpoint-row"><span><Radio size={16} />JSON-RPC</span><code>{n.rpcUrl}</code><em>{n.publicRpcReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.rpcUrl} /></div>
             <div className="endpoint-row"><span><Network size={16} />WebSocket</span><code>{n.wsUrl}</code><em>{n.publicWsReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.wsUrl} /></div>
             <div className="endpoint-row"><span><Globe2 size={16} />Explorer</span><code>{n.explorerUrl}</code><em>{n.publicExplorerReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.explorerUrl} /></div>
-            <div className="endpoint-row"><span><FlaskConical size={16} />Faucet</span><code>Not published</code><em>PLANNED</em></div>
+            <div className="endpoint-row"><span><FlaskConical size={16} />Faucet</span><code>{n.faucetUrl}</code><em>{n.publicFaucetReady ? 'LIVE' : 'RESERVED'}</em><CopyButton value={n.faucetUrl} /></div>
           </div>
         </div>
       </section>
@@ -58,7 +58,7 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
         </div>
       </section>
 
-      <section className="safety-section"><div className="shell safety-grid"><div><ShieldCheck size={28} /><span>TESTNET SAFETY</span><h2>Test assets are not Mainnet assets.</h2></div><div><p>tRAB is the native Rabbit Testnet asset and has no Mainnet value. Verify software and endpoints through rabbitchain.org and the official Rabbit GitHub.</p><div className="safety-points"><span><CheckCircle2 size={15} />No seed phrase requested</span><span><CheckCircle2 size={15} />No guaranteed monetary value</span><span><CheckCircle2 size={15} />Service status shown explicitly</span></div></div></div></section>
+      <section className="safety-section"><div className="shell safety-grid"><div><ShieldCheck size={28} /><span>TESTNET SAFETY</span><h2>Test assets are not Mainnet assets.</h2></div><div><p>tRAB is the native Rabbit Testnet asset and tRUSD is a test-only ERC-20 asset. Neither has guaranteed monetary value or Mainnet value. Verify software and endpoints through rabbitchain.org and the official Rabbit GitHub.</p><div className="safety-points"><span><CheckCircle2 size={15} />No seed phrase requested</span><span><CheckCircle2 size={15} />No guaranteed monetary value</span><span><CheckCircle2 size={15} />Service status shown explicitly</span></div></div></div></section>
     </main>
   )
 }

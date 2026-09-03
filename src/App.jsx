@@ -291,8 +291,8 @@ export default function App() {
             <Route path="/developers" element={<Page><Developers /></Page>} />
             <Route path="/docs" element={<Page><Docs /></Page>} />
             <Route path="/community" element={<Page><Community /></Page>} />
-            <Route path="/platform" element={<Page><Platform walletState={walletState} onConnect={openWallet} onAddNetwork={switchNetwork} /></Page>} />
-            <Route path="/platform/:tool" element={<Page><Platform walletState={walletState} onConnect={openWallet} onAddNetwork={switchNetwork} /></Page>} />
+            <Route path="/platform" element={<Page><Platform walletState={walletState} walletProvider={provider} onConnect={openWallet} onAddNetwork={switchNetwork} toast={toast} /></Page>} />
+            <Route path="/platform/:tool" element={<Page><Platform walletState={walletState} walletProvider={provider} onConnect={openWallet} onAddNetwork={switchNetwork} toast={toast} /></Page>} />
             <Route path="/rab" element={<Page><Rab /></Page>} />
             <Route path="/security" element={<Page><Security /></Page>} />
             <Route path="/releases" element={<Page><Releases /></Page>} />

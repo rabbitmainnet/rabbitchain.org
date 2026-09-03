@@ -9,6 +9,7 @@ import { PLATFORM_NETWORKS, platformModuleStatus } from '../config/platform'
 import { usePlatformNetwork } from '../hooks/usePlatformNetwork'
 import PlatformNetworkSwitch from '../components/PlatformNetworkSwitch'
 import RabbitSwapPanel from '../components/RabbitSwapPanel'
+import RabbitFaucetPanel from '../components/RabbitFaucetPanel'
 
 const tools = {
   swap: { icon: Repeat2, label: 'SWAP', title: 'Rabbit Swap', intro: 'Trade supported Rabbit-native assets through the official wallet-connected interface.' },
@@ -22,14 +23,14 @@ const tools = {
     icon: Droplets,
     label: 'FAUCET',
     title: 'Faucet',
-    intro: 'Request verified test assets for Rabbit Testnet development and network testing.'
+    intro: 'Participant faucet for miners, builders and testers. Mine tRAB first, then use test assets to keep testing Rabbit Testnet.'
   },
 }
 
 const toolOrder = ['swap', 'liquidity', 'staking', 'bridge', 'p2p', 'launchpool', 'factory', 'faucet']
 
 
-function ToolPanel({ tool, walletState, onConnect, onSwitchNetwork, networkKey }) {
+function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwork, networkKey, toast }) {
   const entry = tools[tool]
   const Icon = entry.icon
   const network = PLATFORM_NETWORKS[networkKey] || PLATFORM_NETWORKS.testnet
@@ -162,26 +163,13 @@ function ToolPanel({ tool, walletState, onConnect, onSwitchNetwork, networkKey }
 
   if (tool === 'faucet') {
     return (
-      <div className="product-panel product-faucet">
-        <div className="product-panel-title">
-          <div><Droplets size={20} /><span>FAUCET</span></div>
-          <b>{statusText}</b>
-        </div>
-
-        <div className="faucet-intro">
-          <h3>Rabbit Testnet Faucet</h3>
-          <p>The faucet is planned and has no official endpoint or distribution contract yet.</p>
-        </div>
-
-        <div className="product-empty">
-          <h3>Faucet not published.</h3>
-          <p>Funding rules, abuse controls and contract details will be published after deployment and validation.</p>
-        </div>
-
-        <p className="product-disclaimer">
-          tRAB is the native Testnet asset. No ERC-20 test asset is currently presented as official.
-        </p>
-      </div>
+      <RabbitFaucetPanel
+        walletState={walletState}
+        walletProvider={walletProvider}
+        onConnect={onConnect}
+        onSwitchNetwork={onSwitchNetwork}
+        toast={toast}
+      />
     )
   }
 
@@ -193,7 +181,7 @@ function ToolPanel({ tool, walletState, onConnect, onSwitchNetwork, networkKey }
   )
 }
 
-export default function Platform({ walletState, onConnect, onAddNetwork }) {
+export default function Platform({ walletState, walletProvider, onConnect, onAddNetwork, toast }) {
   const { tool } = useParams()
   const activeTool = tools[tool] ? tool : null
   const navigate = useNavigate()
@@ -260,7 +248,7 @@ export default function Platform({ walletState, onConnect, onAddNetwork }) {
 
           <section className="platform-workspace">
             <div className="platform-workspace-head"><div><span>{entry.label}</span><h1>{entry.title}</h1><p>{entry.intro}</p></div><button className="button secondary" onClick={onConnect}><Wallet size={15} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button></div>
-            <div className="platform-product-grid"><ToolPanel tool={activeTool} walletState={walletState} onConnect={onConnect} onSwitchNetwork={onAddNetwork} networkKey={platformNetwork} /><aside className="product-context"><span>RABBIT PLATFORM</span><h3>Product interface first. Services only when verified.</h3><p>These screens are the official application surface, but they stay explicit about availability. No market, bridge or contract is presented as live before its release gate is complete.</p><div><ShieldCheck size={17} /><span><b>No seed phrase</b><small>Wallet connection uses the public account only.</small></span></div><div><Network size={17} /><span><b>{networkName}</b><small>Chain ID {networkChainId} · {platformConfig.status}</small></span></div><button
+            <div className="platform-product-grid"><ToolPanel tool={activeTool} walletState={walletState} walletProvider={walletProvider} onConnect={onConnect} onSwitchNetwork={onAddNetwork} networkKey={platformNetwork} toast={toast} /><aside className="product-context"><span>RABBIT PLATFORM</span><h3>Product interface first. Services only when verified.</h3><p>These screens are the official application surface, but they stay explicit about availability. No market, bridge or contract is presented as live before its release gate is complete.</p><div><ShieldCheck size={17} /><span><b>No seed phrase</b><small>Wallet connection uses the public account only.</small></span></div><div><Network size={17} /><span><b>{networkName}</b><small>Chain ID {networkChainId} · {platformConfig.status}</small></span></div><button
       className="button primary"
       disabled={!selectedNetwork?.walletEnabled}
       onClick={() => selectedNetwork?.walletEnabled && onAddNetwork?.(selectedNetwork)}

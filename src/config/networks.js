@@ -19,7 +19,7 @@ export const NETWORKS = {
     rpcUrl: 'https://rpc-testnet.rabbitchain.org',
     wsUrl: 'wss://rpc-testnet.rabbitchain.org/ws',
     explorerUrl: 'https://explorer-testnet.rabbitchain.org',
-    faucetUrl: null,
+    faucetUrl: 'https://rabbitchain.org/platform/faucet',
 
     // Launch/readiness source of truth.
     networkLive: TESTNET_LIVE,
@@ -27,7 +27,7 @@ export const NETWORKS = {
     publicRpcReady: true,
     publicWsReady: true,
     publicExplorerReady: true,
-    publicFaucetReady: false,
+    publicFaucetReady: true,
 
     platform: {
       swapLive: false,

@@ -16,7 +16,8 @@
     "react-dom": "19.2.8",
     "react-router-dom": "7.18.2",
     "vite": "8.2.2",
-    "@walletconnect/ethereum-provider": "2.23.10"
+    "@walletconnect/ethereum-provider": "2.23.10",
+    "viem": "2.55.19"
   },
   "devDependencies": {}
 }
