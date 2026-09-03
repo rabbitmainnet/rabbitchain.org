@@ -5440,3 +5440,32 @@ footer {
     overflow-y:hidden !important;
   }
 }
+
+
+/* RABBIT_PLATFORM_DESKTOP_STICKY_FIX_V2
+   Desktop only.
+   Fix global main overflow blocking sticky and remove excessive
+   space between the Rabbit header and Platform module navigation. */
+
+@media(min-width:821px){
+
+  /* The global main{overflow:hidden} prevents position:sticky. */
+  main.platform-product-page{
+    overflow:visible !important;
+    padding-top:8px !important;
+  }
+
+  .platform-product-page .platform-product-shell{
+    margin-top:0 !important;
+    overflow:visible !important;
+  }
+
+  /* Complete Platform bar:
+     modules + Testnet/Mainnet selector. */
+  .platform-product-page .platform-sidebar{
+    position:sticky !important;
+    top:76px !important;
+    z-index:80 !important;
+    margin-top:0 !important;
+  }
+}
