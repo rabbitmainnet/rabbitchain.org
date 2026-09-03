@@ -5483,3 +5483,14 @@ footer {
     margin-top:0 !important;
   }
 }
+
+
+/* RABBIT_PLATFORM_HEADER_LAYER_FIX_V4
+   Desktop only.
+   Keep Platform sticky navigation below the main Rabbit header
+   so header dropdown menus always open in front. */
+@media(min-width:821px){
+  .platform-product-page .platform-sidebar{
+    z-index:50 !important;
+  }
+}
