@@ -24,7 +24,7 @@ const verifyRows = [
   [FileCheck2, 'Release center', 'Verified Windows and Linux Rabbit Core packages with published SHA-256 hashes.', '/releases', false],
 ]
 
-export default function Home({ walletState, onConnect, onAddNetwork }) {
+export default function Home({ walletState, walletProvider, onConnect, onAddNetwork, toast }) {
   const testnet = NETWORKS.testnet
   const {
     platformNetwork,
@@ -162,8 +162,10 @@ export default function Home({ walletState, onConnect, onAddNetwork }) {
             <RabbitSwapPanel
               networkKey={platformNetwork}
               walletState={walletState}
+              walletProvider={walletProvider}
               onConnect={onConnect}
               onSwitchNetwork={onAddNetwork}
+              toast={toast}
               variant="home"
             />
 

@@ -3,9 +3,11 @@ import { Search, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const items = [
-  ['Rabbit Platform', 'Planned swap, liquidity, staking, bridge, P2P, launchpool and token factory modules', '/platform'],
+  ['Rabbit Platform', 'Live Testnet Swap, Liquidity and Faucet plus upcoming platform modules', '/platform'],
   ['Rabbit Testnet', 'First public network · Chain ID 9280', '/testnet'],
-  ['Testnet Faucet', 'Request official tRAB and tRUSD test assets', '/platform/faucet'],
+  ['Rabbit Swap', 'Testnet Beta · tRAB, tWRAB and tRUSD', '/platform/swap'],
+  ['Liquidity', 'Testnet Beta · create and manage RabbitSwap pools', '/platform/liquidity'],
+  ['Testnet Faucet', 'Participant faucet for tRAB and tRUSD test assets', '/platform/faucet'],
   ['Network Status', 'Live RPC, WebSocket, explorer and faucet services', '/status'],
   ['LCQ Consensus', 'Work, eligibility and producer coordination', '/lcq'],
   ['Mining', 'Download, verify and participate', '/mining'],

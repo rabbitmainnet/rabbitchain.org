@@ -282,7 +282,7 @@ export default function App() {
       <Suspense fallback={<PageLoader />}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Page><Home walletState={walletState} onConnect={openWallet} onAddNetwork={switchNetwork} /></Page>} />
+            <Route path="/" element={<Page><Home walletState={walletState} walletProvider={provider} onConnect={openWallet} onAddNetwork={switchNetwork} toast={toast} /></Page>} />
             <Route path="/testnet" element={<Page><Testnet walletState={walletState} onConnect={openWallet} onAddNetwork={switchNetwork} /></Page>} />
             <Route path="/mainnet" element={<Page><Mainnet /></Page>} />
             <Route path="/lcq" element={<Page><Lcq /></Page>} />

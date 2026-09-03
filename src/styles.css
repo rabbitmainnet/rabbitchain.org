@@ -4059,3 +4059,724 @@ footer {
     justify-self:start;
   }
 }
+
+/* =========================================================
+   RABBIT SWAP + LIQUIDITY — TESTNET BETA
+   ========================================================= */
+
+.rabbit-swap-live{
+  border-color:rgba(111,86,230,.20) !important;
+}
+
+.rabbit-swap-field-label{
+  margin-bottom:9px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.rabbit-swap-field-label label{
+  color:#77738c;
+  font-size:9px;
+  font-weight:800;
+}
+
+.rabbit-swap-field-label small{
+  color:#999cab;
+  font-size:8px;
+}
+
+.rabbit-beta-strip{
+  margin:0 0 14px;
+  padding:10px 12px;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  background:#f7f5ff;
+  border:1px solid #e6ddff;
+  border-radius:12px;
+  color:#6e4ee9;
+  font-size:9px;
+  line-height:1.4;
+}
+
+.rabbit-beta-strip svg{flex:none}
+.rabbit-beta-strip span{color:#5f5a74;font-weight:700}
+.rabbit-beta-strip a{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  color:#7148f4;
+  font-weight:850;
+  white-space:nowrap;
+}
+
+.rabbit-swap-details{
+  margin-top:13px;
+  padding:12px 13px;
+  display:grid;
+  gap:8px;
+  background:#fbfbfd;
+  border:1px solid #e8e8ef;
+  border-radius:13px;
+}
+
+.rabbit-swap-details > div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.rabbit-swap-details span{
+  color:#8c909f;
+  font-size:9px;
+}
+
+.rabbit-swap-details b{
+  color:#25273a;
+  font-size:9px;
+  text-align:right;
+}
+
+.rabbit-swap-settings button{
+  max-width:70%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.rabbit-liquidity-panel{
+  min-height:0 !important;
+  padding:20px !important;
+  background:#fff !important;
+  border-color:rgba(111,86,230,.18) !important;
+}
+
+.rabbit-liquidity-panel .faucet-live-badge{
+  color:#6d49e9 !important;
+  background:#f1edff !important;
+}
+
+.liquidity-intro{
+  padding:22px 3px 15px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+
+.liquidity-intro h3{
+  margin:0 0 6px;
+  font-size:24px;
+  letter-spacing:-.035em;
+}
+
+.liquidity-intro p{
+  max-width:610px;
+  margin:0;
+  color:#7b7f8e;
+  font-size:11px;
+  line-height:1.65;
+}
+
+.liquidity-intro > button{
+  min-height:34px;
+  padding:0 11px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:#fff;
+  border:1px solid #dfe0e8;
+  border-radius:9px;
+  color:#676b7b;
+  font-size:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.liquidity-beta-strip{margin-bottom:14px}
+
+.liquidity-mode-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4px;
+  padding:4px;
+  background:#f2f2f7;
+  border-radius:12px;
+}
+
+.liquidity-mode-tabs button{
+  min-height:38px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:#8a8e9d;
+  font-size:10px;
+  font-weight:850;
+  cursor:pointer;
+}
+
+.liquidity-mode-tabs button.active{
+  background:#fff;
+  color:#16182a;
+  box-shadow:0 3px 10px rgba(20,18,40,.06);
+}
+
+.liquidity-pair-selectors{
+  margin-top:13px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:9px;
+}
+
+.liquidity-pair-selectors > span{
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  transform:rotate(-90deg);
+  color:#7657f5;
+  border:1px solid #e1dff0;
+  border-radius:9px;
+  background:#fff;
+}
+
+.liquidity-token-select{
+  min-width:0;
+  min-height:61px;
+  padding:9px 10px;
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  position:relative;
+  background:#f7f7fa;
+  border:1px solid #e6e6ed;
+  border-radius:13px;
+}
+
+.liquidity-token-select .rabbit-token-logo{
+  width:34px;
+  height:34px;
+}
+
+.liquidity-token-select > span:not(.rabbit-token-logo){display:grid;min-width:0;gap:2px}
+.liquidity-token-select b{font-size:13px}
+.liquidity-token-select small{color:#969aa8;font-size:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.liquidity-token-select select{
+  max-width:74px;
+  height:31px;
+  padding:0 5px;
+  border:1px solid #dddde7;
+  border-radius:8px;
+  background:#fff;
+  color:#5e6270;
+  font-size:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.liquidity-metrics-grid{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+
+.liquidity-metric{
+  min-width:0;
+  padding:12px;
+  display:grid;
+  gap:4px;
+  background:#fbfbfd;
+  border:1px solid #e8e8ef;
+  border-radius:11px;
+}
+
+.liquidity-metric span{
+  color:#9b9eab;
+  font-size:8px;
+  font-weight:850;
+  letter-spacing:.06em;
+}
+
+.liquidity-metric strong{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#242638;
+  font-size:11px;
+  white-space:nowrap;
+}
+
+.liquidity-metric small{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#9a9daa;
+  font-size:8px;
+  white-space:nowrap;
+}
+
+.liquidity-form{
+  margin-top:13px;
+  padding:13px;
+  background:#f6f5fa;
+  border:1px solid #ebe9f1;
+  border-radius:15px;
+}
+
+.liquidity-amount-row{
+  min-height:68px;
+  padding:11px 12px;
+  display:grid;
+  grid-template-columns:minmax(100px,.65fr) minmax(130px,1fr);
+  align-items:center;
+  gap:12px;
+  background:#fff;
+  border:1px solid #e6e6ed;
+  border-radius:12px;
+}
+
+.liquidity-amount-row > div{display:grid;gap:3px}
+.liquidity-amount-row span{font-size:13px;font-weight:850}
+.liquidity-amount-row small{color:#999daa;font-size:8px}
+.liquidity-amount-row input{
+  width:100%;
+  padding:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#17192a;
+  font:inherit;
+  font-size:23px;
+  font-weight:750;
+  letter-spacing:-.035em;
+  text-align:right;
+}
+
+.liquidity-amount-row input::placeholder{color:#aaa8bb}
+
+.liquidity-plus{
+  height:20px;
+  display:grid;
+  place-items:center;
+  color:#8058f5;
+}
+
+.liquidity-ratio-note{
+  margin:10px 2px 0;
+  color:#858998;
+  font-size:8px;
+  line-height:1.55;
+}
+
+.liquidity-remove-balance{
+  margin-bottom:9px;
+  padding:12px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:end;
+  gap:5px 12px;
+  background:#fff;
+  border:1px solid #e6e6ed;
+  border-radius:12px;
+}
+
+.liquidity-remove-balance > span{color:#969aa8;font-size:8px;font-weight:800}
+.liquidity-remove-balance > strong{font-size:14px;text-align:right}
+.liquidity-remove-balance > div{grid-column:1/-1;display:flex;justify-content:flex-end;gap:5px;margin-top:4px}
+.liquidity-remove-balance button{
+  min-width:44px;
+  height:27px;
+  border:1px solid #e1dff0;
+  border-radius:7px;
+  background:#f8f6ff;
+  color:#7048ee;
+  font-size:8px;
+  font-weight:850;
+  cursor:pointer;
+}
+
+.liquidity-remove-preview{
+  margin-top:9px;
+  padding:12px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:5px 12px;
+  background:#fff;
+  border:1px solid #e6e6ed;
+  border-radius:12px;
+}
+
+.liquidity-remove-preview span{grid-column:1/-1;color:#969aa8;font-size:8px}
+.liquidity-remove-preview b{font-size:10px}
+.liquidity-remove-preview b:nth-of-type(2){text-align:right}
+.liquidity-remove-preview small{grid-column:1/-1;color:#999daa;font-size:8px}
+
+.liquidity-contracts{
+  margin-top:13px;
+  padding-top:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 18px;
+  border-top:1px solid #ececf2;
+}
+
+.liquidity-contracts span{color:#9a9eab;font-size:8px;font-weight:800;letter-spacing:.05em}
+.liquidity-contracts a{display:inline-flex;align-items:center;gap:3px;color:#7048ee}
+
+@media(max-width:720px){
+  .rabbit-beta-strip{grid-template-columns:auto 1fr}.rabbit-beta-strip a{grid-column:2}
+  .liquidity-intro{flex-direction:column}.liquidity-intro > button{align-self:flex-end}
+  .liquidity-pair-selectors{grid-template-columns:1fr}.liquidity-pair-selectors > span{justify-self:center;transform:none}
+  .liquidity-metrics-grid{grid-template-columns:1fr}
+  .liquidity-amount-row{grid-template-columns:1fr}.liquidity-amount-row input{text-align:left}
+}
+
+/* Rabbit Swap Testnet token discovery + fee policy */
+.rabbit-token-search{
+  margin:8px 7px 6px;
+  min-height:36px;
+  padding:0 10px;
+  display:grid;
+  grid-template-columns:16px minmax(0,1fr);
+  align-items:center;
+  gap:7px;
+  color:#8d91a0;
+  background:#f7f7fa;
+  border:1px solid #e6e6ed;
+  border-radius:10px;
+}
+.rabbit-token-search input{
+  min-width:0;
+  width:100%;
+  height:34px;
+  padding:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#222436;
+  font-size:10px;
+}
+.rabbit-token-menu > button.rabbit-token-import-action{
+  margin-top:3px;
+  background:#f4f0ff;
+  color:#6845df;
+}
+.rabbit-token-menu > button.rabbit-token-import-action:disabled{opacity:.62;cursor:wait}
+
+.liquidity-token-search{
+  margin-top:9px;
+  min-height:39px;
+  padding:5px 6px 5px 10px;
+  display:grid;
+  grid-template-columns:16px minmax(0,1fr) auto;
+  align-items:center;
+  gap:7px;
+  background:#fbfbfd;
+  border:1px solid #e7e7ee;
+  border-radius:11px;
+  color:#8e92a0;
+}
+.liquidity-token-search input{
+  min-width:0;
+  height:28px;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#25273a;
+  font-size:9px;
+}
+.liquidity-token-search button{
+  min-height:29px;
+  padding:0 10px;
+  border:1px solid #ddd9f3;
+  border-radius:8px;
+  background:#f3efff;
+  color:#6b48e5;
+  font-size:8px;
+  font-weight:850;
+  cursor:pointer;
+}
+.liquidity-token-search button:disabled{opacity:.6;cursor:wait}
+
+.rabbit-fee-policy{
+  margin-top:9px;
+  padding:9px 11px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px 14px;
+  background:#fbfbfd;
+  border:1px solid #e8e8ef;
+  border-radius:11px;
+  color:#898d9c;
+  font-size:8px;
+  line-height:1.45;
+}
+.rabbit-fee-policy span{white-space:nowrap}
+.rabbit-fee-policy b{color:#37394d;font-weight:850}
+
+@media (max-width:680px){
+  .liquidity-token-search{grid-template-columns:16px minmax(0,1fr)}
+  .liquidity-token-search button{grid-column:1/-1;width:100%}
+  .rabbit-fee-policy{gap:6px 10px}
+}
+
+/* Rabbit Platform Testnet V5 — permissionless liquidity token finder */
+.liquidity-token-finder{
+  margin-top:9px;
+  display:grid;
+  gap:6px;
+}
+.liquidity-token-search-target{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:0 2px;
+}
+.liquidity-token-search-target > span{
+  margin-right:2px;
+  color:#9b9eab;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.liquidity-token-search-target button{
+  min-height:25px;
+  padding:0 8px;
+  border:1px solid #e2e1eb;
+  border-radius:7px;
+  background:#fff;
+  color:#777b8a;
+  font-size:7px;
+  font-weight:850;
+  cursor:pointer;
+}
+.liquidity-token-search-target button.active{
+  border-color:#d7cdfd;
+  background:#f3efff;
+  color:#6845df;
+}
+.liquidity-token-finder .liquidity-token-search{margin-top:0}
+.liquidity-token-results{
+  display:grid;
+  gap:4px;
+  padding:5px;
+  border:1px solid #e8e7ef;
+  border-radius:10px;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(25,24,45,.06);
+}
+.liquidity-token-results > button{
+  width:100%;
+  min-height:42px;
+  display:grid;
+  grid-template-columns:28px minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  padding:5px 7px;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:#222436;
+  text-align:left;
+  cursor:pointer;
+}
+.liquidity-token-results > button:hover{background:#f8f7fc}
+.liquidity-token-results .rabbit-token-logo{width:26px;height:26px}
+.liquidity-token-results span{display:grid;min-width:0;gap:1px}
+.liquidity-token-results b{font-size:9px}
+.liquidity-token-results small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#969aa8;font-size:7px}
+.liquidity-token-results em{font-style:normal;color:#7657f5;font-size:7px;font-weight:850}
+.liquidity-token-finder-note{
+  margin:0 3px!important;
+  color:#9a9eac!important;
+  font-size:7px!important;
+  line-height:1.45!important;
+}
+@media (max-width:680px){
+  .liquidity-token-search-target{flex-wrap:wrap}
+  .liquidity-token-search-target > span{width:100%}
+  .liquidity-token-results > button{grid-template-columns:26px minmax(0,1fr)}
+  .liquidity-token-results em{grid-column:2}
+}
+
+/* Rabbit Platform transaction settings — shared by Swap and Liquidity */
+.rabbit-slippage-control{
+  position:relative;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.rabbit-slippage-control > button{
+  min-height:34px;
+  max-width:100%;
+  padding:0 11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border:1px solid #e0e1e8;
+  border-radius:10px;
+  background:#f4f5f7;
+  color:#646978;
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.rabbit-swap-settings .rabbit-slippage-control{
+  max-width:70%;
+}
+
+.rabbit-swap-settings .rabbit-slippage-control > button{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.rabbit-slippage-popover{
+  position:absolute;
+  z-index:35;
+  right:0;
+  top:calc(100% + 8px);
+  width:270px;
+  padding:13px;
+  display:grid;
+  gap:10px;
+  border:1px solid #e2e0ec;
+  border-radius:13px;
+  background:#fff;
+  box-shadow:0 18px 45px rgba(23,18,50,.14);
+  white-space:normal;
+}
+
+.rabbit-slippage-head{
+  display:grid;
+  gap:3px;
+}
+
+.rabbit-slippage-head b{
+  color:#202234;
+  font-size:11px;
+}
+
+.rabbit-slippage-head small,
+.rabbit-slippage-range{
+  color:#9295a3;
+  font-size:8px;
+  line-height:1.45;
+}
+
+.rabbit-slippage-presets{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+}
+
+.rabbit-slippage-popover .rabbit-slippage-presets button{
+  min-height:31px;
+  max-width:none;
+  padding:0 7px;
+  border:1px solid #dfddea;
+  border-radius:8px;
+  background:#f8f7fc;
+  color:#646777;
+  font-size:9px;
+  font-weight:850;
+  cursor:pointer;
+}
+
+.rabbit-slippage-popover .rabbit-slippage-presets button.active{
+  border-color:#bcb0fb;
+  background:#f0edff;
+  color:#6e48ee;
+}
+
+.rabbit-slippage-custom{
+  display:grid;
+  grid-template-columns:1fr 105px;
+  align-items:center;
+  gap:10px;
+  color:#747887;
+  font-size:9px;
+  font-weight:800;
+}
+
+.rabbit-slippage-custom > div{
+  min-height:33px;
+  padding:0 9px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  border:1px solid #dfdfea;
+  border-radius:8px;
+  background:#fff;
+}
+
+.rabbit-slippage-custom input{
+  width:100%;
+  min-width:0;
+  padding:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#242638;
+  font:inherit;
+  font-size:10px;
+  font-weight:850;
+  text-align:right;
+}
+
+.rabbit-slippage-custom b{
+  color:#777b89;
+  font-size:9px;
+}
+
+.rabbit-slippage-warning{
+  margin:0;
+  padding:8px 9px;
+  border-radius:8px;
+  background:#fff7e7;
+  color:#93691e;
+  font-size:8px;
+  line-height:1.45;
+}
+
+.liquidity-transaction-settings{
+  margin-top:8px;
+  padding:8px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border:1px solid #e8e7ef;
+  border-radius:10px;
+  background:#fbfbfd;
+}
+
+.liquidity-transaction-settings > span{
+  color:#898d9b;
+  font-size:8px;
+  font-weight:850;
+  letter-spacing:.02em;
+}
+
+.liquidity-transaction-settings .rabbit-slippage-control > button{
+  min-height:29px;
+  padding:0 9px;
+  font-size:8px;
+}
+
+@media (max-width:640px){
+  .rabbit-slippage-popover{
+    width:min(270px, calc(100vw - 48px));
+  }
+
+  .rabbit-swap-settings .rabbit-slippage-control{
+    max-width:76%;
+  }
+}

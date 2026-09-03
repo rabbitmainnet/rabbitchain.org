@@ -1,20 +1,10 @@
 import { NETWORKS } from './networks'
+import { getSwapTokens } from './swap'
 
 export const PLATFORM_DEFAULT_NETWORK = 'testnet'
 
 const TOKENS = {
-  testnet: [
-    {
-      symbol: 'tRAB',
-      name: 'Test RAB',
-      description: 'Rabbit Testnet native asset',
-      decimals: 18,
-      native: true,
-      address: null,
-      logo: '/rabbit-mark.png',
-      faucet: false,
-    },
-  ],
+  testnet: getSwapTokens(),
 
   mainnet: [
     {
@@ -51,7 +41,7 @@ export const PLATFORM_NETWORKS = Object.fromEntries(
       swapLive: network.platform.swapLive,
       modules: network.platform,
       defaultFrom: network.currency,
-      defaultTo: null,
+      defaultTo: key === 'testnet' ? 'tRUSD' : null,
       tokens: TOKENS[key],
     },
   ])
@@ -67,6 +57,7 @@ export function platformModuleLive(networkKey, tool) {
 export function platformModuleStatus(networkKey, tool) {
   const network = PLATFORM_NETWORKS[networkKey]
   if (!network) return 'UNAVAILABLE'
+  if (networkKey === 'testnet' && platformModuleLive(networkKey, tool) && (tool === 'swap' || tool === 'liquidity')) return 'TESTNET BETA'
   if (platformModuleLive(networkKey, tool)) return 'LIVE'
   if (networkKey === 'mainnet' && !network.networkLive) return 'COMING LATER'
   return 'PRE-LAUNCH'

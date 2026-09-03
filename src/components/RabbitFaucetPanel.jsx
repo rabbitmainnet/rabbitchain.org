@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, CheckCircle2, Clock3, Coins, Droplets, Pickaxe, RefreshCw, Wallet } from 'lucide-react'
+import { ArrowUpRight, CheckCircle2, Clock3, Droplets, Pickaxe, RefreshCw, Wallet } from 'lucide-react'
 import { decodeFunctionResult, encodeFunctionData, formatUnits } from 'viem'
 import { NETWORKS } from '../config/networks'
 import { TESTNET_FAUCETS, TRAB_FAUCET_ABI, TRUSD_FAUCET_ABI } from '../config/faucets'
@@ -98,7 +98,7 @@ function AssetCard({
   return (
     <article className="faucet-live-card">
       <div className="faucet-live-head">
-        <div className="faucet-token-mark">{isNative ? <img src="/rabbit-mark.png" alt="" /> : <Coins size={21} />}</div>
+        <div className="faucet-token-mark"><img src={asset.logo} alt={`${asset.symbol} logo`} /></div>
         <div>
           <span>{asset.name}</span>
           <strong>{asset.symbol}</strong>

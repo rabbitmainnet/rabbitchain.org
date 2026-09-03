@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Clock3, FlaskConical, Globe2, Radio, Wallet } from 'lucide-react'
+import { ArrowRight, Clock3, FlaskConical, Globe2, Radio, Repeat2, Wallet, Waves } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import { NETWORKS } from '../config/networks'
 import { RELEASE } from '../config/release'
@@ -8,7 +8,7 @@ const Service = ({ Icon, label, value, status }) => (
   <article className="status-card">
     <div><Icon size={19} /><span>{label}</span></div>
     <strong>{value}</strong>
-    <b className={status === 'LIVE' ? 'live' : ''}>{status}</b>
+    <b className={status === 'LIVE' || status === 'BETA' ? 'live' : ''}>{status}</b>
   </article>
 )
 
@@ -21,13 +21,15 @@ export default function Status() {
         <SectionHeader
           eyebrow="PUBLIC SERVICES"
           title="Rabbit Testnet public service status."
-          text="HTTPS RPC, WebSocket RPC, explorer and the participant tRAB + tRUSD faucet is live. New wallets mine tRAB first for gas."
+          text="HTTPS RPC, WebSocket RPC, explorer and the participant faucet are live. Rabbit Swap and Liquidity are now available as Testnet Beta services."
         />
         <div className="status-service-grid">
           <Service Icon={Wallet} label="Wallet connection" value="Injected + WalletConnect" status="LIVE" />
           <Service Icon={Radio} label="JSON-RPC" value={t.rpcUrl} status={t.publicRpcReady ? 'LIVE' : 'OFFLINE'} />
           <Service Icon={Radio} label="WebSocket" value={t.wsUrl} status={t.publicWsReady ? 'LIVE' : 'OFFLINE'} />
           <Service Icon={Globe2} label="Explorer" value={t.explorerUrl} status={t.publicExplorerReady ? 'LIVE' : 'OFFLINE'} />
+          <Service Icon={Repeat2} label="Rabbit Swap" value="tRAB · tWRAB · tRUSD" status={t.platform.swapLive ? 'BETA' : 'OFFLINE'} />
+          <Service Icon={Waves} label="Liquidity" value="tWRAB / tRUSD reference pool" status={t.platform.liquidityLive ? 'BETA' : 'OFFLINE'} />
           <Service Icon={FlaskConical} label="Faucet" value="tRAB + tRUSD" status={t.publicFaucetReady ? 'LIVE' : 'OFFLINE'} />
         </div>
       </section>

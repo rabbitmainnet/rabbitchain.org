@@ -30,8 +30,8 @@ export const NETWORKS = {
     publicFaucetReady: true,
 
     platform: {
-      swapLive: false,
-      liquidityLive: false,
+      swapLive: true,
+      liquidityLive: true,
       stakingLive: false,
       bridgeLive: false,
       p2pLive: false,
