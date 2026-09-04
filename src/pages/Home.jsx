@@ -84,7 +84,7 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
           <div className="home-v2-copy">
             <div className="hero-eyebrow"><i /> RABBIT CHAIN · EVM LAYER 1 · LCQ CONSENSUS</div>
             <h1>Fair access to <em>block production.</em></h1>
-            <p>Rabbit Chain is a permissionless EVM Layer 1 where valid work can create eligibility and <strong>LCQ coordinates the next producer opportunity.</strong></p>
+            <p>Rabbit Chain is a permissionless EVM Layer 1 where Work V2 provides permissionless admission, canonical state gives an admitted wallet one persistent equal seat, and <strong>LCQ coordinates producer opportunities.</strong></p>
             <div className="home-v2-manifesto"><span>One wallet</span><i /><span>One fair chance</span></div>
             <div className="hero-ctas">
               <Link className="button primary" to="/testnet">Enter Testnet <ArrowRight size={16} /></Link>
@@ -100,11 +100,11 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
             <div
               className={`home-active-miners${activeMiners !== null ? ' is-live' : ''}`}
               aria-label={activeMiners !== null
-                ? `${activeMiners} Rabbit Testnet active miners, unique producers in the last ${activeMinersWindow} blocks`
-                : 'Rabbit Testnet active miner count loading'}
+                ? `${activeMiners} unique Rabbit Testnet producers observed in the last ${activeMinersWindow} blocks`
+                : 'Rabbit Testnet recent producer count loading'}
             >
               <i aria-hidden="true" />
-              <span>TESTNET ACTIVE MINERS</span>
+              <span>RECENT ACTIVE PRODUCERS</span>
               <strong>{activeMiners ?? '—'}</strong>
               <small>UNIQUE PRODUCERS · LAST {activeMinersWindow} BLOCKS</small>
             </div>
@@ -129,7 +129,7 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
           <div className="home-v2-manifesto-copy">
             <span className="section-kicker">WHY RABBIT</span>
             <h2>No permanent producer class.</h2>
-            <p>Rabbit separates participation from permanent control. Valid work can open eligibility, while LCQ coordinates the producer opportunity from protocol state.</p>
+            <p>Rabbit separates a persistent equal consensus seat from permanent control of block production. Work V2 admission establishes participation, while LCQ coordinates producer opportunities from canonical protocol state.</p>
             <Link className="inline-link" to="/lcq">Understand LCQ <ArrowRight size={15} /></Link>
           </div>
           <div className="participation-map" aria-label="Rabbit participation model">

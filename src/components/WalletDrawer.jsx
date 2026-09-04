@@ -39,7 +39,7 @@ export default function WalletDrawer({ open, state, walletName, onClose, onDisco
         </button>
       })}</div>
 
-      <div className="drawer-info"><Network size={16}/><p>Add Network uses the wallet's native EVM network flow. If a public RPC is still coming online, some wallets may reject the request until launch. Rabbit never asks for a seed phrase or private key.</p></div>
+      <div className="drawer-info"><Network size={16}/><p>Add Network uses the wallet's native EVM network flow. Rabbit Testnet's public RPC is live; if a wallet rejects the request, verify that it supports custom EVM networks and confirm the official network details. Rabbit never asks for a seed phrase or private key.</p></div>
       <a className="drawer-link" href="https://github.com/rabbitmainnet" target="_blank" rel="noreferrer">Official GitHub <ExternalLink size={14}/></a>
 
       <div className="disconnect-zone">

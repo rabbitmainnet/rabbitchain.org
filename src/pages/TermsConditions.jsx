@@ -3,7 +3,7 @@ import LegalPage from '../components/LegalPage'
 const sections=[
   {id:'acceptance',title:'Acceptance of Terms',paragraphs:['These Terms govern access to and use of official Rabbit Chain websites, documentation, network interfaces and other official services. By using them, you acknowledge that you have read and understood these Terms and agree to comply with them.']},
   {id:'project',title:'Nature of Rabbit Chain',paragraphs:[
-    'Rabbit Chain is open-source, permissionless blockchain infrastructure built around EVM execution and LCQ Consensus. The public Testnet is intended to launch before Mainnet so that network behavior, mining, nodes, applications and infrastructure can be validated publicly.',
+    'Rabbit Chain is open-source, permissionless blockchain infrastructure built around EVM execution and LCQ Consensus. The public Rabbit Testnet is live and precedes Mainnet so that network behavior, mining, nodes, applications and infrastructure can be validated publicly before the production network launches.',
     'Testnet software, parameters, balances and services are experimental and may be reset, upgraded, modified or discontinued. Testnet assets are not Mainnet assets and should not be treated as having guaranteed economic value.'
   ]},
   {id:'custody',title:'No custody and wallet responsibility',paragraphs:[

@@ -9,7 +9,7 @@ const sections=[
     'Eligibility, queue position, fallback behavior, committee participation, connectivity, hardware performance, network conditions and future protocol upgrades can affect participation. There is no guarantee that mining or operating infrastructure will be profitable or result in any specific reward.'
   ]},
   {id:'testnet',title:'Testnet and Mainnet transition risk',paragraphs:[
-    'Rabbit Testnet, Chain ID 9280, is the first public launch environment. Testnet state, balances, assets, endpoints and software may be reset, changed or retired during validation.',
+    'Rabbit Testnet, Chain ID 9280, is the live public validation network. Normal LCQ recovery preserves canonical history, balances, transactions and persistent seats. Because Testnet remains experimental, a deliberately announced network migration, reset, upgrade or retirement may still occur for testing purposes; such an event is separate from protocol recovery and should be documented through official project channels.',
     'Rabbit Mainnet, Chain ID 928, is a separate production network planned to follow successful validation and launch gates. Testnet participation does not guarantee Mainnet allocations, balances, rewards, access or economic rights unless explicitly stated in a future official specification.'
   ]},
   {id:'contracts',title:'Smart-contract and Platform risk',paragraphs:[

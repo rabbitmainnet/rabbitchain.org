@@ -15,7 +15,7 @@ const flow = [
 
 const principles = [
   [Network, 'Permissionless participation', 'Rabbit is designed so participation comes from running the protocol under its rules, not from a permanent producer allowlist.'],
-  [Activity, 'Live eligibility', 'Producer opportunities follow valid participation and protocol state rather than a permanent seat.'],
+  [Activity, 'Live eligibility', 'Persistent equal seats define canonical participation, while LCQ uses protocol state to coordinate producer opportunities among active eligible seats.'],
   [RefreshCcw, 'Fallback & recovery', 'Fallback and recovery behavior belongs in protocol logic so participant changes do not require a human coordinator.'],
   [Clock3, 'Target cadence', 'Rabbit is designed around an approximately ten-second target block cadence, subject to finalized network parameters.'],
 ]
@@ -85,7 +85,7 @@ export default function Lcq() {
         <div className="lcq-v2-faq-head"><span className="section-kicker">LCQ FAQ</span><h2>Technical enough to evaluate. Clear enough to understand.</h2></div>
         <div className="faq-grid">
           <details open><summary>Is Rabbit just Proof of Work?</summary><p>Work is part of participation, while LCQ is the consensus coordination layer that organizes eligible participants and resolves producer opportunities.</p></details>
-          <details><summary>Does the biggest miner automatically produce every block?</summary><p>The protocol design aims to separate valid participation from permanent producer control. Eligibility feeds LCQ coordination rather than creating a permanent seat.</p></details>
+          <details><summary>Does the biggest miner automatically produce every block?</summary><p>The protocol separates a persistent consensus seat from permanent control of block production. Work V2 admission can establish one persistent equal seat per wallet; LCQ then coordinates producer opportunities among active eligible seats. More CPU speed does not give an already-admitted wallet extra seats or recurring consensus weight.</p></details>
           <details><summary>Can anyone run a node?</summary><p>Rabbit is designed as a permissionless P2P network. Public release documentation defines the supported node and mining workflows.</p></details>
           <details><summary>Why Testnet first?</summary><p>Consensus, mining, node recovery, wallet integration and public infrastructure should be exercised before a production network carries real value.</p></details>
         </div>
