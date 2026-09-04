@@ -226,6 +226,7 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
   const visibleTools = toolOrder.filter((key) => {
     if (key === 'faucet' && !platformConfig.showFaucet) return false
     if (key === 'bridge' && platformNetwork === 'testnet') return false
+    if (platformNetwork === 'testnet' && (key === 'staking' || key === 'p2p')) return false
     return true
   })
 
@@ -235,7 +236,8 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
   useEffect(() => {
     const faucetUnavailable = tool === 'faucet' && !platformConfig.showFaucet
     const bridgeUnavailable = tool === 'bridge' && platformNetwork === 'testnet'
-    if (faucetUnavailable || bridgeUnavailable) navigate('/platform/swap', { replace: true })
+    const deferredOnTestnet = platformNetwork === 'testnet' && (tool === 'staking' || tool === 'p2p')
+    if (faucetUnavailable || bridgeUnavailable || deferredOnTestnet) navigate('/platform/swap', { replace: true })
   }, [tool, platformConfig.showFaucet, platformNetwork, navigate])
 
   function selectPlatformNetwork(key) {
@@ -243,10 +245,11 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
 
     const faucetUnavailable = !PLATFORM_NETWORKS[key]?.showFaucet && activeTool === 'faucet'
     const bridgeUnavailable = key === 'testnet' && activeTool === 'bridge'
-    if (faucetUnavailable || bridgeUnavailable) navigate('/platform/swap')
+    const deferredOnTestnet = key === 'testnet' && (activeTool === 'staking' || activeTool === 'p2p')
+    if (faucetUnavailable || bridgeUnavailable || deferredOnTestnet) navigate('/platform/swap')
   }
 
-  if ((activeTool === 'faucet' && !platformConfig.showFaucet) || (activeTool === 'bridge' && platformNetwork === 'testnet')) return null
+  if ((activeTool === 'faucet' && !platformConfig.showFaucet) || (activeTool === 'bridge' && platformNetwork === 'testnet') || (platformNetwork === 'testnet' && (activeTool === 'staking' || activeTool === 'p2p'))) return null
 
   if (activeTool) {
     const entry = tools[activeTool]
@@ -299,7 +302,7 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
           <div className="platform-v2-copy">
             <span className="hero-eyebrow"><i /> RABBIT PLATFORM · OFFICIAL APPLICATION LAYER</span>
             <h1>Everything you use on Rabbit. <em>One product surface.</em></h1>
-            <p>{platformNetwork === 'testnet' ? 'Wallet, swaps, liquidity, staking, P2P, launches and token creation organized as one Testnet workspace — with every module showing its real launch state.' : 'Wallet, swaps, liquidity, staking, bridging, P2P, launches and token creation organized as one product — with every module showing its real launch state.'}</p>
+            <p>{platformNetwork === 'testnet' ? 'Wallet, swaps, liquidity, launches and token creation organized as one Testnet workspace — focused on the services available for public Testnet validation.' : 'Wallet, swaps, liquidity, staking, bridging, P2P, launches and token creation organized as one product — with every module showing its real launch state.'}</p>
             <div className="hero-ctas"><button className="button primary" onClick={onConnect}><Wallet size={16} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button><button
       className="button secondary"
       disabled={!selectedNetwork?.walletEnabled}
@@ -336,7 +339,7 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
       <section className="platform-v2-stack">
         <div className="shell platform-v2-stack-grid">
           <div><span className="section-kicker">THE RABBIT STACK</span><h2>Applications above. Protocol below.</h2><p>Rabbit Platform uses the same wallet, RPC, EVM, LCQ and P2P surfaces documented across RabbitChain.org.</p><Link className="inline-link light-link" to="/lcq">Understand LCQ <ArrowRight size={14} /></Link></div>
-          <div className="platform-v2-stack-rail"><div><small>05</small><span>APPLICATIONS</span><strong>{platformNetwork === 'testnet' ? 'Swap · Liquidity · Staking · P2P · Launchpool · Factory' : 'Swap · Liquidity · Staking · Bridge · P2P · Launchpool · Factory'}</strong></div><i /><div><small>04</small><span>WALLET & RPC</span><strong>EVM wallet · WalletConnect · JSON-RPC</strong></div><i /><div><small>03</small><span>EXECUTION</span><strong>EVM · transactions · smart contracts</strong></div><i /><div className="accent"><small>02</small><span>CONSENSUS</span><strong>LCQ · producer · committee</strong></div><i /><div><small>01</small><span>NETWORK</span><strong>P2P · nodes · mining</strong></div></div>
+          <div className="platform-v2-stack-rail"><div><small>05</small><span>APPLICATIONS</span><strong>{platformNetwork === 'testnet' ? 'Swap · Liquidity · Launchpool · Factory' : 'Swap · Liquidity · Staking · Bridge · P2P · Launchpool · Factory'}</strong></div><i /><div><small>04</small><span>WALLET & RPC</span><strong>EVM wallet · WalletConnect · JSON-RPC</strong></div><i /><div><small>03</small><span>EXECUTION</span><strong>EVM · transactions · smart contracts</strong></div><i /><div className="accent"><small>02</small><span>CONSENSUS</span><strong>LCQ · producer · committee</strong></div><i /><div><small>01</small><span>NETWORK</span><strong>P2P · nodes · mining</strong></div></div>
         </div>
       </section>
 

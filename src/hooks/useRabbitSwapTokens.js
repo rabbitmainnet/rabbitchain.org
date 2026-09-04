@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { canonicalSwapAddress, getSwapTokens, RABBIT_SWAP_FACTORY_ABI, RABBIT_SWAP_TESTNET } from '../config/swap'
 import {
   discoverRabbitSwapPools,
@@ -31,6 +31,33 @@ function canonicalTokenAddress(token) {
   return canonicalSwapAddress(token)?.toLowerCase() || ''
 }
 
+function samePoolIndex(current, next) {
+  if (current === next) return true
+  if (!Array.isArray(current) || !Array.isArray(next) || current.length !== next.length) return false
+  for (let i = 0; i < current.length; i += 1) {
+    const a = current[i]
+    const b = next[i]
+    if (String(a?.pair || '').toLowerCase() !== String(b?.pair || '').toLowerCase()) return false
+    if (String(a?.token0 || '').toLowerCase() !== String(b?.token0 || '').toLowerCase()) return false
+    if (String(a?.token1 || '').toLowerCase() !== String(b?.token1 || '').toLowerCase()) return false
+  }
+  return true
+}
+
+function sameDiscoveredTokens(current, next) {
+  if (current === next) return true
+  if (!Array.isArray(current) || !Array.isArray(next) || current.length !== next.length) return false
+  for (let i = 0; i < current.length; i += 1) {
+    const a = current[i]
+    const b = next[i]
+    if (String(a?.address || '').toLowerCase() !== String(b?.address || '').toLowerCase()) return false
+    if (String(a?.symbol || '') !== String(b?.symbol || '')) return false
+    if (String(a?.name || '') !== String(b?.name || '')) return false
+    if (Number(a?.decimals) !== Number(b?.decimals)) return false
+  }
+  return true
+}
+
 export function tokenKey(token) {
   if (!token) return ''
   return token.key || (token.native ? 'tRAB' : token.address?.toLowerCase()) || token.symbol
@@ -42,6 +69,7 @@ export function useRabbitSwapTokens(provider, enabled = true) {
   const [pools, setPools] = useState([])
   const [poolsLoading, setPoolsLoading] = useState(Boolean(enabled))
   const [poolError, setPoolError] = useState(null)
+  const hasLoadedPools = useRef(false)
 
   const tokens = useMemo(() => {
     const merged = []
@@ -61,28 +89,31 @@ export function useRabbitSwapTokens(provider, enabled = true) {
     return merged
   }, [discoveredTokens, importedTokens])
 
-  const refreshPools = useCallback(async () => {
+  const refreshPools = useCallback(async (showLoading = false) => {
     if (!enabled) {
       setPools([])
       setDiscoveredTokens([])
       setPoolsLoading(false)
       setPoolError(null)
+      hasLoadedPools.current = true
       return []
     }
 
-    setPoolsLoading(true)
+    const visibleLoading = showLoading || !hasLoadedPools.current
+    if (visibleLoading) setPoolsLoading(true)
     try {
       const nextPools = await discoverRabbitSwapPools(provider)
       const nextTokens = await readPoolDiscoveredTokens(nextPools, provider)
-      setPools(nextPools)
-      setDiscoveredTokens(nextTokens)
+      setPools((current) => samePoolIndex(current, nextPools) ? current : nextPools)
+      setDiscoveredTokens((current) => sameDiscoveredTokens(current, nextTokens) ? current : nextTokens)
       setPoolError(null)
       return nextPools
     } catch (error) {
       setPoolError(error)
       return null
     } finally {
-      setPoolsLoading(false)
+      hasLoadedPools.current = true
+      if (visibleLoading) setPoolsLoading(false)
     }
   }, [enabled, provider])
 

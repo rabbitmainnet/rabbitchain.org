@@ -218,7 +218,7 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
   useEffect(() => { refresh() }, [refresh])
 
   const refreshAll = useCallback(async () => {
-    await refreshPools()
+    await refreshPools(true)
     await refresh()
   }, [refreshPools, refresh])
 
