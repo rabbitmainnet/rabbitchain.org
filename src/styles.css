@@ -5678,45 +5678,43 @@ footer {
   .rabbit-initial-price-rates{grid-template-columns:1fr}
 }
 
-/* RABBIT_TESTNET_CENTERED_PRODUCT_LAYOUT_V1
-   Desktop Testnet product pages:
-   - remove the large context/info card
-   - center the actual product surface
-   - keep Add/switch Testnet as a discreet header action
-   Mainnet layout remains unchanged. */
+/* RABBIT_TESTNET_STANDARD_PRODUCT_SURFACE_V2
+   Shared Testnet Platform standard:
+   Swap -> Liquidity -> Token Factory -> Launchpool -> Faucet.
+   Product component is the page surface, matching the cleaner Rabbit Swap model.
+   Duplicate workspace title/wallet controls are removed on Testnet.
+   + Testnet remains available as a discreet Platform-nav action.
+   Mainnet header/context remain preserved.
+   Mobile-specific refinement remains deferred. */
 
-.platform-workspace-actions{
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:9px;
-  flex-wrap:wrap;
-}
-
-.platform-testnet-network-button{
-  min-height:34px;
-  padding:0 11px;
+.platform-sidebar nav .platform-testnet-nav-network{
+  flex:none;
+  min-height:30px;
+  padding:0 10px;
   border:1px solid rgba(112,87,245,.20);
   border-radius:999px;
   background:#fff;
   color:#6f52df;
   font:inherit;
-  font-size:10px;
+  font-size:9px;
+  line-height:1;
   font-weight:850;
   letter-spacing:.015em;
+  white-space:nowrap;
   cursor:pointer;
-  box-shadow:0 5px 16px rgba(66,50,130,.045);
-  transition:border-color .16s ease, background .16s ease, transform .16s ease;
+  box-shadow:0 4px 12px rgba(66,50,130,.04);
+  transition:border-color .16s ease, background .16s ease, color .16s ease;
 }
 
-.platform-testnet-network-button:hover{
+.platform-sidebar nav .platform-testnet-nav-network:hover{
   border-color:rgba(112,87,245,.38);
   background:#faf9ff;
-  transform:translateY(-1px);
+  color:#5e41d6;
 }
 
-.platform-testnet-network-button:active{
-  transform:translateY(0);
+.platform-sidebar nav .platform-testnet-nav-network:focus-visible{
+  outline:2px solid rgba(112,87,245,.28);
+  outline-offset:2px;
 }
 
 @media (min-width:681px){
@@ -5724,17 +5722,10 @@ footer {
     width:100%;
   }
 
-  .platform-workspace-testnet .platform-workspace-head{
-    width:min(100%,1080px);
-    margin-left:auto;
-    margin-right:auto;
-  }
-
   .platform-product-grid-testnet{
     grid-template-columns:minmax(0,1fr) !important;
     width:min(100%,1080px);
-    margin-left:auto;
-    margin-right:auto;
+    margin:24px auto 0;
   }
 
   .platform-product-grid-testnet > :first-child{
