@@ -1,9 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { canonicalSwapAddress, getSwapTokens, RABBIT_SWAP_FACTORY_ABI, RABBIT_SWAP_TESTNET } from '../config/swap'
-import { readRabbitContract, readTokenMetadata } from '../lib/rabbitSwap'
+import {
+  discoverRabbitSwapPools,
+  readPoolDiscoveredTokens,
+  readRabbitContract,
+  readTokenMetadata,
+} from '../lib/rabbitSwap'
 
 const STORAGE_KEY = 'rabbit.swap.testnet.importedTokens.v1'
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+const FACTORY_REFRESH_MS = 20_000
 
 function loadImportedTokens() {
   if (typeof window === 'undefined') return []
@@ -21,24 +27,83 @@ function persistImportedTokens(tokens) {
   try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tokens)) } catch {}
 }
 
+function canonicalTokenAddress(token) {
+  return canonicalSwapAddress(token)?.toLowerCase() || ''
+}
+
 export function tokenKey(token) {
   if (!token) return ''
   return token.key || (token.native ? 'tRAB' : token.address?.toLowerCase()) || token.symbol
 }
 
-export function useRabbitSwapTokens(provider) {
+export function useRabbitSwapTokens(provider, enabled = true) {
   const [importedTokens, setImportedTokens] = useState(loadImportedTokens)
+  const [discoveredTokens, setDiscoveredTokens] = useState([])
+  const [pools, setPools] = useState([])
+  const [poolsLoading, setPoolsLoading] = useState(Boolean(enabled))
+  const [poolError, setPoolError] = useState(null)
 
   const tokens = useMemo(() => {
-    const base = getSwapTokens()
-    const existing = new Set(base.filter((token) => !token.native && token.address).map((token) => token.address.toLowerCase()))
-    const extras = importedTokens.filter((token) => !existing.has(token.address.toLowerCase()))
-    return [...base, ...extras]
-  }, [importedTokens])
+    const merged = []
+    const seen = new Set()
+    const add = (token) => {
+      if (!token) return
+      // Keep tRAB and tWRAB as separate user-facing choices even though both route
+      // through the same wrapped-native address. All other ERC-20s dedupe by address.
+      const key = token.native ? 'native:trab' : canonicalTokenAddress(token)
+      if (!key || seen.has(key)) return
+      seen.add(key)
+      merged.push(token)
+    }
+    getSwapTokens().forEach(add)
+    discoveredTokens.forEach(add)
+    importedTokens.forEach(add)
+    return merged
+  }, [discoveredTokens, importedTokens])
+
+  const refreshPools = useCallback(async () => {
+    if (!enabled) {
+      setPools([])
+      setDiscoveredTokens([])
+      setPoolsLoading(false)
+      setPoolError(null)
+      return []
+    }
+
+    setPoolsLoading(true)
+    try {
+      const nextPools = await discoverRabbitSwapPools(provider)
+      const nextTokens = await readPoolDiscoveredTokens(nextPools, provider)
+      setPools(nextPools)
+      setDiscoveredTokens(nextTokens)
+      setPoolError(null)
+      return nextPools
+    } catch (error) {
+      setPoolError(error)
+      return null
+    } finally {
+      setPoolsLoading(false)
+    }
+  }, [enabled, provider])
+
+  useEffect(() => {
+    let cancelled = false
+    let timer = null
+
+    const tick = async () => {
+      if (cancelled) return
+      await refreshPools()
+      if (!cancelled) timer = window.setTimeout(tick, FACTORY_REFRESH_MS)
+    }
+
+    tick()
+    return () => {
+      cancelled = true
+      if (timer) window.clearTimeout(timer)
+    }
+  }, [refreshPools])
 
   const importToken = useCallback(async (address) => {
-    if (!provider?.request) throw new Error('Connect a wallet on Rabbit Testnet to import a token by address')
-
     const existing = tokens.find((token) => !token.native && token.address?.toLowerCase() === String(address).trim().toLowerCase())
     if (existing) return existing
 
@@ -64,17 +129,17 @@ export function useRabbitSwapTokens(provider) {
     return token
   }, [provider, tokens])
 
-  return { tokens, importToken }
+  return { tokens, importToken, pools, poolsLoading, poolError, refreshPools }
 }
 
-export function useRabbitSwapProtocolFee(provider) {
+export function useRabbitSwapProtocolFee(provider, enabled = true) {
   const [state, setState] = useState({ enabled: null, feeTo: null })
 
   useEffect(() => {
     let cancelled = false
 
     async function refresh() {
-      if (!provider?.request) {
+      if (!enabled) {
         setState({ enabled: null, feeTo: null })
         return
       }
@@ -93,7 +158,7 @@ export function useRabbitSwapProtocolFee(provider) {
 
     refresh()
     return () => { cancelled = true }
-  }, [provider])
+  }, [provider, enabled])
 
   return state
 }

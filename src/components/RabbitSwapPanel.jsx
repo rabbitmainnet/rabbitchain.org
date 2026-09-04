@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, ArrowUpRight, CheckCircle2, RefreshCw, Search, Wallet } from 'lucide-react'
-import { formatUnits } from 'viem'
 import { NETWORKS } from '../config/networks'
 import { PLATFORM_NETWORKS } from '../config/platform'
 import {
@@ -16,8 +15,8 @@ import {
   deadlineIn,
   formatTokenAmount,
   parseTokenAmount,
+  quoteBestSwapRoute,
   readAllowance,
-  readRabbitContract,
   readTokenBalance,
   sendRabbitContract,
   waitForRabbitReceipt,
@@ -74,22 +73,16 @@ function TokenSelector({ token, tokens, open, onToggle, onSelect, onImportToken,
           {candidates.map((item) => (
             <button key={tokenKey(item)} type="button" onClick={() => onSelect(tokenKey(item))}>
               <TokenLogo token={item} />
-              <span><b>{item.symbol}</b><small>{item.imported ? `${shortAddress(item.address)} · imported token` : item.description}</small></span>
+              <span><b>{item.symbol}</b><small>{item.imported ? `${shortAddress(item.address)} · imported token` : item.discovered ? `${shortAddress(item.address)} · live pool token` : item.description}</small></span>
             </button>
           ))}
           {canImport && <button className="rabbit-token-import-action" type="button" disabled={importing} onClick={handleImport}><Search size={14} /><span><b>{importing ? 'Reading token…' : 'Import contract'}</b><small>{shortAddress(normalized)}</small></span></button>}
           {!candidates.length && !canImport && <p>No listed token matches. Paste an ERC-20 contract address to import it from Rabbit Testnet.</p>}
-          <p>Verified assets are listed first. Imported contracts are not endorsed by Rabbit Chain. Token Factory assets will be indexed automatically when that module goes live.</p>
+          <p>RabbitSwap Factory pool tokens are indexed automatically. Manually imported contracts are permissionless and are not endorsed by Rabbit Chain.</p>
         </div>
       )}
     </div>
   )
-}
-
-function numberFromUnits(value, decimals) {
-  if (!value) return 0
-  const parsed = Number(formatUnits(BigInt(value), decimals))
-  return Number.isFinite(parsed) ? parsed : 0
 }
 
 export default function RabbitSwapPanel({
@@ -107,8 +100,8 @@ export default function RabbitSwapPanel({
   const correctNetwork = connected && walletState?.chainId === Number(network.chainId)
   const wrongNetwork = connected && !correctNetwork
   const provider = testnetBeta && correctNetwork && walletProvider?.request ? walletProvider : null
-  const { tokens: testnetTokens, importToken } = useRabbitSwapTokens(provider)
-  const protocolFee = useRabbitSwapProtocolFee(provider)
+  const { tokens: testnetTokens, importToken, pools, poolsLoading, refreshPools } = useRabbitSwapTokens(provider, testnetBeta)
+  const protocolFee = useRabbitSwapProtocolFee(provider, testnetBeta)
   const { slippageBps, slippageLabel, setSlippageBps } = useRabbitSlippage()
   const tokens = testnetBeta ? testnetTokens : network.tokens
 
@@ -118,7 +111,8 @@ export default function RabbitSwapPanel({
   const [openSelector, setOpenSelector] = useState(null)
   const [quote, setQuote] = useState(null)
   const [minimumOut, setMinimumOut] = useState(null)
-  const [reserves, setReserves] = useState(null)
+  const [path, setPath] = useState(null)
+  const [spotOutput, setSpotOutput] = useState(null)
   const [balance, setBalance] = useState(null)
   const [allowance, setAllowance] = useState(0n)
   const [loadingQuote, setLoadingQuote] = useState(false)
@@ -138,13 +132,6 @@ export default function RabbitSwapPanel({
   const amountIn = useMemo(() => {
     try { return parseTokenAmount(amount, fromToken?.decimals ?? 18) } catch { return 0n }
   }, [amount, fromToken])
-
-  const path = useMemo(() => {
-    const from = canonicalSwapAddress(fromToken)
-    const to = canonicalSwapAddress(toToken)
-    if (!from || !to || from.toLowerCase() === to.toLowerCase()) return null
-    return [from, to]
-  }, [fromToken, toToken])
 
   const refreshAccount = useCallback(async () => {
     if (!testnetBeta || !walletState?.account || !provider || !fromToken) {
@@ -167,60 +154,47 @@ export default function RabbitSwapPanel({
   useEffect(() => {
     let cancelled = false
     const timer = window.setTimeout(async () => {
-      if (!testnetBeta || !path || amountIn <= 0n) {
+      if (!testnetBeta || !fromToken || !toToken || amountIn <= 0n) {
         setQuote(null)
         setMinimumOut(null)
-        setReserves(null)
+        setPath(null)
+        setSpotOutput(null)
         return
       }
 
       setLoadingQuote(true)
-      const activeProvider = provider
-      const reads = await Promise.allSettled([
-        readRabbitContract({
-          address: RABBIT_SWAP_TESTNET.router,
-          abi: RABBIT_SWAP_ROUTER_ABI,
-          functionName: 'getAmountsOut',
-          args: [amountIn, path],
-          provider: activeProvider,
-        }),
-        readRabbitContract({
-          address: RABBIT_SWAP_TESTNET.router,
-          abi: RABBIT_SWAP_ROUTER_ABI,
-          functionName: 'getReserves',
-          args: path,
-          provider: activeProvider,
-        }),
-      ])
-
-      if (cancelled) return
-      if (reads[0].status === 'fulfilled') {
-        const amounts = reads[0].value
-        const output = BigInt(amounts[amounts.length - 1])
-        setQuote(output)
-        setMinimumOut(applySlippage(output, slippageBps))
-      } else {
-        setQuote(null)
-        setMinimumOut(null)
+      try {
+        const best = await quoteBestSwapRoute({
+          amountIn,
+          fromToken,
+          toToken,
+          pools,
+          provider,
+        })
+        if (cancelled) return
+        if (best) {
+          setQuote(best.amountOut)
+          setMinimumOut(applySlippage(best.amountOut, slippageBps))
+          setPath(best.path)
+          setSpotOutput(best.spotOutput)
+        } else {
+          setQuote(null)
+          setMinimumOut(null)
+          setPath(null)
+          setSpotOutput(null)
+        }
+      } finally {
+        if (!cancelled) setLoadingQuote(false)
       }
-      setReserves(reads[1].status === 'fulfilled' ? [BigInt(reads[1].value[0]), BigInt(reads[1].value[1])] : null)
-      setLoadingQuote(false)
     }, 250)
 
     return () => { cancelled = true; window.clearTimeout(timer) }
-  }, [testnetBeta, path, amountIn, provider, slippageBps])
+  }, [testnetBeta, fromToken, toToken, amountIn, pools, provider, slippageBps])
 
   const priceImpact = useMemo(() => {
-    if (!fromToken || !toToken || !quote || !reserves || amountIn <= 0n || reserves[0] <= 0n || reserves[1] <= 0n) return null
-    const input = numberFromUnits(amountIn, fromToken.decimals)
-    const output = numberFromUnits(quote, toToken.decimals)
-    const reserveIn = numberFromUnits(reserves[0], fromToken.decimals)
-    const reserveOut = numberFromUnits(reserves[1], toToken.decimals)
-    if (!input || !output || !reserveIn || !reserveOut) return null
-    const spot = reserveOut / reserveIn
-    const effective = output / input
-    return Math.max(0, (1 - effective / spot) * 100)
-  }, [quote, reserves, amountIn, fromToken, toToken])
+    if (!quote || !spotOutput || spotOutput <= 0n || quote >= spotOutput) return quote && spotOutput ? 0 : null
+    return Number(((spotOutput - quote) * 1_000_000n) / spotOutput) / 10_000
+  }, [quote, spotOutput])
 
   const insufficientBalance = balance !== null && amountIn > balance
   const needsApproval = testnetBeta && !fromToken?.native && amountIn > 0n && allowance < amountIn
@@ -285,6 +259,7 @@ export default function RabbitSwapPanel({
     setAmount('')
     setQuote(null)
     await refreshAccount()
+    await refreshPools()
   }
 
   async function handleAction() {
@@ -324,11 +299,15 @@ export default function RabbitSwapPanel({
 
   const balanceText = balance === null ? '—' : formatTokenAmount(balance, fromToken?.decimals ?? 18, 6)
   const outputText = quote === null ? '' : formatTokenAmount(quote, toToken?.decimals ?? 18, 8)
-  const routeText = fromToken?.native
-    ? `tRAB → tWRAB → ${toToken?.symbol || 'token'}`
-    : toToken?.native
-      ? `${fromToken?.symbol || 'token'} → tWRAB → tRAB`
-      : `${fromToken?.symbol || 'token'} → ${toToken?.symbol || 'token'}`
+  const routeText = useMemo(() => {
+    if (!path?.length || !fromToken || !toToken) return poolsLoading ? 'Scanning RabbitSwap pools…' : 'Best route'
+    return path.map((address, index) => {
+      if (index === 0) return fromToken.symbol
+      if (index === path.length - 1) return toToken.symbol
+      const match = tokens.find((token) => !token.native && canonicalSwapAddress(token)?.toLowerCase() === address.toLowerCase())
+      return match?.symbol || shortAddress(address)
+    }).join(' → ')
+  }, [path, fromToken, toToken, tokens, poolsLoading])
 
   async function handleImportToken(address) {
     try {
@@ -354,7 +333,7 @@ export default function RabbitSwapPanel({
       {testnetBeta && (
         <div className="rabbit-beta-strip">
           <CheckCircle2 size={15} />
-          <span>Verified Testnet routing · tWRAB/tRUSD liquidity is active.</span>
+          <span>Permissionless routing · live RabbitSwap Factory pools are indexed automatically.</span>
           <a href={`${NETWORKS.testnet.explorerUrl}/address/${RABBIT_SWAP_TESTNET.router}`} target="_blank" rel="noreferrer">Router <ArrowUpRight size={12} /></a>
         </div>
       )}
@@ -396,7 +375,7 @@ export default function RabbitSwapPanel({
 
       <p className="rabbit-swap-disclaimer">
         {testnetBeta
-          ? `Rabbit Swap Testnet Beta uses the deployed RabbitSwapRouter02. Total AMM fee is 0.30%. When the Factory protocol fee is enabled, approximately 0.25% remains with LPs and approximately 0.05% is captured by the protocol through LP minting. Imported tokens are permissionless and not endorsed. Testnet assets have no guaranteed monetary value.${connected ? ` Connected ${shortAddress(walletState.account)}.` : ''}`
+          ? `Rabbit Swap Testnet Beta indexes live Factory pools and uses the deployed RabbitSwapRouter02 to select the best available route up to 3 hops. Total AMM fee is 0.30%. When the Factory protocol fee is enabled, approximately 0.25% remains with LPs and approximately 0.05% is captured by the protocol through LP minting. Imported tokens are permissionless and not endorsed. Testnet assets have no guaranteed monetary value.${connected ? ` Connected ${shortAddress(walletState.account)}.` : ''}`
           : 'No swap is presented as live until the official contracts, liquidity and routing are released.'}
       </p>
     </div>

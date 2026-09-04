@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ArrowUpRight, CheckCircle2, Droplets, RefreshCw, Search, Wallet, Waves } from 'lucide-react'
+import { ArrowDown, ArrowUpRight, CheckCircle2, Droplets, RefreshCw, Search, Waves } from 'lucide-react'
 import { NETWORKS } from '../config/networks'
 import {
   RABBIT_SWAP_ERC20_ABI,
@@ -16,6 +16,7 @@ import {
   formatInputAmount,
   formatTokenAmount,
   getPairSnapshot,
+  getWalletLiquidityPositions,
   parseTokenAmount,
   readAllowance,
   readTokenBalance,
@@ -53,13 +54,40 @@ function PairMetric({ label, value, detail }) {
   return <div className="liquidity-metric"><span>{label}</span><strong>{value}</strong>{detail && <small>{detail}</small>}</div>
 }
 
+function liquidityTokenForAddress(tokens, address) {
+  const normalized = String(address || '').toLowerCase()
+  if (normalized === RABBIT_SWAP_TESTNET.wrappedNative.toLowerCase()) {
+    return tokens.find((token) => token.native) || tokens.find((token) => token.address?.toLowerCase() === normalized) || null
+  }
+  return tokens.find((token) => !token.native && token.address?.toLowerCase() === normalized) || null
+}
+
+function LiquidityPositionRow({ position, tokens, onManage }) {
+  const token0 = liquidityTokenForAddress(tokens, position.token0)
+  const token1 = liquidityTokenForAddress(tokens, position.token1)
+  if (!token0 || !token1) return null
+  const share = position.totalSupply > 0n
+    ? Number((position.lpBalance * 1_000_000n) / position.totalSupply) / 10_000
+    : 0
+  return (
+    <button type="button" onClick={() => onManage(position)}>
+      <span className="rabbit-token-logo rabbit-token-logo-fallback"><Waves size={15} /></span>
+      <span>
+        <b>{token0.symbol} / {token1.symbol}</b>
+        <small>{formatTokenAmount(position.lpBalance, 18, 10)} RABBIT-LP · {formatTokenAmount(position.amount0, token0.decimals, 6)} {token0.symbol} + {formatTokenAmount(position.amount1, token1.decimals, 6)} {token1.symbol}</small>
+      </span>
+      <em>{share.toFixed(share < 0.01 ? 4 : 2)}% · Manage</em>
+    </button>
+  )
+}
+
 export default function RabbitLiquidityPanel({ walletState, walletProvider, onConnect, onSwitchNetwork, toast }) {
   const account = walletState?.account || null
   const connected = Boolean(account)
   const correctNetwork = connected && walletState?.chainId === TESTNET.chainId
   const provider = correctNetwork && walletProvider?.request ? walletProvider : null
-  const { tokens, importToken } = useRabbitSwapTokens(provider)
-  const protocolFee = useRabbitSwapProtocolFee(provider)
+  const { tokens, importToken, pools, poolsLoading, refreshPools } = useRabbitSwapTokens(provider, true)
+  const protocolFee = useRabbitSwapProtocolFee(provider, true)
   const { slippageBps, slippageLabel, setSlippageBps } = useRabbitSlippage()
   const [tokenAKey, setTokenAKey] = useState('tRAB')
   const [tokenBKey, setTokenBKey] = useState('tRUSD')
@@ -75,9 +103,31 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
   const [allowances, setAllowances] = useState({ A: 0n, B: 0n })
   const [loading, setLoading] = useState(true)
   const [pending, setPending] = useState(null)
+  const [myPositions, setMyPositions] = useState([])
+  const [myPositionsLoading, setMyPositionsLoading] = useState(false)
 
   const tokenA = tokens.find((item) => tokenKey(item) === tokenAKey || item.symbol === tokenAKey) || tokens[0]
   const tokenB = tokens.find((item) => tokenKey(item) === tokenBKey || item.symbol === tokenBKey) || tokens[2]
+
+  const refreshMyPositions = useCallback(async () => {
+    if (!account || !correctNetwork || !pools.length) {
+      setMyPositions([])
+      setMyPositionsLoading(false)
+      return
+    }
+    setMyPositionsLoading(true)
+    try {
+      const positions = await getWalletLiquidityPositions(pools, account, provider)
+      setMyPositions(positions)
+    } catch (error) {
+      setMyPositions([])
+      toast?.(friendlyWalletError(error, 'Could not read your RabbitSwap liquidity positions'))
+    } finally {
+      setMyPositionsLoading(false)
+    }
+  }, [account, correctNetwork, pools, provider, toast])
+
+  useEffect(() => { refreshMyPositions() }, [refreshMyPositions])
 
   const rawA = useMemo(() => { try { return parseTokenAmount(amountA, tokenA.decimals) } catch { return 0n } }, [amountA, tokenA])
   const rawB = useMemo(() => { try { return parseTokenAmount(amountB, tokenB.decimals) } catch { return 0n } }, [amountB, tokenB])
@@ -115,6 +165,27 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
   }, [tokenA, tokenB, account, provider])
 
   useEffect(() => { refresh() }, [refresh])
+
+  const refreshAll = useCallback(async () => {
+    await refreshPools()
+    await refresh()
+  }, [refreshPools, refresh])
+
+  function manageLiquidityPosition(position) {
+    const first = liquidityTokenForAddress(tokens, position.token0)
+    const second = liquidityTokenForAddress(tokens, position.token1)
+    if (!first || !second) {
+      toast?.('This pool token metadata is still loading. Refresh and try again.')
+      return
+    }
+    setTokenAKey(tokenKey(first))
+    setTokenBKey(tokenKey(second))
+    setAmountA('')
+    setAmountB('')
+    setLpAmount('')
+    setMode('remove')
+    toast?.(`${first.symbol}/${second.symbol} liquidity selected`)
+  }
 
   function changeToken(side, key) {
     if (side === 'A') setTokenAKey(key)
@@ -267,6 +338,7 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     setAmountA('')
     setAmountB('')
     await refresh()
+    await refreshPools()
   }
 
   async function addAction() {
@@ -344,6 +416,7 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     toast?.(receipt ? 'Liquidity removed on Rabbit Testnet' : 'Removal submitted; confirmation is taking longer than expected')
     setLpAmount('')
     await refresh()
+    await refreshPools()
   }
 
   async function removeAction() {
@@ -413,19 +486,38 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
 
       <div className="liquidity-intro">
         <div><h3>Rabbit Swap Liquidity</h3><p>Create and manage permissionless RabbitSwap pairs. Use verified Testnet assets, future Token Factory assets, or import any compatible Rabbit Testnet ERC-20 by contract address.</p></div>
-        <button onClick={refresh} disabled={loading}><RefreshCw className={loading ? 'spin' : ''} size={15} /> Refresh</button>
+        <button onClick={refreshAll} disabled={loading || poolsLoading}><RefreshCw className={loading || poolsLoading ? 'spin' : ''} size={15} /> Refresh</button>
       </div>
 
       <div className="rabbit-beta-strip liquidity-beta-strip">
         <CheckCircle2 size={15} />
-        <span>Reference pool active · tWRAB / tRUSD</span>
-        <a href={`${TESTNET.explorerUrl}/address/${RABBIT_SWAP_TESTNET.referencePair}`} target="_blank" rel="noreferrer">Pair <ArrowUpRight size={12} /></a>
+        <span>Live Factory pools · automatically indexed for Swap and My Liquidity</span>
+        <a href={`${TESTNET.explorerUrl}/address/${RABBIT_SWAP_TESTNET.factory}`} target="_blank" rel="noreferrer">Factory <ArrowUpRight size={12} /></a>
       </div>
 
       <div className="liquidity-mode-tabs">
         <button className={mode === 'add' ? 'active' : ''} onClick={() => setMode('add')}>Add liquidity</button>
         <button className={mode === 'remove' ? 'active' : ''} onClick={() => setMode('remove')}>Remove liquidity</button>
       </div>
+
+      <div className="liquidity-intro">
+        <div><h3>My Liquidity</h3><p>Every RabbitSwap LP position held by the connected wallet is discovered directly from the Factory.</p></div>
+      </div>
+      {!connected ? (
+        <p className="liquidity-token-finder-note">Connect your wallet to discover all of your RabbitSwap liquidity positions.</p>
+      ) : !correctNetwork ? (
+        <p className="liquidity-token-finder-note">Switch to Rabbit Testnet to read your liquidity positions.</p>
+      ) : myPositionsLoading || poolsLoading ? (
+        <p className="liquidity-token-finder-note">Scanning RabbitSwap Factory and your RABBIT-LP balances…</p>
+      ) : myPositions.length ? (
+        <div className="liquidity-token-results">
+          {myPositions.map((position) => (
+            <LiquidityPositionRow key={position.pair} position={position} tokens={tokens} onManage={manageLiquidityPosition} />
+          ))}
+        </div>
+      ) : (
+        <p className="liquidity-token-finder-note">No RABBIT-LP balance found in the currently indexed Factory pools.</p>
+      )}
 
       <div className="liquidity-pair-selectors">
         <LiquidityTokenSelect token={tokenA} otherToken={tokenB} tokens={tokens} onChange={(key) => changeToken('A', key)} />
@@ -449,13 +541,13 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
             {tokenSearchMatches.map((item) => (
               <button type="button" key={tokenKey(item)} onClick={() => selectLiquidityToken(item)}>
                 <TokenLogo token={item} />
-                <span><b>{item.symbol}</b><small>{item.name}{item.imported ? ' · imported ERC-20' : ''}</small></span>
+                <span><b>{item.symbol}</b><small>{item.name}{item.discovered ? ' · live pool token' : item.imported ? ' · imported ERC-20' : ''}</small></span>
                 <em>Use as {tokenSearchSide}</em>
               </button>
             ))}
           </div>
         )}
-        <p className="liquidity-token-finder-note">External token? Paste its Rabbit Testnet ERC-20 contract address. Imported tokens are saved locally and become available in both Liquidity and Swap. If the selected pair does not exist, RabbitSwap creates it automatically with the first liquidity deposit.</p>
+        <p className="liquidity-token-finder-note">External token? Paste its Rabbit Testnet ERC-20 contract address. Tokens from existing Factory pools are indexed automatically in both Liquidity and Swap. Manual address import is only needed for a token that does not have a pool yet. If the selected pair does not exist, RabbitSwap creates it automatically with the first liquidity deposit.</p>
       </div>
 
       <div className="rabbit-fee-policy">
@@ -501,7 +593,7 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
         <span>ROUTER <a href={`${TESTNET.explorerUrl}/address/${RABBIT_SWAP_TESTNET.router}`} target="_blank" rel="noreferrer">{shortAddress(RABBIT_SWAP_TESTNET.router)} <ArrowUpRight size={11} /></a></span>
       </div>
 
-      <p className="product-disclaimer">Rabbit Swap is permissionless at the contract level: any compatible ERC-20/ERC-20 pair can be created with no protocol pair-creation fee beyond network gas. LPs earn the pool's trading fees pro-rata; fees accrue in pool reserves and are realized through LP value/liquidity removal. Paste a token contract address to use an external Rabbit Testnet ERC-20 on either side of a pair. Imported tokens are stored locally and are not endorsed. Token Factory assets will be indexed automatically when that module is activated. Testnet assets and liquidity have no guaranteed monetary value.</p>
+      <p className="product-disclaimer">Rabbit Swap is permissionless at the contract level: any compatible ERC-20/ERC-20 pair can be created with no protocol pair-creation fee beyond network gas. LPs earn the pool's trading fees pro-rata; fees accrue in pool reserves and are realized through LP value/liquidity removal. Paste a token contract address to use an external Rabbit Testnet ERC-20 on either side of a pair. Existing Factory pool tokens are indexed automatically. Manually imported tokens are stored locally and are not endorsed. Testnet assets and liquidity have no guaranteed monetary value.</p>
     </div>
   )
 }
