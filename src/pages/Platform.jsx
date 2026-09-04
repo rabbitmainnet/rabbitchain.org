@@ -280,15 +280,15 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
             </nav>
           </aside>
 
-          <section className="platform-workspace">
-            <div className="platform-workspace-head"><div><span>{entry.label}</span><h1>{entry.title}</h1><p>{entry.intro}</p></div><button className="button secondary" onClick={onConnect}><Wallet size={15} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button></div>
-            <div className="platform-product-grid"><ToolPanel tool={activeTool} walletState={walletState} walletProvider={walletProvider} onConnect={onConnect} onSwitchNetwork={onAddNetwork} networkKey={platformNetwork} toast={toast} /><aside className="product-context"><span>RABBIT PLATFORM</span><h3>Product interface first. Services only when verified.</h3><p>These screens are the official application surface, but they stay explicit about availability. No module or contract is presented as live before its release gate is complete.</p><div><ShieldCheck size={17} /><span><b>No seed phrase</b><small>Wallet connection uses the public account only.</small></span></div><div><Network size={17} /><span><b>{networkName}</b><small>Chain ID {networkChainId} · {platformConfig.status}</small></span></div><button
+          <section className={`platform-workspace${platformNetwork === 'testnet' ? ' platform-workspace-testnet' : ''}`}>
+            <div className="platform-workspace-head"><div><span>{entry.label}</span><h1>{entry.title}</h1><p>{entry.intro}</p></div><div className="platform-workspace-actions">{platformNetwork === 'testnet' && selectedNetwork?.walletEnabled && <button className="platform-testnet-network-button" type="button" onClick={() => onAddNetwork?.(selectedNetwork)}>Add / switch Testnet</button>}<button className="button secondary" onClick={onConnect}><Wallet size={15} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button></div></div>
+            <div className={`platform-product-grid${platformNetwork === 'testnet' ? ' platform-product-grid-testnet' : ''}`}><ToolPanel tool={activeTool} walletState={walletState} walletProvider={walletProvider} onConnect={onConnect} onSwitchNetwork={onAddNetwork} networkKey={platformNetwork} toast={toast} />{platformNetwork !== 'testnet' && <aside className="product-context"><span>RABBIT PLATFORM</span><h3>Product interface first. Services only when verified.</h3><p>These screens are the official application surface, but they stay explicit about availability. No module or contract is presented as live before its release gate is complete.</p><div><ShieldCheck size={17} /><span><b>No seed phrase</b><small>Wallet connection uses the public account only.</small></span></div><div><Network size={17} /><span><b>{networkName}</b><small>Chain ID {networkChainId} · {platformConfig.status}</small></span></div><button
       className="button primary"
       disabled={!selectedNetwork?.walletEnabled}
       onClick={() => selectedNetwork?.walletEnabled && onAddNetwork?.(selectedNetwork)}
     >
       {selectedNetwork?.walletEnabled ? `Add / switch ${selectedNetwork.shortName}` : `${selectedNetwork.shortName} coming later`}
-    </button></aside></div>
+    </button></aside>}</div>
           </section>
         </section>
       </main>
