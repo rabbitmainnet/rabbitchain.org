@@ -5494,3 +5494,186 @@ footer {
     z-index:50 !important;
   }
 }
+
+/* RABBIT LIQUIDITY WALLET POSITIONS + INITIAL PRICE V3 */
+.rabbit-my-liquidity{
+  margin:14px 0 12px;
+  padding:13px;
+  display:grid;
+  gap:10px;
+  border:1px solid #e3dff2;
+  border-radius:14px;
+  background:linear-gradient(180deg,#fcfbff 0%,#f8f7fc 100%);
+}
+.rabbit-my-liquidity-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+}
+.rabbit-my-liquidity-head > div{display:grid;gap:2px;min-width:0}
+.rabbit-my-liquidity-head span,
+.rabbit-liquidity-manager-head span,
+.rabbit-initial-price-head span{
+  color:#7657f5;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.11em;
+}
+.rabbit-my-liquidity-head h3{margin:0;color:#171827;font-size:15px;line-height:1.2}
+.rabbit-my-liquidity-head p{margin:1px 0 0;color:#858999;font-size:8px;line-height:1.45}
+.rabbit-my-liquidity-head > b{
+  flex:0 0 auto;
+  padding:6px 9px;
+  border:1px solid #ddd5fb;
+  border-radius:999px;
+  background:#f2eeff;
+  color:#6845df;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+.rabbit-my-liquidity-empty{
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:10px;
+  border:1px dashed #dedbe8;
+  border-radius:10px;
+  background:#fff;
+  color:#8d91a0;
+  font-size:8px;
+  text-align:center;
+}
+.rabbit-liquidity-position-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:9px;
+}
+.rabbit-liquidity-position-card{
+  min-width:0;
+  padding:11px;
+  display:grid;
+  gap:10px;
+  border:1px solid #e5e3ed;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(29,27,54,.045);
+}
+.rabbit-liquidity-position-top{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+}
+.rabbit-liquidity-position-logos{display:flex;align-items:center;padding-left:5px}
+.rabbit-liquidity-position-logos .rabbit-token-logo{width:28px;height:28px;margin-left:-5px;border:2px solid #fff;box-shadow:0 1px 5px rgba(21,20,36,.09)}
+.rabbit-liquidity-position-title{display:grid;gap:1px;min-width:0}
+.rabbit-liquidity-position-title > span,
+.rabbit-liquidity-position-share > span,
+.rabbit-liquidity-position-assets span{
+  color:#9a9eac;
+  font-size:6.5px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.rabbit-liquidity-position-title h4{margin:0;color:#202131;font-size:11px}
+.rabbit-liquidity-position-title small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#999daa;font-size:7px}
+.rabbit-liquidity-position-share{display:grid;justify-items:end;gap:1px}
+.rabbit-liquidity-position-share strong{color:#6845df;font-size:12px}
+.rabbit-liquidity-position-assets{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+.rabbit-liquidity-position-assets > div{
+  min-width:0;
+  padding:8px 9px;
+  display:grid;
+  gap:3px;
+  border:1px solid #eceaf2;
+  border-radius:9px;
+  background:#faf9fc;
+}
+.rabbit-liquidity-position-assets strong{overflow:hidden;text-overflow:ellipsis;color:#292a3b;font-size:9px}
+.rabbit-liquidity-position-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.rabbit-liquidity-position-actions button{
+  min-height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border-radius:9px;
+  font-size:8px;
+  font-weight:900;
+  cursor:pointer;
+}
+.rabbit-liquidity-position-actions button.secondary{border:1px solid #dcd8ea;background:#fff;color:#5f6372}
+.rabbit-liquidity-position-actions button.secondary:hover{background:#f8f7fb}
+.rabbit-liquidity-position-actions button.primary{border:1px solid #7657f5;background:#7657f5;color:#fff}
+.rabbit-liquidity-position-actions button.primary:hover{filter:brightness(.97)}
+.rabbit-liquidity-manager-head{
+  margin-top:13px;
+  padding:0 2px 7px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.rabbit-liquidity-manager-head strong{color:#727685;font-size:8px;font-weight:750;text-align:right}
+#rabbit-liquidity-editor{scroll-margin-top:120px}
+.rabbit-initial-price-preview{
+  padding:11px 12px;
+  display:grid;
+  gap:8px;
+  border:1px solid #d9cffd;
+  border-radius:11px;
+  background:linear-gradient(135deg,#f8f4ff 0%,#f5f7ff 100%);
+}
+.rabbit-initial-price-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.rabbit-initial-price-head b{
+  padding:4px 7px;
+  border:1px solid #ddd4ff;
+  border-radius:999px;
+  background:#fff;
+  color:#6845df;
+  font-size:6.5px;
+  font-weight:900;
+  letter-spacing:.05em;
+}
+.rabbit-initial-price-rates{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+.rabbit-initial-price-rates strong{
+  min-width:0;
+  padding:8px 9px;
+  border:1px solid #e6e0f8;
+  border-radius:9px;
+  background:#fff;
+  color:#252638;
+  font-size:9px;
+  overflow-wrap:anywhere;
+}
+.rabbit-initial-price-preview > small{color:#7e8292;font-size:7.5px;line-height:1.5}
+@media (max-width:680px){
+  .rabbit-my-liquidity{padding:10px}
+  .rabbit-my-liquidity-head{display:grid}
+  .rabbit-my-liquidity-head > b{justify-self:start}
+  .rabbit-liquidity-position-grid{grid-template-columns:1fr}
+  .rabbit-liquidity-position-top{grid-template-columns:auto minmax(0,1fr)}
+  .rabbit-liquidity-position-share{grid-column:2;justify-items:start}
+  .rabbit-liquidity-position-assets{grid-template-columns:1fr}
+  .rabbit-liquidity-manager-head{display:grid}
+  .rabbit-liquidity-manager-head strong{text-align:left}
+  .rabbit-initial-price-head{align-items:flex-start;display:grid}
+  .rabbit-initial-price-rates{grid-template-columns:1fr}
+}

@@ -54,6 +54,20 @@ function PairMetric({ label, value, detail }) {
   return <div className="liquidity-metric"><span>{label}</span><strong>{value}</strong>{detail && <small>{detail}</small>}</div>
 }
 
+function formatPoolPrice(quoteRaw, quoteDecimals, baseRaw, baseDecimals, precision = 12) {
+  if (quoteRaw <= 0n || baseRaw <= 0n) return null
+  const scale = 10n ** BigInt(precision)
+  const numerator = quoteRaw * (10n ** BigInt(baseDecimals)) * scale
+  const denominator = baseRaw * (10n ** BigInt(quoteDecimals))
+  if (denominator <= 0n) return null
+  const scaled = numerator / denominator
+  if (scaled === 0n) return `<0.${'0'.repeat(Math.max(0, precision - 1))}1`
+  const raw = scaled.toString().padStart(precision + 1, '0')
+  const whole = raw.slice(0, -precision) || '0'
+  const fraction = raw.slice(-precision).replace(/0+$/, '')
+  return fraction ? `${whole}.${fraction}` : whole
+}
+
 function liquidityTokenForAddress(tokens, address) {
   const normalized = String(address || '').toLowerCase()
   if (normalized === RABBIT_SWAP_TESTNET.wrappedNative.toLowerCase()) {
@@ -62,22 +76,50 @@ function liquidityTokenForAddress(tokens, address) {
   return tokens.find((token) => !token.native && token.address?.toLowerCase() === normalized) || null
 }
 
-function LiquidityPositionRow({ position, tokens, onManage }) {
+function LiquidityPositionCard({ position, tokens, onAdd, onRemove }) {
   const token0 = liquidityTokenForAddress(tokens, position.token0)
   const token1 = liquidityTokenForAddress(tokens, position.token1)
   if (!token0 || !token1) return null
+
   const share = position.totalSupply > 0n
     ? Number((position.lpBalance * 1_000_000n) / position.totalSupply) / 10_000
     : 0
+  const shareText = `${share.toFixed(share < 0.01 ? 4 : 2)}%`
+
   return (
-    <button type="button" onClick={() => onManage(position)}>
-      <span className="rabbit-token-logo rabbit-token-logo-fallback"><Waves size={15} /></span>
-      <span>
-        <b>{token0.symbol} / {token1.symbol}</b>
-        <small>{formatTokenAmount(position.lpBalance, 18, 10)} RABBIT-LP · {formatTokenAmount(position.amount0, token0.decimals, 6)} {token0.symbol} + {formatTokenAmount(position.amount1, token1.decimals, 6)} {token1.symbol}</small>
-      </span>
-      <em>{share.toFixed(share < 0.01 ? 4 : 2)}% · Manage</em>
-    </button>
+    <article className="rabbit-liquidity-position-card">
+      <div className="rabbit-liquidity-position-top">
+        <div className="rabbit-liquidity-position-logos" aria-hidden="true">
+          <TokenLogo token={token0} />
+          <TokenLogo token={token1} />
+        </div>
+        <div className="rabbit-liquidity-position-title">
+          <span>YOUR POSITION</span>
+          <h4>{token0.symbol} / {token1.symbol}</h4>
+          <small>{shortAddress(position.pair)} · {formatTokenAmount(position.lpBalance, 18, 10)} RABBIT-LP</small>
+        </div>
+        <div className="rabbit-liquidity-position-share">
+          <span>POOL SHARE</span>
+          <strong>{shareText}</strong>
+        </div>
+      </div>
+
+      <div className="rabbit-liquidity-position-assets">
+        <div>
+          <span>POOLED {token0.symbol}</span>
+          <strong>{formatTokenAmount(position.amount0, token0.decimals, 8)}</strong>
+        </div>
+        <div>
+          <span>POOLED {token1.symbol}</span>
+          <strong>{formatTokenAmount(position.amount1, token1.decimals, 8)}</strong>
+        </div>
+      </div>
+
+      <div className="rabbit-liquidity-position-actions">
+        <button type="button" className="secondary" onClick={() => onAdd(position)}><Droplets size={14} /> Add</button>
+        <button type="button" className="primary" onClick={() => onRemove(position)}><Waves size={14} /> Remove</button>
+      </div>
+    </article>
   )
 }
 
@@ -133,6 +175,15 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
   const rawB = useMemo(() => { try { return parseTokenAmount(amountB, tokenB.decimals) } catch { return 0n } }, [amountB, tokenB])
   const rawLP = useMemo(() => { try { return parseTokenAmount(lpAmount, 18) } catch { return 0n } }, [lpAmount])
 
+  const establishesInitialPrice = !snapshot.pair || snapshot.totalSupply <= 0n || snapshot.reserveA <= 0n || snapshot.reserveB <= 0n
+  const initialPricePreview = useMemo(() => {
+    if (!establishesInitialPrice || rawA <= 0n || rawB <= 0n) return null
+    const aInB = formatPoolPrice(rawB, tokenB.decimals, rawA, tokenA.decimals)
+    const bInA = formatPoolPrice(rawA, tokenA.decimals, rawB, tokenB.decimals)
+    if (!aInB || !bInA) return null
+    return { aInB, bInA }
+  }, [establishesInitialPrice, rawA, rawB, tokenA, tokenB])
+
   const refresh = useCallback(async () => {
     setLoading(true)
     const activeProvider = provider
@@ -171,7 +222,7 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     await refresh()
   }, [refreshPools, refresh])
 
-  function manageLiquidityPosition(position) {
+  function selectLiquidityPosition(position, nextMode) {
     const first = liquidityTokenForAddress(tokens, position.token0)
     const second = liquidityTokenForAddress(tokens, position.token1)
     if (!first || !second) {
@@ -183,8 +234,11 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     setAmountA('')
     setAmountB('')
     setLpAmount('')
-    setMode('remove')
-    toast?.(`${first.symbol}/${second.symbol} liquidity selected`)
+    setMode(nextMode)
+    window.setTimeout(() => {
+      document.getElementById('rabbit-liquidity-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 0)
+    toast?.(`${first.symbol}/${second.symbol} selected for ${nextMode === 'add' ? 'adding' : 'removing'} liquidity`)
   }
 
   function changeToken(side, key) {
@@ -495,29 +549,48 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
         <a href={`${TESTNET.explorerUrl}/address/${RABBIT_SWAP_TESTNET.factory}`} target="_blank" rel="noreferrer">Factory <ArrowUpRight size={12} /></a>
       </div>
 
-      <div className="liquidity-mode-tabs">
+      <section className="rabbit-my-liquidity">
+        <div className="rabbit-my-liquidity-head">
+          <div>
+            <span>YOUR LIQUIDITY</span>
+            <h3>Wallet positions</h3>
+            <p>{connected ? `Pools where ${shortAddress(account)} currently holds RABBIT-LP.` : 'Connect a wallet to see every RabbitSwap LP position held by that wallet.'}</p>
+          </div>
+          {connected && correctNetwork && !myPositionsLoading && !poolsLoading && <b>{myPositions.length} {myPositions.length === 1 ? 'POSITION' : 'POSITIONS'}</b>}
+        </div>
+
+        {!connected ? (
+          <div className="rabbit-my-liquidity-empty">Connect your wallet to discover your liquidity positions.</div>
+        ) : !correctNetwork ? (
+          <div className="rabbit-my-liquidity-empty">Switch to Rabbit Testnet to read your liquidity positions.</div>
+        ) : myPositionsLoading || poolsLoading ? (
+          <div className="rabbit-my-liquidity-empty"><RefreshCw className="spin" size={14} /> Scanning Factory pools and RABBIT-LP balances…</div>
+        ) : myPositions.length ? (
+          <div className="rabbit-liquidity-position-grid">
+            {myPositions.map((position) => (
+              <LiquidityPositionCard
+                key={position.pair}
+                position={position}
+                tokens={tokens}
+                onAdd={(item) => selectLiquidityPosition(item, 'add')}
+                onRemove={(item) => selectLiquidityPosition(item, 'remove')}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="rabbit-my-liquidity-empty">No RABBIT-LP balance found for this wallet in the indexed Factory pools.</div>
+        )}
+      </section>
+
+      <div className="rabbit-liquidity-manager-head">
+        <span>LIQUIDITY MANAGER</span>
+        <strong>{mode === 'add' ? 'Create a new pool or add to an existing position' : 'Select a position above or choose a pair to remove liquidity'}</strong>
+      </div>
+
+      <div id="rabbit-liquidity-editor" className="liquidity-mode-tabs">
         <button className={mode === 'add' ? 'active' : ''} onClick={() => setMode('add')}>Add liquidity</button>
         <button className={mode === 'remove' ? 'active' : ''} onClick={() => setMode('remove')}>Remove liquidity</button>
       </div>
-
-      <div className="liquidity-intro">
-        <div><h3>My Liquidity</h3><p>Every RabbitSwap LP position held by the connected wallet is discovered directly from the Factory.</p></div>
-      </div>
-      {!connected ? (
-        <p className="liquidity-token-finder-note">Connect your wallet to discover all of your RabbitSwap liquidity positions.</p>
-      ) : !correctNetwork ? (
-        <p className="liquidity-token-finder-note">Switch to Rabbit Testnet to read your liquidity positions.</p>
-      ) : myPositionsLoading || poolsLoading ? (
-        <p className="liquidity-token-finder-note">Scanning RabbitSwap Factory and your RABBIT-LP balances…</p>
-      ) : myPositions.length ? (
-        <div className="liquidity-token-results">
-          {myPositions.map((position) => (
-            <LiquidityPositionRow key={position.pair} position={position} tokens={tokens} onManage={manageLiquidityPosition} />
-          ))}
-        </div>
-      ) : (
-        <p className="liquidity-token-finder-note">No RABBIT-LP balance found in the currently indexed Factory pools.</p>
-      )}
 
       <div className="liquidity-pair-selectors">
         <LiquidityTokenSelect token={tokenA} otherToken={tokenB} tokens={tokens} onChange={(key) => changeToken('A', key)} />
@@ -574,6 +647,20 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
           <div className="liquidity-amount-row"><div><span>{tokenA.symbol}</span><small>Balance {balances.A === null ? '—' : formatTokenAmount(balances.A, tokenA.decimals, 8)}</small></div><input inputMode="decimal" value={amountA} onChange={(event) => updateAddAmount('A', event.target.value)} placeholder="0.00" /></div>
           <div className="liquidity-plus"><Droplets size={15} /></div>
           <div className="liquidity-amount-row"><div><span>{tokenB.symbol}</span><small>Balance {balances.B === null ? '—' : formatTokenAmount(balances.B, tokenB.decimals, 8)}</small></div><input inputMode="decimal" value={amountB} onChange={(event) => updateAddAmount('B', event.target.value)} placeholder="0.00" /></div>
+
+          {initialPricePreview && (
+            <div className="rabbit-initial-price-preview">
+              <div className="rabbit-initial-price-head">
+                <span>INITIAL POOL PRICE</span>
+                <b>SET BY FIRST LIQUIDITY</b>
+              </div>
+              <div className="rabbit-initial-price-rates">
+                <strong>1 {tokenA.symbol} = {initialPricePreview.aInB} {tokenB.symbol}</strong>
+                <strong>1 {tokenB.symbol} = {initialPricePreview.bInA} {tokenA.symbol}</strong>
+              </div>
+              <small>The first liquidity deposit defines this pair&apos;s starting AMM price. Review the ratio before confirming. After trading starts, swaps can move the pool price.{tokenA.symbol === 'tRUSD' || tokenB.symbol === 'tRUSD' ? ' tRUSD is a Testnet reference asset; this quote is not a guaranteed fiat value.' : ''}</small>
+            </div>
+          )}
 
           {snapshot.pair && snapshot.reserveA > 0n && snapshot.reserveB > 0n && <p className="liquidity-ratio-note">Existing pool ratio is applied automatically when you edit either amount. Router slippage protection: {slippageLabel}%.</p>}
 
