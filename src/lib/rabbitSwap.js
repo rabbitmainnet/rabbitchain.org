@@ -209,6 +209,26 @@ export async function waitForRabbitBatchFinalReceipt(batch, timeoutMs = 90000) {
   return waitForRabbitReceipt(finalHash, null, timeoutMs)
 }
 
+// RABBIT_WALLETCONNECT_ENABLE_ONCE_V8
+export const RABBIT_MAX_ALLOWANCE = (1n << 256n) - 1n
+
+export async function enableRabbitTokenOnce({
+  provider,
+  account,
+  tokenAddress,
+  spender,
+  abi = RABBIT_SWAP_ERC20_ABI,
+}) {
+  return sendRabbitContract({
+    provider,
+    account,
+    address: tokenAddress,
+    abi,
+    functionName: 'approve',
+    args: [spender, RABBIT_MAX_ALLOWANCE],
+  })
+}
+
 
 export async function readTokenMetadata(address, provider = null) {
   const input = String(address || '').trim()

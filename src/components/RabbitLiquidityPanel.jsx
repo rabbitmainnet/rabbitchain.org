@@ -11,6 +11,7 @@ import {
 import {
   applySlippage,
   approveExact,
+  enableRabbitTokenOnce,
   cleanDecimalInput,
   deadlineIn,
   formatInputAmount,
@@ -326,6 +327,10 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
 
   const needsApprovalA = !tokenA.native && rawA > 0n && allowances.A < rawA
   const needsApprovalB = !tokenB.native && rawB > 0n && allowances.B < rawB
+  const walletConnectSerial = Boolean(
+    walletProvider?.session
+    && !walletSupportsRabbitBatch(walletProvider)
+  )
   const insufficientA = balances.A !== null && rawA > balances.A
   const insufficientB = balances.B !== null && rawB > balances.B
   const canAdd = rawA > 0n && rawB > 0n && !insufficientA && !insufficientB
@@ -340,6 +345,39 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
 
   const lpInsufficient = rawLP > snapshot.lpBalance
   const lpNeedsApproval = snapshot.pair && rawLP > 0n && snapshot.lpAllowance < rawLP
+
+  async function enableLiquidityToken(token) {
+    if (!token?.address || pending) return
+
+    try {
+      setPending(`Enabling ${token.symbol} for RabbitSwap…`)
+
+      const hash = await enableRabbitTokenOnce({
+        provider: walletProvider,
+        account,
+        tokenAddress: token.address,
+        spender: RABBIT_SWAP_TESTNET.router,
+        abi: RABBIT_SWAP_ERC20_ABI,
+      })
+
+      toast?.(`${token.symbol} enable transaction submitted`)
+      const receipt = await waitForRabbitReceipt(hash, null)
+
+      if (receipt?.status === '0x0') {
+        throw new Error(`${token.symbol} enable transaction reverted`)
+      }
+      if (!receipt) {
+        throw new Error(`${token.symbol} enable confirmation timed out`)
+      }
+
+      toast?.(`${token.symbol} enabled for RabbitSwap`)
+    } catch (error) {
+      toast?.(friendlyWalletError(error, `${token.symbol} enable failed`))
+    } finally {
+      setPending(null)
+      void refresh().catch(() => {})
+    }
+  }
 
   async function ensureTokenApproval({ token, amount, currentAllowance, step, totalSteps }) {
     setPending(`Step ${step} of ${totalSteps} — Approving ${token.symbol}…`)
@@ -465,6 +503,11 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     if (!correctNetwork) return onSwitchNetwork?.(TESTNET)
     if (!canAdd || pending) return
 
+    // A WalletConnect wallet that cannot batch should never receive a hidden
+    // second transaction request while the browser is in the background.
+    if (walletConnectSerial && needsApprovalA) return enableLiquidityToken(tokenA)
+    if (walletConnectSerial && needsApprovalB) return enableLiquidityToken(tokenB)
+
     // Freeze the pair and amounts before the first wallet prompt. Any required
     // ERC-20 approvals continue automatically into addLiquidity in this click.
     const plan = {
@@ -495,6 +538,39 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
       toast?.(friendlyWalletError(error, approvals.length ? 'Approve-and-add-liquidity flow failed' : 'Add liquidity failed'))
     } finally {
       setPending(null)
+    }
+  }
+
+  async function enableLPForRabbitSwap(pair) {
+    if (!pair || pending) return
+
+    try {
+      setPending('Enabling RABBIT-LP for RabbitSwap…')
+
+      const hash = await enableRabbitTokenOnce({
+        provider: walletProvider,
+        account,
+        tokenAddress: pair,
+        spender: RABBIT_SWAP_TESTNET.router,
+        abi: RABBIT_SWAP_PAIR_ABI,
+      })
+
+      toast?.('RABBIT-LP enable transaction submitted')
+      const receipt = await waitForRabbitReceipt(hash, null)
+
+      if (receipt?.status === '0x0') {
+        throw new Error('RABBIT-LP enable transaction reverted')
+      }
+      if (!receipt) {
+        throw new Error('RABBIT-LP enable confirmation timed out')
+      }
+
+      toast?.('RABBIT-LP enabled for RabbitSwap')
+    } catch (error) {
+      toast?.(friendlyWalletError(error, 'RABBIT-LP enable failed'))
+    } finally {
+      setPending(null)
+      void refresh().catch(() => {})
     }
   }
 
@@ -586,6 +662,10 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     if (!correctNetwork) return onSwitchNetwork?.(TESTNET)
     if (rawLP <= 0n || lpInsufficient || !removalEstimate || pending) return
 
+    if (walletConnectSerial && lpNeedsApproval) {
+      return enableLPForRabbitSwap(snapshot.pair)
+    }
+
     // Capture the requested position before any wallet prompt. The approval receipt
     // must not clear or recalculate the removal amount before step 2 is submitted.
     const plan = {
@@ -630,6 +710,8 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
   else if (!correctNetwork) { addLabel = 'Switch to Rabbit Testnet'; addDisabled = false }
   else if (insufficientA) addLabel = `Insufficient ${tokenA.symbol}`
   else if (insufficientB) addLabel = `Insufficient ${tokenB.symbol}`
+  else if (walletConnectSerial && needsApprovalA) { addLabel = `Enable ${tokenA.symbol} for RabbitSwap`; addDisabled = false }
+  else if (walletConnectSerial && needsApprovalB) { addLabel = `Enable ${tokenB.symbol} for RabbitSwap`; addDisabled = false }
   else if (needsApprovalA && needsApprovalB) { addLabel = 'Approve tokens & add liquidity'; addDisabled = false }
   else if (needsApprovalA) { addLabel = `Approve ${tokenA.symbol} & add liquidity`; addDisabled = false }
   else if (needsApprovalB) { addLabel = `Approve ${tokenB.symbol} & add liquidity`; addDisabled = false }
@@ -642,6 +724,7 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
   else if (!correctNetwork) { removeLabel = 'Switch to Rabbit Testnet'; removeDisabled = false }
   else if (!snapshot.pair) removeLabel = 'No pair exists yet'
   else if (lpInsufficient) removeLabel = 'Insufficient RABBIT-LP'
+  else if (walletConnectSerial && lpNeedsApproval) { removeLabel = 'Enable RABBIT-LP for RabbitSwap'; removeDisabled = false }
   else if (lpNeedsApproval) { removeLabel = 'Approve & remove liquidity'; removeDisabled = false }
   else if (rawLP > 0n) { removeLabel = 'Remove liquidity'; removeDisabled = false }
   if (pending) { removeLabel = pending; removeDisabled = true }

@@ -11,6 +11,7 @@ import {
 import {
   applySlippage,
   approveExact,
+  enableRabbitTokenOnce,
   cleanDecimalInput,
   deadlineIn,
   formatTokenAmount,
@@ -202,6 +203,11 @@ export default function RabbitSwapPanel({
 
   const insufficientBalance = balance !== null && amountIn > balance
   const needsApproval = testnetBeta && !fromToken?.native && amountIn > 0n && allowance < amountIn
+  const walletConnectNeedsEnable = Boolean(
+    needsApproval
+    && walletProvider?.session
+    && !walletSupportsRabbitBatch(walletProvider)
+  )
 
   let actionLabel = 'Enter an amount'
   let actionDisabled = true
@@ -210,6 +216,7 @@ export default function RabbitSwapPanel({
   else if (!testnetBeta) actionLabel = 'Swap activates after contracts'
   else if (insufficientBalance) actionLabel = `Insufficient ${fromToken.symbol}`
   else if (amountIn > 0n && !quote && !loadingQuote) actionLabel = 'No active route'
+  else if (walletConnectNeedsEnable) { actionLabel = `Enable ${fromToken.symbol} for RabbitSwap`; actionDisabled = false }
   else if (needsApproval) { actionLabel = `Approve & swap ${fromToken.symbol}`; actionDisabled = false }
   else if (amountIn > 0n && quote) { actionLabel = `Swap ${fromToken.symbol} → ${toToken.symbol}`; actionDisabled = false }
   if (pending) { actionLabel = pending; actionDisabled = true }
@@ -311,10 +318,44 @@ export default function RabbitSwapPanel({
     void Promise.allSettled([refreshAccount(), refreshPools()])
   }
 
+  async function enableInputForRabbitSwap() {
+    if (!fromToken?.address || !walletProvider?.request || pending) return
+
+    try {
+      setPending(`Enabling ${fromToken.symbol} for RabbitSwap…`)
+
+      const hash = await enableRabbitTokenOnce({
+        provider: walletProvider,
+        account: walletState.account,
+        tokenAddress: fromToken.address,
+        spender: RABBIT_SWAP_TESTNET.router,
+        abi: RABBIT_SWAP_ERC20_ABI,
+      })
+
+      toast?.(`${fromToken.symbol} enable transaction submitted`)
+      const receipt = await waitForRabbitReceipt(hash, null)
+
+      if (receipt?.status === '0x0') {
+        throw new Error(`${fromToken.symbol} enable transaction reverted`)
+      }
+      if (!receipt) {
+        throw new Error(`${fromToken.symbol} enable confirmation timed out`)
+      }
+
+      toast?.(`${fromToken.symbol} enabled for RabbitSwap`)
+    } catch (error) {
+      toast?.(friendlyWalletError(error, `${fromToken.symbol} enable failed`))
+    } finally {
+      setPending(null)
+      void refreshAccount().catch(() => {})
+    }
+  }
+
   async function handleAction() {
     if (!connected) return onConnect?.()
     if (wrongNetwork) return onSwitchNetwork?.(NETWORKS[networkKey])
     if (!quote || !minimumOut || !path || amountIn <= 0n || pending) return
+    if (walletConnectNeedsEnable) return enableInputForRabbitSwap()
 
     // Capture the quote and protection before opening any wallet prompt. An ERC-20
     // approval must continue directly into the swap without forcing a second click.
