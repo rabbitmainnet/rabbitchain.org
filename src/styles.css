@@ -5735,3 +5735,329 @@ footer {
     margin-right:auto;
   }
 }
+
+/* RABBIT_PLATFORM_MOBILE_PASS_V2
+   Mobile-only usability pass for Rabbit Platform.
+   Desktop remains untouched. */
+
+@media (max-width:680px){
+  main.platform-product-page{
+    overflow-x:hidden;
+    padding:10px 0 44px;
+  }
+
+  .platform-product-page .platform-product-shell,
+  .platform-product-page .platform-product-shell.shell{
+    width:calc(100% - 16px);
+    max-width:none;
+    min-height:0;
+    margin:0 auto;
+    border-radius:16px;
+    overflow:visible;
+  }
+
+  .platform-product-page .platform-sidebar{
+    position:relative !important;
+    top:auto !important;
+    z-index:2;
+    padding:10px 10px 9px;
+    border-radius:15px 15px 0 0;
+  }
+
+  .platform-product-page .platform-sidebar .platform-network-switch{
+    width:100%;
+    max-width:none;
+  }
+
+  .platform-product-page .platform-sidebar nav{
+    display:flex;
+    width:100%;
+    gap:6px;
+    margin-top:8px;
+    padding:1px 0 3px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+    scroll-snap-type:x proximity;
+  }
+
+  .platform-product-page .platform-sidebar nav::-webkit-scrollbar{
+    display:none;
+  }
+
+  .platform-product-page .platform-sidebar nav a,
+  .platform-product-page .platform-sidebar nav .platform-testnet-nav-network{
+    flex:0 0 auto;
+    min-height:38px;
+    padding:0 12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    border-radius:10px;
+    font-size:11px;
+    line-height:1;
+    white-space:nowrap;
+    scroll-snap-align:start;
+  }
+
+  .platform-product-page .platform-sidebar nav a svg{
+    width:15px;
+    height:15px;
+    flex:none;
+  }
+
+  .platform-workspace,
+  .platform-workspace-testnet{
+    min-width:0;
+    padding:10px 8px 16px;
+  }
+
+  .platform-product-grid,
+  .platform-product-grid-testnet{
+    width:100%;
+    min-width:0;
+    margin:10px 0 0;
+    gap:10px;
+  }
+
+  .platform-product-grid > *,
+  .platform-product-grid-testnet > *{
+    min-width:0;
+    max-width:100%;
+  }
+
+  .product-panel,
+  .rabbit-swap-panel,
+  .rabbit-liquidity-panel,
+  .product-faucet-live{
+    width:100%;
+    min-width:0;
+    max-width:100%;
+    box-sizing:border-box;
+    border-radius:14px;
+  }
+
+  .product-panel{
+    min-height:0;
+    padding:12px;
+  }
+
+  .rabbit-swap-toolbar small,
+  .rabbit-swap-field-label small,
+  .rabbit-swap-details span,
+  .rabbit-swap-disclaimer,
+  .product-disclaimer,
+  .faucet-live-disclaimer,
+  .rabbit-token-button small,
+  .rabbit-token-menu > button small,
+  .rabbit-liquidity-position-title small,
+  .rabbit-liquidity-position-share > span,
+  .rabbit-liquidity-position-assets span,
+  .rabbit-liquidity-manager-head span,
+  .rabbit-liquidity-manager-head strong,
+  .rabbit-initial-price-preview > small,
+  .rabbit-slippage-head small,
+  .rabbit-slippage-range,
+  .rabbit-slippage-warning,
+  .liquidity-transaction-settings > span,
+  .faucet-live-head span,
+  .faucet-live-card > p,
+  .faucet-live-stats span,
+  .faucet-contract-line > span,
+  .rabbit-factory-topline span{
+    color:#686c7a;
+    font-size:10px;
+    line-height:1.45;
+  }
+
+  .rabbit-swap-disclaimer,
+  .product-disclaimer,
+  .faucet-live-disclaimer,
+  .faucet-live-card > p{
+    font-size:11px;
+    line-height:1.55;
+  }
+
+  .rabbit-swap-panel{padding:12px}
+  .rabbit-swap-toolbar{gap:9px}
+  .rabbit-swap-field{padding:12px;border-radius:12px}
+  .rabbit-swap-field-main{min-width:0;gap:8px}
+
+  .rabbit-token-selector,
+  .rabbit-token-button{
+    min-width:0;
+    max-width:48vw;
+  }
+
+  .rabbit-token-button{
+    min-height:44px;
+    padding:7px 9px;
+  }
+
+  .rabbit-token-button b{font-size:11px}
+  .rabbit-swap-amount{min-width:0}
+  .rabbit-swap-amount input{min-width:0;font-size:26px}
+  .rabbit-swap-settings{gap:8px}
+  .rabbit-swap-settings > span{flex:none;font-size:10px}
+
+  .rabbit-swap-settings .rabbit-slippage-control{
+    min-width:0;
+    max-width:72%;
+  }
+
+  .rabbit-swap-action{
+    min-height:46px;
+    font-size:12px;
+  }
+
+  .rabbit-token-search input,
+  .factory-form input{
+    font-size:16px;
+  }
+
+  .rabbit-token-menu > button{min-height:48px}
+
+  .rabbit-my-liquidity{
+    padding:12px;
+    border-radius:12px;
+  }
+
+  .rabbit-my-liquidity-head{gap:7px}
+
+  .rabbit-liquidity-position-card{
+    padding:11px;
+    border-radius:11px;
+  }
+
+  .rabbit-liquidity-position-title h4{
+    font-size:12px;
+    line-height:1.3;
+  }
+
+  .rabbit-liquidity-position-title small{font-size:9px}
+  .rabbit-liquidity-position-share strong{font-size:13px}
+  .rabbit-liquidity-position-assets{gap:7px}
+
+  .rabbit-liquidity-position-assets > div{
+    min-width:0;
+    padding:9px;
+  }
+
+  .rabbit-liquidity-position-assets strong{
+    color:#292a3b;
+    font-size:10.5px;
+  }
+
+  .rabbit-liquidity-position-actions button{
+    min-height:42px;
+    font-size:11px;
+  }
+
+  .rabbit-liquidity-manager-head{gap:6px}
+  .rabbit-liquidity-manager-head strong{font-size:10px}
+
+  .liquidity-transaction-settings{
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+
+  .rabbit-initial-price-rates strong{
+    font-size:10.5px;
+    line-height:1.4;
+  }
+
+  .rabbit-initial-price-preview > small{font-size:9px}
+
+  .rabbit-factory{
+    min-width:0;
+    gap:12px;
+  }
+
+  .rabbit-factory-topline{
+    display:grid;
+    gap:8px;
+    padding:12px;
+  }
+
+  .rabbit-factory-topline > b{justify-self:start}
+  .factory-form{gap:10px}
+  .factory-form > div{grid-template-columns:1fr}
+
+  .factory-form label > span{
+    color:#686c7a;
+    font-size:10px;
+  }
+
+  .factory-form input{
+    width:100%;
+    min-width:0;
+    height:46px;
+    color:#272938;
+  }
+
+  .faucet-intro-live{
+    display:grid;
+    gap:10px;
+  }
+
+  .faucet-refresh{
+    justify-self:start;
+    min-height:40px;
+  }
+
+  .faucet-live-grid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .faucet-live-card{
+    min-width:0;
+    padding:13px;
+  }
+
+  .faucet-live-stats{gap:7px}
+  .faucet-live-stats > div{min-width:0}
+
+  .faucet-claim-button,
+  .faucet-mining-button{
+    min-height:44px;
+  }
+
+  .faucet-contract-line{min-width:0}
+
+  .faucet-contract-line code,
+  .faucet-contract-line a{
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+}
+
+@media (max-width:420px){
+  .platform-product-page .platform-product-shell,
+  .platform-product-page .platform-product-shell.shell{
+    width:calc(100% - 10px);
+  }
+
+  .platform-workspace,
+  .platform-workspace-testnet{
+    padding-left:5px;
+    padding-right:5px;
+  }
+
+  .product-panel,
+  .rabbit-swap-panel,
+  .rabbit-liquidity-panel,
+  .product-faucet-live{
+    border-radius:12px;
+  }
+
+  .rabbit-token-selector,
+  .rabbit-token-button{
+    max-width:46vw;
+  }
+
+  .rabbit-swap-amount input{font-size:23px}
+  .rabbit-liquidity-position-actions{grid-template-columns:1fr}
+}
