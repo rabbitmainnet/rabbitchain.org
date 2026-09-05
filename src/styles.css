@@ -6061,3 +6061,113 @@ footer {
   .rabbit-swap-amount input{font-size:23px}
   .rabbit-liquidity-position-actions{grid-template-columns:1fr}
 }
+
+/* RABBIT_GLOBAL_MOBILE_UX_V3 */
+@media (max-width:680px){
+  html,body,#root,.app-shell{max-width:100%;overflow-x:clip}
+  .shell,.header-shell,.announcement-inner{width:calc(100% - 20px)!important}
+
+  .announcement{min-height:28px;height:28px}
+  .announcement-inner{font-size:9px!important;letter-spacing:.055em!important;gap:8px}
+  .announcement-inner>span{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .announcement-inner a{flex:none}
+
+  .site-header{height:62px!important}
+  .header-shell{gap:6px!important}
+  .brand,.rabbit-brand-image{min-width:0!important;flex:0 1 auto!important}
+  .brand-mark{width:128px!important;height:34px!important;flex:0 1 128px!important}
+  .rabbit-navbar-logo{width:128px!important;max-width:128px!important;max-height:34px!important}
+  .header-actions{gap:5px!important;margin-left:auto!important;min-width:0!important}
+  .wallet-button{height:40px!important;min-width:40px!important;max-width:126px!important;padding:0 9px!important;gap:6px!important;border-radius:10px!important;font-size:11px!important}
+  .wallet-button.connected small{display:none!important}
+  .wallet-button .wallet-button-copy{display:block!important;max-width:76px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+  .wallet-button.connected .wallet-connected-dot{width:7px;height:7px;flex:0 0 7px}
+  .wallet-button.connected svg{flex:0 0 auto}
+  .mobile-button{display:flex!important;width:40px!important;height:40px!important;flex:0 0 40px!important}
+
+  .mobile-nav{right:10px!important;left:10px!important;width:auto!important;bottom:10px!important;padding:14px!important;border-radius:16px!important}
+  .mobile-nav-head{padding:2px 4px 12px!important}
+  .mobile-nav-head span,.mobile-nav-label{color:#737887!important}
+  .mobile-nav>a{min-height:44px;padding:11px 12px!important;font-size:13px!important;display:flex;align-items:center}
+  .mobile-nav-label{font-size:10px!important}
+  .mobile-wallet{min-height:48px!important;font-size:12px!important}
+
+  .drawer-backdrop,.modal-backdrop{padding:0!important;align-items:flex-end!important}
+  .wallet-drawer{width:100%!important;height:min(88dvh,760px)!important;padding:18px 14px 22px!important;border-radius:18px 18px 0 0!important;box-shadow:0 -20px 60px rgba(12,14,28,.18)!important}
+  .wallet-modal{width:100%!important;max-height:88dvh!important;padding:18px 14px 22px!important;border-radius:18px 18px 0 0!important}
+  .drawer-head h3,.wallet-modal-head h3{font-size:20px!important}
+  .drawer-head span,.wallet-modal-head span{font-size:10px!important}
+  .wallet-session-pill{font-size:10px!important}
+  .wallet-identity-card{grid-template-columns:44px minmax(0,1fr) 38px!important;padding:11px!important}
+  .wallet-avatar{width:44px!important;height:44px!important}
+  .wallet-identity-card b{font-size:13px!important}
+  .wallet-identity-card small,.current-network-card small,.drawer-primary-network small,.drawer-network small,.drawer-info p,.disconnect-zone p,.wallet-modal-intro,.wallet-list small,.wallet-mobile-row small,.wallet-security span{color:#686d7d!important;font-size:11px!important;line-height:1.5!important}
+  .current-network-card{padding:11px!important}
+  .drawer-primary-network{display:grid!important;grid-template-columns:1fr!important;align-items:start!important;padding:12px!important}
+  .drawer-primary-network button{width:100%!important;min-height:42px!important;justify-content:center!important}
+  .drawer-network{min-height:58px!important;gap:10px!important}
+  .drawer-network>span{font-size:9px!important;text-align:right!important}
+  .disconnect-btn{min-height:44px!important}
+
+  .home-page-v13 .home-v2-hero{min-height:auto!important;align-items:flex-start!important;overflow:hidden!important}
+  .home-page-v13 .home-v2-hero-grid{transform:none!important}
+  .home-page-v13 .home-v2-copy{padding:42px 0 38px!important}
+  .home-page-v13 .home-v2-copy .hero-eyebrow{max-width:100%!important;padding:8px 10px!important;font-size:9px!important;line-height:1.35!important;letter-spacing:.075em!important;white-space:normal!important}
+  .home-page-v13 .home-v2-copy h1{font-size:clamp(46px,14vw,62px)!important;line-height:.98!important;letter-spacing:-.045em!important;margin-top:20px!important}
+  .home-page-v13 .home-v2-copy>p{margin-top:16px!important;color:#5f6474!important;font-size:15px!important;line-height:1.62!important}
+  .home-page-v13 .home-v2-manifesto{margin-top:20px!important;gap:9px!important;font-size:9px!important;color:#515665!important}
+  .home-page-v13 .home-v2-manifesto span{font-size:9px!important;letter-spacing:.08em!important}
+  .home-page-v13 .hero-ctas{width:100%!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important;margin-top:20px!important}
+  .home-page-v13 .hero-ctas .button{width:100%!important;min-width:0!important;height:46px!important;padding:0 10px!important;font-size:11px!important;box-shadow:none!important}
+  .home-page-v13 .hero-ctas .button.primary{background:linear-gradient(100deg,#dc27bd 0%,#9b3cff 48%,#5264ff 100%)!important;color:#fff!important;border:0!important}
+  .home-page-v13 .hero-ctas .button.secondary{background:#fff!important;color:#1d2030!important;border:1px solid #d8dae5!important}
+  .home-page-v13 .hero-ctas .button.ghost{grid-column:1/-1!important;background:transparent!important;color:#6047d8!important;border:1px solid transparent!important}
+
+  .home-page-v13 .home-v2-facts{grid-template-columns:1fr 1fr!important;gap:16px 0!important;margin-top:30px!important;padding-top:18px!important}
+  .home-page-v13 .home-v2-facts>div{padding:0 12px!important}
+  .home-page-v13 .home-v2-facts>div:nth-child(odd){padding-left:0!important;border-right:1px solid #e0e1e8!important}
+  .home-page-v13 .home-v2-facts span{color:#707584!important;font-size:9px!important;line-height:1.35!important}
+  .home-page-v13 .home-v2-facts small{color:#858a99!important;font-size:8.5px!important;line-height:1.4!important}
+  .home-page-v13 .home-v2-facts strong{font-size:17px!important}
+
+  .home-active-miners{margin:16px 0 0!important;padding:13px 0 0!important;display:grid!important;grid-template-columns:7px max-content minmax(0,1fr)!important;align-items:center!important;column-gap:8px!important;row-gap:5px!important;min-height:0!important;text-align:left!important}
+  .home-active-miners>i{grid-column:1!important}
+  .home-active-miners>span{grid-column:2!important;color:#686d7c!important;font-size:9px!important;line-height:1.2!important}
+  .home-active-miners>strong{grid-column:3!important;justify-self:start!important;margin:0!important;font-size:15px!important}
+  .home-active-miners>small{grid-column:2/4!important;margin:0!important;color:#7b808f!important;font-size:8.5px!important;line-height:1.35!important;letter-spacing:.075em!important}
+
+  .home-v2-network-strip>.shell{grid-template-columns:1fr 1fr!important;gap:12px!important;padding:15px 0!important}
+  .home-v2-network-strip span{color:#777c8b!important;font-size:9px!important}
+  .home-v2-network-strip strong{font-size:12px!important}
+
+  .home-v2-manifesto-section,.home-v2-lcq,.home-v2-platform,.home-v2-paths,.home-v2-testnet,.home-v2-verify{padding:58px 0!important}
+  .home-v2-manifesto-copy h2,.home-v2-lcq-head h2,.home-v2-platform-head h2,.home-v2-paths-head h2,.home-v2-verify-grid h2{font-size:36px!important;line-height:1.03!important}
+  .home-v2-manifesto-copy p,.home-v2-paths-head p,.testnet-copy p,.home-v2-verify-grid p{color:#636878!important;font-size:14px!important;line-height:1.65!important}
+  .section-kicker{font-size:10px!important;line-height:1.35!important}
+  .participation-map{padding:14px!important;border-radius:18px!important}
+  .participation-wallets{gap:7px!important}
+  .participation-wallets>div{padding:13px 6px!important}
+  .participation-wallets span{font-size:15px!important}
+  .participation-wallets small{color:#777c8b!important;font-size:8.5px!important}
+  .participation-flow{margin:20px 0 14px!important;gap:10px!important}
+  .participation-flow>div{min-height:82px!important;padding:14px!important}
+  .participation-flow span{color:#747989!important;font-size:9px!important}
+  .participation-flow .accent span{color:#b7bccd!important}
+  .participation-map>p{color:#686d7c!important;font-size:11px!important;line-height:1.5!important}
+  .home-v2-lcq-head p,.consensus-rail p,.home-v2-reward-copy p{color:#b8bdcd!important;font-size:12px!important;line-height:1.6!important}
+  .consensus-rail small{color:#b7bccd!important;font-size:9px!important}
+  .path-rows p,.verify-rows small{color:#666b7b!important;font-size:11px!important;line-height:1.5!important}
+  .testnet-number span,.testnet-number small,.testnet-status-table b{color:#727786!important;font-size:9px!important}
+
+  .page-hero-copy>p,.section-header p,.principle-card p,.resource-grid p,.tool-grid p,.community-grid p,.security-grid p,.status-service-grid p,.legal-page p,.docs-content p{color:#646979!important;line-height:1.65!important}
+  .hero-eyebrow{font-size:9.5px!important;line-height:1.35!important}
+}
+
+@media (max-width:380px){
+  .brand-mark{width:112px!important;flex-basis:112px!important}
+  .rabbit-navbar-logo{width:112px!important;max-width:112px!important}
+  .wallet-button{max-width:108px!important;padding:0 7px!important}
+  .wallet-button .wallet-button-copy{max-width:58px!important}
+  .home-page-v13 .hero-ctas{grid-template-columns:1fr!important}
+  .home-page-v13 .hero-ctas .button.ghost{grid-column:auto!important}
+}
