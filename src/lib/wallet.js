@@ -33,6 +33,60 @@ async function migrateWalletConnectSessionOnce(provider) {
   } catch {}
 }
 
+// RABBIT_WALLETCONNECT_CHAIN_SYNC_V3
+function isWalletConnectProvider(provider) {
+  return Boolean(provider?.isWalletConnect || provider?.signer?.setDefaultChain || provider?.session)
+}
+
+function walletConnectSessionHasChain(provider, chainId) {
+  const caip = `eip155:${Number(chainId)}`
+  const namespaces = provider?.session?.namespaces || {}
+
+  for (const [key, namespace] of Object.entries(namespaces)) {
+    const namespaceKey = String(key)
+    if (namespaceKey === caip) return true
+    if (!namespaceKey.startsWith('eip155')) continue
+
+    const chains = Array.isArray(namespace?.chains) ? namespace.chains : []
+    const accounts = Array.isArray(namespace?.accounts) ? namespace.accounts : []
+
+    if (chains.includes(caip)) return true
+    if (accounts.some((account) => String(account).startsWith(`${caip}:`))) return true
+  }
+
+  return false
+}
+
+function setWalletConnectDefaultChain(provider, network) {
+  if (!provider || !network) return
+  if (!walletConnectSessionHasChain(provider, network.chainId)) {
+    throw new Error(`${network.name} is not approved in this WalletConnect session. Disconnect and reconnect the wallet once.`)
+  }
+
+  const caip = `eip155:${Number(network.chainId)}`
+
+  // @walletconnect/ethereum-provider routes request() through its internal
+  // chainId, while UniversalProvider owns the CAIP-2 default chain.
+  // Keep both in sync so reads and eth_sendTransaction go to the same chain.
+  provider.signer?.setDefaultChain?.(caip, network.rpcUrl)
+
+  try {
+    provider.chainId = Number(network.chainId)
+  } catch {}
+}
+
+function normalizeWalletConnectRabbitChain(provider) {
+  if (!isWalletConnectProvider(provider)) return
+
+  const current = Number(provider?.chainId)
+  if (NETWORK_LIST.some((network) => Number(network.chainId) === current)) return
+
+  const testnet = WALLET_NETWORK_LIST.find((network) => Number(network.chainId) === RABBIT_WC_TESTNET_CHAIN_ID)
+  if (testnet && walletConnectSessionHasChain(provider, testnet.chainId)) {
+    setWalletConnectDefaultChain(provider, testnet)
+  }
+}
+
 export function detectInjectedWallets(timeout = 450) {
   return new Promise((resolve) => {
     const found = new Map()
@@ -102,6 +156,7 @@ export async function connectWalletConnect() {
   await migrateWalletConnectSessionOnce(provider)
 
   if (!provider.session) await provider.connect()
+  normalizeWalletConnectRabbitChain(provider)
 
   const peer = provider.session?.peer?.metadata
   return {
@@ -116,6 +171,7 @@ export async function connectWalletConnect() {
 export async function restoreWalletConnect() {
   const provider = await getWalletConnectProvider()
   if (!provider.session) return null
+  normalizeWalletConnectRabbitChain(provider)
 
   const peer = provider.session?.peer?.metadata
   return {
@@ -152,6 +208,21 @@ export async function connectWallet(provider) {
 }
 
 export async function getWalletSnapshot(provider) {
+  if (isWalletConnectProvider(provider)) {
+    normalizeWalletConnectRabbitChain(provider)
+
+    const accounts = await provider.request({ method: 'eth_accounts' })
+    const internalChainId = Number(provider?.chainId)
+
+    if (Number.isFinite(internalChainId) && internalChainId > 0) {
+      return {
+        account: accounts?.[0] || provider?.accounts?.[0] || null,
+        chainIdHex: `0x${internalChainId.toString(16)}`,
+        chainId: internalChainId
+      }
+    }
+  }
+
   const [accounts, chainIdHex] = await Promise.all([
     provider.request({ method: 'eth_accounts' }),
     provider.request({ method: 'eth_chainId' })
@@ -164,6 +235,11 @@ export async function getWalletSnapshot(provider) {
 }
 
 export async function switchOrAddNetwork(provider, network) {
+  if (isWalletConnectProvider(provider)) {
+    setWalletConnectDefaultChain(provider, network)
+    return
+  }
+
   try {
     await provider.request({
       method: 'wallet_switchEthereumChain',
