@@ -10,6 +10,7 @@ let walletConnectProviderPromise = null
 // One migration key is used only to discard the pre-V2 persisted session once.
 const RABBIT_WC_TESTNET_CHAIN_ID = 9280
 const RABBIT_WC_SESSION_MIGRATION_KEY = 'rabbit:walletconnect:interactive-v2'
+const RABBIT_WC_BATCH_MIGRATION_KEY = 'rabbit:walletconnect:batch-v7'
 
 async function migrateWalletConnectSessionOnce(provider) {
   if (typeof window === 'undefined') return
@@ -30,6 +31,29 @@ async function migrateWalletConnectSessionOnce(provider) {
 
   try {
     window.localStorage.setItem(RABBIT_WC_SESSION_MIGRATION_KEY, '1')
+  } catch {}
+}
+
+// RABBIT_WALLET_BATCH_CALLS_V7
+// Existing sessions cannot gain newly requested optional methods in place.
+// Clear the pre-V7 WalletConnect session once so the next connection can
+// negotiate wallet_sendCalls. This is a one-time migration, not a reconnect loop.
+async function migrateWalletConnectBatchSessionOnce(provider) {
+  if (typeof window === 'undefined') return
+
+  let migrated = false
+  try {
+    migrated = window.localStorage.getItem(RABBIT_WC_BATCH_MIGRATION_KEY) === '1'
+  } catch {}
+
+  if (migrated) return
+
+  if (provider?.session) {
+    try { await provider.disconnect() } catch {}
+  }
+
+  try {
+    window.localStorage.setItem(RABBIT_WC_BATCH_MIGRATION_KEY, '1')
   } catch {}
 }
 
@@ -138,7 +162,7 @@ async function getWalletConnectProvider() {
         optionalChains: WALLET_NETWORK_LIST
           .filter((n) => n.chainId !== RABBIT_WC_TESTNET_CHAIN_ID)
           .map((n) => n.chainId),
-        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
+        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','wallet_sendCalls','wallet_getCallsStatus','wallet_showCallsStatus','wallet_getCapabilities','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
         optionalEvents: ['chainChanged','accountsChanged'],
         rpcMap,
         qrModalOptions: { themeMode: 'light' }
@@ -154,6 +178,7 @@ export async function connectWalletConnect() {
   // Do this only once after the V2 deployment. It clears the legacy
   // read-only/optional session without creating a permanent reconnect loop.
   await migrateWalletConnectSessionOnce(provider)
+  await migrateWalletConnectBatchSessionOnce(provider)
 
   if (!provider.session) await provider.connect()
   normalizeWalletConnectRabbitChain(provider)
@@ -170,6 +195,7 @@ export async function connectWalletConnect() {
 
 export async function restoreWalletConnect() {
   const provider = await getWalletConnectProvider()
+  await migrateWalletConnectBatchSessionOnce(provider)
   if (!provider.session) return null
   normalizeWalletConnectRabbitChain(provider)
 

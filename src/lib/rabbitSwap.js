@@ -97,6 +97,118 @@ export async function sendRabbitContract({ provider, account, address, abi, func
   })
 }
 
+// RABBIT_WALLET_BATCH_CALLS_V7
+function walletSessionHasRabbitMethod(provider, method, chainId = TESTNET.chainId) {
+  const caip = `eip155:${Number(chainId)}`
+  const namespaces = provider?.session?.namespaces || {}
+
+  for (const [key, namespace] of Object.entries(namespaces)) {
+    if (!String(key).startsWith('eip155')) continue
+    const methods = Array.isArray(namespace?.methods) ? namespace.methods : []
+    if (!methods.includes(method)) continue
+
+    if (String(key) === caip) return true
+
+    const chains = Array.isArray(namespace?.chains) ? namespace.chains : []
+    const accounts = Array.isArray(namespace?.accounts) ? namespace.accounts : []
+    if (chains.includes(caip)) return true
+    if (accounts.some((entry) => String(entry).startsWith(`${caip}:`))) return true
+  }
+
+  return false
+}
+
+export function walletSupportsRabbitBatch(provider) {
+  return walletSessionHasRabbitMethod(provider, 'wallet_sendCalls', TESTNET.chainId)
+}
+
+export function rabbitApprovalCalls({
+  tokenAddress,
+  spender,
+  amount,
+  currentAllowance = 0n,
+  abi = RABBIT_SWAP_ERC20_ABI,
+}) {
+  const wanted = BigInt(amount)
+  const existing = BigInt(currentAllowance || 0n)
+  if (existing >= wanted) return []
+
+  const calls = []
+  if (existing > 0n) {
+    calls.push({
+      address: tokenAddress,
+      abi,
+      functionName: 'approve',
+      args: [spender, 0n],
+    })
+  }
+
+  calls.push({
+    address: tokenAddress,
+    abi,
+    functionName: 'approve',
+    args: [spender, wanted],
+  })
+
+  return calls
+}
+
+function encodeRabbitBatchCall(call) {
+  return {
+    to: call.address,
+    data: encodeFunctionData({
+      abi: call.abi,
+      functionName: call.functionName,
+      args: call.args || [],
+    }),
+    value: toHex(BigInt(call.value || 0n)),
+  }
+}
+
+function batchUnsupported(error) {
+  const code = Number(error?.code)
+  if (code === -32601 || code === 4200 || code === 5710 || code === 5760) return true
+  return /unsupported|not supported|method not found|unknown method/i.test(String(error?.message || ''))
+}
+
+export async function sendRabbitContractBatch({ provider, account, calls }) {
+  if (!walletSupportsRabbitBatch(provider) || !Array.isArray(calls) || calls.length < 2) return null
+
+  try {
+    const result = await provider.request({
+      method: 'wallet_sendCalls',
+      params: [{
+        version: '2.0.0',
+        from: account,
+        chainId: TESTNET.chainIdHex || toHex(BigInt(TESTNET.chainId)),
+        atomicRequired: false,
+        calls: calls.map(encodeRabbitBatchCall),
+      }],
+    })
+
+    const transactionHashes = Array.isArray(result?.capabilities?.caip345?.transactionHashes)
+      ? result.capabilities.caip345.transactionHashes
+      : []
+
+    return {
+      id: typeof result === 'string' ? result : (result?.id || null),
+      transactionHashes,
+    }
+  } catch (error) {
+    // Safe fallback only for "method/chain unsupported". A user rejection must
+    // never silently become a second serial request.
+    if (batchUnsupported(error)) return null
+    throw error
+  }
+}
+
+export async function waitForRabbitBatchFinalReceipt(batch, timeoutMs = 90000) {
+  const hashes = Array.isArray(batch?.transactionHashes) ? batch.transactionHashes : []
+  const finalHash = hashes[hashes.length - 1]
+  if (!finalHash) return null
+  return waitForRabbitReceipt(finalHash, null, timeoutMs)
+}
+
 
 export async function readTokenMetadata(address, provider = null) {
   const input = String(address || '').trim()

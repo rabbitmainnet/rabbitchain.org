@@ -18,8 +18,12 @@ import {
   quoteBestSwapRoute,
   readAllowance,
   readTokenBalance,
+  rabbitApprovalCalls,
   sendRabbitContract,
+  sendRabbitContractBatch,
+  waitForRabbitBatchFinalReceipt,
   waitForRabbitReceipt,
+  walletSupportsRabbitBatch,
 } from '../lib/rabbitSwap'
 import { friendlyWalletError, shortAddress } from '../lib/wallet'
 import RabbitSlippageSettings from './RabbitSlippageSettings'
@@ -226,7 +230,7 @@ export default function RabbitSwapPanel({
     toast?.(`${plan.fromToken.symbol} approval submitted. Confirm the swap next.`)
   }
 
-  async function executeSwapPlan(plan, followsApproval = false) {
+  async function executeSwapPlan(plan, followsApproval = false, batchApproval = null) {
     setPending(followsApproval ? 'Step 2 of 2 — Confirm swap…' : 'Submitting swap…')
     let functionName
     let args
@@ -242,6 +246,47 @@ export default function RabbitSwapPanel({
     } else {
       functionName = 'swapExactTokensForTokens'
       args = [plan.amountIn, plan.minimumOut, plan.path, walletState.account, deadlineIn()]
+    }
+
+    if (batchApproval && walletSupportsRabbitBatch(walletProvider)) {
+      setPending('Confirm approve & swap in wallet…')
+      const batch = await sendRabbitContractBatch({
+        provider: walletProvider,
+        account: walletState.account,
+        calls: [
+          ...rabbitApprovalCalls(batchApproval),
+          {
+            address: RABBIT_SWAP_TESTNET.router,
+            abi: RABBIT_SWAP_ROUTER_ABI,
+            functionName,
+            args,
+            value,
+          },
+        ],
+      })
+
+      if (batch) {
+        toast?.('Approve + swap submitted from wallet')
+        setAmount('')
+        setQuote(null)
+        setPending(null)
+
+        void waitForRabbitBatchFinalReceipt(batch).then((receipt) => {
+          if (receipt?.status === '0x0') {
+            toast?.('Rabbit Swap batch reverted')
+          } else if (receipt) {
+            toast?.('Swap confirmed on Rabbit Testnet')
+          }
+          return Promise.allSettled([refreshAccount(), refreshPools()])
+        }).catch(() => {})
+
+        window.setTimeout(() => { void Promise.allSettled([refreshAccount(), refreshPools()]) }, 4000)
+        return
+      }
+
+      // Wallet advertised batching but rejected it as unsupported for this chain.
+      // Fall back to the already-tested serial WalletConnect flow.
+      await ensureInputApproval(plan)
     }
 
     const hash = await sendRabbitContract({
@@ -284,8 +329,23 @@ export default function RabbitSwapPanel({
     const requiresApproval = Boolean(needsApproval)
 
     try {
-      if (requiresApproval) await ensureInputApproval(plan)
-      await executeSwapPlan(plan, requiresApproval)
+      const useBatch = requiresApproval && walletSupportsRabbitBatch(walletProvider)
+
+      if (requiresApproval && !useBatch) await ensureInputApproval(plan)
+
+      await executeSwapPlan(
+        plan,
+        requiresApproval,
+        useBatch
+          ? {
+              tokenAddress: plan.fromToken.address,
+              spender: RABBIT_SWAP_TESTNET.router,
+              amount: plan.amountIn,
+              currentAllowance: plan.allowance,
+              abi: RABBIT_SWAP_ERC20_ABI,
+            }
+          : null,
+      )
     } catch (error) {
       toast?.(friendlyWalletError(error, requiresApproval ? 'Approve-and-swap flow failed' : 'Swap failed'))
     } finally {

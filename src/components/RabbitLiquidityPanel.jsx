@@ -20,8 +20,12 @@ import {
   parseTokenAmount,
   readAllowance,
   readTokenBalance,
+  rabbitApprovalCalls,
   sendRabbitContract,
+  sendRabbitContractBatch,
+  waitForRabbitBatchFinalReceipt,
   waitForRabbitReceipt,
+  walletSupportsRabbitBatch,
 } from '../lib/rabbitSwap'
 import { friendlyWalletError, shortAddress } from '../lib/wallet'
 import RabbitSlippageSettings from './RabbitSlippageSettings'
@@ -353,7 +357,7 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     toast?.(`${token.symbol} approval submitted for liquidity`)
   }
 
-  async function executeAddLiquidity(plan, approvalCount = 0) {
+  async function executeAddLiquidity(plan, approvalCount = 0, batchApprovals = null) {
     const totalSteps = approvalCount + 1
     setPending(approvalCount ? `Step ${totalSteps} of ${totalSteps} — Confirm add liquidity…` : 'Adding liquidity…')
     const minA = applySlippage(plan.rawA, plan.slippageBps)
@@ -375,6 +379,62 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     } else {
       functionName = 'addLiquidity'
       args = [plan.tokenA.address, plan.tokenB.address, plan.rawA, plan.rawB, minA, minB, account, deadlineIn()]
+    }
+
+    if (batchApprovals?.length && walletSupportsRabbitBatch(walletProvider)) {
+      setPending('Confirm approvals & add liquidity in wallet…')
+
+      const approvalCalls = batchApprovals.flatMap((approval) => rabbitApprovalCalls({
+        tokenAddress: approval.token.address,
+        spender: RABBIT_SWAP_TESTNET.router,
+        amount: approval.amount,
+        currentAllowance: approval.currentAllowance,
+        abi: RABBIT_SWAP_ERC20_ABI,
+      }))
+
+      const batch = await sendRabbitContractBatch({
+        provider: walletProvider,
+        account,
+        calls: [
+          ...approvalCalls,
+          {
+            address: RABBIT_SWAP_TESTNET.router,
+            abi: RABBIT_SWAP_ROUTER_ABI,
+            functionName,
+            args,
+            value,
+          },
+        ],
+      })
+
+      if (batch) {
+        toast?.('Approvals + liquidity submitted from wallet')
+        setAmountA('')
+        setAmountB('')
+        setPending(null)
+
+        void waitForRabbitBatchFinalReceipt(batch).then((receipt) => {
+          if (receipt?.status === '0x0') {
+            toast?.('Liquidity batch reverted')
+          } else if (receipt) {
+            toast?.('Liquidity added on Rabbit Testnet')
+          }
+          return refresh()
+        }).catch(() => {})
+
+        window.setTimeout(() => { void refresh().catch(() => {}) }, 4000)
+        return
+      }
+
+      // Batch is not available for this wallet/chain despite the negotiated
+      // method. Use the serial flow without losing the frozen plan.
+      for (let index = 0; index < batchApprovals.length; index += 1) {
+        await ensureTokenApproval({
+          ...batchApprovals[index],
+          step: index + 1,
+          totalSteps: batchApprovals.length + 1,
+        })
+      }
     }
 
     const hash = await sendRabbitContract({
@@ -422,10 +482,15 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     const totalSteps = approvals.length + 1
 
     try {
-      for (let index = 0; index < approvals.length; index += 1) {
-        await ensureTokenApproval({ ...approvals[index], step: index + 1, totalSteps })
+      const useBatch = approvals.length > 0 && walletSupportsRabbitBatch(walletProvider)
+
+      if (!useBatch) {
+        for (let index = 0; index < approvals.length; index += 1) {
+          await ensureTokenApproval({ ...approvals[index], step: index + 1, totalSteps })
+        }
       }
-      await executeAddLiquidity(plan, approvals.length)
+
+      await executeAddLiquidity(plan, approvals.length, useBatch ? approvals : null)
     } catch (error) {
       toast?.(friendlyWalletError(error, approvals.length ? 'Approve-and-add-liquidity flow failed' : 'Add liquidity failed'))
     } finally {
@@ -448,7 +513,7 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     toast?.('RABBIT-LP approval submitted. Confirm the removal transaction next.')
   }
 
-  async function executeRemoveLiquidity(plan, followsApproval = false) {
+  async function executeRemoveLiquidity(plan, followsApproval = false, batchApproval = null) {
     setPending(followsApproval ? 'Step 2 of 2 — Confirm removal…' : 'Removing liquidity…')
     const minA = applySlippage(plan.estimate.A, plan.slippageBps)
     const minB = applySlippage(plan.estimate.B, plan.slippageBps)
@@ -465,6 +530,43 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     } else {
       functionName = 'removeLiquidity'
       args = [plan.tokenA.address, plan.tokenB.address, plan.amount, minA, minB, account, deadlineIn()]
+    }
+
+    if (batchApproval && walletSupportsRabbitBatch(walletProvider)) {
+      setPending('Confirm LP approval & removal in wallet…')
+      const batch = await sendRabbitContractBatch({
+        provider: walletProvider,
+        account,
+        calls: [
+          ...rabbitApprovalCalls(batchApproval),
+          {
+            address: RABBIT_SWAP_TESTNET.router,
+            abi: RABBIT_SWAP_ROUTER_ABI,
+            functionName,
+            args,
+          },
+        ],
+      })
+
+      if (batch) {
+        toast?.('LP approval + removal submitted from wallet')
+        setLpAmount('')
+        setPending(null)
+
+        void waitForRabbitBatchFinalReceipt(batch).then((receipt) => {
+          if (receipt?.status === '0x0') {
+            toast?.('Liquidity removal batch reverted')
+          } else if (receipt) {
+            toast?.('Liquidity removed on Rabbit Testnet')
+          }
+          return refresh()
+        }).catch(() => {})
+
+        window.setTimeout(() => { void refresh().catch(() => {}) }, 4000)
+        return
+      }
+
+      await approveLPForRemoval(plan.pair, plan.amount)
     }
 
     const hash = await sendRabbitContract({ provider: walletProvider, account, address: RABBIT_SWAP_TESTNET.router, abi: RABBIT_SWAP_ROUTER_ABI, functionName, args })
@@ -493,12 +595,28 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
       tokenA,
       tokenB,
       slippageBps,
+      lpAllowance: snapshot.lpAllowance,
     }
     const requiresApproval = Boolean(lpNeedsApproval)
 
     try {
-      if (requiresApproval) await approveLPForRemoval(plan.pair, plan.amount)
-      await executeRemoveLiquidity(plan, requiresApproval)
+      const useBatch = requiresApproval && walletSupportsRabbitBatch(walletProvider)
+
+      if (requiresApproval && !useBatch) await approveLPForRemoval(plan.pair, plan.amount)
+
+      await executeRemoveLiquidity(
+        plan,
+        requiresApproval,
+        useBatch
+          ? {
+              tokenAddress: plan.pair,
+              spender: RABBIT_SWAP_TESTNET.router,
+              amount: plan.amount,
+              currentAllowance: plan.lpAllowance,
+              abi: RABBIT_SWAP_PAIR_ABI,
+            }
+          : null,
+      )
     } catch (error) {
       toast?.(friendlyWalletError(error, requiresApproval ? 'Liquidity removal flow failed' : 'Remove liquidity failed'))
     } finally {
