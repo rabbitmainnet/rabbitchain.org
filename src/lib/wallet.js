@@ -4,6 +4,49 @@ import { REOWN_PROJECT_ID, WALLETCONNECT_METADATA } from '../config/walletconnec
 const LAST_WALLET_KEY = 'rabbit:last-wallet'
 let walletConnectProviderPromise = null
 
+// RABBIT_WALLETCONNECT_REQUIRED_TESTNET_V1
+// A WalletConnect session must be able to WRITE on Rabbit Testnet.
+// Previously Rabbit Testnet and eth_sendTransaction were optional, so a
+// wallet could appear connected while approving only account/read access.
+const RABBIT_WC_TESTNET_CHAIN_ID = 9280
+const RABBIT_WC_TESTNET_CAIP = `eip155:${RABBIT_WC_TESTNET_CHAIN_ID}`
+
+function walletConnectSessionSupportsRabbitTestnet(session) {
+  if (!session) return false
+
+  const namespaces = session?.namespaces || {}
+  let chainApproved = false
+  let sendApproved = false
+
+  for (const [namespaceKey, namespace] of Object.entries(namespaces)) {
+    if (!String(namespaceKey).startsWith('eip155')) continue
+
+    const chains = Array.isArray(namespace?.chains) ? namespace.chains : []
+    const accounts = Array.isArray(namespace?.accounts) ? namespace.accounts : []
+    const methods = Array.isArray(namespace?.methods) ? namespace.methods : []
+
+    const hasRabbitChain =
+      namespaceKey === RABBIT_WC_TESTNET_CAIP ||
+      chains.includes(RABBIT_WC_TESTNET_CAIP) ||
+      accounts.some((account) => String(account).startsWith(`${RABBIT_WC_TESTNET_CAIP}:`))
+
+    if (hasRabbitChain) chainApproved = true
+    if (methods.includes('eth_sendTransaction')) sendApproved = true
+  }
+
+  return chainApproved && sendApproved
+}
+
+async function resetIncompatibleWalletConnectSession(provider) {
+  if (!provider?.session || walletConnectSessionSupportsRabbitTestnet(provider.session)) return false
+
+  try {
+    await provider.disconnect()
+  } catch {}
+
+  return true
+}
+
 export function detectInjectedWallets(timeout = 450) {
   return new Promise((resolve) => {
     const found = new Map()
@@ -47,8 +90,15 @@ async function getWalletConnectProvider() {
         projectId: REOWN_PROJECT_ID,
         metadata: WALLETCONNECT_METADATA,
         showQrModal: true,
-        optionalChains: WALLET_NETWORK_LIST.map((n) => n.chainId),
-        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','eth_sendTransaction','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
+        // Rabbit Platform is interactive, so a successful WalletConnect session
+        // must authorize Rabbit Testnet transactions instead of treating them as optional.
+        chains: [RABBIT_WC_TESTNET_CHAIN_ID],
+        methods: ['eth_sendTransaction'],
+        events: ['chainChanged','accountsChanged'],
+        optionalChains: WALLET_NETWORK_LIST
+          .filter((n) => n.chainId !== RABBIT_WC_TESTNET_CHAIN_ID)
+          .map((n) => n.chainId),
+        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
         optionalEvents: ['chainChanged','accountsChanged'],
         rpcMap,
         qrModalOptions: { themeMode: 'light' }
@@ -60,7 +110,18 @@ async function getWalletConnectProvider() {
 
 export async function connectWalletConnect() {
   const provider = await getWalletConnectProvider()
+
+  // Sessions created before this fix may show the address but lack permission
+  // to submit transactions. Drop those sessions and negotiate a proper one.
+  await resetIncompatibleWalletConnectSession(provider)
+
   if (!provider.session) await provider.connect()
+
+  if (!walletConnectSessionSupportsRabbitTestnet(provider.session)) {
+    try { await provider.disconnect() } catch {}
+    throw new Error('WalletConnect did not authorize Rabbit Testnet transactions. Reconnect with a wallet that supports Rabbit Testnet and transaction requests.')
+  }
+
   const peer = provider.session?.peer?.metadata
   return {
     kind: 'walletconnect',
@@ -74,6 +135,14 @@ export async function connectWalletConnect() {
 export async function restoreWalletConnect() {
   const provider = await getWalletConnectProvider()
   if (!provider.session) return null
+
+  // Never restore an old session that cannot sign/send on Rabbit Testnet.
+  // The next Connect wallet action will create a fresh compatible session.
+  if (!walletConnectSessionSupportsRabbitTestnet(provider.session)) {
+    try { await provider.disconnect() } catch {}
+    return null
+  }
+
   const peer = provider.session?.peer?.metadata
   return {
     kind: 'walletconnect',
@@ -145,8 +214,13 @@ export async function switchOrAddNetwork(provider, network) {
 export function friendlyWalletError(error, fallback = 'Wallet request failed') {
   if (error?.code === 4001) return 'Request cancelled in wallet.'
   if (error?.code === -32002) return 'A wallet request is already open.'
-  if (/unsupported|not supported/i.test(error?.message || '')) return 'This wallet does not support that request yet.'
-  return error?.message || fallback
+
+  const message = String(error?.message || '')
+  if (/walletconnect/i.test(message) && /(namespace|chain|method|session|authorize|route)/i.test(message)) {
+    return 'WalletConnect session cannot submit Rabbit Testnet transactions. Disconnect and reconnect the wallet, then try again.'
+  }
+  if (/unsupported|not supported/i.test(message)) return 'This wallet does not support that request yet.'
+  return message || fallback
 }
 
 export function identifyRabbitNetwork(chainId) {
