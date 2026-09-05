@@ -51,11 +51,11 @@ export function applySlippage(value, bps = RABBIT_SWAP_TESTNET.slippageBps) {
   return (BigInt(value) * (10_000n - BigInt(bps))) / 10_000n
 }
 
+// RABBIT_PUBLIC_READ_RPC_V1
+// Read-only blockchain calls must never wake a mobile wallet.
+// WalletConnect is reserved for user-authorized writes/signatures; balances,
+// quotes, reserves, allowances, metadata and receipt polling use the public RPC.
 export async function rabbitRpc(method, params, provider = null) {
-  if (provider?.request) {
-    return provider.request({ method, params })
-  }
-
   const response = await fetch(TESTNET.rpcUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
