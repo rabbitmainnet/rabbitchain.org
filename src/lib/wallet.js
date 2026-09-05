@@ -4,47 +4,33 @@ import { REOWN_PROJECT_ID, WALLETCONNECT_METADATA } from '../config/walletconnec
 const LAST_WALLET_KEY = 'rabbit:last-wallet'
 let walletConnectProviderPromise = null
 
-// RABBIT_WALLETCONNECT_REQUIRED_TESTNET_V1
-// A WalletConnect session must be able to WRITE on Rabbit Testnet.
-// Previously Rabbit Testnet and eth_sendTransaction were optional, so a
-// wallet could appear connected while approving only account/read access.
+// RABBIT_WALLETCONNECT_MOBILE_SESSION_V2
+// Rabbit Testnet transactions stay required in the WalletConnect proposal,
+// but session acceptance/restoration is delegated to EthereumProvider itself.
+// One migration key is used only to discard the pre-V2 persisted session once.
 const RABBIT_WC_TESTNET_CHAIN_ID = 9280
-const RABBIT_WC_TESTNET_CAIP = `eip155:${RABBIT_WC_TESTNET_CHAIN_ID}`
+const RABBIT_WC_SESSION_MIGRATION_KEY = 'rabbit:walletconnect:interactive-v2'
 
-function walletConnectSessionSupportsRabbitTestnet(session) {
-  if (!session) return false
+async function migrateWalletConnectSessionOnce(provider) {
+  if (typeof window === 'undefined') return
 
-  const namespaces = session?.namespaces || {}
-  let chainApproved = false
-  let sendApproved = false
-
-  for (const [namespaceKey, namespace] of Object.entries(namespaces)) {
-    if (!String(namespaceKey).startsWith('eip155')) continue
-
-    const chains = Array.isArray(namespace?.chains) ? namespace.chains : []
-    const accounts = Array.isArray(namespace?.accounts) ? namespace.accounts : []
-    const methods = Array.isArray(namespace?.methods) ? namespace.methods : []
-
-    const hasRabbitChain =
-      namespaceKey === RABBIT_WC_TESTNET_CAIP ||
-      chains.includes(RABBIT_WC_TESTNET_CAIP) ||
-      accounts.some((account) => String(account).startsWith(`${RABBIT_WC_TESTNET_CAIP}:`))
-
-    if (hasRabbitChain) chainApproved = true
-    if (methods.includes('eth_sendTransaction')) sendApproved = true
-  }
-
-  return chainApproved && sendApproved
-}
-
-async function resetIncompatibleWalletConnectSession(provider) {
-  if (!provider?.session || walletConnectSessionSupportsRabbitTestnet(provider.session)) return false
-
+  let migrated = false
   try {
-    await provider.disconnect()
+    migrated = window.localStorage.getItem(RABBIT_WC_SESSION_MIGRATION_KEY) === '1'
   } catch {}
 
-  return true
+  if (migrated) return
+
+  // The old site could persist a WalletConnect session created while Rabbit
+  // Testnet transaction capability was optional. Drop that session ONCE so the
+  // next connection negotiates the current interactive proposal.
+  if (provider?.session) {
+    try { await provider.disconnect() } catch {}
+  }
+
+  try {
+    window.localStorage.setItem(RABBIT_WC_SESSION_MIGRATION_KEY, '1')
+  } catch {}
 }
 
 export function detectInjectedWallets(timeout = 450) {
@@ -111,16 +97,11 @@ async function getWalletConnectProvider() {
 export async function connectWalletConnect() {
   const provider = await getWalletConnectProvider()
 
-  // Sessions created before this fix may show the address but lack permission
-  // to submit transactions. Drop those sessions and negotiate a proper one.
-  await resetIncompatibleWalletConnectSession(provider)
+  // Do this only once after the V2 deployment. It clears the legacy
+  // read-only/optional session without creating a permanent reconnect loop.
+  await migrateWalletConnectSessionOnce(provider)
 
   if (!provider.session) await provider.connect()
-
-  if (!walletConnectSessionSupportsRabbitTestnet(provider.session)) {
-    try { await provider.disconnect() } catch {}
-    throw new Error('WalletConnect did not authorize Rabbit Testnet transactions. Reconnect with a wallet that supports Rabbit Testnet and transaction requests.')
-  }
 
   const peer = provider.session?.peer?.metadata
   return {
@@ -135,13 +116,6 @@ export async function connectWalletConnect() {
 export async function restoreWalletConnect() {
   const provider = await getWalletConnectProvider()
   if (!provider.session) return null
-
-  // Never restore an old session that cannot sign/send on Rabbit Testnet.
-  // The next Connect wallet action will create a fresh compatible session.
-  if (!walletConnectSessionSupportsRabbitTestnet(provider.session)) {
-    try { await provider.disconnect() } catch {}
-    return null
-  }
 
   const peer = provider.session?.peer?.metadata
   return {
