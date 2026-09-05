@@ -221,8 +221,9 @@ export default function RabbitSwapPanel({
       currentAllowance: plan.allowance,
       abi: RABBIT_SWAP_ERC20_ABI,
       onReset: () => toast?.(`Resetting existing ${plan.fromToken.symbol} allowance first`),
+      waitForConfirmation: false,
     })
-    toast?.(`${plan.fromToken.symbol} approved. Confirm the swap next.`)
+    toast?.(`${plan.fromToken.symbol} approval submitted. Confirm the swap next.`)
   }
 
   async function executeSwapPlan(plan, followsApproval = false) {
@@ -258,8 +259,11 @@ export default function RabbitSwapPanel({
     toast?.(receipt ? 'Swap confirmed on Rabbit Testnet' : 'Swap submitted; confirmation is taking longer than expected')
     setAmount('')
     setQuote(null)
-    await refreshAccount()
-    await refreshPools()
+
+    // The signing/confirmation lifecycle is finished. Do not keep the button
+    // spinning while read-only balances and pools refresh.
+    setPending(null)
+    void Promise.allSettled([refreshAccount(), refreshPools()])
   }
 
   async function handleAction() {

@@ -348,8 +348,9 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
       currentAllowance,
       abi: RABBIT_SWAP_ERC20_ABI,
       onReset: () => toast?.(`Resetting existing ${token.symbol} allowance first`),
+      waitForConfirmation: false,
     })
-    toast?.(`${token.symbol} approved for liquidity`)
+    toast?.(`${token.symbol} approval submitted for liquidity`)
   }
 
   async function executeAddLiquidity(plan, approvalCount = 0) {
@@ -391,7 +392,11 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     toast?.(receipt ? 'Liquidity added on Rabbit Testnet' : 'Liquidity submitted; confirmation is taking longer than expected')
     setAmountA('')
     setAmountB('')
-    await refresh()
+
+    // Final transaction settled (or was submitted and exceeded the UI wait).
+    // Release the action immediately; pool/account reads continue silently.
+    setPending(null)
+    void refresh().catch(() => {})
     await refreshPools()
   }
 
@@ -438,10 +443,9 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
       functionName: 'approve',
       args: [RABBIT_SWAP_TESTNET.router, amount],
     })
-    const receipt = await waitForRabbitReceipt(hash, walletProvider)
-    if (receipt?.status === '0x0') throw new Error('RABBIT-LP approval reverted')
-    if (!receipt) throw new Error('RABBIT-LP approval confirmation timed out')
-    toast?.('RABBIT-LP approved. Confirm the removal transaction next.')
+    // Do not wait for the approval receipt here. The following removal uses
+    // the next account nonce, so the chain necessarily executes this approval first.
+    toast?.('RABBIT-LP approval submitted. Confirm the removal transaction next.')
   }
 
   async function executeRemoveLiquidity(plan, followsApproval = false) {
@@ -469,7 +473,9 @@ export default function RabbitLiquidityPanel({ walletState, walletProvider, onCo
     if (receipt?.status === '0x0') throw new Error('Remove-liquidity transaction reverted')
     toast?.(receipt ? 'Liquidity removed on Rabbit Testnet' : 'Removal submitted; confirmation is taking longer than expected')
     setLpAmount('')
-    await refresh()
+
+    setPending(null)
+    void refresh().catch(() => {})
     await refreshPools()
   }
 

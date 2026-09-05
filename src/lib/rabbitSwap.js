@@ -145,7 +145,18 @@ export async function readAllowance(tokenAddress, owner, spender, provider = nul
   })
 }
 
-export async function approveExact({ provider, account, tokenAddress, spender, amount, currentAllowance = 0n, abi = RABBIT_SWAP_ERC20_ABI, onReset }) {
+// RABBIT_MOBILE_TX_SEQUENCE_V6
+export async function approveExact({
+  provider,
+  account,
+  tokenAddress,
+  spender,
+  amount,
+  currentAllowance = 0n,
+  abi = RABBIT_SWAP_ERC20_ABI,
+  onReset,
+  waitForConfirmation = true,
+}) {
   const wanted = BigInt(amount)
   const existing = BigInt(currentAllowance || 0n)
 
@@ -161,8 +172,11 @@ export async function approveExact({ provider, account, tokenAddress, spender, a
       functionName: 'approve',
       args: [spender, 0n],
     })
-    const resetReceipt = await waitForRabbitReceipt(resetHash, provider)
-    if (resetReceipt?.status === '0x0') throw new Error('Approval reset reverted')
+    if (waitForConfirmation) {
+      const resetReceipt = await waitForRabbitReceipt(resetHash, provider)
+      if (resetReceipt?.status === '0x0') throw new Error('Approval reset reverted')
+      if (!resetReceipt) throw new Error('Approval reset confirmation timed out')
+    }
   }
 
   const hash = await sendRabbitContract({
@@ -173,8 +187,11 @@ export async function approveExact({ provider, account, tokenAddress, spender, a
     functionName: 'approve',
     args: [spender, wanted],
   })
-  const receipt = await waitForRabbitReceipt(hash, provider)
-  if (receipt?.status === '0x0') throw new Error('Token approval reverted')
+  if (waitForConfirmation) {
+    const receipt = await waitForRabbitReceipt(hash, provider)
+    if (receipt?.status === '0x0') throw new Error('Token approval reverted')
+    if (!receipt) throw new Error('Token approval confirmation timed out')
+  }
   return hash
 }
 
