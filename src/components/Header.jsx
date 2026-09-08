@@ -3,7 +3,6 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import { ChevronDown, Code2, Menu, Search, Wallet, X } from 'lucide-react'
 import Brand from './Brand'
 import { identifyRabbitNetwork, shortAddress } from '../lib/wallet'
-import { usePlatformNetwork } from '../hooks/usePlatformNetwork'
 
 const groups = [
   {
@@ -44,7 +43,6 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
   const location = useLocation()
   const navRef = useRef(null)
   const activeNetwork = identifyRabbitNetwork(walletState.chainId)
-  const { network: platformNetworkConfig } = usePlatformNetwork()
 
   useEffect(() => {
     setOpen(null)
@@ -85,11 +83,9 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
         <div className="shell announcement-inner">
           <span className="notranslate" translate="no">
             <i />
-            {platformNetworkConfig.key === 'mainnet'
-              ? `RABBIT MAINNET · ${platformNetworkConfig.networkLive ? 'LIVE' : 'COMING LATER'} · CHAIN ID ${platformNetworkConfig.chainId}`
-              : `RABBIT TESTNET · ${platformNetworkConfig.networkLive ? 'LIVE' : 'FIRST PUBLIC LAUNCH'} · CHAIN ID ${platformNetworkConfig.chainId}`}
+            RABBIT TESTNET · REQUIRED UPGRADE · HARD FORK BLOCK 50,000
           </span>
-          <Link to="/status">Network status <span>→</span></Link>
+          <Link to="/mining#downloads">Download V2.2 <span>→</span></Link>
         </div>
       </div>
 
