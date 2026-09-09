@@ -85,7 +85,7 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
             <i />
             RABBIT TESTNET · REQUIRED UPGRADE · HARD FORK BLOCK 50,000
           </span>
-          <Link to="/mining#downloads">Download V2.2.1 <span>→</span></Link>
+          <Link to="/mining#downloads">Download V2.2.2 <span>→</span></Link>
         </div>
       </div>
 
