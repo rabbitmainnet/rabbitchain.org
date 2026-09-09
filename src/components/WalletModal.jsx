@@ -26,12 +26,12 @@ export default function WalletModal({ open, onClose, onSelect, onWalletConnect }
   return <div className="modal-backdrop" onMouseDown={onClose} role="presentation">
     <div className="wallet-modal" onMouseDown={(e)=>e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="wallet-modal-title">
       <div className="wallet-modal-head"><div><span>RABBIT WALLET</span><h3 id="wallet-modal-title">Connect a wallet</h3></div><button onClick={onClose} aria-label="Close wallet connection"><X size={18}/></button></div>
-      <p className="wallet-modal-intro">Connect with any compatible EVM wallet. Use an installed wallet, QR code, mobile deep link or WalletConnect. Rabbit never asks for a seed phrase or private key.</p>
+      <p className="wallet-modal-intro">Choose an installed EVM wallet or connect from another device with WalletConnect. Rabbit never asks for a seed phrase or private key.</p>
 
       <div className="wallet-connect-featured">
         <button type="button" onClick={openWalletConnect} disabled={remoteLoading}>
           <span className="wallet-connect-mark"><QrCode size={22}/></span>
-          <span><b>All compatible wallets</b><small>{remoteLoading?'Opening wallet connection…':'QR code · mobile · desktop · WalletConnect · EVM wallets'}</small></span>
+          <span><b>WalletConnect</b><small>{remoteLoading?'Opening secure connection…':'QR code · mobile and desktop wallets'}</small></span>
           <ArrowRight size={17}/>
         </button>
       </div>
@@ -43,7 +43,7 @@ export default function WalletModal({ open, onClose, onSelect, onWalletConnect }
         {!loading && wallets.length===0 && <div className="wallet-empty compact"><Wallet size={20}/><div><b>No injected wallet detected</b><p>You can still connect through WalletConnect above.</p></div></div>}
       </div>
 
-      <div className="wallet-mobile-row active"><Smartphone size={18}/><div><b>Mobile ready</b><small>Use QR code, a wallet deep link, or the wallet's built-in browser.</small></div><span>LIVE</span></div>
+      <div className="wallet-mobile-row active"><Smartphone size={18}/><div><b>Mobile ready</b><small>Scan the QR code or open a compatible wallet from your phone.</small></div><span>LIVE</span></div>
       <div className="wallet-security"><ShieldCheck size={16}/><span>Connecting only shares your public address and selected network. No signature is requested on connect.</span></div>
     </div>
   </div>
