@@ -4,6 +4,48 @@ import { REOWN_PROJECT_ID, WALLETCONNECT_METADATA } from '../config/walletconnec
 const LAST_WALLET_KEY = 'rabbit:last-wallet'
 let walletConnectProviderPromise = null
 
+// RABBIT_WALLETCONNECT_SESSION_MODAL_GUARD_V17
+// Keep the WalletConnect/AppKit connect modal available while pairing.
+// The instant a real WalletConnect session exists, the connect modal is stale
+// and must never remain visible or reopen.
+function installWalletConnectSessionModalGuard(provider) {
+  if (!provider || provider.__rabbitSessionModalGuardV17) return
+  provider.__rabbitSessionModalGuardV17 = true
+
+  const closeIfSessionExists = () => {
+    if (!provider.session) return
+
+    try {
+      const result = provider.modal?.close?.()
+      if (result && typeof result.catch === 'function') result.catch(() => {})
+    } catch {}
+  }
+
+  // EthereumProvider emits "connect" after the session is created.
+  provider.on?.('connect', closeIfSessionExists)
+
+  // Some mobile/QR flows can re-open or leave the AppKit modal visible after
+  // the connect event. Close every such stale presentation while the session lives.
+  try {
+    provider.modal?.subscribeState?.((state) => {
+      if (!state?.open || !provider.session) return
+      queueMicrotask(closeIfSessionExists)
+    })
+  } catch {}
+
+  // Also cover providers that finish modal state updates one tick later.
+  const closeAfterConnect = () => {
+    closeIfSessionExists()
+    setTimeout(closeIfSessionExists, 0)
+    setTimeout(closeIfSessionExists, 100)
+    setTimeout(closeIfSessionExists, 350)
+  }
+
+  provider.on?.('connect', closeAfterConnect)
+}
+
+let walletConnectBootstrapProviderPromise = null
+
 // RABBIT_WALLETCONNECT_MOBILE_SESSION_V2
 // Rabbit Testnet transactions stay required in the WalletConnect proposal,
 // but session acceptance/restoration is delegated to EthereumProvider itself.
@@ -11,6 +53,8 @@ let walletConnectProviderPromise = null
 const RABBIT_WC_TESTNET_CHAIN_ID = 9280
 const RABBIT_WC_SESSION_MIGRATION_KEY = 'rabbit:walletconnect:interactive-v2'
 const RABBIT_WC_BATCH_MIGRATION_KEY = 'rabbit:walletconnect:batch-v7'
+const RABBIT_WC_OPTIONAL_CHAIN_MIGRATION_KEY = 'rabbit:walletconnect:optional-chain-v10'
+const RABBIT_WC_SINGLE_PAIR_MIGRATION_KEY = 'rabbit:walletconnect:single-pair-v11'
 
 async function migrateWalletConnectSessionOnce(provider) {
   if (typeof window === 'undefined') return
@@ -57,6 +101,100 @@ async function migrateWalletConnectBatchSessionOnce(provider) {
   } catch {}
 }
 
+
+// RABBIT_WALLETCONNECT_OPTIONAL_CHAIN_V10
+// WalletConnect custom chains must be part of the optional namespace for
+// wallets such as Rabby to route later requests to eip155:9280 correctly.
+async function migrateWalletConnectOptionalChainOnce(provider) {
+  if (typeof window === 'undefined') return
+
+  let migrated = false
+  try {
+    migrated = window.localStorage.getItem(RABBIT_WC_OPTIONAL_CHAIN_MIGRATION_KEY) === '1'
+  } catch {}
+
+  if (migrated) return
+
+  // A WalletConnect session cannot retroactively gain a chain namespace.
+  // Drop the pre-V10 session once so the next pairing negotiates 9280 again.
+  if (provider?.session) {
+    try { await provider.disconnect() } catch {}
+  }
+
+  try {
+    window.localStorage.setItem(RABBIT_WC_OPTIONAL_CHAIN_MIGRATION_KEY, '1')
+  } catch {}
+}
+
+function walletConnectRequestedChains() {
+  const ids = WALLET_NETWORK_LIST
+    .map((network) => Number(network.chainId))
+    .filter((chainId) => Number.isFinite(chainId) && chainId > 0 && chainId !== RABBIT_WC_TESTNET_CHAIN_ID)
+
+  return [RABBIT_WC_TESTNET_CHAIN_ID, ...ids]
+}
+
+
+// RABBIT_WALLETCONNECT_SINGLE_PAIR_V11
+// V10 could automatically create a second pairing if the wallet omitted
+// Rabbit Testnet from the optional namespace. V11 never does that.
+async function migrateWalletConnectSinglePairOnce(provider) {
+  if (typeof window === 'undefined') return
+
+  let migrated = false
+  try {
+    migrated = window.localStorage.getItem(RABBIT_WC_SINGLE_PAIR_MIGRATION_KEY) === '1'
+  } catch {}
+
+  if (migrated) return
+
+  // Clear any V10 session once. The next user-initiated connect produces
+  // exactly one fresh QR/pairing.
+  if (provider?.session) {
+    try { await provider.disconnect() } catch {}
+  }
+
+  try {
+    window.localStorage.setItem(RABBIT_WC_SINGLE_PAIR_MIGRATION_KEY, '1')
+  } catch {}
+}
+
+async function waitForWalletConnectRabbitApproval(provider, timeoutMs = 1800) {
+  const deadline = Date.now() + timeoutMs
+  while (Date.now() < deadline) {
+    if (walletConnectSessionHasChain(provider, RABBIT_WC_TESTNET_CHAIN_ID)) return true
+    await new Promise((resolve) => setTimeout(resolve, 150))
+  }
+  return walletConnectSessionHasChain(provider, RABBIT_WC_TESTNET_CHAIN_ID)
+}
+
+async function tryPrepareRabbitInsideWalletConnectSession(provider, network) {
+  if (!provider?.session || !network) return false
+
+  // wallet_* methods are chain-management requests. Try them in the already
+  // approved session; never disconnect/re-pair automatically.
+  try {
+    await provider.request({
+      method: 'wallet_addEthereumChain',
+      params: [walletNetworkParams(network)]
+    })
+  } catch (error) {
+    if (!walletConnectChainAlreadyAdded(error) && !walletMethodUnsupported(error)) {
+      // User rejection or a wallet-specific failure should not trigger
+      // another QR. Continue to the final namespace check below.
+    }
+  }
+
+  try {
+    await provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: network.chainIdHex }]
+    })
+  } catch {}
+
+  return waitForWalletConnectRabbitApproval(provider)
+}
+
 // RABBIT_WALLETCONNECT_CHAIN_SYNC_V3
 function isWalletConnectProvider(provider) {
   return Boolean(provider?.isWalletConnect || provider?.signer?.setDefaultChain || provider?.session)
@@ -79,6 +217,72 @@ function walletConnectSessionHasChain(provider, chainId) {
   }
 
   return false
+}
+
+function walletConnectSessionSupportsMethod(provider, method) {
+  const namespaces = provider?.session?.namespaces || {}
+  return Object.values(namespaces).some((namespace) => {
+    const methods = Array.isArray(namespace?.methods) ? namespace.methods : []
+    return methods.includes(method)
+  })
+}
+
+// RABBIT_WALLETCONNECT_CUSTOM_CHAIN_BOOTSTRAP_V9
+// Keep the existing strict Rabbit Testnet session as the primary path.
+// Only wallets that explicitly reject the custom chain during pairing use
+// the compatibility bootstrap below.
+function walletConnectNeedsCustomChainBootstrap(error) {
+  const message = String(error?.message || error || '')
+
+  // Never turn a user cancellation into another wallet prompt.
+  if (/user rejected|user denied|declined|cancelled|canceled|request reset|connection request reset/i.test(message)) {
+    return false
+  }
+
+  return /requested chains?.*(?:not supported|unsupported)|chains?.*(?:not supported|unsupported)|unsupported.*chains?|non.?conforming.*namespace|namespace.*(?:chain|unsupported)/i.test(message)
+}
+
+function walletConnectChainAlreadyAdded(error) {
+  const message = String(error?.message || error || '')
+  return /already.*(?:added|exists|configured)|chain.*already/i.test(message)
+}
+
+function walletNetworkParams(network) {
+  return {
+    chainId: network.chainIdHex,
+    chainName: network.name,
+    nativeCurrency: {
+      name: network.currencyName || network.currency,
+      symbol: network.currency,
+      decimals: 18,
+    },
+    rpcUrls: [network.rpcUrl],
+    blockExplorerUrls: network.explorerUrl ? [network.explorerUrl] : [],
+    iconUrls: ['https://rabbitchain.org/rabbit-wallet-icon.png'],
+  }
+}
+
+function numericChainId(value) {
+  if (typeof value === 'number') return value
+  if (typeof value === 'bigint') return Number(value)
+  const input = String(value || '').trim()
+  if (!input) return null
+  const parsed = input.startsWith('0x') || input.startsWith('0X')
+    ? Number.parseInt(input, 16)
+    : Number.parseInt(input, 10)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+function walletMethodUnsupported(error) {
+  const code = Number(error?.code)
+  const message = String(error?.message || '')
+  return code === -32601 || code === 4200 || /unsupported|not supported|method not found|unknown method/i.test(message)
+}
+
+function walletUnknownChain(error) {
+  const code = Number(error?.code)
+  const message = String(error?.message || '')
+  return code === 4902 || /unknown chain|unrecognized chain|chain.*not (?:added|found|configured)/i.test(message)
 }
 
 function setWalletConnectDefaultChain(provider, network) {
@@ -154,15 +358,11 @@ async function getWalletConnectProvider() {
         projectId: REOWN_PROJECT_ID,
         metadata: WALLETCONNECT_METADATA,
         showQrModal: true,
-        // Rabbit Platform is interactive, so a successful WalletConnect session
-        // must authorize Rabbit Testnet transactions instead of treating them as optional.
-        chains: [RABBIT_WC_TESTNET_CHAIN_ID],
-        methods: ['eth_sendTransaction'],
-        events: ['chainChanged','accountsChanged'],
-        optionalChains: WALLET_NETWORK_LIST
-          .filter((n) => n.chainId !== RABBIT_WC_TESTNET_CHAIN_ID)
-          .map((n) => n.chainId),
-        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','wallet_sendCalls','wallet_getCallsStatus','wallet_showCallsStatus','wallet_getCapabilities','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
+        // V10: propose Rabbit Testnet in the optional WalletConnect namespace.
+        // This keeps the QR/mobile handshake compatible with wallets that accept
+        // custom EVM chains only through optionalNamespaces.
+        optionalChains: walletConnectRequestedChains(),
+        optionalMethods: ['eth_sendTransaction','wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','wallet_sendCalls','wallet_getCallsStatus','wallet_showCallsStatus','wallet_getCapabilities','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
         optionalEvents: ['chainChanged','accountsChanged'],
         rpcMap,
         qrModalOptions: { themeMode: 'light' }
@@ -172,16 +372,119 @@ async function getWalletConnectProvider() {
   return walletConnectProviderPromise
 }
 
+async function getWalletConnectBootstrapProvider() {
+  if (!walletConnectBootstrapProviderPromise) {
+    walletConnectBootstrapProviderPromise = import('@walletconnect/ethereum-provider').then(async ({ EthereumProvider }) => {
+      return EthereumProvider.init({
+        projectId: REOWN_PROJECT_ID,
+        metadata: WALLETCONNECT_METADATA,
+        showQrModal: true,
+
+        // Compatibility session only. Ethereum mainnet is used as a widely
+        // supported EVM transport so the wallet can receive EIP-3085.
+        // No Rabbit transaction is ever sent on this bootstrap session.
+        chains: [1],
+        methods: ['wallet_addEthereumChain'],
+        events: ['chainChanged','accountsChanged'],
+        optionalMethods: ['wallet_switchEthereumChain'],
+        optionalEvents: ['chainChanged','accountsChanged'],
+        qrModalOptions: { themeMode: 'light' }
+      })
+    })
+  }
+  return walletConnectBootstrapProviderPromise
+}
+
+async function bootstrapRabbitTestnetViaWalletConnect() {
+  const network = WALLET_NETWORK_LIST.find((item) => Number(item.chainId) === RABBIT_WC_TESTNET_CHAIN_ID)
+  if (!network) throw new Error('Rabbit Testnet configuration is unavailable.')
+
+  const bootstrap = await getWalletConnectBootstrapProvider()
+
+  // A bootstrap session is disposable. Never let it replace the real Rabbit
+  // session used by the application.
+  if (bootstrap.session) {
+    try { await bootstrap.disconnect() } catch {}
+  }
+
+  try {
+    await bootstrap.connect()
+
+    try {
+      await bootstrap.request({
+        method: 'wallet_addEthereumChain',
+        params: [walletNetworkParams(network)]
+      })
+    } catch (error) {
+      if (!walletConnectChainAlreadyAdded(error)) throw error
+    }
+
+    // Helpful when supported, but not required: the following strict Rabbit
+    // reconnect remains the authoritative chain/session gate.
+    if (walletConnectSessionSupportsMethod(bootstrap, 'wallet_switchEthereumChain')) {
+      try {
+        await bootstrap.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: network.chainIdHex }]
+        })
+      } catch {}
+    }
+  } catch (error) {
+    const message = String(error?.message || error || '')
+    throw new Error(
+      `This wallet cannot add Rabbit Testnet through WalletConnect automatically. ` +
+      `Open RabbitChain.org in the wallet browser once and connect there, then try WalletConnect again.` +
+      (message ? ` (${message})` : '')
+    )
+  } finally {
+    if (bootstrap.session) {
+      try { await bootstrap.disconnect() } catch {}
+    }
+  }
+}
+
 export async function connectWalletConnect() {
   const provider = await getWalletConnectProvider()
+  installWalletConnectSessionModalGuard(provider)
 
-  // Do this only once after the V2 deployment. It clears the legacy
-  // read-only/optional session without creating a permanent reconnect loop.
   await migrateWalletConnectSessionOnce(provider)
   await migrateWalletConnectBatchSessionOnce(provider)
+  await migrateWalletConnectOptionalChainOnce(provider)
+  await migrateWalletConnectSinglePairOnce(provider)
 
-  if (!provider.session) await provider.connect()
-  normalizeWalletConnectRabbitChain(provider)
+  // The init configuration already contains Rabbit Testnet in optionalChains.
+  // One explicit user action = one WalletConnect pairing/QR.
+  if (!provider.session) {
+    await provider.connect()
+  }
+
+  const testnet = WALLET_NETWORK_LIST.find(
+    (network) => Number(network.chainId) === RABBIT_WC_TESTNET_CHAIN_ID
+  )
+  if (!testnet) throw new Error('Rabbit Testnet configuration is unavailable.')
+
+  let rabbitApproved = walletConnectSessionHasChain(provider, RABBIT_WC_TESTNET_CHAIN_ID)
+
+  if (!rabbitApproved) {
+    rabbitApproved = await tryPrepareRabbitInsideWalletConnectSession(provider, testnet)
+  }
+
+  if (!rabbitApproved) {
+    const peerName = String(provider.session?.peer?.metadata?.name || 'This wallet')
+    throw new Error(
+      `${peerName} connected, but did not authorize Rabbit Testnet (eip155:9280) in this WalletConnect session. ` +
+      `No second QR was opened. If this is Rabby, open RabbitChain.org inside Rabby's built-in browser; ` +
+      `Rabby currently has a custom-chain WalletConnect namespace limitation.`
+    )
+  }
+
+  if (!walletConnectSessionSupportsMethod(provider, 'eth_sendTransaction')) {
+    throw new Error(
+      'Wallet connected to Rabbit Testnet but did not authorize transaction signing in this WalletConnect session.'
+    )
+  }
+
+  setWalletConnectDefaultChain(provider, testnet)
 
   const peer = provider.session?.peer?.metadata
   return {
@@ -195,9 +498,27 @@ export async function connectWalletConnect() {
 
 export async function restoreWalletConnect() {
   const provider = await getWalletConnectProvider()
+  installWalletConnectSessionModalGuard(provider)
   await migrateWalletConnectBatchSessionOnce(provider)
+  await migrateWalletConnectOptionalChainOnce(provider)
+  await migrateWalletConnectSinglePairOnce(provider)
+
   if (!provider.session) return null
-  normalizeWalletConnectRabbitChain(provider)
+  try { await provider.modal?.close?.() } catch {}
+
+  if (
+    !walletConnectSessionHasChain(provider, RABBIT_WC_TESTNET_CHAIN_ID) ||
+    !walletConnectSessionSupportsMethod(provider, 'eth_sendTransaction')
+  ) {
+    return null
+  }
+
+  const testnet = WALLET_NETWORK_LIST.find(
+    (network) => Number(network.chainId) === RABBIT_WC_TESTNET_CHAIN_ID
+  )
+  if (!testnet) return null
+
+  setWalletConnectDefaultChain(provider, testnet)
 
   const peer = provider.session?.peer?.metadata
   return {
