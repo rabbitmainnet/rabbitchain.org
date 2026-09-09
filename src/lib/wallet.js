@@ -1,129 +1,282 @@
 import { NETWORK_LIST, WALLET_NETWORK_LIST } from '../config/networks'
-import { REOWN_PROJECT_ID, WALLETCONNECT_METADATA } from '../config/walletconnect'
+import {
+  disconnect as wagmiDisconnect,
+  getAccount as wagmiGetAccount,
+  switchChain as wagmiSwitchChain,
+  watchAccount as wagmiWatchAccount,
+} from 'wagmi/actions'
+import {
+  getRabbitAppKitNetwork,
+  rabbitAppKit,
+  rabbitWagmiAdapter,
+  RABBIT_APPKIT_TESTNET,
+} from './appkit'
 
 const LAST_WALLET_KEY = 'rabbit:last-wallet'
-let walletConnectProviderPromise = null
+const RABBIT_TESTNET_CHAIN_ID = 9280
 
-// RABBIT_WALLETCONNECT_MOBILE_SESSION_V2
-// Rabbit Testnet transactions stay required in the WalletConnect proposal,
-// but session acceptance/restoration is delegated to EthereumProvider itself.
-// One migration key is used only to discard the pre-V2 persisted session once.
-const RABBIT_WC_TESTNET_CHAIN_ID = 9280
-const RABBIT_WC_SESSION_MIGRATION_KEY = 'rabbit:walletconnect:interactive-v2'
-const RABBIT_WC_BATCH_MIGRATION_KEY = 'rabbit:walletconnect:batch-v7'
+function numericChainId(value) {
+  if (typeof value === 'number') return value
+  if (typeof value === 'bigint') return Number(value)
 
-async function migrateWalletConnectSessionOnce(provider) {
-  if (typeof window === 'undefined') return
+  const input = String(value || '').trim()
+  if (!input) return null
 
-  let migrated = false
-  try {
-    migrated = window.localStorage.getItem(RABBIT_WC_SESSION_MIGRATION_KEY) === '1'
-  } catch {}
+  const parsed = input.startsWith('0x') || input.startsWith('0X')
+    ? Number.parseInt(input, 16)
+    : Number.parseInt(input, 10)
 
-  if (migrated) return
-
-  // The old site could persist a WalletConnect session created while Rabbit
-  // Testnet transaction capability was optional. Drop that session ONCE so the
-  // next connection negotiates the current interactive proposal.
-  if (provider?.session) {
-    try { await provider.disconnect() } catch {}
-  }
-
-  try {
-    window.localStorage.setItem(RABBIT_WC_SESSION_MIGRATION_KEY, '1')
-  } catch {}
+  return Number.isFinite(parsed) ? parsed : null
 }
 
-// RABBIT_WALLET_BATCH_CALLS_V7
-// Existing sessions cannot gain newly requested optional methods in place.
-// Clear the pre-V7 WalletConnect session once so the next connection can
-// negotiate wallet_sendCalls. This is a one-time migration, not a reconnect loop.
-async function migrateWalletConnectBatchSessionOnce(provider) {
-  if (typeof window === 'undefined') return
-
-  let migrated = false
-  try {
-    migrated = window.localStorage.getItem(RABBIT_WC_BATCH_MIGRATION_KEY) === '1'
-  } catch {}
-
-  if (migrated) return
-
-  if (provider?.session) {
-    try { await provider.disconnect() } catch {}
-  }
-
-  try {
-    window.localStorage.setItem(RABBIT_WC_BATCH_MIGRATION_KEY, '1')
-  } catch {}
+function walletUnknownChain(error) {
+  const code = Number(error?.code)
+  const message = String(error?.message || '')
+  return code === 4902 ||
+    /unknown chain|unrecognized chain|chain.*not (?:added|found|configured)/i.test(message)
 }
 
-// RABBIT_WALLETCONNECT_CHAIN_SYNC_V3
-function isWalletConnectProvider(provider) {
-  return Boolean(provider?.isWalletConnect || provider?.signer?.setDefaultChain || provider?.session)
-}
-
-function walletConnectSessionHasChain(provider, chainId) {
-  const caip = `eip155:${Number(chainId)}`
-  const namespaces = provider?.session?.namespaces || {}
-
-  for (const [key, namespace] of Object.entries(namespaces)) {
-    const namespaceKey = String(key)
-    if (namespaceKey === caip) return true
-    if (!namespaceKey.startsWith('eip155')) continue
-
-    const chains = Array.isArray(namespace?.chains) ? namespace.chains : []
-    const accounts = Array.isArray(namespace?.accounts) ? namespace.accounts : []
-
-    if (chains.includes(caip)) return true
-    if (accounts.some((account) => String(account).startsWith(`${caip}:`))) return true
-  }
-
-  return false
-}
-
-function setWalletConnectDefaultChain(provider, network) {
-  if (!provider || !network) return
-  if (!walletConnectSessionHasChain(provider, network.chainId)) {
-    throw new Error(`${network.name} is not approved in this WalletConnect session. Disconnect and reconnect the wallet once.`)
-  }
-
-  const caip = `eip155:${Number(network.chainId)}`
-
-  // @walletconnect/ethereum-provider routes request() through its internal
-  // chainId, while UniversalProvider owns the CAIP-2 default chain.
-  // Keep both in sync so reads and eth_sendTransaction go to the same chain.
-  provider.signer?.setDefaultChain?.(caip, network.rpcUrl)
-
-  try {
-    provider.chainId = Number(network.chainId)
-  } catch {}
-}
-
-function normalizeWalletConnectRabbitChain(provider) {
-  if (!isWalletConnectProvider(provider)) return
-
-  const current = Number(provider?.chainId)
-  if (NETWORK_LIST.some((network) => Number(network.chainId) === current)) return
-
-  const testnet = WALLET_NETWORK_LIST.find((network) => Number(network.chainId) === RABBIT_WC_TESTNET_CHAIN_ID)
-  if (testnet && walletConnectSessionHasChain(provider, testnet.chainId)) {
-    setWalletConnectDefaultChain(provider, testnet)
+function walletNetworkParams(network) {
+  return {
+    chainId: network.chainIdHex,
+    chainName: network.name,
+    nativeCurrency: {
+      name: network.currencyName || network.currency,
+      symbol: network.currency,
+      decimals: 18,
+    },
+    rpcUrls: [network.rpcUrl],
+    blockExplorerUrls: network.explorerUrl ? [network.explorerUrl] : [],
+    iconUrls: ['https://rabbitchain.org/rabbit-wallet-icon.png'],
   }
 }
 
-export function detectInjectedWallets(timeout = 450) {
+function rawProvider(provider) {
+  return provider?.__rabbitRawProvider || provider
+}
+
+async function disconnectWagmiWallet() {
+  const account = wagmiGetAccount(rabbitWagmiAdapter.wagmiConfig)
+  if (!account?.connector) return
+  await wagmiDisconnect(rabbitWagmiAdapter.wagmiConfig, {
+    connector: account.connector,
+  })
+}
+
+function wrapAppKitProvider(provider) {
+  if (!provider?.request) throw new Error('Connected wallet did not expose an EVM provider.')
+
+  const wrapped = {
+    __rabbitAppKit: true,
+    __rabbitRawProvider: provider,
+
+    // RABBIT_APPKIT_WRITE_TIME_CHAIN_GUARD_V14B
+    // Connect first. Only a Rabbit write may request Rabbit Testnet.
+    request: async (args) => {
+      const method = String(args?.method || '')
+      if (method === 'eth_sendTransaction' || method === 'wallet_sendCalls') {
+        await ensureAppKitRabbitTestnet(provider)
+      }
+      return provider.request(args)
+    },
+
+    disconnect: disconnectWagmiWallet,
+  }
+
+  if (typeof provider.on === 'function') {
+    wrapped.on = provider.on.bind(provider)
+  }
+  if (typeof provider.removeListener === 'function') {
+    wrapped.removeListener = provider.removeListener.bind(provider)
+  }
+
+  return wrapped
+}
+
+async function ensureRawProviderNetwork(provider, network) {
+  const target = Number(network.chainId)
+
+  let current = numericChainId(await provider.request({ method: 'eth_chainId' }))
+  if (current === target) return
+
+  try {
+    await provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: network.chainIdHex }],
+    })
+  } catch (error) {
+    if (!walletUnknownChain(error)) throw error
+
+    await provider.request({
+      method: 'wallet_addEthereumChain',
+      params: [walletNetworkParams(network)],
+    })
+
+    await provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: network.chainIdHex }],
+    })
+  }
+
+  current = numericChainId(await provider.request({ method: 'eth_chainId' }))
+  if (current !== target) {
+    throw new Error(`${network.name} was not selected in the wallet.`)
+  }
+}
+
+// RABBIT_APPKIT_WAGMI_STATE_FIX_V12
+async function getWagmiProvider(account = wagmiGetAccount(rabbitWagmiAdapter.wagmiConfig)) {
+  if (!account?.connector?.getProvider) return null
+  return account.connector.getProvider()
+}
+
+// RABBIT_APPKIT_USER_CHOICE_V13
+async function ensureAppKitRabbitTestnet(provider) {
+  const raw = rawProvider(provider)
+  const current = numericChainId(
+    await raw.request({ method: 'eth_chainId' })
+  )
+
+  if (current === RABBIT_TESTNET_CHAIN_ID) return
+
+  // AppKit/Wagmi owns chain switching for AppKit connections.
+  // Do not manually call wallet_addEthereumChain through a WalletConnect session.
+  try {
+    await wagmiSwitchChain(rabbitWagmiAdapter.wagmiConfig, {
+      chainId: RABBIT_TESTNET_CHAIN_ID,
+    })
+  } catch (error) {
+    const detail = String(error?.shortMessage || error?.message || '')
+    throw new Error(
+      `Rabbit Testnet 9280 could not be activated in this wallet connection. ${detail}`.trim()
+    )
+  }
+
+  const after = numericChainId(
+    await raw.request({ method: 'eth_chainId' })
+  )
+
+  if (after !== RABBIT_TESTNET_CHAIN_ID) {
+    throw new Error('Wallet connected, but Rabbit Testnet 9280 is not active.')
+  }
+}
+
+function appKitWalletResult(provider, connector) {
+  return {
+    kind: 'walletconnect',
+    name: connector?.name || 'EVM Wallet',
+    icon: connector?.icon || null,
+    provider: wrapAppKitProvider(provider),
+    rdns: connector?.id || 'appkit',
+  }
+}
+
+async function connectedWagmiWallet() {
+  const account = wagmiGetAccount(rabbitWagmiAdapter.wagmiConfig)
+  if (!account?.isConnected || !account?.address || !account?.connector) return null
+
+  const provider = await getWagmiProvider(account)
+  if (!provider?.request) return null
+
+  // Restore the connection exactly as the wallet is.
+  // Never force Rabbit 9280 merely because the page loaded.
+  return appKitWalletResult(provider, account.connector)
+}
+
+async function waitForAppKitConnection() {
+  // Explicit click on "All wallets" always means: let the user choose.
+  // If AppKit auto-restored an older connector, disconnect it first instead
+  // of silently selecting it and jumping straight to "Approve in wallet".
+  const current = wagmiGetAccount(rabbitWagmiAdapter.wagmiConfig)
+  if (current?.isConnected && current?.connector) {
+    try {
+      await wagmiDisconnect(rabbitWagmiAdapter.wagmiConfig, {
+        connector: current.connector,
+      })
+    } catch {}
+  }
+
+  return new Promise((resolve, reject) => {
+    let settled = false
+    let modalSeenOpen = false
+    let unwatchAccount = () => {}
+    let unsubscribeState = () => {}
+
+    const finish = (fn, value) => {
+      if (settled) return
+      settled = true
+      try { unwatchAccount?.() } catch {}
+      try { unsubscribeState?.() } catch {}
+      fn(value)
+    }
+
+    unwatchAccount = wagmiWatchAccount(
+      rabbitWagmiAdapter.wagmiConfig,
+      {
+        onChange: async (account) => {
+          if (!account?.isConnected || !account?.address || !account?.connector) return
+
+          try {
+            const provider = await getWagmiProvider(account)
+            if (!provider?.request) {
+              throw new Error('Connected wallet did not expose an EVM provider.')
+            }
+
+            // Connection succeeds on the wallet's current chain.
+            // Rabbit 9280 is requested only for a Rabbit write or explicit switch.
+            finish(resolve, appKitWalletResult(provider, account.connector))
+          } catch (error) {
+            finish(reject, error)
+          }
+        },
+      },
+    )
+
+    // subscribeState remains a supported AppKit API and is used only to
+    // detect a user closing the modal before a connection completes.
+    unsubscribeState = rabbitAppKit.subscribeState((state) => {
+      if (state?.open) {
+        modalSeenOpen = true
+        return
+      }
+
+      if (!modalSeenOpen || settled) return
+
+      const account = wagmiGetAccount(rabbitWagmiAdapter.wagmiConfig)
+      if (!account?.isConnected) {
+        const error = new Error('Wallet connection cancelled.')
+        error.code = 4001
+        finish(reject, error)
+      }
+    })
+
+    Promise.resolve(
+      rabbitAppKit.open({ view: 'Connect', namespace: 'eip155' })
+    ).catch((error) => finish(reject, error))
+  })
+}
+
+// RABBIT_APPKIT_EIP6963_V12
+export function detectInjectedWallets(timeout = 650) {
   return new Promise((resolve) => {
     const found = new Map()
+
     const handler = (event) => {
       const detail = event?.detail
       if (!detail?.provider) return
-      const key = detail.info?.uuid || detail.info?.rdns || detail.info?.name || Math.random().toString(36)
+
+      const key =
+        detail.info?.uuid ||
+        detail.info?.rdns ||
+        detail.info?.name ||
+        Math.random().toString(36)
+
       found.set(key, {
         kind: 'injected',
         name: detail.info?.name || 'Browser Wallet',
         icon: detail.info?.icon || null,
         provider: detail.provider,
-        rdns: detail.info?.rdns || ''
+        rdns: detail.info?.rdns || '',
       })
     }
 
@@ -132,159 +285,109 @@ export function detectInjectedWallets(timeout = 450) {
 
     setTimeout(() => {
       window.removeEventListener('eip6963:announceProvider', handler)
-      if (window.ethereum && ![...found.values()].some((w) => w.provider === window.ethereum)) {
+
+      if (
+        window.ethereum &&
+        ![...found.values()].some((wallet) => wallet.provider === window.ethereum)
+      ) {
         found.set('legacy', {
           kind: 'injected',
           name: window.ethereum.isMetaMask ? 'MetaMask' : 'Browser Wallet',
           icon: null,
           provider: window.ethereum,
-          rdns: 'legacy'
+          rdns: 'legacy',
         })
       }
+
       resolve([...found.values()])
     }, timeout)
   })
 }
 
-async function getWalletConnectProvider() {
-  if (!walletConnectProviderPromise) {
-    walletConnectProviderPromise = import('@walletconnect/ethereum-provider').then(async ({ EthereumProvider }) => {
-      const rpcMap = Object.fromEntries(WALLET_NETWORK_LIST.filter((n) => n.rpcUrl).map((n) => [n.chainId, n.rpcUrl]))
-      return EthereumProvider.init({
-        projectId: REOWN_PROJECT_ID,
-        metadata: WALLETCONNECT_METADATA,
-        showQrModal: true,
-        // Rabbit Platform is interactive, so a successful WalletConnect session
-        // must authorize Rabbit Testnet transactions instead of treating them as optional.
-        chains: [RABBIT_WC_TESTNET_CHAIN_ID],
-        methods: ['eth_sendTransaction'],
-        events: ['chainChanged','accountsChanged'],
-        optionalChains: WALLET_NETWORK_LIST
-          .filter((n) => n.chainId !== RABBIT_WC_TESTNET_CHAIN_ID)
-          .map((n) => n.chainId),
-        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','wallet_sendCalls','wallet_getCallsStatus','wallet_showCallsStatus','wallet_getCapabilities','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
-        optionalEvents: ['chainChanged','accountsChanged'],
-        rpcMap,
-        qrModalOptions: { themeMode: 'light' }
-      })
-    })
-  }
-  return walletConnectProviderPromise
-}
-
+// Public name preserved so App.jsx does not need invasive changes.
 export async function connectWalletConnect() {
-  const provider = await getWalletConnectProvider()
-
-  // Do this only once after the V2 deployment. It clears the legacy
-  // read-only/optional session without creating a permanent reconnect loop.
-  await migrateWalletConnectSessionOnce(provider)
-  await migrateWalletConnectBatchSessionOnce(provider)
-
-  if (!provider.session) await provider.connect()
-  normalizeWalletConnectRabbitChain(provider)
-
-  const peer = provider.session?.peer?.metadata
-  return {
-    kind: 'walletconnect',
-    name: peer?.name || 'WalletConnect',
-    icon: peer?.icons?.[0] || null,
-    provider,
-    rdns: 'walletconnect'
-  }
+  return waitForAppKitConnection()
 }
 
 export async function restoreWalletConnect() {
-  const provider = await getWalletConnectProvider()
-  await migrateWalletConnectBatchSessionOnce(provider)
-  if (!provider.session) return null
-  normalizeWalletConnectRabbitChain(provider)
-
-  const peer = provider.session?.peer?.metadata
-  return {
-    kind: 'walletconnect',
-    name: peer?.name || 'WalletConnect',
-    icon: peer?.icons?.[0] || null,
-    provider,
-    rdns: 'walletconnect'
+  try {
+    return await connectedWagmiWallet()
+  } catch {
+    return null
   }
 }
 
 export function saveWalletPreference(wallet) {
   try {
-    localStorage.setItem(LAST_WALLET_KEY, JSON.stringify({ kind: wallet.kind || 'injected', rdns: wallet.rdns || '', name: wallet.name || '' }))
+    localStorage.setItem(
+      LAST_WALLET_KEY,
+      JSON.stringify({
+        kind: wallet.kind || 'injected',
+        rdns: wallet.rdns || '',
+        name: wallet.name || '',
+      }),
+    )
   } catch {}
 }
 
 export function getWalletPreference() {
-  try { return JSON.parse(localStorage.getItem(LAST_WALLET_KEY) || 'null') } catch { return null }
+  try {
+    return JSON.parse(localStorage.getItem(LAST_WALLET_KEY) || 'null')
+  } catch {
+    return null
+  }
 }
 
 export function clearWalletPreference() {
-  try { localStorage.removeItem(LAST_WALLET_KEY) } catch {}
+  try {
+    localStorage.removeItem(LAST_WALLET_KEY)
+  } catch {}
 }
 
 export async function connectWallet(provider) {
   const accounts = await provider.request({ method: 'eth_requestAccounts' })
   const chainIdHex = await provider.request({ method: 'eth_chainId' })
+
   return {
     account: accounts?.[0] || null,
     chainIdHex,
-    chainId: Number.parseInt(chainIdHex, 16)
+    chainId: numericChainId(chainIdHex),
   }
 }
 
 export async function getWalletSnapshot(provider) {
-  if (isWalletConnectProvider(provider)) {
-    normalizeWalletConnectRabbitChain(provider)
-
-    const accounts = await provider.request({ method: 'eth_accounts' })
-    const internalChainId = Number(provider?.chainId)
-
-    if (Number.isFinite(internalChainId) && internalChainId > 0) {
-      return {
-        account: accounts?.[0] || provider?.accounts?.[0] || null,
-        chainIdHex: `0x${internalChainId.toString(16)}`,
-        chainId: internalChainId
-      }
-    }
-  }
+  const raw = rawProvider(provider)
 
   const [accounts, chainIdHex] = await Promise.all([
-    provider.request({ method: 'eth_accounts' }),
-    provider.request({ method: 'eth_chainId' })
+    raw.request({ method: 'eth_accounts' }),
+    raw.request({ method: 'eth_chainId' }),
   ])
+
   return {
     account: accounts?.[0] || null,
     chainIdHex,
-    chainId: Number.parseInt(chainIdHex, 16)
+    chainId: numericChainId(chainIdHex),
   }
 }
 
 export async function switchOrAddNetwork(provider, network) {
-  if (isWalletConnectProvider(provider)) {
-    setWalletConnectDefaultChain(provider, network)
+  if (provider?.__rabbitAppKit) {
+    const appKitNetwork = getRabbitAppKitNetwork(network.chainId)
+
+    if (appKitNetwork) {
+      try {
+        await wagmiSwitchChain(rabbitWagmiAdapter.wagmiConfig, {
+          chainId: Number(appKitNetwork.id),
+        })
+        return
+      } catch {}
+    }
+
+    await ensureRawProviderNetwork(rawProvider(provider), network)
     return
   }
 
-  try {
-    await provider.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: network.chainIdHex }]
-    })
-  } catch (error) {
-    if (error?.code !== 4902) throw error
-    await provider.request({
-      method: 'wallet_addEthereumChain',
-      params: [{
-        chainId: network.chainIdHex,
-        chainName: network.name,
-        nativeCurrency: { name: network.currencyName || network.currency, symbol: network.currency, decimals: 18 },
-        rpcUrls: [network.rpcUrl],
-        blockExplorerUrls: network.explorerUrl ? [network.explorerUrl] : [],
-        iconUrls: ['https://rabbitchain.org/rabbit-wallet-icon.png']
-      }]
-    })
-  }
+  await ensureRawProviderNetwork(provider, network)
 }
 
 export function friendlyWalletError(error, fallback = 'Wallet request failed') {
@@ -292,15 +395,20 @@ export function friendlyWalletError(error, fallback = 'Wallet request failed') {
   if (error?.code === -32002) return 'A wallet request is already open.'
 
   const message = String(error?.message || '')
-  if (/walletconnect/i.test(message) && /(namespace|chain|method|session|authorize|route)/i.test(message)) {
-    return 'WalletConnect session cannot submit Rabbit Testnet transactions. Disconnect and reconnect the wallet, then try again.'
+
+  if (/missing or invalid.*chainid|eip155:9280/i.test(message)) {
+    return 'This wallet did not authorize Rabbit Testnet for this connection. Reconnect through All wallets / WalletConnect.'
   }
-  if (/unsupported|not supported/i.test(message)) return 'This wallet does not support that request yet.'
+
+  if (/unsupported|not supported/i.test(message)) {
+    return 'This wallet does not support that request yet.'
+  }
+
   return message || fallback
 }
 
 export function identifyRabbitNetwork(chainId) {
-  return NETWORK_LIST.find((n) => n.chainId === chainId) || null
+  return NETWORK_LIST.find((network) => network.chainId === Number(chainId)) || null
 }
 
 export function shortAddress(address) {

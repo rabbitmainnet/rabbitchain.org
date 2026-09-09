@@ -9,15 +9,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reown/appkit": "1.8.23",
+    "@reown/appkit-adapter-wagmi": "1.8.23",
+    "@tanstack/react-query": "5.102.8",
     "@vitejs/plugin-react": "6.1.0",
     "framer-motion": "13.1.1",
     "lucide-react": "1.34.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-router-dom": "7.18.2",
+    "viem": "2.55.19",
     "vite": "8.2.2",
-    "@walletconnect/ethereum-provider": "2.23.10",
-    "viem": "2.55.19"
-  },
-  "devDependencies": {}
+    "wagmi": "3.7.7"
+  }
 }
