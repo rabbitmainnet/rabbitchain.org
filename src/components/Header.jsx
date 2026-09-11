@@ -83,9 +83,9 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
         <div className="shell announcement-inner">
           <span className="notranslate" translate="no">
             <i />
-            RABBIT TESTNET · REQUIRED UPGRADE · HARD FORK BLOCK 50,000
+            RABBIT TESTNET · URGENT UPGRADE · V2.2.3 REQUIRED BEFORE BLOCK 50,500
           </span>
-          <Link to="/mining#downloads">Download V2.2.2 <span>→</span></Link>
+          <Link to="/mining">Upgrade instructions <span>→</span></Link>
         </div>
       </div>
 
