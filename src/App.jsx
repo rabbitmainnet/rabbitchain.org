@@ -31,6 +31,7 @@ const Docs = lazy(() => import('./pages/Docs'))
 const Community = lazy(() => import('./pages/Community'))
 const Platform = lazy(() => import('./pages/Platform'))
 const ExplorerSwap = lazy(() => import('./pages/ExplorerSwap'))
+const ExplorerPlatformTools = lazy(() => import('./pages/ExplorerPlatformTools'))
 const Whitepaper = lazy(() => import('./pages/Whitepaper'))
 const Status = lazy(() => import('./pages/Status'))
 const Rab = lazy(() => import('./pages/Rab'))
@@ -317,6 +318,24 @@ export default function App() {
             <Route path="/privacy-policy" element={<Page><PrivacyPolicy /></Page>} />
             <Route path="/terms-and-conditions" element={<Page><TermsConditions /></Page>} />
             <Route path="/risk-disclosure" element={<Page><RiskDisclosure /></Page>} />
+            <Route
+              path="/embed/liquidity"
+              element={
+                <ExplorerPlatformTools
+                  tool="liquidity"
+                  toast={toast}
+                />
+              }
+            />
+            <Route
+              path="/embed/factory"
+              element={
+                <ExplorerPlatformTools
+                  tool="factory"
+                  toast={toast}
+                />
+              }
+            />
             <Route path="*" element={<Page><NotFound /></Page>} />
           </Routes>
         </AnimatePresence>

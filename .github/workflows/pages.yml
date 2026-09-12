@@ -48,6 +48,8 @@ jobs:
             platform
             platform/swap
             embed/swap
+            embed/liquidity
+            embed/factory
             platform/liquidity
             platform/staking
             platform/launchpool
