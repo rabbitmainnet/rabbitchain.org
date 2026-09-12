@@ -57,7 +57,7 @@ export default function Mining() {
 
           <div>
             <span>URGENT TESTNET UPGRADE</span>
-            <h2>Rabbit Core V2.2.3 is required before block 50,500.</h2>
+            <h2>Rabbit Core V2.2.3 is the current required release after the block 50,500 stabilization.</h2>
 
             <p>
               Do not continue running Rabbit Core V2.2.2 through the stabilization
@@ -120,7 +120,7 @@ export default function Mining() {
 
             <p>
               Do not download or continue using V2.2.2 past block 50,500.
-              Verified V2.2.3 Windows and Linux downloads will appear here
+              Verified V2.2.3 Windows and Linux downloads are available here
               together as soon as both packages pass final verification.
             </p>
 

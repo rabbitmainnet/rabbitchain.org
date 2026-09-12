@@ -86,7 +86,7 @@ export default function Releases() {
           <div className="release-check-card">
             <FileCheck2 size={28} />
             <span>DO NOT USE V2.2.2 PAST BLOCK 50,500</span>
-            <strong>V2.2.3 Windows + Linux downloads are being finalized.</strong>
+            <strong>V2.2.3 Windows + Linux downloads are available and SHA-256 verified.</strong>
 
             <p>
               The verified download buttons and SHA-256 values will appear here
