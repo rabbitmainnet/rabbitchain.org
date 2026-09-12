@@ -336,6 +336,19 @@ export default function App() {
                 />
               }
             />
+            <Route
+              path="/embed/faucet"
+              element={
+                <ExplorerPlatformTools
+                  tool="faucet"
+                  toast={toast}
+                />
+              }
+            />
+            <Route
+              path="/embed/mining"
+              element={<Mining />}
+            />
             <Route path="*" element={<Page><NotFound /></Page>} />
           </Routes>
         </AnimatePresence>

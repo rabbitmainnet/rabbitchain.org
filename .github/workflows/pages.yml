@@ -50,6 +50,8 @@ jobs:
             embed/swap
             embed/liquidity
             embed/factory
+            embed/faucet
+            embed/mining
             platform/liquidity
             platform/staking
             platform/launchpool

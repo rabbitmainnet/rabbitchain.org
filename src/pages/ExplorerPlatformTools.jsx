@@ -1,12 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import SafeAppsSDK from '@safe-global/safe-apps-sdk'
 import { SafeAppProvider } from '@safe-global/safe-apps-provider'
+import RabbitFaucetPanel from '../components/RabbitFaucetPanel'
 import RabbitLiquidityPanel from '../components/RabbitLiquidityPanel'
 import RabbitTokenFactoryPanel from '../components/RabbitTokenFactoryPanel'
 
 const RABBIT_CHAIN_ID = 9280
 
 const TOOLS = {
+  faucet: {
+    title: 'Rabbit Faucet',
+    Component: RabbitFaucetPanel,
+  },
   liquidity: {
     title: 'Rabbit Liquidity',
     Component: RabbitLiquidityPanel,
