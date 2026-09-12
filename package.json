@@ -9,15 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@safe-global/safe-apps-provider": "0.18.6",
+    "@safe-global/safe-apps-sdk": "9.1.0",
     "@vitejs/plugin-react": "6.1.0",
+    "@walletconnect/ethereum-provider": "2.23.10",
     "framer-motion": "13.1.1",
     "lucide-react": "1.34.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-router-dom": "7.18.2",
-    "vite": "8.2.2",
-    "@walletconnect/ethereum-provider": "2.23.10",
-    "viem": "2.55.19"
-  },
-  "devDependencies": {}
+    "viem": "2.55.19",
+    "vite": "8.2.2"
+  }
 }

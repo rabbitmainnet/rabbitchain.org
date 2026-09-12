@@ -30,6 +30,7 @@ const Developers = lazy(() => import('./pages/Developers'))
 const Docs = lazy(() => import('./pages/Docs'))
 const Community = lazy(() => import('./pages/Community'))
 const Platform = lazy(() => import('./pages/Platform'))
+const ExplorerSwap = lazy(() => import('./pages/ExplorerSwap'))
 const Whitepaper = lazy(() => import('./pages/Whitepaper'))
 const Status = lazy(() => import('./pages/Status'))
 const Rab = lazy(() => import('./pages/Rab'))
@@ -276,9 +277,11 @@ export default function App() {
     }
   }, [provider])
 
+  const embeddedApp = location.pathname.startsWith('/embed/')
+
   return (
-    <div className="app-shell">
-      <Header walletState={walletState} onWalletClick={openWallet} onOpenSearch={() => setSearchOpen(true)} />
+    <div className={`app-shell${embeddedApp ? ' rabbit-embed-shell' : ''}`}>
+      {!embeddedApp && <Header walletState={walletState} onWalletClick={openWallet} onOpenSearch={() => setSearchOpen(true)} />}
       <Suspense fallback={<PageLoader />}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
@@ -293,6 +296,18 @@ export default function App() {
             <Route path="/community" element={<Page><Community /></Page>} />
             <Route path="/platform" element={<Page><Platform walletState={walletState} walletProvider={provider} onConnect={openWallet} onAddNetwork={switchNetwork} toast={toast} /></Page>} />
             <Route path="/platform/:tool" element={<Page><Platform walletState={walletState} walletProvider={provider} onConnect={openWallet} onAddNetwork={switchNetwork} toast={toast} /></Page>} />
+            <Route
+              path="/embed/swap"
+              element={
+                <ExplorerSwap
+                  walletState={walletState}
+                  walletProvider={provider}
+                  onConnect={openWallet}
+                  onSwitchNetwork={switchNetwork}
+                  toast={toast}
+                />
+              }
+            />
             <Route path="/rab" element={<Page><Rab /></Page>} />
             <Route path="/security" element={<Page><Security /></Page>} />
             <Route path="/releases" element={<Page><Releases /></Page>} />
@@ -306,7 +321,7 @@ export default function App() {
           </Routes>
         </AnimatePresence>
       </Suspense>
-      <Footer />
+      {!embeddedApp && <Footer />}
       <WalletModal open={walletModalOpen} onClose={() => { setWalletModalOpen(false); setPendingNetwork(null) }} onSelect={selectWallet} onWalletConnect={selectWalletConnect} />
       <WalletDrawer open={walletDrawerOpen} state={walletState} walletName={walletName} onClose={() => setWalletDrawerOpen(false)} onDisconnect={disconnect} onSwitch={switchNetwork} toast={toast} />
       <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />

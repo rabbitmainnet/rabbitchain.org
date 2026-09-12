@@ -6171,3 +6171,72 @@ footer {
   .home-page-v13 .hero-ctas{grid-template-columns:1fr!important}
   .home-page-v13 .hero-ctas .button.ghost{grid-column:auto!important}
 }
+
+/* RABBIT_EXPLORER_EMBED_V1
+   Minimal Rabbit Platform surface for Blockscout/DAppscout iframe.
+   The regular rabbitchain.org experience is unchanged. */
+.rabbit-embed-shell{
+  min-height:100vh;
+  background:#f5f5f9;
+}
+
+.rabbit-explorer-embed{
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(520px 300px at 50% 0%,rgba(126,67,255,.08),transparent 70%),
+    #f5f5f9;
+}
+
+.rabbit-explorer-embed-inner{
+  width:min(720px,100%);
+  margin:0 auto;
+}
+
+@media (max-width:700px){
+  .rabbit-explorer-embed{
+    padding:12px;
+  }
+}
+
+/* RABBIT_EXPLORER_WALLET_V1 */
+.rabbit-explorer-wallet-status{
+  width:min(520px,100%);
+  margin:70px auto 0;
+  padding:34px;
+  text-align:center;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#fff;
+  box-shadow:var(--shadow-sm);
+}
+
+.rabbit-explorer-wallet-status img{
+  width:54px;
+  height:54px;
+  object-fit:contain;
+  margin-bottom:14px;
+}
+
+.rabbit-explorer-wallet-status>span{
+  display:block;
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.12em;
+  color:#8f59e7;
+}
+
+.rabbit-explorer-wallet-status h2{
+  margin:8px 0;
+  font-size:24px;
+}
+
+.rabbit-explorer-wallet-status p{
+  margin:0;
+  color:#777b8a;
+  font-size:12px;
+  line-height:1.65;
+}
