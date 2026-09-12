@@ -4,7 +4,7 @@ import { SafeAppProvider } from '@safe-global/safe-apps-provider'
 import RabbitSwapPanel from '../components/RabbitSwapPanel'
 
 const RABBIT_CHAIN_ID = 9280
-const RABBIT_EXPLORER = /^explorer-testnet\.rabbitchain\.org$/
+
 
 function parseChainId(value) {
   if (typeof value === 'number') return value
@@ -34,7 +34,6 @@ function ExplorerStatus({ title, text }) {
 
 export default function ExplorerSwap({ toast }) {
   const sdk = useMemo(() => new SafeAppsSDK({
-    allowedDomains: [RABBIT_EXPLORER],
     debug: false,
   }), [])
 
