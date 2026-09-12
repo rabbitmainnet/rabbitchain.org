@@ -47,6 +47,7 @@ jobs:
             docs
             platform
             platform/swap
+            embed/swap
             platform/liquidity
             platform/staking
             platform/launchpool
