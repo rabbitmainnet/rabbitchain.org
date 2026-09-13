@@ -182,77 +182,143 @@ export default function Mining() {
       </section>
 
       <section className="section shell" id="data-location">
+        <style>{`
+          .rabbit-storage-platforms {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 32px;
+            align-items: start;
+          }
+
+          .rabbit-storage-platform {
+            min-width: 0;
+          }
+
+          .rabbit-storage-platform h2 {
+            font-size: clamp(2rem, 3vw, 3.35rem);
+            line-height: 1.02;
+            margin-bottom: 18px;
+          }
+
+          .rabbit-storage-lead {
+            min-width: 0;
+            margin-bottom: 18px;
+          }
+
+          .rabbit-storage-lead code,
+          .rabbit-storage-paths code {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            line-height: 1.55;
+          }
+
+          .rabbit-storage-paths {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 14px !important;
+          }
+
+          .rabbit-storage-paths article {
+            min-width: 0;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+          }
+
+          .rabbit-storage-paths p {
+            min-width: 0;
+            max-width: 100%;
+          }
+
+          @media (max-width: 900px) {
+            .rabbit-storage-platforms {
+              grid-template-columns: 1fr;
+            }
+
+            .rabbit-storage-platform h2 {
+              font-size: clamp(1.9rem, 8vw, 2.8rem);
+            }
+          }
+        `}</style>
+
         <SectionHeader
           eyebrow="YOUR FILES"
           title="Where Rabbit Core stores your wallet, blockchain and logs."
           text="The program can be extracted anywhere. Your persistent Rabbit Testnet data is stored separately in your operating-system user configuration directory."
         />
 
-        <div className="operator-split">
-          <div>
+        <div className="rabbit-storage-platforms">
+          <div className="rabbit-storage-platform">
             <span className="section-kicker">WINDOWS</span>
             <h2>Your Rabbit data is in AppData.</h2>
 
-            <p>
-              Main directory:
-              {' '}
+            <div className="rabbit-storage-lead">
+              <p>Main directory:</p>
               <code>%APPDATA%\RabbitChain\TestnetV2</code>
-            </p>
+            </div>
 
-            <p>
-              Typical full path:
-              {' '}
+            <div className="rabbit-storage-lead">
+              <p>Typical full path:</p>
               <code>C:\Users\&lt;USER&gt;\AppData\Roaming\RabbitChain\TestnetV2</code>
-            </p>
+            </div>
 
-            <div className="operator-cards">
+            <div className="operator-cards rabbit-storage-paths">
               <article>
                 <ShieldCheck size={22} />
                 <h3>Encrypted wallet</h3>
-                <p><code>%APPDATA%\RabbitChain\TestnetV2\keystore\UTC--...</code></p>
+                <code>%APPDATA%\RabbitChain\TestnetV2\keystore\UTC--...</code>
               </article>
 
               <article>
                 <HardDrive size={22} />
                 <h3>Blockchain</h3>
-                <p><code>%APPDATA%\RabbitChain\TestnetV2\rabbit\chaindata</code></p>
+                <code>%APPDATA%\RabbitChain\TestnetV2\rabbit\chaindata</code>
               </article>
 
               <article>
                 <TerminalSquare size={22} />
                 <h3>Node log</h3>
-                <p><code>%APPDATA%\RabbitChain\TestnetV2\logs\rabbit-node.log</code></p>
+                <code>%APPDATA%\RabbitChain\TestnetV2\logs\rabbit-node.log</code>
               </article>
             </div>
           </div>
 
-          <div>
+          <div className="rabbit-storage-platform">
             <span className="section-kicker">LINUX</span>
             <h2>Your Rabbit data is in your user config directory.</h2>
 
-            <p>
-              Main directory:
-              {' '}
+            <div className="rabbit-storage-lead">
+              <p>Main directory:</p>
               <code>${'{'}XDG_CONFIG_HOME:-$HOME/.config{'}'}/RabbitChain/TestnetV2</code>
-            </p>
+            </div>
 
-            <div className="operator-cards">
+            <div className="rabbit-storage-lead">
+              <p>Default full path:</p>
+              <code>$HOME/.config/RabbitChain/TestnetV2</code>
+            </div>
+
+            <div className="operator-cards rabbit-storage-paths">
               <article>
                 <ShieldCheck size={22} />
                 <h3>Encrypted wallet</h3>
-                <p><code>.../RabbitChain/TestnetV2/keystore/UTC--...</code></p>
+                <code>$HOME/.config/RabbitChain/TestnetV2/keystore/UTC--...</code>
               </article>
 
               <article>
                 <HardDrive size={22} />
                 <h3>Blockchain</h3>
-                <p><code>.../RabbitChain/TestnetV2/rabbit/chaindata</code></p>
+                <code>$HOME/.config/RabbitChain/TestnetV2/rabbit/chaindata</code>
               </article>
 
               <article>
                 <TerminalSquare size={22} />
                 <h3>Node log</h3>
-                <p><code>.../RabbitChain/TestnetV2/logs/rabbit-node.log</code></p>
+                <code>$HOME/.config/RabbitChain/TestnetV2/logs/rabbit-node.log</code>
               </article>
             </div>
           </div>
