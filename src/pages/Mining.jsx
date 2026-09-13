@@ -1,5 +1,14 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Cpu, Download, FileCheck2, HardDrive, MonitorDown, ShieldCheck, TerminalSquare } from 'lucide-react'
+import {
+  ArrowRight,
+  Cpu,
+  Download,
+  FileCheck2,
+  HardDrive,
+  MonitorDown,
+  ShieldCheck,
+  TerminalSquare,
+} from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import { DOWNLOADS, RELEASE } from '../config/release'
 
@@ -19,14 +28,14 @@ export default function Mining() {
             <span className="hero-eyebrow"><i /> PERMISSIONLESS TESTNET MINING</span>
             <h1>Download. Open. <em>Mine Rabbit.</em></h1>
             <p>
-              Rabbit Core is the complete mining application. No MetaMask, Rabby,
-              browser wallet, manual RPC, WebSocket, peer list or registration
+              Rabbit Core is the complete Rabbit Chain mining application. No MetaMask,
+              Rabby, browser wallet, manual RPC, WebSocket, peer list or registration
               transaction is required to start mining.
             </p>
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.2.3 <ArrowRight size={15} />
+                Rabbit Core V2.2.3 R1 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -35,17 +44,17 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.2.3</b>
+              <b>V2.2.3 R1</b>
             </div>
 
             <pre><code>
               <span>$</span> Start-Rabbit-Core.cmd{`\n\n`}
               <b>✓</b> wallet created or reused automatically{`\n`}
-              <b>✓</b> Rabbit Testnet connected automatically{`\n`}
-              <b>✓</b> blockchain synchronized automatically{`\n`}
+              <b>✓</b> official Rabbit Testnet connected{`\n`}
+              <b>✓</b> canonical blockchain synchronized{`\n`}
               <b>✓</b> LCQ admission handled automatically{`\n`}
-              <b>✓</b> mining started{`\n\n`}
-              <em>No manual configuration required_</em>
+              <b>✓</b> mining and committee participation started{`\n\n`}
+              <em>No manual RPC or consensus configuration required_</em>
             </code></pre>
           </div>
         </div>
@@ -56,28 +65,26 @@ export default function Mining() {
           <ShieldCheck size={24} />
 
           <div>
-            <span>URGENT TESTNET UPGRADE</span>
-            <h2>Rabbit Core V2.2.3 is the current required release after the block 50,500 stabilization.</h2>
+            <span>CURRENT TESTNET RELEASE</span>
+            <h2>Rabbit Core V2.2.3 R1 is the current public Testnet package.</h2>
 
             <p>
-              Do not continue running Rabbit Core V2.2.2 through the stabilization
-              fork. Existing miners only need to close the old Rabbit Core, extract
-              V2.2.3 into a new folder and open it normally. Rabbit Core reuses the
-              existing Rabbit Testnet data and mining wallet automatically.
-              Do not delete your data directory, do not create another mining wallet
-              and do not register again.
+              Existing miners only need to close the previous Rabbit Core, extract
+              the new package into a new program folder and open it normally. Rabbit
+              Core reuses the persistent Rabbit Testnet data directory and encrypted
+              mining wallet automatically.
             </p>
           </div>
 
-          <a className="button light" href="#downloads">V2.2.3 status</a>
+          <a className="button light" href="#downloads">Download R1</a>
         </div>
       </section>
 
       <section className="section shell" id="downloads">
         <SectionHeader
-          eyebrow="RABBIT CORE V2.2.3"
-          title="The only version for the block 50,500 stabilization fork."
-          text="Use only the verified Rabbit Core V2.2.3 packages published by Rabbit Chain."
+          eyebrow="RABBIT CORE V2.2.3 R1"
+          title="Official verified Testnet packages."
+          text="Use only Rabbit Core packages published by Rabbit Chain. Verify the SHA-256 before extracting or running the archive."
         />
 
         {downloadsReady ? (
@@ -94,7 +101,7 @@ export default function Mining() {
 
                   <div className="download-meta">
                     <small>VERSION</small>
-                    <b>Testnet V2.2.3</b>
+                    <b>Testnet V2.2.3 R1</b>
 
                     <small>SHA-256</small>
                     <code>{download.sha256}</code>
@@ -115,19 +122,8 @@ export default function Mining() {
         ) : (
           <div className="release-check-card">
             <FileCheck2 size={28} />
-            <span>V2.2.3 REQUIRED</span>
-            <strong>Windows + Linux packages are being finalized.</strong>
-
-            <p>
-              Do not download or continue using V2.2.2 past block 50,500.
-              Verified V2.2.3 Windows and Linux downloads are available here
-              together as soon as both packages pass final verification.
-            </p>
-
-            <p>
-              Existing miners: your Rabbit Testnet wallet, WorkSeat and chain data
-              must be preserved. Do not delete your Rabbit data folder.
-            </p>
+            <span>DOWNLOADS TEMPORARILY UNAVAILABLE</span>
+            <strong>Use only packages published on this page.</strong>
           </div>
         )}
       </section>
@@ -145,8 +141,8 @@ export default function Mining() {
               <Download size={21} />
               <h3>Download</h3>
               <p>
-                Download the official Rabbit Core V2.2.3 package for Windows or Linux
-                and verify the SHA-256 displayed on this page.
+                Download the official Windows or Linux package and compare its
+                SHA-256 with the value displayed above.
               </p>
             </article>
 
@@ -156,8 +152,8 @@ export default function Mining() {
               <h3>Extract and open</h3>
               <p>
                 Windows: run <code>Start-Rabbit-Core.cmd</code>. Linux: run
-                <code> ./Start-Rabbit-Core.sh</code>. No RPC, WebSocket, bootnode or
-                peer configuration is required from the miner.
+                <code> ./Start-Rabbit-Core.sh</code>. Keep the extracted program
+                folder separate from your persistent Rabbit data directory.
               </p>
             </article>
 
@@ -166,9 +162,8 @@ export default function Mining() {
               <ShieldCheck size={21} />
               <h3>Create your password</h3>
               <p>
-                On the first run Rabbit Core creates the encrypted mining wallet
-                locally. On later runs it automatically reuses the existing wallet.
-                Keep the password safe.
+                On first run Rabbit Core creates an encrypted mining wallet locally.
+                Keep the password safe and back up the exact encrypted keystore file.
               </p>
             </article>
 
@@ -177,57 +172,153 @@ export default function Mining() {
               <Cpu size={21} />
               <h3>Leave Rabbit Core running</h3>
               <p>
-                Rabbit Core connects to the official P2P network, discovers peers and
-                bootnodes, synchronizes the canonical chain, performs admission when
-                needed and participates in LCQ automatically.
+                Rabbit Core connects to the P2P network, discovers peers,
+                synchronizes the canonical chain, performs admission when required
+                and participates in LCQ automatically.
               </p>
             </article>
           </div>
         </div>
       </section>
 
-      <section className="section shell">
+      <section className="section shell" id="data-location">
+        <SectionHeader
+          eyebrow="YOUR FILES"
+          title="Where Rabbit Core stores your wallet, blockchain and logs."
+          text="The program can be extracted anywhere. Your persistent Rabbit Testnet data is stored separately in your operating-system user configuration directory."
+        />
+
         <div className="operator-split">
           <div>
-            <span className="section-kicker">ALREADY MINING?</span>
-            <h2>Upgrade without touching your wallet.</h2>
+            <span className="section-kicker">WINDOWS</span>
+            <h2>Your Rabbit data is in AppData.</h2>
 
             <p>
-              Close the previous Rabbit Core application. Extract V2.2.3 into a new
-              program folder and start it normally. Rabbit Core uses the existing
-              Rabbit Testnet data directory and encrypted mining wallet.
+              Main directory:
+              {' '}
+              <code>%APPDATA%\RabbitChain\TestnetV2</code>
             </p>
 
             <p>
-              You do not need to connect a browser wallet, import a wallet into the
-              website, send a registration transaction or perform admission again
-              when the existing persistent seat is already present.
+              Typical full path:
+              {' '}
+              <code>C:\Users\&lt;USER&gt;\AppData\Roaming\RabbitChain\TestnetV2</code>
+            </p>
+
+            <div className="operator-cards">
+              <article>
+                <ShieldCheck size={22} />
+                <h3>Encrypted wallet</h3>
+                <p><code>%APPDATA%\RabbitChain\TestnetV2\keystore\UTC--...</code></p>
+              </article>
+
+              <article>
+                <HardDrive size={22} />
+                <h3>Blockchain</h3>
+                <p><code>%APPDATA%\RabbitChain\TestnetV2\rabbit\chaindata</code></p>
+              </article>
+
+              <article>
+                <TerminalSquare size={22} />
+                <h3>Node log</h3>
+                <p><code>%APPDATA%\RabbitChain\TestnetV2\logs\rabbit-node.log</code></p>
+              </article>
+            </div>
+          </div>
+
+          <div>
+            <span className="section-kicker">LINUX</span>
+            <h2>Your Rabbit data is in your user config directory.</h2>
+
+            <p>
+              Main directory:
+              {' '}
+              <code>${'{'}XDG_CONFIG_HOME:-$HOME/.config{'}'}/RabbitChain/TestnetV2</code>
+            </p>
+
+            <div className="operator-cards">
+              <article>
+                <ShieldCheck size={22} />
+                <h3>Encrypted wallet</h3>
+                <p><code>.../RabbitChain/TestnetV2/keystore/UTC--...</code></p>
+              </article>
+
+              <article>
+                <HardDrive size={22} />
+                <h3>Blockchain</h3>
+                <p><code>.../RabbitChain/TestnetV2/rabbit/chaindata</code></p>
+              </article>
+
+              <article>
+                <TerminalSquare size={22} />
+                <h3>Node log</h3>
+                <p><code>.../RabbitChain/TestnetV2/logs/rabbit-node.log</code></p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="security-callout">
+        <div className="shell">
+          <ShieldCheck size={24} />
+
+          <div>
+            <span>BACK UP YOUR MINING WALLET</span>
+            <h2>The keystore file and its password are what you must protect.</h2>
+
+            <p>
+              Back up the exact <code>UTC--...</code> file from the
+              <code> keystore</code> directory and store its password separately.
+              Never send the keystore file or password to support, Discord, social
+              media or another person. The temporary
+              <code> .rabbit-session-password-*</code> file is not a wallet backup
+              and is removed automatically when the session ends.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section shell">
+        <div className="operator-split">
+          <div>
+            <span className="section-kicker">UPGRADE OR MOVE TO ANOTHER PC</span>
+            <h2>Keep the same wallet.</h2>
+
+            <p>
+              For a normal upgrade, close Rabbit Core safely, extract the new program
+              package into a new folder and start it. Do not delete the persistent
+              Testnet data directory or create another mining wallet.
+            </p>
+
+            <p>
+              To move the mining identity to another computer, first stop Rabbit Core
+              cleanly. Copy the encrypted <code>UTC--...</code> keystore file and keep
+              its password separately. Preserving the complete Rabbit data directory
+              can avoid downloading and validating the full chain again.
             </p>
           </div>
 
           <div className="operator-cards">
             <article>
               <ShieldCheck size={22} />
-              <h3>Do not</h3>
+              <h3>Never delete</h3>
               <ul>
-                <li>Do not delete the Rabbit Testnet data directory</li>
-                <li>Do not delete the keystore</li>
-                <li>Do not create another mining wallet for the upgrade</li>
-                <li>Do not register manually</li>
-                <li>Do not configure a public RPC to mine</li>
+                <li>Your <code>keystore</code> when you want to keep the wallet</li>
+                <li>Your wallet password</li>
+                <li>Your backup of the encrypted <code>UTC--...</code> file</li>
               </ul>
             </article>
 
             <article>
               <Cpu size={22} />
-              <h3>Rabbit Core does</h3>
+              <h3>Rabbit Core handles</h3>
               <ul>
                 <li>Wallet creation and reuse</li>
-                <li>Official P2P bootstrap</li>
-                <li>Bootnode and peer discovery</li>
+                <li>Official P2P bootstrap and peer discovery</li>
                 <li>Canonical chain synchronization</li>
                 <li>RandomX admission when required</li>
-                <li>LCQ participation</li>
+                <li>LCQ producer and committee participation</li>
               </ul>
             </article>
           </div>
@@ -237,26 +328,32 @@ export default function Mining() {
       <section className="section shell">
         <div className="operator-split">
           <div>
-            <span className="section-kicker">WHAT YOU WILL SEE</span>
-            <h2>Rabbit Miner tells you when you are active.</h2>
+            <span className="section-kicker">NORMAL OPERATION</span>
+            <h2>Keep Rabbit Core open while mining.</h2>
 
             <p>
-              <code>LCQ PENDING</code> means the admission is accepted and the wallet
-              is waiting for canonical activation. <code>LCQ ACTIVE</code> or
-              <code> ACTIVE LCQ seat</code> means the mining wallet has an active
-              consensus seat.
+              Closing Rabbit Core does not erase a canonical persistent seat. Restart
+              with the same wallet and data directory. When stopping manually, use
+              <code> Ctrl+C</code> and wait for Rabbit Core to finish its safe
+              shutdown before closing the terminal or turning off the computer.
+            </p>
+
+            <p>
+              If the network has no reachable peers, production pauses rather than
+              creating an isolated private chain. When connectivity returns, Rabbit
+              Core verifies the canonical chain before normal participation resumes.
             </p>
           </div>
 
           <div className="operator-cards">
             <article>
               <Cpu size={22} />
-              <h3>Rewards</h3>
+              <h3>Mining status</h3>
               <ul>
-                <li>🐇 PRODUCER — your wallet produced the block</li>
-                <li>🥕 COMMITTEE — your wallet received committee reward</li>
-                <li>Current block reward: 1.2 tRAB</li>
-                <li>70% producer / 30% committee</li>
+                <li><code>LCQ PENDING</code> — admission accepted, activation pending</li>
+                <li><code>LCQ ACTIVE</code> — wallet has an active consensus seat</li>
+                <li>🐇 PRODUCER — wallet produced the canonical block</li>
+                <li>🥕 COMMITTEE — wallet received committee reward</li>
               </ul>
             </article>
 
@@ -265,7 +362,7 @@ export default function Mining() {
               <h3>Fair participation</h3>
               <ul>
                 <li>One persistent consensus seat per wallet</li>
-                <li>RandomX is admission work</li>
+                <li>RandomX is admission work, not a permanent speed race</li>
                 <li>CPU speed does not create extra LCQ seats</li>
                 <li>Persistent WorkSeat survives normal restarts</li>
               </ul>
@@ -274,15 +371,89 @@ export default function Mining() {
         </div>
       </section>
 
+      <section className="section shell">
+        <SectionHeader
+          eyebrow="RECOVERY & SUPPORT"
+          title="Know what is safe to rebuild and what must never be lost."
+          text="The blockchain database is reproducible from the network. Your encrypted wallet is not."
+        />
+
+        <div className="operator-cards">
+          <article>
+            <HardDrive size={22} />
+            <h3>Local chain recovery</h3>
+            <p>
+              Rabbit Core V2.2.3 R1 can automatically rebuild detected damaged
+              reproducible local blockchain state while preserving the encrypted
+              wallet. Keep Rabbit Core open while a rebuild or resynchronization is
+              in progress.
+            </p>
+          </article>
+
+          <article>
+            <TerminalSquare size={22} />
+            <h3>If you need the node log</h3>
+            <p>
+              Windows:
+              {' '}
+              <code>%APPDATA%\RabbitChain\TestnetV2\logs\rabbit-node.log</code>
+            </p>
+            <p>
+              Linux:
+              {' '}
+              <code>.../RabbitChain/TestnetV2/logs/rabbit-node.log</code>
+            </p>
+          </article>
+
+          <article>
+            <ShieldCheck size={22} />
+            <h3>Safe support information</h3>
+            <p>
+              You may share your operating system, Rabbit Git commit, public wallet
+              address, block heights, peer count, synchronization status and a
+              sanitized error. Never share the wallet password or encrypted keystore
+              file.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section className="section shell">
+        <div className="operator-split">
+          <div>
+            <span className="section-kicker">REWARDS</span>
+            <h2>Producer and committee rewards are visible in Rabbit Miner.</h2>
+
+            <p>
+              The current Testnet block reward is 1.2 tRAB. The protocol allocates
+              70% to the selected producer and 30% to the eligible committee.
+            </p>
+          </div>
+
+          <div className="operator-cards">
+            <article>
+              <Cpu size={22} />
+              <h3>Current split</h3>
+              <ul>
+                <li>🐇 Producer: 0.84 tRAB</li>
+                <li>🥕 Committee: 0.36 tRAB total</li>
+                <li>Displayed balance updates as canonical rewards arrive</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section className="security-callout">
         <div className="shell">
-          <ShieldCheck size={24} />
+          <FileCheck2 size={24} />
           <div>
             <span>RELEASE SECURITY</span>
-            <h2>Only run verified Rabbit Core packages.</h2>
+            <h2>Verify the package before running it.</h2>
             <p>
-              Compare the downloaded archive SHA-256 with the value published by
-              Rabbit Chain before extracting or running Rabbit Core.
+              Compare the downloaded archive SHA-256 with this page. Rabbit Core also
+              includes internal checksums and validates the official Testnet genesis
+              and chain ID before normal operation.
             </p>
           </div>
 
