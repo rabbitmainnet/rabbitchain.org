@@ -16,18 +16,18 @@ export default function Releases() {
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
             <span className="hero-eyebrow"><i /> OFFICIAL SOFTWARE</span>
-            <h1>Rabbit Core Testnet V2.2.3 <em>required.</em></h1>
+            <h1>Rabbit Core Testnet V2.2.5 <em>required.</em></h1>
 
             <p>
-              V2.2.3 is the required Rabbit Core release for the stabilization fork
-              at block 50,500. Only use packages whose archive SHA-256 matches the
+              V2.2.5 is the required Rabbit Core release for the Fairness/Liveness upgrade
+              at block 73,000. Only use packages whose archive SHA-256 matches the
               value published by Rabbit Chain.
             </p>
           </div>
 
           <div className="release-check-card">
             <FileCheck2 size={28} />
-            <span>PUBLIC TESTNET V2.2.3</span>
+            <span>PUBLIC TESTNET V2.2.5</span>
             <strong>
               {downloadsReady ? 'Windows + Linux verified' : 'Final package verification in progress'}
             </strong>
@@ -46,8 +46,8 @@ export default function Releases() {
       <section className="section shell">
         <SectionHeader
           eyebrow="OFFICIAL DOWNLOADS"
-          title="Rabbit Core V2.2.3"
-          text="Never use an older Rabbit Core release past the block 50,500 stabilization fork."
+          title="Rabbit Core V2.2.5"
+          text="Upgrade to Rabbit Core V2.2.5 before the block 73,000 Fairness/Liveness activation."
         />
 
         {downloadsReady ? (
@@ -64,7 +64,7 @@ export default function Releases() {
 
                   <div className="download-meta">
                     <small>VERSION</small>
-                    <b>Testnet V2.2.3</b>
+                    <b>Testnet V2.2.5</b>
 
                     <small>SHA-256</small>
                     <code>{download.sha256}</code>
@@ -85,8 +85,8 @@ export default function Releases() {
         ) : (
           <div className="release-check-card">
             <FileCheck2 size={28} />
-            <span>DO NOT USE V2.2.2 PAST BLOCK 50,500</span>
-            <strong>V2.2.3 Windows + Linux downloads are available and SHA-256 verified.</strong>
+            <span>UPGRADE BEFORE BLOCK 73,000</span>
+            <strong>Final V2.2.5 Windows + Linux package verification is in progress.</strong>
 
             <p>
               The verified download buttons and SHA-256 values will appear here
