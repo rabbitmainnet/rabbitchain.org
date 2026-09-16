@@ -3,9 +3,10 @@ import { ArrowRight, ArrowUpRight, BookOpen, FileText, ShieldCheck } from 'lucid
 import SectionHeader from '../components/SectionHeader'
 
 const WHITEPAPER_REPO = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper'
-const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.4.pdf'
+const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.5.pdf'
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
+const LIVENESS_V3_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.3.0-Liveness-V3-Upgrade.md'
 const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/rabbit-core-testnet-v2.3.0'
 
 export default function Whitepaper() {
@@ -14,8 +15,8 @@ export default function Whitepaper() {
       <section className="page-hero whitepaper-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
-            <span className="hero-eyebrow"><i /> OFFICIAL TECHNICAL WHITEPAPER · v1.4</span>
-            <h1>Public Testnet V2 <em>Fairness/Liveness Edition.</em></h1>
+            <span className="hero-eyebrow"><i /> OFFICIAL TECHNICAL WHITEPAPER · v1.5</span>
+            <h1>Public Testnet V2 <em>Liveness V3 Edition.</em></h1>
             <p>
               Rabbit Chain is a permissionless, EVM-compatible Layer 1 built around
               Live Consensus Queue (LCQ). Work qualifies participation; canonical
@@ -25,7 +26,7 @@ export default function Whitepaper() {
 
             <div className="hero-ctas">
               <a className="button primary" href={WHITEPAPER_PDF} target="_blank" rel="noreferrer">
-                Whitepaper PDF v1.4 <ArrowUpRight size={14} />
+                Whitepaper PDF v1.5 <ArrowUpRight size={14} />
               </a>
               <a className="button secondary" href={WHITEPAPER_REPO} target="_blank" rel="noreferrer">
                 Source repository <ArrowUpRight size={14} />
@@ -35,7 +36,7 @@ export default function Whitepaper() {
 
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
-            <strong>Technical Whitepaper v1.4</strong>
+            <strong>Technical Whitepaper v1.5</strong>
             <p>16 September 2026 · Rabbit Core Testnet V2.3.0</p>
             <section>
               <span>CHAIN ID 9280</span>
@@ -51,7 +52,7 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="The site and the whitepaper now use the same Testnet identity."
-          text="These values are copied from the current v1.4 whitepaper and the Rabbit Core V2.2.5 Fairness/Liveness release record."
+          text="These values are copied from the current v1.5 whitepaper and the Rabbit Core V2.3.0 Liveness V3 release record."
         />
 
         <div className="resource-grid">
@@ -161,14 +162,17 @@ export default function Whitepaper() {
 
       <section className="section shell">
         <SectionHeader
-          eyebrow="CURRENT V2.2.5 UPGRADE RECORD"
-          title="Fairness/Liveness activation at block 73,000."
-          text="The public upgrade record documents the V2.2.5 release identity, verified Windows and Linux packages, deterministic producer-order transition, preserved WorkSeats and the in-place upgrade path."
+          eyebrow="CURRENT V2.3.0 LIVENESS V3 RECORD"
+          title="Liveness V3 activation at block 77,000."
+          text="The public upgrade record documents the V2.3.0 release identity, verified Windows and Linux packages, deterministic producer rotation, fallback recovery, committee participation and the preserved in-place upgrade path."
         />
 
         <div className="hero-ctas">
-          <a className="button primary" href={FAIRNESS_REPORT} target="_blank" rel="noreferrer">
-            Read Fairness/Liveness record <ArrowUpRight size={14} />
+          <a className="button primary" href={LIVENESS_V3_REPORT} target="_blank" rel="noreferrer">
+            Read Liveness V3 record <ArrowUpRight size={14} />
+          </a>
+          <a className="button secondary" href={FAIRNESS_REPORT} target="_blank" rel="noreferrer">
+            Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
             Rabbit Core V2.3.0 release <ArrowUpRight size={14} />
