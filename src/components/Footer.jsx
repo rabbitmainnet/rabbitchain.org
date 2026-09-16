@@ -25,7 +25,12 @@ export default function Footer() {
           <Brand />
           <p>Permissionless EVM Layer 1 powered by LCQ Consensus.</p>
           <strong>One wallet. One fair chance.</strong>
-          <div className="footer-social"><a href="https://x.com/rabbit_mainnet" target="_blank" rel="noreferrer">X / Twitter ↗</a><a href="https://discord.gg/TBWspuEZss" target="_blank" rel="noreferrer">Discord ↗</a><a href="https://www.reddit.com/user/Rabbit_Chain/" target="_blank" rel="noreferrer">Reddit ↗</a><a href="https://github.com/rabbitmainnet" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://github.com/rabbitmainnet/rabbit-chain-whitepaper" target="_blank" rel="noreferrer">Whitepaper ↗</a></div>
+          <div className="footer-social" aria-label="Rabbit Chain social channels">
+            <a href="https://x.com/rabbit_mainnet" target="_blank" rel="noreferrer" aria-label="Rabbit Chain on X" title="X / Twitter"><img src="/social/x.svg" alt="" /></a>
+            <a href="https://discord.gg/TBWspuEZss" target="_blank" rel="noreferrer" aria-label="Rabbit Chain Discord" title="Discord"><img src="/social/discord.svg" alt="" /></a>
+            <a href="https://www.reddit.com/user/Rabbit_Chain/" target="_blank" rel="noreferrer" aria-label="Rabbit Chain on Reddit" title="Reddit"><img src="/social/reddit.svg" alt="" /></a>
+            <a href="https://github.com/rabbitmainnet" target="_blank" rel="noreferrer" aria-label="Rabbit Chain on GitHub" title="GitHub"><img src="/social/github.svg" alt="" /></a>
+          </div>
         </div>
         {columns.map(([title, items]) => (
           <div className="footer-col" key={title}>

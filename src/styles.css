@@ -6240,3 +6240,41 @@ footer {
   font-size:12px;
   line-height:1.65;
 }
+
+
+/* RABBIT FOOTER SOCIAL ICONS */
+.footer-social{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-top:23px;
+}
+
+.footer-social a{
+  width:30px;
+  height:30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #e1e2e9;
+  border-radius:8px;
+  background:#fff;
+  transition:transform .15s ease,border-color .15s ease,background .15s ease;
+}
+
+.footer-social a:hover{
+  transform:translateY(-1px);
+  border-color:#c9ccd7;
+  background:#f7f7fa;
+}
+
+.footer-social img{
+  display:block;
+  width:15px;
+  height:15px;
+  opacity:.68;
+}
+
+.footer-social a:hover img{
+  opacity:.95;
+}
