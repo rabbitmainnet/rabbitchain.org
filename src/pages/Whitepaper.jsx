@@ -63,13 +63,14 @@ export default function Whitepaper() {
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                ed6fb1692392ce93886d112d84142b8aa487fceb
+                7128cb6db44dbecff608a54b4890a03f5e426647
               </code>
             </p>
             <p>
               Consensus hardening: block 50,000.<br />
               Consensus stabilization: block 50,500.<br />
-               Fairness/Liveness: block 73,000.
+               Fairness/Liveness: block 73,000.<br />
+                Liveness V3: block 77,000.
             </p>
             <a href={CORE_RELEASE} target="_blank" rel="noreferrer">
               Official release <ArrowUpRight size={14} />
@@ -89,7 +90,7 @@ export default function Whitepaper() {
             <p>
               Genesis SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                ef115b86fe0225b8fddd41d61ff9576c08960b97bd4e1e374fcfa0cee4ec7ad9
+                1e3dbb01317c0f89f7865576caca906cd29a6afd9a726639ea1452cb92ab1a61
               </code>
             </p>
           </article>
@@ -97,17 +98,17 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.2.5</h3>
+            <h3>Rabbit Core V2.3.0</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                08a7cf8d79b8183cdde641fa06157b60c92329105e31965492ccc1b32031c945
+                a23662ee6def886b62336ce0dedd5b0d6bf8daeb0cb12cc96eadae435c12ab0e
               </code>
             </p>
             <p>
               Linux AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                f376de87e944624834ea9128018ed4ee42df7ab6e55779dfded5085aacf7ca35
+                e5d75d1b3c71b31420a1999043a369f661bea794afc4aaefdff5e157262ec2ad
               </code>
             </p>
           </article>
@@ -238,7 +239,7 @@ export default function Whitepaper() {
 
         <div className="hero-ctas">
           <a className="button primary" href={WHITEPAPER_PDF} target="_blank" rel="noreferrer">
-            Read the full v1.4 paper <ArrowUpRight size={14} />
+            Read the full v1.5 paper <ArrowUpRight size={14} />
           </a>
           <Link className="button secondary" to="/docs">
             Explore Docs <ArrowRight size={14} />

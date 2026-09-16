@@ -1,7 +1,7 @@
 import { NETWORKS } from './networks'
 
 export const RELEASE_TAG = 'rabbit-core-testnet-v2.3.0'
-export const RELEASE_COMMIT = 'ed6fb1692392ce93886d112d84142b8aa487fceb'
+export const RELEASE_COMMIT = '7128cb6db44dbecff608a54b4890a03f5e426647'
 export const REQUIRED_VERSION = 'V2.3.0'
 export const STABILIZATION_BLOCK = 50500
 export const FAIRNESS_BLOCK = 73000
@@ -45,6 +45,7 @@ export const RELEASE = {
   requiredVersion: REQUIRED_VERSION,
   stabilizationBlock: STABILIZATION_BLOCK,
   fairnessBlock: FAIRNESS_BLOCK,
+  livenessV3Block: LIVENESS_V3_BLOCK,
 }
 
 export function releaseLabel() {
