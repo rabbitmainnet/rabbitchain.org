@@ -28,7 +28,6 @@ export default function Footer() {
           <div className="footer-social" aria-label="Rabbit Chain social channels">
             <a href="https://x.com/rabbit_mainnet" target="_blank" rel="noreferrer" aria-label="Rabbit Chain on X" title="X / Twitter"><img src="/social/x.svg" alt="" /></a>
             <a href="https://discord.gg/TBWspuEZss" target="_blank" rel="noreferrer" aria-label="Rabbit Chain Discord" title="Discord"><img src="/social/discord.svg" alt="" /></a>
-            <a href="https://www.reddit.com/user/Rabbit_Chain/" target="_blank" rel="noreferrer" aria-label="Rabbit Chain on Reddit" title="Reddit"><img src="/social/reddit.svg" alt="" /></a>
             <a href="https://github.com/rabbitmainnet" target="_blank" rel="noreferrer" aria-label="Rabbit Chain on GitHub" title="GitHub"><img src="/social/github.svg" alt="" /></a>
           </div>
         </div>
