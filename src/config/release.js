@@ -1,16 +1,17 @@
 import { NETWORKS } from './networks'
 
-export const RELEASE_TAG = 'rabbit-core-testnet-v2.2.5'
+export const RELEASE_TAG = 'rabbit-core-testnet-v2.3.0'
 export const RELEASE_COMMIT = 'ed6fb1692392ce93886d112d84142b8aa487fceb'
-export const REQUIRED_VERSION = 'V2.2.5'
+export const REQUIRED_VERSION = 'V2.3.0'
 export const STABILIZATION_BLOCK = 50500
 export const FAIRNESS_BLOCK = 73000
+export const LIVENESS_V3_BLOCK = 77000
 
 export const RELEASE_URL =
-  'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/rabbit-core-testnet-v2.2.5'
+  'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/rabbit-core-testnet-v2.3.0'
 
 export const RELEASE_DOWNLOAD_BASE =
-  'https://github.com/rabbitmainnet/rabbit-geth/releases/download/rabbit-core-testnet-v2.2.5'
+  'https://github.com/rabbitmainnet/rabbit-geth/releases/download/rabbit-core-testnet-v2.3.0'
 
 export const DOWNLOADS = [
   {
@@ -18,16 +19,16 @@ export const DOWNLOADS = [
     platform: 'Windows',
     architecture: 'AMD64',
     format: 'ZIP',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.2.5-windows-amd64.zip`,
-    sha256: '08a7cf8d79b8183cdde641fa06157b60c92329105e31965492ccc1b32031c945',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.0-windows-amd64.zip`,
+    sha256: 'a23662ee6def886b62336ce0dedd5b0d6bf8daeb0cb12cc96eadae435c12ab0e',
   },
   {
     key: 'linux-amd64',
     platform: 'Linux',
     architecture: 'AMD64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.2.5-linux-amd64.tar.gz`,
-    sha256: 'f376de87e944624834ea9128018ed4ee42df7ab6e55779dfded5085aacf7ca35',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.0-linux-amd64.tar.gz`,
+    sha256: 'e5d75d1b3c71b31420a1999043a369f661bea794afc4aaefdff5e157262ec2ad',
   },
 ]
 

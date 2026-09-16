@@ -6,7 +6,7 @@ const WHITEPAPER_REPO = 'https://github.com/rabbitmainnet/rabbit-chain-whitepape
 const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.4.pdf'
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
-const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/rabbit-core-testnet-v2.2.5'
+const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/rabbit-core-testnet-v2.3.0'
 
 export default function Whitepaper() {
   return (
@@ -36,7 +36,7 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.4</strong>
-            <p>14 September 2026 · Rabbit Core Testnet V2.2.5</p>
+            <p>16 September 2026 · Rabbit Core Testnet V2.3.0</p>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -58,7 +58,7 @@ export default function Whitepaper() {
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.2.5</h3>
+            <h3>Rabbit Core V2.3.0</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -171,7 +171,7 @@ export default function Whitepaper() {
             Read Fairness/Liveness record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Rabbit Core V2.2.5 release <ArrowUpRight size={14} />
+            Rabbit Core V2.3.0 release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>

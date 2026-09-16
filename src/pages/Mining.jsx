@@ -35,7 +35,7 @@ export default function Mining() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.2.5 <ArrowRight size={15} />
+                Rabbit Core V2.3.0 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -44,7 +44,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.2.5</b>
+              <b>V2.3.0</b>
             </div>
 
             <pre><code>
@@ -66,7 +66,7 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <h2>Rabbit Core V2.2.5 is the current public Testnet package.</h2>
+            <h2>Rabbit Core V2.3.0 is the current public Testnet package.</h2>
 
             <p>
               Existing miners only need to close the previous Rabbit Core, extract
@@ -76,13 +76,13 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.2.5</a>
+          <a className="button light" href="#downloads">Download V2.3.0</a>
         </div>
       </section>
 
       <section className="section shell" id="downloads">
         <SectionHeader
-          eyebrow="RABBIT CORE V2.2.5"
+          eyebrow="RABBIT CORE V2.3.0"
           title="Official verified Testnet packages."
           text="Use only Rabbit Core packages published by Rabbit Chain. Verify the SHA-256 before extracting or running the archive."
         />
@@ -101,7 +101,7 @@ export default function Mining() {
 
                   <div className="download-meta">
                     <small>VERSION</small>
-                    <b>Testnet V2.2.5</b>
+                    <b>Testnet V2.3.0</b>
 
                     <small>SHA-256</small>
                     <code>{download.sha256}</code>
@@ -449,7 +449,7 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.2.5 preserves the existing Rabbit Testnet blockchain data,
+              Rabbit Core V2.3.0 preserves the existing Rabbit Testnet blockchain data,
               encrypted wallet and persistent consensus state across normal restarts.
               If the node stops unexpectedly, Rabbit Core restarts it using the same
               data directory and waits for canonical synchronization before mining resumes.
