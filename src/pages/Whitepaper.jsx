@@ -111,6 +111,18 @@ export default function Whitepaper() {
                 9063b3d349172a79e61b89fb6c01c815874c82eaf63741d1034cba330125913c
               </code>
             </p>
+            <p>
+              macOS Intel / AMD64 SHA-256:<br />
+              <code style={{ wordBreak: 'break-all' }}>
+                10bda73072fc8a9ddc68cc4e96e569ea76241e77553c17c4b5ca5b7a9c606271
+              </code>
+            </p>
+            <p>
+              macOS Apple Silicon / ARM64 SHA-256:<br />
+              <code style={{ wordBreak: 'break-all' }}>
+                6ee3b40eacd8b94d2b7b95aaa4a0a9219173226f2bd3d239f132f49448d536ba
+              </code>
+            </p>
           </article>
         </div>
       </section>

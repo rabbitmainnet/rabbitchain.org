@@ -30,6 +30,22 @@ export const DOWNLOADS = [
     url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.4-linux-amd64.tar.gz`,
     sha256: '9063b3d349172a79e61b89fb6c01c815874c82eaf63741d1034cba330125913c',
   },
+  {
+    key: 'darwin-amd64',
+    platform: 'macOS',
+    architecture: 'Intel / AMD64',
+    format: 'TAR.GZ',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.4-darwin-amd64.tar.gz`,
+    sha256: '10bda73072fc8a9ddc68cc4e96e569ea76241e77553c17c4b5ca5b7a9c606271',
+  },
+  {
+    key: 'darwin-arm64',
+    platform: 'macOS',
+    architecture: 'Apple Silicon / ARM64',
+    format: 'TAR.GZ',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.4-darwin-arm64.tar.gz`,
+    sha256: '6ee3b40eacd8b94d2b7b95aaa4a0a9219173226f2bd3d239f132f49448d536ba',
+  },
 ]
 
 export const RELEASE = {

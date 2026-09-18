@@ -15,6 +15,8 @@ import { DOWNLOADS, RELEASE } from '../config/release'
 const icons = {
   'windows-amd64': MonitorDown,
   'linux-amd64': TerminalSquare,
+  'darwin-amd64': MonitorDown,
+  'darwin-arm64': MonitorDown,
 }
 
 export default function Mining() {
@@ -141,8 +143,8 @@ export default function Mining() {
               <Download size={21} />
               <h3>Download</h3>
               <p>
-                Download the official Windows or Linux package and compare its
-                SHA-256 with the value displayed above.
+                Download the official package for Windows, Linux, macOS Intel or
+                macOS Apple Silicon and compare its SHA-256 with the value displayed above.
               </p>
             </article>
 
@@ -152,8 +154,10 @@ export default function Mining() {
               <h3>Extract and open</h3>
               <p>
                 Windows: run <code>Start-Rabbit-Core.cmd</code>. Linux: run
-                <code> ./Start-Rabbit-Core.sh</code>. Keep the extracted program
-                folder separate from your persistent Rabbit data directory.
+                <code> ./Start-Rabbit-Core.sh</code>. macOS: open
+                <code> Start-Rabbit-Core.command</code> from the package matching
+                your Mac architecture. Keep the extracted program folder separate
+                from your persistent Rabbit data directory.
               </p>
             </article>
 

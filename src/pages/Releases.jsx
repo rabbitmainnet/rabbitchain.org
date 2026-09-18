@@ -5,6 +5,8 @@ import { DOWNLOADS, RELEASE } from '../config/release'
 const icons = {
   'windows-amd64': MonitorDown,
   'linux-amd64': TerminalSquare,
+  'darwin-amd64': MonitorDown,
+  'darwin-arm64': MonitorDown,
 }
 
 export default function Releases() {
@@ -30,7 +32,7 @@ export default function Releases() {
             <FileCheck2 size={28} />
             <span>PUBLIC TESTNET V2.3.4</span>
             <strong>
-              {downloadsReady ? 'Windows + Linux verified' : 'Final package verification in progress'}
+              {downloadsReady ? 'Windows + Linux + macOS verified' : 'Final package verification in progress'}
             </strong>
 
             <p>Source commit: <code>{RELEASE.commit}</code></p>
@@ -87,7 +89,7 @@ export default function Releases() {
           <div className="release-check-card">
             <FileCheck2 size={28} />
             <span>CURRENT PUBLIC TESTNET RELEASE</span>
-            <strong>Verified V2.3.4 Windows and Linux packages are available now.</strong>
+            <strong>Verified V2.3.4 Windows, Linux and macOS packages are available now.</strong>
 
             <p>
               The verified download buttons and SHA-256 values will appear here
