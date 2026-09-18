@@ -7,7 +7,7 @@ const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
 const LIVENESS_V3_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.3.0-Liveness-V3-Upgrade.md'
-const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/rabbit-core-testnet-v2.3.0'
+const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.3.4'
 
 export default function Whitepaper() {
   return (
@@ -37,7 +37,7 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.5</strong>
-            <p>16 September 2026 · Rabbit Core Testnet V2.3.0</p>
+            <p>18 September 2026 · Rabbit Core Testnet V2.3.4</p>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -51,19 +51,19 @@ export default function Whitepaper() {
       <section className="section shell">
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
-          title="The site and the whitepaper now use the same Testnet identity."
-          text="These values are copied from the current v1.5 whitepaper and the Rabbit Core V2.3.0 Liveness V3 release record."
+          title="Whitepaper protocol history and the current Core release are tracked together."
+          text="Whitepaper v1.5 documents the Liveness V3 protocol state; the current public software release is Rabbit Core V2.3.4."
         />
 
         <div className="resource-grid">
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.3.0</h3>
+            <h3>Rabbit Core V2.3.4</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                7128cb6db44dbecff608a54b4890a03f5e426647
+                b6fda8e6118d6ac7a6af81119120345e80081249
               </code>
             </p>
             <p>
@@ -98,17 +98,17 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.3.0</h3>
+            <h3>Rabbit Core V2.3.4</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                a23662ee6def886b62336ce0dedd5b0d6bf8daeb0cb12cc96eadae435c12ab0e
+                791970d2071191db54cbcc3a1fb5db22ccfc9a771640f30cf7624d6fc10e143f
               </code>
             </p>
             <p>
               Linux AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                e5d75d1b3c71b31420a1999043a369f661bea794afc4aaefdff5e157262ec2ad
+                9063b3d349172a79e61b89fb6c01c815874c82eaf63741d1034cba330125913c
               </code>
             </p>
           </article>
@@ -163,7 +163,7 @@ export default function Whitepaper() {
 
       <section className="section shell">
         <SectionHeader
-          eyebrow="CURRENT V2.3.0 LIVENESS V3 RECORD"
+          eyebrow="HISTORICAL V2.3.0 LIVENESS V3 RECORD"
           title="Liveness V3 activation at block 77,000."
           text="The public upgrade record documents the V2.3.0 release identity, verified Windows and Linux packages, deterministic producer rotation, fallback recovery, committee participation and the preserved in-place upgrade path."
         />
@@ -176,7 +176,7 @@ export default function Whitepaper() {
             Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Rabbit Core V2.3.0 release <ArrowUpRight size={14} />
+            Current Rabbit Core V2.3.4 release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>
