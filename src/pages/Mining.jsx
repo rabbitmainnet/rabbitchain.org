@@ -50,7 +50,7 @@ export default function Mining() {
             </div>
 
             <pre><code>
-              <span>$</span> Start-Rabbit-Core.cmd{`\n\n`}
+              <span>$</span> Start-Rabbit-Core.cmd / .sh / .command{`\n\n`}
               <b>✓</b> wallet created or reused automatically{`\n`}
               <b>✓</b> official Rabbit Testnet connected{`\n`}
               <b>✓</b> canonical blockchain synchronized{`\n`}
@@ -185,11 +185,77 @@ export default function Mining() {
         </div>
       </section>
 
+      <section className="section shell">
+        <div className="operator-split">
+          <div>
+            <span className="section-kicker">MACOS QUICK START</span>
+            <h2>Choose the Rabbit Core package that matches your Mac.</h2>
+
+            <p>
+              Apple Silicon Macs use the <strong>ARM64</strong> package. Intel Macs use
+              the <strong> AMD64</strong> package. If you are unsure, open Terminal and
+              run <code>uname -m</code>.
+            </p>
+
+            <p>
+              <code>arm64</code> means Apple Silicon. <code>x86_64</code> means Intel.
+              After downloading, verify the SHA-256 shown above, extract the archive and
+              open <code>Start-Rabbit-Core.command</code>.
+            </p>
+
+            <p>
+              Rabbit Core creates or reuses the encrypted mining wallet, connects to the
+              official Rabbit Testnet, synchronizes the canonical blockchain and handles
+              Work V2 / LCQ participation automatically. No manual RPC, bootnode or
+              consensus configuration is required.
+            </p>
+          </div>
+
+          <div className="operator-cards">
+            <article>
+              <Cpu size={22} />
+              <h3>Apple Silicon</h3>
+              <ul>
+                <li>M1, M2, M3, M4 or newer Apple chips</li>
+                <li><code>uname -m</code> reports <code>arm64</code></li>
+                <li>Download <code>macOS Apple Silicon / ARM64</code></li>
+              </ul>
+            </article>
+
+            <article>
+              <MonitorDown size={22} />
+              <h3>Intel Mac</h3>
+              <ul>
+                <li>Macs using an Intel processor</li>
+                <li><code>uname -m</code> reports <code>x86_64</code></li>
+                <li>Download <code>macOS Intel / AMD64</code></li>
+              </ul>
+            </article>
+
+            <article>
+              <ShieldCheck size={22} />
+              <h3>First launch on macOS</h3>
+              <p>
+                macOS may ask you to confirm software downloaded from the Internet.
+                Verify the SHA-256 first. If the verified launcher is blocked, Control-click
+                <code> Start-Rabbit-Core.command</code> in Finder and choose Open, or use
+                System Settings → Privacy &amp; Security → Open Anyway when macOS offers it.
+              </p>
+              <p>
+                If Terminal specifically reports <code>Permission denied</code>, open
+                Terminal in the extracted Rabbit Core folder and run
+                <code> chmod +x ./Start-Rabbit-Core.command</code>, then open it again.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section className="section shell" id="data-location">
         <style>{`
           .rabbit-storage-platforms {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 32px;
             align-items: start;
           }
@@ -323,6 +389,41 @@ export default function Mining() {
                 <TerminalSquare size={22} />
                 <h3>Node log</h3>
                 <code>$HOME/.config/RabbitChain/TestnetV2/logs/rabbit-node.log</code>
+              </article>
+            </div>
+          </div>
+
+          <div className="rabbit-storage-platform">
+            <span className="section-kicker">MACOS</span>
+            <h2>Your Rabbit data is in Application Support.</h2>
+
+            <div className="rabbit-storage-lead">
+              <p>Main directory:</p>
+              <code>~/Library/Application Support/RabbitChain/TestnetV2</code>
+            </div>
+
+            <div className="rabbit-storage-lead">
+              <p>Typical full path:</p>
+              <code>/Users/&lt;USER&gt;/Library/Application Support/RabbitChain/TestnetV2</code>
+            </div>
+
+            <div className="operator-cards rabbit-storage-paths">
+              <article>
+                <ShieldCheck size={22} />
+                <h3>Encrypted wallet</h3>
+                <code>~/Library/Application Support/RabbitChain/TestnetV2/keystore/UTC--...</code>
+              </article>
+
+              <article>
+                <HardDrive size={22} />
+                <h3>Blockchain</h3>
+                <code>~/Library/Application Support/RabbitChain/TestnetV2/rabbit/chaindata</code>
+              </article>
+
+              <article>
+                <TerminalSquare size={22} />
+                <h3>Node log</h3>
+                <code>~/Library/Application Support/RabbitChain/TestnetV2/logs/rabbit-node.log</code>
               </article>
             </div>
           </div>
@@ -472,6 +573,11 @@ export default function Mining() {
               Linux:
               {' '}
               <code>.../RabbitChain/TestnetV2/logs/rabbit-node.log</code>
+            </p>
+            <p>
+              macOS:
+              {' '}
+              <code>~/Library/Application Support/RabbitChain/TestnetV2/logs/rabbit-node.log</code>
             </p>
           </article>
 
