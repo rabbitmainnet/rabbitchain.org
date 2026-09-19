@@ -5,6 +5,7 @@ import {
   Repeat2, Rocket, ShieldCheck, Wallet, Waves,
 } from 'lucide-react'
 import { NETWORKS } from '../config/networks'
+import { RABBIT_VRF } from '../config/vrf'
 import { PLATFORM_NETWORKS, platformModuleStatus } from '../config/platform'
 import { usePlatformNetwork } from '../hooks/usePlatformNetwork'
 import PlatformNetworkSwitch from '../components/PlatformNetworkSwitch'
@@ -18,6 +19,7 @@ const tools = {
   liquidity: { icon: Waves, label: 'LIQUIDITY', title: 'Liquidity', intro: 'Create and manage RabbitSwap liquidity positions. Permissionless pairs are supported by the Testnet contracts.' },
   launchpool: { icon: Flame, label: 'LAUNCHPOOL', title: 'Launchpool', intro: 'Discover official launch campaigns and participation windows in one place.' },
   factory: { icon: Factory, label: 'TOKEN FACTORY', title: 'Token Factory', intro: 'Create fixed-supply Rabbit Testnet ERC-20 tokens with transparent rules and TWAP-priced fees.' },
+  vrf: { icon: ShieldCheck, label: 'RABBIT VRF', title: 'Rabbit VRF', intro: 'Verifiable randomness native to Rabbit Chain, with protocol status and requests exposed through one simple interface.' },
   bridge: { icon: Layers3, label: 'BRIDGE', title: 'Bridge', intro: 'Move supported assets through official routes when bridge infrastructure is available.' },
   staking: { icon: Coins, label: 'STAKING', title: 'Staking', intro: 'Stake supported Rabbit assets through the official non-custodial application interface when staking contracts are released.' },
   p2p: { icon: Network, label: 'P2P', title: 'P2P', intro: 'Direct peer-to-peer interaction through the Rabbit application layer when the public service is released.' },
@@ -29,8 +31,8 @@ const tools = {
   },
 }
 
-const toolOrder = ['swap', 'liquidity', 'staking', 'bridge', 'p2p', 'launchpool', 'factory', 'faucet']
-const testnetToolOrder = ['swap', 'liquidity', 'factory', 'launchpool', 'faucet']
+const toolOrder = ['swap', 'liquidity', 'staking', 'bridge', 'p2p', 'launchpool', 'factory', 'vrf', 'faucet']
+const testnetToolOrder = ['swap', 'liquidity', 'factory', 'vrf', 'launchpool', 'faucet']
 
 
 function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwork, networkKey, toast }) {
@@ -191,6 +193,79 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
     )
   }
 
+
+  if (tool === 'vrf') {
+    const connected = Boolean(walletState?.account)
+    const walletNetwork = NETWORKS[networkKey]
+    const correctNetwork = connected && walletState?.chainId === Number(walletNetwork?.chainId)
+
+    let actionLabel = 'Request Randomness · Coming Soon'
+    let actionDisabled = true
+    let actionHandler
+
+    if (!connected) {
+      actionLabel = 'Connect wallet'
+      actionDisabled = false
+      actionHandler = onConnect
+    } else if (!correctNetwork && walletNetwork?.walletEnabled) {
+      actionLabel = `Add / switch ${walletNetwork.shortName}`
+      actionDisabled = false
+      actionHandler = () => onSwitchNetwork?.(walletNetwork)
+    }
+
+    const coordinator = `${RABBIT_VRF.coordinator.slice(0, 10)}…${RABBIT_VRF.coordinator.slice(-8)}`
+
+    return (
+      <div className="product-panel">
+        <div className="product-panel-title">
+          <div><ShieldCheck size={20} /><span>{entry.label}</span></div>
+          <b>{statusText}</b>
+        </div>
+
+        <div className="launchpool-card">
+          <span>VERIFIABLE RANDOMNESS · NATIVE TO RABBIT CHAIN</span>
+          <h3>Rabbit VRF</h3>
+          <p>
+            Randomness secured by Rabbit Chain consensus. No trusted oracle operator.
+            No centralized randomness API.
+          </p>
+
+          <div>
+            <small>{networkKey === 'testnet' ? 'TESTNET VRF' : 'RABBIT VRF'}</small>
+            <strong>{RABBIT_VRF.status}</strong>
+          </div>
+        </div>
+
+        <div className="factory-form">
+          <div>
+            <label>
+              <span>BASE PROTOCOL FEE</span>
+              <input disabled value="0.01 tRUSD / request" readOnly />
+            </label>
+            <label>
+              <span>COORDINATOR</span>
+              <input disabled value={coordinator} readOnly />
+            </label>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="product-action"
+          disabled={actionDisabled}
+          onClick={actionHandler}
+        >
+          {actionLabel}
+        </button>
+
+        <p className="product-disclaimer">
+          Rabbit VRF public requests are not enabled on Rabbit Testnet yet.
+          This interface is an integration preview and does not submit randomness transactions.
+        </p>
+      </div>
+    )
+  }
+
   if (tool === 'faucet') {
     return (
       <RabbitFaucetPanel
@@ -317,7 +392,7 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
           <div className="platform-v2-copy">
             <span className="hero-eyebrow"><i /> RABBIT PLATFORM · OFFICIAL APPLICATION LAYER</span>
             <h1>Everything you use on Rabbit. <em>One product surface.</em></h1>
-            <p>{platformNetwork === 'testnet' ? 'Wallet, swaps, liquidity, launches and token creation organized as one Testnet workspace — focused on the services available for public Testnet validation.' : 'Wallet, swaps, liquidity, staking, bridging, P2P, launches and token creation organized as one product — with every module showing its real launch state.'}</p>
+            <p>{platformNetwork === 'testnet' ? 'Wallet, swaps, liquidity, token creation, verifiable randomness and launches organized as one Testnet workspace — focused on the services available for public Testnet validation.' : 'Wallet, swaps, liquidity, staking, bridging, P2P, launches and token creation organized as one product — with every module showing its real launch state.'}</p>
             <div className="hero-ctas"><button className="button primary" onClick={onConnect}><Wallet size={16} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button><button
       className="button secondary"
       disabled={!selectedNetwork?.walletEnabled}
@@ -354,7 +429,7 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
       <section className="platform-v2-stack">
         <div className="shell platform-v2-stack-grid">
           <div><span className="section-kicker">THE RABBIT STACK</span><h2>Applications above. Protocol below.</h2><p>Rabbit Platform uses the same wallet, RPC, EVM, LCQ and P2P surfaces documented across RabbitChain.org.</p><Link className="inline-link light-link" to="/lcq">Understand LCQ <ArrowRight size={14} /></Link></div>
-          <div className="platform-v2-stack-rail"><div><small>05</small><span>APPLICATIONS</span><strong>{platformNetwork === 'testnet' ? 'Swap · Liquidity · Launchpool · Factory' : 'Swap · Liquidity · Staking · Bridge · P2P · Launchpool · Factory'}</strong></div><i /><div><small>04</small><span>WALLET & RPC</span><strong>EVM wallet · WalletConnect · JSON-RPC</strong></div><i /><div><small>03</small><span>EXECUTION</span><strong>EVM · transactions · smart contracts</strong></div><i /><div className="accent"><small>02</small><span>CONSENSUS</span><strong>LCQ · producer · committee</strong></div><i /><div><small>01</small><span>NETWORK</span><strong>P2P · nodes · mining</strong></div></div>
+          <div className="platform-v2-stack-rail"><div><small>05</small><span>APPLICATIONS</span><strong>{platformNetwork === 'testnet' ? 'Swap · Liquidity · Factory · Rabbit VRF · Launchpool' : 'Swap · Liquidity · Staking · Bridge · P2P · Launchpool · Factory'}</strong></div><i /><div><small>04</small><span>WALLET & RPC</span><strong>EVM wallet · WalletConnect · JSON-RPC</strong></div><i /><div><small>03</small><span>EXECUTION</span><strong>EVM · transactions · smart contracts</strong></div><i /><div className="accent"><small>02</small><span>CONSENSUS</span><strong>LCQ · producer · committee</strong></div><i /><div><small>01</small><span>NETWORK</span><strong>P2P · nodes · mining</strong></div></div>
         </div>
       </section>
 

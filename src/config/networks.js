@@ -1,3 +1,5 @@
+import { RABBIT_VRF } from './vrf'
+
 export const TESTNET_LIVE = true
 export const MAINNET_LIVE = false
 
@@ -37,6 +39,7 @@ export const NETWORKS = {
       p2pLive: false,
       launchpoolLive: false,
       factoryLive: true,
+      vrfLive: RABBIT_VRF.enabled,
     },
   },
 
@@ -74,6 +77,7 @@ export const NETWORKS = {
       p2pLive: false,
       launchpoolLive: false,
       factoryLive: false,
+      vrfLive: false,
     },
   },
 }
