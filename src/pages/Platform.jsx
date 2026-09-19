@@ -195,6 +195,10 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
 
 
   if (tool === 'vrf') {
+    const connected = Boolean(walletState?.account)
+    const walletNetwork = NETWORKS[networkKey]
+    const correctNetwork = connected && walletState?.chainId === Number(walletNetwork?.chainId)
+
     let actionLabel = 'Request Randomness · Coming Soon'
     let actionDisabled = true
     let actionHandler
@@ -211,104 +215,33 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
 
     const coordinator = `${RABBIT_VRF.coordinator.slice(0, 10)}…${RABBIT_VRF.coordinator.slice(-8)}`
 
-    const useCases = [
-      {
-        title: 'Online Casinos & iGaming',
-        description:
-          'Verifiable randomness for dice, roulette, card shuffles, slots, jackpots, bonus rounds and on-chain game outcomes.',
-      },
-      {
-        title: 'Games',
-        description:
-          'Critical hits, matchmaking seeds, procedural maps, item drops, spawn logic and unpredictable game mechanics.',
-      },
-      {
-        title: 'NFTs',
-        description:
-          'Random traits, rarity distribution, reveal order, mint selection and generative collections.',
-      },
-      {
-        title: 'Loot & Rewards',
-        description:
-          'Mystery boxes, reward tiers, quests, prizes, randomized drops and promotional rewards.',
-      },
-      {
-        title: 'Draws & Raffles',
-        description:
-          'Transparent winner selection for raffles, giveaways, contests and community campaigns.',
-      },
-      {
-        title: 'Random Selection',
-        description:
-          'Fairly select wallets, participants, committees, allowlists or other on-chain actors.',
-      },
-      {
-        title: 'Prediction & Markets',
-        description:
-          'Verifiable randomness for applications and markets that require unpredictable settlement inputs.',
-      },
-      {
-        title: 'On-chain Apps',
-        description:
-          'A general-purpose randomness primitive for EVM applications, protocols and autonomous contracts.',
-      },
-      {
-        title: 'Custom Integration',
-        description:
-          'Integrate randomness directly from Solidity without depending on a centralized randomness API.',
-      },
-    ]
-
-    const benefits = [
-      'Native to Rabbit Chain',
-      'Consensus-secured',
-      'No trusted oracle operator',
-      'No centralized randomness API',
-      'Transparent protocol pricing',
-      'EVM-native integration',
-    ]
-
     return (
-      <div className="product-panel vrf-panel">
+      <div className="product-panel">
         <div className="product-panel-title">
-          <div>
-            <ShieldCheck size={20} />
-            <span>{entry.label}</span>
-          </div>
-          <b>{networkKey === 'testnet' ? 'TESTNET PREVIEW' : statusText}</b>
+          <div><ShieldCheck size={20} /><span>{entry.label}</span></div>
+          <b>{statusText}</b>
         </div>
 
-        <div className="launchpool-card vrf-hero">
+        <div className="launchpool-card">
           <span>VERIFIABLE RANDOMNESS · NATIVE TO RABBIT CHAIN</span>
-
           <h3>Rabbit VRF</h3>
-
           <p>
-            Verifiable randomness secured by Rabbit Chain consensus.
-            Built for applications that cannot depend on a trusted oracle operator
-            or centralized randomness API.
+            Randomness secured by Rabbit Chain consensus. No trusted oracle operator.
+            No centralized randomness API.
           </p>
 
-          <div className="vrf-hero-status">
-            <div>
-              <small>{networkKey === 'testnet' ? 'TESTNET VRF' : 'RABBIT VRF'}</small>
-              <strong>{RABBIT_VRF.status}</strong>
-            </div>
-
-            <div>
-              <small>DESIGNED FOR</small>
-              <strong>Casinos · Games · NFTs · Apps</strong>
-            </div>
+          <div>
+            <small>{networkKey === 'testnet' ? 'TESTNET VRF' : 'RABBIT VRF'}</small>
+            <strong>{RABBIT_VRF.status}</strong>
           </div>
         </div>
 
-        <div className="factory-form vrf-protocol-meta">
+        <div className="factory-form">
           <div>
             <label>
               <span>BASE PROTOCOL FEE</span>
               <input disabled value="0.01 tRUSD / request" readOnly />
             </label>
-
             <label>
               <span>COORDINATOR</span>
               <input disabled value={coordinator} readOnly />
@@ -316,93 +249,9 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
           </div>
         </div>
 
-        <section className="vrf-section">
-          <div className="vrf-section-heading">
-            <span>USE CASES</span>
-            <h3>Built for applications where randomness must be trusted.</h3>
-            <p>
-              Casinos. Games. NFTs. Rewards. Draws. Markets.
-              Any smart contract that needs unpredictable, verifiable randomness.
-            </p>
-          </div>
-
-          <div className="vrf-usecase-grid">
-            {useCases.map((item) => (
-              <div className="launchpool-card vrf-use-case" key={item.title}>
-                <span>USE CASE</span>
-                <h4>{item.title}</h4>
-                <p>{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="vrf-section">
-          <div className="vrf-section-heading">
-            <span>HOW IT WORKS</span>
-            <h3>From request to verifiable randomness.</h3>
-          </div>
-
-          <div className="launchpool-card vrf-flow-card">
-            <div className="vrf-flow">
-              <strong>Request</strong>
-              <b>→</b>
-              <strong>Rabbit Chain Consensus</strong>
-              <b>→</b>
-              <strong>Verifiable Randomness</strong>
-              <b>→</b>
-              <strong>Smart Contract</strong>
-            </div>
-          </div>
-        </section>
-
-        <section className="vrf-section">
-          <div className="vrf-section-heading">
-            <span>WHY RABBIT VRF</span>
-            <h3>Randomness without a centralized oracle operator.</h3>
-          </div>
-
-          <div className="vrf-benefit-grid">
-            {benefits.map((benefit) => (
-              <div className="vrf-benefit" key={benefit}>
-                <ShieldCheck size={17} />
-                <strong>{benefit}</strong>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="vrf-section">
-          <div className="vrf-section-heading">
-            <span>DEVELOPER INTEGRATION</span>
-            <h3>Built for Solidity and EVM applications.</h3>
-            <p>
-              The final public request ABI will be published with Rabbit VRF
-              Testnet activation. No request transaction is enabled from this
-              preview interface yet.
-            </p>
-          </div>
-
-          <div className="vrf-code-wrap">
-            <div className="vrf-code-title">
-              <span>Solidity</span>
-              <span>Rabbit VRF · Integration Preview</span>
-            </div>
-
-            <pre className="vrf-code"><code>{`// Rabbit VRF Coordinator
-// Final request ABI ships with protocol activation.
-
-IRabbitVRFCoordinatorV1 coordinator =
-    IRabbitVRFCoordinatorV1(RABBIT_VRF_COORDINATOR);
-
-// Request verifiable randomness
-// Coming with Rabbit VRF Testnet activation.`}</code></pre>
-          </div>
-        </section>
-
         <button
           type="button"
-          className="product-action vrf-action"
+          className="product-action"
           disabled={actionDisabled}
           onClick={actionHandler}
         >
