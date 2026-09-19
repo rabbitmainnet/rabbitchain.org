@@ -249,6 +249,175 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
           </div>
         </div>
 
+        <div style={{ marginTop: '26px' }}>
+          <small>USE CASES</small>
+          <h3 style={{ margin: '6px 0 8px' }}>
+            What can you build with Rabbit VRF?
+          </h3>
+          <p style={{ marginBottom: '16px' }}>
+            Verifiable randomness for casinos, games, NFTs, rewards, draws,
+            markets and any EVM application that needs unpredictable outcomes.
+          </p>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '12px',
+          }}>
+            <div style={{
+              border: '1px solid rgba(120,120,140,.22)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}>
+              <strong>Online Casinos &amp; iGaming</strong>
+              <p>
+                Verifiable randomness for dice, roulette, card shuffles,
+                slots, jackpots, bonus rounds and game outcomes.
+              </p>
+            </div>
+
+            <div style={{
+              border: '1px solid rgba(120,120,140,.22)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}>
+              <strong>Games</strong>
+              <p>
+                Critical hits, matchmaking seeds, procedural maps,
+                item drops, spawn logic and unpredictable mechanics.
+              </p>
+            </div>
+
+            <div style={{
+              border: '1px solid rgba(120,120,140,.22)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}>
+              <strong>NFTs</strong>
+              <p>
+                Random traits, rarity distribution, reveal order,
+                mint selection and generative collections.
+              </p>
+            </div>
+
+            <div style={{
+              border: '1px solid rgba(120,120,140,.22)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}>
+              <strong>Loot &amp; Rewards</strong>
+              <p>
+                Mystery boxes, prizes, quests, reward tiers
+                and randomized promotional drops.
+              </p>
+            </div>
+
+            <div style={{
+              border: '1px solid rgba(120,120,140,.22)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}>
+              <strong>Draws &amp; Raffles</strong>
+              <p>
+                Transparent winner selection for raffles,
+                giveaways, contests and community campaigns.
+              </p>
+            </div>
+
+            <div style={{
+              border: '1px solid rgba(120,120,140,.22)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}>
+              <strong>Random Selection</strong>
+              <p>
+                Fair selection of wallets, participants,
+                committees, allowlists and other on-chain actors.
+              </p>
+            </div>
+
+            <div style={{
+              border: '1px solid rgba(120,120,140,.22)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}>
+              <strong>Prediction &amp; Markets</strong>
+              <p>
+                Verifiable random inputs for applications
+                requiring unpredictable settlement conditions.
+              </p>
+            </div>
+
+            <div style={{
+              border: '1px solid rgba(120,120,140,.22)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}>
+              <strong>On-chain Apps</strong>
+              <p>
+                General-purpose randomness for EVM protocols,
+                smart contracts and autonomous applications.
+              </p>
+            </div>
+
+            <div style={{
+              border: '1px solid rgba(120,120,140,.22)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}>
+              <strong>Custom Integration</strong>
+              <p>
+                Integrate directly from Solidity without relying
+                on a centralized randomness API.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ marginTop: '28px' }}>
+          <small>HOW IT WORKS</small>
+          <h3 style={{ margin: '6px 0 12px' }}>
+            From request to verifiable randomness.
+          </h3>
+
+          <div style={{
+            border: '1px solid rgba(120,120,140,.22)',
+            borderRadius: '12px',
+            padding: '18px',
+            textAlign: 'center',
+          }}>
+            <strong>
+              Request → Rabbit Chain Consensus → Verifiable Randomness → Smart Contract
+            </strong>
+          </div>
+        </div>
+
+        <div style={{ marginTop: '28px' }}>
+          <small>WHY RABBIT VRF</small>
+          <h3 style={{ margin: '6px 0 12px' }}>
+            Randomness native to Rabbit Chain.
+          </h3>
+
+          <p>
+            Consensus-secured · No trusted oracle operator ·
+            No centralized randomness API · Transparent protocol pricing ·
+            EVM-native integration
+          </p>
+        </div>
+
+        <div style={{ marginTop: '28px' }}>
+          <small>DEVELOPER INTEGRATION</small>
+          <h3 style={{ margin: '6px 0 8px' }}>
+            Built for Solidity and EVM applications.
+          </h3>
+
+          <p>
+            Developers will be able to request Rabbit VRF directly from
+            smart contracts. The final public request ABI will be published
+            with Rabbit VRF Testnet activation.
+          </p>
+        </div>
+
         <button
           type="button"
           className="product-action"
