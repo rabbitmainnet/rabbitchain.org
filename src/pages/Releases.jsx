@@ -18,11 +18,11 @@ export default function Releases() {
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
             <span className="hero-eyebrow"><i /> OFFICIAL SOFTWARE</span>
-            <h1>Rabbit Core Testnet V2.3.4 <em>current.</em></h1>
+            <h1>Rabbit Core Testnet V2.3.5 <em>current.</em></h1>
 
             <p>
-              V2.3.4 is the current Rabbit Core release for the public Testnet. The
-              block 77,000 Liveness V3 activation remains part of the preserved
+              V2.3.5 is the current Rabbit Core release for the public Testnet. The
+              block 97,991 Liveness V4 activation is current; the block 77,000 Liveness V3 activation remains part of the preserved
               network history. Only use packages whose archive SHA-256 matches the
               value published by Rabbit Chain.
             </p>
@@ -30,7 +30,7 @@ export default function Releases() {
 
           <div className="release-check-card">
             <FileCheck2 size={28} />
-            <span>PUBLIC TESTNET V2.3.4</span>
+            <span>PUBLIC TESTNET V2.3.5</span>
             <strong>
               {downloadsReady ? 'Windows + Linux + macOS verified' : 'Final package verification in progress'}
             </strong>
@@ -49,8 +49,8 @@ export default function Releases() {
       <section className="section shell">
         <SectionHeader
           eyebrow="OFFICIAL DOWNLOADS"
-          title="Rabbit Core V2.3.4"
-          text="Rabbit Core V2.3.4 is the current verified public Testnet release."
+          title="Rabbit Core V2.3.5"
+          text="Rabbit Core V2.3.5 is the current verified public Testnet release."
         />
 
         {downloadsReady ? (
@@ -67,7 +67,7 @@ export default function Releases() {
 
                   <div className="download-meta">
                     <small>VERSION</small>
-                    <b>Testnet V2.3.4</b>
+                    <b>Testnet V2.3.5</b>
 
                     <small>SHA-256</small>
                     <code>{download.sha256}</code>
@@ -89,7 +89,7 @@ export default function Releases() {
           <div className="release-check-card">
             <FileCheck2 size={28} />
             <span>CURRENT PUBLIC TESTNET RELEASE</span>
-            <strong>Verified V2.3.4 Windows, Linux and macOS packages are available now.</strong>
+            <strong>Verified V2.3.5 Windows, Linux and macOS packages are available now.</strong>
 
             <p>
               The verified download buttons and SHA-256 values will appear here

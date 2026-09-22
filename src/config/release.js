@@ -1,17 +1,18 @@
 import { NETWORKS } from './networks'
 
-export const RELEASE_TAG = 'v2.3.4'
-export const RELEASE_COMMIT = 'b6fda8e6118d6ac7a6af81119120345e80081249'
-export const REQUIRED_VERSION = 'V2.3.4'
+export const RELEASE_TAG = 'v2.3.5'
+export const RELEASE_COMMIT = 'd63b72dea47b7b9bc92e1e1d7ca0ff05ebdb4791'
+export const REQUIRED_VERSION = 'V2.3.5'
 export const STABILIZATION_BLOCK = 50500
 export const FAIRNESS_BLOCK = 73000
 export const LIVENESS_V3_BLOCK = 77000
+export const LIVENESS_V4_BLOCK = 97991
 
 export const RELEASE_URL =
-  'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.3.4'
+  'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.3.5'
 
 export const RELEASE_DOWNLOAD_BASE =
-  'https://github.com/rabbitmainnet/rabbit-geth/releases/download/v2.3.4'
+  'https://github.com/rabbitmainnet/rabbit-geth/releases/download/v2.3.5'
 
 export const DOWNLOADS = [
   {
@@ -19,32 +20,32 @@ export const DOWNLOADS = [
     platform: 'Windows',
     architecture: 'AMD64',
     format: 'ZIP',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.4-windows-amd64.zip`,
-    sha256: '791970d2071191db54cbcc3a1fb5db22ccfc9a771640f30cf7624d6fc10e143f',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.5-windows-amd64.zip`,
+    sha256: '26c548c274d53afed4102a74e36488fb823d5665083f0056fc37a9f3020ba6cb',
   },
   {
     key: 'linux-amd64',
     platform: 'Linux',
     architecture: 'AMD64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.4-linux-amd64.tar.gz`,
-    sha256: '9063b3d349172a79e61b89fb6c01c815874c82eaf63741d1034cba330125913c',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.5-linux-amd64.tar.gz`,
+    sha256: '5539b214e14e6d2f1a7ecf4cbf3a973d5d9b6b8d65acd6d9cf2f5a2c7a74030a',
   },
   {
     key: 'darwin-amd64',
     platform: 'macOS',
     architecture: 'Intel / AMD64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.4-darwin-amd64.tar.gz`,
-    sha256: '10bda73072fc8a9ddc68cc4e96e569ea76241e77553c17c4b5ca5b7a9c606271',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.5-darwin-amd64.tar.gz`,
+    sha256: 'ce79b6b059338bbcdce6ddf6ee6d40bff34556c47d33b32fec761144ebf5742b',
   },
   {
     key: 'darwin-arm64',
     platform: 'macOS',
     architecture: 'Apple Silicon / ARM64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.4-darwin-arm64.tar.gz`,
-    sha256: '6ee3b40eacd8b94d2b7b95aaa4a0a9219173226f2bd3d239f132f49448d536ba',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.5-darwin-arm64.tar.gz`,
+    sha256: '950fb844cea2c78e9f49ffab0e914e8ec8ed5dabbd3a300057cde3cfaf2ac35c',
   },
 ]
 
@@ -62,6 +63,7 @@ export const RELEASE = {
   stabilizationBlock: STABILIZATION_BLOCK,
   fairnessBlock: FAIRNESS_BLOCK,
   livenessV3Block: LIVENESS_V3_BLOCK,
+  livenessV4Block: LIVENESS_V4_BLOCK,
 }
 
 export function releaseLabel() {

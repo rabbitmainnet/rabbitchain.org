@@ -104,7 +104,7 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
                 : 'Rabbit Testnet recent producer count loading'}
             >
               <i aria-hidden="true" />
-              <span>RECENT ACTIVE PRODUCERS</span>
+              <span>RECENT BLOCK PRODUCERS</span>
               <strong>{activeMiners ?? '—'}</strong>
               <small>UNIQUE PRODUCERS · LAST {activeMinersWindow} BLOCKS</small>
             </div>
