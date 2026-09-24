@@ -58,7 +58,7 @@ const META = {
   '/releases': ['Releases — Rabbit Chain', 'Official Rabbit Core V2.3.5 release and SHA-256 verification center for the current public Testnet packages.'],
   '/about': ['About Rabbit Chain', 'Rabbit Chain project principles, architecture and public launch model.'],
   '/whitepaper': ['Whitepaper — Rabbit Chain', 'Read Rabbit Chain Technical Whitepaper v1.5 covering LCQ Consensus, the historical block 77,000 Liveness V3 record, architecture, mining, economics, security and Rabbit Core V2.3.5 with Liveness V4 active from block 97,991.'],
-  '/community': ['Community — Rabbit Chain', 'Official Rabbit Chain GitHub, X, Discord and community resources.'],
+  '/community': ['Community — Rabbit Chain', 'Official Rabbit Chain GitHub, X, Discord, Instagram, Facebook and community resources.'],
   '/status': ['Network Status — Rabbit Chain', 'Official Rabbit Testnet RPC, WebSocket, explorer, downloads and planned-service status.'],
   '/privacy-policy': ['Privacy Policy — Rabbit Chain', 'Rabbit Chain privacy policy.'],
   '/terms-and-conditions': ['Terms & Conditions — Rabbit Chain', 'Rabbit Chain terms and conditions.'],

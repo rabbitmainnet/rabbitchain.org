@@ -29,6 +29,8 @@ export default function Footer() {
             <a href="https://x.com/rabbit_mainnet" target="_blank" rel="noreferrer" aria-label="Rabbit Chain on X" title="X / Twitter"><img src="/social/x.svg" alt="" /></a>
             <a href="https://discord.gg/TBWspuEZss" target="_blank" rel="noreferrer" aria-label="Rabbit Chain Discord" title="Discord"><img src="/social/discord.svg" alt="" /></a>
             <a href="https://github.com/rabbitmainnet" target="_blank" rel="noreferrer" aria-label="Rabbit Chain on GitHub" title="GitHub"><img src="/social/github.svg" alt="" /></a>
+            <a href="https://www.instagram.com/rabbit_chain/" target="_blank" rel="noreferrer" aria-label="Rabbit Chain on Instagram" title="Instagram"><img src="/social/instagram.svg" alt="" /></a>
+            <a href="https://web.facebook.com/people/Rabbit-Chain/61594695301840/" target="_blank" rel="noreferrer" aria-label="Rabbit Chain on Facebook" title="Facebook"><img src="/social/facebook.svg" alt="" /></a>
           </div>
         </div>
         {columns.map(([title, items]) => (
