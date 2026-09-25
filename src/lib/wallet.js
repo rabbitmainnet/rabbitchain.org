@@ -51,7 +51,7 @@ let walletConnectBootstrapProviderPromise = null
 // but session acceptance/restoration is delegated to EthereumProvider itself.
 // One migration key is used only to discard the pre-V2 persisted session once.
 const RABBIT_WC_TESTNET_CHAIN_ID = 9280
-const RABBIT_WC_SESSION_MIGRATION_KEY = 'rabbit:walletconnect:required-rabbit-v18'
+const RABBIT_WC_SESSION_MIGRATION_KEY = 'rabbit:walletconnect:mobile-v19'
 const RABBIT_WC_BATCH_MIGRATION_KEY = 'rabbit:walletconnect:batch-v7'
 const RABBIT_WC_OPTIONAL_CHAIN_MIGRATION_KEY = 'rabbit:walletconnect:optional-chain-v10'
 const RABBIT_WC_SINGLE_PAIR_MIGRATION_KEY = 'rabbit:walletconnect:single-pair-v11'
@@ -358,18 +358,18 @@ async function getWalletConnectProvider() {
         projectId: REOWN_PROJECT_ID,
         metadata: WALLETCONNECT_METADATA,
         showQrModal: true,
-        // V18: Rabbit Testnet is the transaction chain required by Rabbit Platform.
-        // Other configured EVM chains remain optional for wallet interoperability.
-        chains: [RABBIT_WC_TESTNET_CHAIN_ID],
-        methods: ['eth_sendTransaction'],
-        events: ['chainChanged','accountsChanged'],
-        optionalChains: walletConnectRequestedChains().filter(
-          (chainId) => chainId !== RABBIT_WC_TESTNET_CHAIN_ID
-        ),
-        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','wallet_sendCalls','wallet_getCallsStatus','wallet_showCallsStatus','wallet_getCapabilities','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
+        // V19: follow the current WalletConnect interoperability model.
+        // Rabbit Testnet remains proposed, but wallets may establish the session
+        // even when they do not support every custom EVM chain.
+        optionalChains: walletConnectRequestedChains(),
+        optionalMethods: ['eth_sendTransaction','wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','wallet_sendCalls','wallet_getCallsStatus','wallet_showCallsStatus','wallet_getCapabilities','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
         optionalEvents: ['chainChanged','accountsChanged'],
         rpcMap,
-        qrModalOptions: { themeMode: 'light' }
+        disableProviderPing: true,
+        qrModalOptions: {
+          themeMode: 'light',
+          enableMobileFullScreen: true,
+        }
       })
     })
   }
