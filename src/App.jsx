@@ -11,17 +11,14 @@ import {
   clearWalletPreference,
   connectWallet,
   connectMetaMaskConnect,
-  connectWalletConnect,
   detectInjectedWallets,
   friendlyWalletError,
   getWalletPreference,
   getWalletSnapshot,
-  restoreWalletConnect,
   saveWalletPreference,
   switchOrAddNetwork,
 } from './lib/wallet'
 
-const RemoteWalletBridge = lazy(() => import('./components/RemoteWalletBridge'))
 const Home = lazy(() => import('./pages/Home'))
 const Testnet = lazy(() => import('./pages/Testnet'))
 const Mainnet = lazy(() => import('./pages/Mainnet'))
@@ -98,12 +95,10 @@ function PageLoader() {
 export default function App() {
   const location = useLocation()
   const [walletModalOpen, setWalletModalOpen] = useState(false)
-  const [remoteWalletEnabled, setRemoteWalletEnabled] = useState(false)
   const [walletDrawerOpen, setWalletDrawerOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [provider, setProvider] = useState(null)
   const [walletName, setWalletName] = useState(null)
-  const [walletKind, setWalletKind] = useState(null)
   const [walletState, setWalletState] = useState({ account: null, chainId: null, chainIdHex: null })
   const [pendingNetwork, setPendingNetwork] = useState(null)
   const [toastMessage, setToastMessage] = useState('')
@@ -119,7 +114,6 @@ export default function App() {
   function applyWallet(wallet, state, { openDrawer = true } = {}) {
     setProvider(wallet.provider)
     setWalletName(wallet.name)
-    setWalletKind(wallet.kind || 'injected')
     setWalletState(state)
     saveWalletPreference(wallet)
     setWalletModalOpen(false)
@@ -152,15 +146,6 @@ export default function App() {
     }
   }
 
-  async function selectWalletConnect() {
-    try {
-      const wallet = await connectWalletConnect()
-      const state = await getWalletSnapshot(wallet.provider)
-      await finishConnection(wallet, state)
-    } catch (error) {
-      toast(friendlyWalletError(error, 'WalletConnect connection failed'))
-    }
-  }
 
   async function selectMetaMaskConnect() {
     try {
@@ -170,68 +155,6 @@ export default function App() {
     } catch (error) {
       toast(friendlyWalletError(error, 'MetaMask connection failed'))
     }
-  }
-
-  async function selectOtherWallets() {
-    setWalletModalOpen(false)
-    setRemoteWalletEnabled(true)
-
-    try {
-      const {
-        openRabbitRemoteWallets,
-      } = await import('./lib/remoteWallets')
-
-      await openRabbitRemoteWallets()
-    } catch (error) {
-      setRemoteWalletEnabled(false)
-
-      toast(
-        friendlyWalletError(
-          error,
-          'Wallet connection failed'
-        )
-      )
-    }
-  }
-
-  function handleRemoteWalletConnected({
-    provider: nextProvider,
-    name,
-    state,
-  }) {
-    setRemoteWalletEnabled(true)
-    setProvider(nextProvider)
-    setWalletName(name || 'WalletConnect wallet')
-    setWalletKind('appkit')
-    setWalletState(state)
-    setPendingNetwork(null)
-    setWalletModalOpen(false)
-    setWalletDrawerOpen(false)
-  }
-
-  function handleRemoteWalletDisconnected() {
-    if (walletKind !== 'appkit') return
-
-    setRemoteWalletEnabled(false)
-    clearWalletPreference()
-    setProvider(null)
-    setWalletName(null)
-    setWalletKind(null)
-    setPendingNetwork(null)
-
-    setWalletState({
-      account: null,
-      chainId: null,
-      chainIdHex: null,
-    })
-
-    setWalletDrawerOpen(false)
-  }
-
-  function handleRemoteWalletIncompatible(name) {
-    toast(
-      `${name || 'This wallet'} connected, but did not authorize Rabbit Testnet (eip155:9280). Use another compatible wallet or open RabbitChain.org inside that wallet's browser.`
-    )
   }
 
   async function switchNetwork(network) {
@@ -254,7 +177,6 @@ export default function App() {
     clearWalletPreference()
     setProvider(null)
     setWalletName(null)
-    setWalletKind(null)
     setPendingNetwork(null)
     setWalletState({ account: null, chainId: null, chainIdHex: null })
     setWalletDrawerOpen(false)
@@ -263,8 +185,7 @@ export default function App() {
 
   async function disconnect() {
     try {
-      if (walletKind === 'walletconnect' && provider?.disconnect) await provider.disconnect()
-      else await provider?.request?.({ method: 'wallet_revokePermissions', params: [{ eth_accounts: {} }] })
+      await provider?.request?.({ method: 'wallet_revokePermissions', params: [{ eth_accounts: {} }] })
     } catch {}
     clearSession()
   }
@@ -298,10 +219,23 @@ export default function App() {
       if (!saved) return
       try {
         let wallet = null
-        if (saved.kind === 'walletconnect') wallet = await restoreWalletConnect()
-        else {
-          const wallets = await detectInjectedWallets(300)
-          wallet = wallets.find((item) => item.rdns === saved.rdns) || wallets.find((item) => item.name === saved.name)
+
+        if (saved.kind === 'injected') {
+          const wallets =
+            await detectInjectedWallets(300)
+
+          wallet =
+            wallets.find(
+              (item) =>
+                item.rdns === saved.rdns
+            ) ||
+            wallets.find(
+              (item) =>
+                item.name === saved.name
+            )
+        } else {
+          clearWalletPreference()
+          return
         }
         if (!wallet || cancelled) return
         const state = await getWalletSnapshot(wallet.provider)
@@ -342,7 +276,28 @@ export default function App() {
       else setWalletState((state) => ({ ...state, account: accounts[0] }))
     }
     const onChain = async () => { try { setWalletState(await getWalletSnapshot(provider)) } catch {} }
-    const onDisconnect = () => clearSession('Wallet session ended')
+    const onDisconnect = () => {
+      window.setTimeout(async () => {
+        try {
+          const accounts =
+            await provider.request({
+              method: 'eth_accounts',
+            })
+
+          if (
+            Array.isArray(accounts) &&
+            accounts.length === 0
+          ) {
+            clearSession(
+              'Wallet disconnected from RabbitChain.org'
+            )
+          }
+        } catch {
+          // Transport/mobile app transition:
+          // não desconecta a interface por erro temporário.
+        }
+      }, 2500)
+    }
     provider.on?.('accountsChanged', onAccounts)
     provider.on?.('chainChanged', onChain)
     provider.on?.('disconnect', onDisconnect)
@@ -429,16 +384,6 @@ export default function App() {
         </AnimatePresence>
       </Suspense>
       {!embeddedApp && <Footer />}
-      {remoteWalletEnabled && (
-        <Suspense fallback={null}>
-          <RemoteWalletBridge
-            onConnected={handleRemoteWalletConnected}
-            onDisconnected={handleRemoteWalletDisconnected}
-            onIncompatible={handleRemoteWalletIncompatible}
-          />
-        </Suspense>
-      )}
-
       <WalletModal
         open={walletModalOpen}
         onClose={() => {
@@ -447,7 +392,6 @@ export default function App() {
         }}
         onSelect={selectWallet}
         onMetaMaskConnect={selectMetaMaskConnect}
-        onOtherWallets={selectOtherWallets}
       />
       <WalletDrawer open={walletDrawerOpen} state={walletState} walletName={walletName} onClose={() => setWalletDrawerOpen(false)} onDisconnect={disconnect} onSwitch={switchNetwork} toast={toast} />
       <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />

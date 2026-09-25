@@ -6,7 +6,6 @@ import {
 
 import {
   ArrowRight,
-  QrCode,
   ShieldCheck,
   Smartphone,
   Wallet,
@@ -17,7 +16,7 @@ import {
   detectInjectedWallets,
 } from '../lib/wallet'
 
-function isRealMetaMask(wallet) {
+function isMetaMask(wallet) {
   const name =
     String(wallet?.name || '').toLowerCase()
 
@@ -36,7 +35,6 @@ export default function WalletModal({
   onClose,
   onSelect,
   onMetaMaskConnect,
-  onOtherWallets,
 }) {
   const [wallets, setWallets] =
     useState([])
@@ -49,47 +47,41 @@ export default function WalletModal({
     setMetaMaskLoading,
   ] = useState(false)
 
-  const [
-    otherLoading,
-    setOtherLoading,
-  ] = useState(false)
-
   const hasInstalledMetaMask =
     useMemo(
-      () => wallets.some(isRealMetaMask),
+      () => wallets.some(isMetaMask),
       [wallets]
     )
 
   useEffect(() => {
     if (!open) return
 
-    let alive = true
+    let active = true
 
     setLoading(true)
 
-    detectInjectedWallets()
+    detectInjectedWallets(450)
       .then((items) => {
-        if (!alive) return
+        if (!active) return
 
         setWallets(items)
         setLoading(false)
       })
       .catch(() => {
-        if (!alive) return
+        if (!active) return
 
         setWallets([])
         setLoading(false)
       })
 
     return () => {
-      alive = false
+      active = false
     }
   }, [open])
 
   useEffect(() => {
     if (!open) {
       setMetaMaskLoading(false)
-      setOtherLoading(false)
     }
   }, [open])
 
@@ -100,16 +92,6 @@ export default function WalletModal({
       await onMetaMaskConnect()
     } finally {
       setMetaMaskLoading(false)
-    }
-  }
-
-  async function openOtherWallets() {
-    setOtherLoading(true)
-
-    try {
-      await onOtherWallets()
-    } finally {
-      setOtherLoading(false)
     }
   }
 
@@ -149,15 +131,15 @@ export default function WalletModal({
         </div>
 
         <p className="wallet-modal-intro">
-          Choose a wallet already installed on
-          this device, use MetaMask, or browse
-          more compatible wallets.
+          Connect an installed EVM wallet or
+          use the official MetaMask mobile
+          connection.
         </p>
 
         {(loading || wallets.length > 0) && (
           <>
             <div className="wallet-section-label">
-              <span>ON THIS DEVICE</span>
+              <span>AVAILABLE ON THIS DEVICE</span>
               <i />
             </div>
 
@@ -239,34 +221,21 @@ export default function WalletModal({
           </>
         )}
 
-        <div className="wallet-section-label">
-          <span>MORE WALLETS</span>
-          <i />
-        </div>
+        {!loading &&
+          wallets.length === 0 && (
+            <div className="wallet-mobile-row active">
+              <Smartphone size={18} />
 
-        <div className="wallet-connect-featured">
-          <button
-            type="button"
-            onClick={openOtherWallets}
-            disabled={otherLoading}
-          >
-            <span className="wallet-connect-mark">
-              <QrCode size={22} />
-            </span>
+              <div>
+                <b>Using another mobile wallet?</b>
 
-            <span>
-              <b>More wallets</b>
-
-              <small>
-                {otherLoading
-                  ? 'Loading wallets…'
-                  : 'Trust · Rainbow · Coinbase & more'}
-              </small>
-            </span>
-
-            <ArrowRight size={17} />
-          </button>
-        </div>
+                <small>
+                  Open RabbitChain.org inside
+                  that wallet's built-in browser.
+                </small>
+              </div>
+            </div>
+          )}
 
         <div className="wallet-security">
           <ShieldCheck size={16} />
