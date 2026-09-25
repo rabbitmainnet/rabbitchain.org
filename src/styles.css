@@ -6518,3 +6518,9 @@ footer {
   }
 }
 /* END RABBIT_PLATFORM_HERO_POLISH_V1 */
+
+/* RABBIT_HOME_SWAP_DIVIDER_V1 */
+.home-platform-final.home-platform-swap-only{
+  border-bottom:1px solid var(--line);
+}
+/* END RABBIT_HOME_SWAP_DIVIDER_V1 */
