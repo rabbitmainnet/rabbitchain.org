@@ -18,6 +18,7 @@ import {
   saveWalletPreference,
   switchOrAddNetwork,
 } from './lib/wallet'
+import { connectWalletConnect } from './lib/walletconnect'
 
 const Home = lazy(() => import('./pages/Home'))
 const Testnet = lazy(() => import('./pages/Testnet'))
@@ -99,6 +100,7 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [provider, setProvider] = useState(null)
   const [walletName, setWalletName] = useState(null)
+  const [walletKind, setWalletKind] = useState(null)
   const [walletState, setWalletState] = useState({ account: null, chainId: null, chainIdHex: null })
   const [pendingNetwork, setPendingNetwork] = useState(null)
   const [toastMessage, setToastMessage] = useState('')
@@ -114,6 +116,7 @@ export default function App() {
   function applyWallet(wallet, state, { openDrawer = true } = {}) {
     setProvider(wallet.provider)
     setWalletName(wallet.name)
+    setWalletKind(wallet.kind || 'injected')
     setWalletState(state)
     saveWalletPreference(wallet)
     setWalletModalOpen(false)
@@ -147,6 +150,27 @@ export default function App() {
   }
 
 
+  async function selectWalletConnect(mode = 'qr') {
+    setWalletModalOpen(false)
+
+    try {
+      const wallet =
+        await connectWalletConnect(mode)
+
+      await finishConnection(
+        wallet,
+        wallet.state
+      )
+    } catch (error) {
+      toast(
+        friendlyWalletError(
+          error,
+          'WalletConnect connection failed'
+        )
+      )
+    }
+  }
+
   async function selectMetaMaskConnect() {
     try {
       const wallet = await connectMetaMaskConnect()
@@ -177,6 +201,7 @@ export default function App() {
     clearWalletPreference()
     setProvider(null)
     setWalletName(null)
+    setWalletKind(null)
     setPendingNetwork(null)
     setWalletState({ account: null, chainId: null, chainIdHex: null })
     setWalletDrawerOpen(false)
@@ -185,8 +210,23 @@ export default function App() {
 
   async function disconnect() {
     try {
-      await provider?.request?.({ method: 'wallet_revokePermissions', params: [{ eth_accounts: {} }] })
+      if (
+        walletKind === 'walletconnect' &&
+        provider?.disconnect
+      ) {
+        await provider.disconnect()
+      } else {
+        await provider?.request?.({
+          method: 'wallet_revokePermissions',
+          params: [
+            {
+              eth_accounts: {},
+            },
+          ],
+        })
+      }
     } catch {}
+
     clearSession()
   }
 
@@ -392,6 +432,7 @@ export default function App() {
         }}
         onSelect={selectWallet}
         onMetaMaskConnect={selectMetaMaskConnect}
+        onWalletConnect={selectWalletConnect}
       />
       <WalletDrawer open={walletDrawerOpen} state={walletState} walletName={walletName} onClose={() => setWalletDrawerOpen(false)} onDisconnect={disconnect} onSwitch={switchNetwork} toast={toast} />
       <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />

@@ -6,6 +6,8 @@ import {
 
 import {
   ArrowRight,
+  LayoutGrid,
+  QrCode,
   ShieldCheck,
   Smartphone,
   Wallet,
@@ -18,10 +20,12 @@ import {
 
 function isMetaMask(wallet) {
   const name =
-    String(wallet?.name || '').toLowerCase()
+    String(wallet?.name || '')
+      .toLowerCase()
 
   const rdns =
-    String(wallet?.rdns || '').toLowerCase()
+    String(wallet?.rdns || '')
+      .toLowerCase()
 
   return (
     name === 'metamask' ||
@@ -30,11 +34,39 @@ function isMetaMask(wallet) {
   )
 }
 
+function Badge({
+  children,
+  active = false,
+}) {
+  return (
+    <span
+      style={{
+        marginLeft: 'auto',
+        padding: '4px 7px',
+        borderRadius: '5px',
+        fontSize: '10px',
+        fontWeight: 800,
+        letterSpacing: '.04em',
+        background: active
+          ? '#ddf7e7'
+          : '#edf1f5',
+        color: active
+          ? '#159455'
+          : '#5c6570',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {children}
+    </span>
+  )
+}
+
 export default function WalletModal({
   open,
   onClose,
   onSelect,
   onMetaMaskConnect,
+  onWalletConnect,
 }) {
   const [wallets, setWallets] =
     useState([])
@@ -43,55 +75,83 @@ export default function WalletModal({
     useState(false)
 
   const [
-    metaMaskLoading,
-    setMetaMaskLoading,
-  ] = useState(false)
+    connecting,
+    setConnecting,
+  ] = useState(null)
 
-  const hasInstalledMetaMask =
+  const metaMask =
     useMemo(
-      () => wallets.some(isMetaMask),
+      () => wallets.find(isMetaMask),
+      [wallets]
+    )
+
+  const otherInstalled =
+    useMemo(
+      () =>
+        wallets.filter(
+          (wallet) =>
+            !isMetaMask(wallet)
+        ),
       [wallets]
     )
 
   useEffect(() => {
     if (!open) return
 
-    let active = true
+    let alive = true
 
     setLoading(true)
 
     detectInjectedWallets(450)
       .then((items) => {
-        if (!active) return
+        if (!alive) return
 
         setWallets(items)
         setLoading(false)
       })
       .catch(() => {
-        if (!active) return
+        if (!alive) return
 
         setWallets([])
         setLoading(false)
       })
 
     return () => {
-      active = false
+      alive = false
     }
   }, [open])
 
   useEffect(() => {
     if (!open) {
-      setMetaMaskLoading(false)
+      setConnecting(null)
     }
   }, [open])
 
-  async function openMetaMask() {
-    setMetaMaskLoading(true)
+  async function connectWC(mode) {
+    setConnecting(
+      mode === 'all'
+        ? 'all'
+        : 'wc'
+    )
 
     try {
-      await onMetaMaskConnect()
+      await onWalletConnect(mode)
     } finally {
-      setMetaMaskLoading(false)
+      setConnecting(null)
+    }
+  }
+
+  async function connectMetaMask() {
+    setConnecting('metamask')
+
+    try {
+      if (metaMask) {
+        await onSelect(metaMask)
+      } else {
+        await onMetaMaskConnect()
+      }
+    } finally {
+      setConnecting(null)
     }
   }
 
@@ -105,6 +165,9 @@ export default function WalletModal({
     >
       <div
         className="wallet-modal"
+        style={{
+          maxWidth: 390,
+        }}
         onMouseDown={(event) =>
           event.stopPropagation()
         }
@@ -114,135 +177,187 @@ export default function WalletModal({
       >
         <div className="wallet-modal-head">
           <div>
-            <span>RABBIT WALLET</span>
+            <span>
+              RABBIT CHAIN
+            </span>
 
             <h3 id="wallet-modal-title">
-              Connect wallet
+              Connect Wallet
             </h3>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close wallet connection"
+            aria-label="Close"
           >
             <X size={18} />
           </button>
         </div>
 
-        <p className="wallet-modal-intro">
-          Connect an installed EVM wallet or
-          use the official MetaMask mobile
-          connection.
-        </p>
+        <div className="wallet-list">
+          <button
+            type="button"
+            onClick={() =>
+              connectWC('qr')
+            }
+            disabled={
+              connecting !== null
+            }
+          >
+            <span className="wallet-icon">
+              <QrCode size={21} />
+            </span>
 
-        {(loading || wallets.length > 0) && (
-          <>
-            <div className="wallet-section-label">
-              <span>AVAILABLE ON THIS DEVICE</span>
-              <i />
-            </div>
+            <span>
+              <b>
+                WalletConnect
+              </b>
 
-            <div className="wallet-list">
-              {loading && (
-                <div className="wallet-loading">
-                  Detecting wallets…
-                </div>
+              <small>
+                {connecting === 'wc'
+                  ? 'Opening QR…'
+                  : 'Connect PC to your mobile wallet'}
+              </small>
+            </span>
+
+            <Badge>
+              QR CODE
+            </Badge>
+          </button>
+
+          <button
+            type="button"
+            onClick={connectMetaMask}
+            disabled={
+              connecting !== null
+            }
+          >
+            <span className="wallet-icon">
+              {metaMask?.icon ? (
+                <img
+                  src={metaMask.icon}
+                  alt=""
+                />
+              ) : (
+                <Smartphone
+                  size={21}
+                />
               )}
+            </span>
 
-              {!loading &&
-                wallets.map((wallet) => (
-                  <button
-                    type="button"
-                    key={
-                      wallet.rdns ||
-                      wallet.name
-                    }
-                    onClick={() =>
-                      onSelect(wallet)
-                    }
-                  >
-                    <span className="wallet-icon">
-                      {wallet.icon ? (
-                        <img
-                          src={wallet.icon}
-                          alt=""
-                        />
-                      ) : (
-                        <Wallet size={19} />
-                      )}
-                    </span>
+            <span>
+              <b>
+                MetaMask
+              </b>
 
-                    <span>
-                      <b>{wallet.name}</b>
+              <small>
+                {connecting ===
+                'metamask'
+                  ? 'Opening MetaMask…'
+                  : metaMask
+                    ? 'Browser extension'
+                    : 'Mobile · QR · browser'}
+              </small>
+            </span>
 
-                      <small>
-                        Installed wallet
-                      </small>
-                    </span>
+            <Badge active={Boolean(metaMask)}>
+              {metaMask
+                ? 'INSTALLED'
+                : 'MOBILE'}
+            </Badge>
+          </button>
 
-                    <ArrowRight size={16} />
-                  </button>
-                ))}
-            </div>
-          </>
-        )}
-
-        {!hasInstalledMetaMask && (
-          <>
-            <div className="wallet-section-label">
-              <span>METAMASK</span>
-              <i />
-            </div>
-
-            <div className="wallet-connect-featured">
+          {otherInstalled.map(
+            (wallet) => (
               <button
                 type="button"
-                onClick={openMetaMask}
-                disabled={metaMaskLoading}
+                key={
+                  wallet.rdns ||
+                  wallet.name
+                }
+                onClick={() =>
+                  onSelect(wallet)
+                }
+                disabled={
+                  connecting !== null
+                }
               >
-                <span className="wallet-connect-mark">
-                  <Smartphone size={22} />
+                <span className="wallet-icon">
+                  {wallet.icon ? (
+                    <img
+                      src={wallet.icon}
+                      alt=""
+                    />
+                  ) : (
+                    <Wallet
+                      size={20}
+                    />
+                  )}
                 </span>
 
                 <span>
-                  <b>MetaMask</b>
+                  <b>
+                    {wallet.name}
+                  </b>
 
                   <small>
-                    {metaMaskLoading
-                      ? 'Opening MetaMask…'
-                      : 'Mobile · QR · browser extension'}
+                    Browser extension
                   </small>
                 </span>
 
-                <ArrowRight size={17} />
+                <Badge active>
+                  INSTALLED
+                </Badge>
               </button>
-            </div>
-          </>
-        )}
-
-        {!loading &&
-          wallets.length === 0 && (
-            <div className="wallet-mobile-row active">
-              <Smartphone size={18} />
-
-              <div>
-                <b>Using another mobile wallet?</b>
-
-                <small>
-                  Open RabbitChain.org inside
-                  that wallet's built-in browser.
-                </small>
-              </div>
-            </div>
+            )
           )}
+
+          <button
+            type="button"
+            onClick={() =>
+              connectWC('all')
+            }
+            disabled={
+              connecting !== null
+            }
+          >
+            <span className="wallet-icon">
+              <LayoutGrid
+                size={21}
+              />
+            </span>
+
+            <span>
+              <b>
+                All Wallets
+              </b>
+
+              <small>
+                {connecting === 'all'
+                  ? 'Loading wallets…'
+                  : 'Browse compatible mobile wallets'}
+              </small>
+            </span>
+
+            <Badge>
+              600+
+            </Badge>
+          </button>
+        </div>
+
+        {loading && (
+          <div className="wallet-loading">
+            Detecting installed wallets…
+          </div>
+        )}
 
         <div className="wallet-security">
           <ShieldCheck size={16} />
 
           <span>
-            Rabbit never asks for your seed
-            phrase or private key.
+            Rabbit never asks for your
+            seed phrase or private key.
           </span>
         </div>
       </div>

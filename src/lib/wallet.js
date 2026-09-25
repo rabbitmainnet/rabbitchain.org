@@ -567,6 +567,18 @@ export async function connectWallet(
 export async function getWalletSnapshot(
   provider
 ) {
+  if (provider?.__rabbitWalletConnect) {
+    const account =
+      provider.accounts?.[0] ||
+      null
+
+    return {
+      account,
+      chainId: 9280,
+      chainIdHex: '0x2440',
+    }
+  }
+
   if (!provider?.request) {
     return {
       account: null,
@@ -608,6 +620,27 @@ export async function switchOrAddNetwork(
   provider,
   network
 ) {
+  if (provider?.__rabbitWalletConnect) {
+    if (Number(network?.chainId) !== 9280) {
+      throw new Error(
+        'This WalletConnect session is authorized for Rabbit Testnet.'
+      )
+    }
+
+    try {
+      provider.signer?.setDefaultChain?.(
+        'eip155:9280',
+        network.rpcUrl
+      )
+    } catch {}
+
+    try {
+      provider.chainId = 9280
+    } catch {}
+
+    return
+  }
+
   if (!provider?.request) {
     throw new Error(
       'Wallet provider is unavailable.'
