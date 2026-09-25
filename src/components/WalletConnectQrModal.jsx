@@ -1,5 +1,6 @@
 import {
   Copy,
+  Search,
   QrCode,
   X,
 } from 'lucide-react'
@@ -7,6 +8,10 @@ import {
 import {
   QRCodeSVG,
 } from 'qrcode.react'
+
+import {
+  openWalletConnectExplorer,
+} from '../lib/walletconnect'
 
 export default function WalletConnectQrModal({
   open,
@@ -144,39 +149,106 @@ export default function WalletConnectQrModal({
                 Scan with your mobile wallet
               </p>
 
-              <button
-                type="button"
-                onClick={copyUri}
+              <div
                 style={{
                   display:
-                    'inline-flex',
+                    'flex',
+
+                  justifyContent:
+                    'center',
 
                   alignItems:
                     'center',
 
+                  flexWrap:
+                    'wrap',
+
                   gap:
-                    7,
-
-                  padding:
-                    '8px 13px',
-
-                  borderRadius:
-                    999,
-
-                  border:
-                    '1px solid rgba(127,127,127,.25)',
-
-                  background:
-                    'transparent',
-
-                  cursor:
-                    'pointer',
+                    10,
                 }}
               >
-                <Copy size={14} />
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      await openWalletConnectExplorer()
+                    } catch {
+                      toast?.(
+                        'Could not open wallet list'
+                      )
+                    }
+                  }}
+                  style={{
+                    display:
+                      'inline-flex',
 
-                Copy link
-              </button>
+                    alignItems:
+                      'center',
+
+                    gap:
+                      7,
+
+                    padding:
+                      '9px 14px',
+
+                    borderRadius:
+                      999,
+
+                    border:
+                      '1px solid rgba(127,127,127,.25)',
+
+                    background:
+                      '#111111',
+
+                    color:
+                      '#ffffff',
+
+                    cursor:
+                      'pointer',
+
+                    fontWeight:
+                      700,
+                  }}
+                >
+                  <Search size={14} />
+
+                  Choose wallet
+                </button>
+
+                <button
+                  type="button"
+                  onClick={copyUri}
+                  style={{
+                    display:
+                      'inline-flex',
+
+                    alignItems:
+                      'center',
+
+                    gap:
+                      7,
+
+                    padding:
+                      '9px 14px',
+
+                    borderRadius:
+                      999,
+
+                    border:
+                      '1px solid rgba(127,127,127,.25)',
+
+                    background:
+                      'transparent',
+
+                    cursor:
+                      'pointer',
+                  }}
+                >
+                  <Copy size={14} />
+
+                  Copy link
+                </button>
+              </div>
             </>
           ) : (
             <div
