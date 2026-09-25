@@ -124,6 +124,59 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
         </div>
       </section>
 
+      <section className="home-platform-final home-platform-swap-only">
+        <div className="shell">
+
+          <div className="home-platform-final-head">
+            <div>
+              <span className="section-kicker">
+                RABBIT PLATFORM
+              </span>
+
+              <h2>
+                One network. One official application layer.
+              </h2>
+            </div>
+
+            <div className="home-platform-final-intro">
+              <p>
+                Wallet-connected network utilities in one coherent
+                product surface. The same official Swap interface is
+                available here and inside Rabbit Platform.
+              </p>
+
+              <Link className="button primary" to="/platform">
+                Explore Platform <span>→</span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="home-platform-swap-stage">
+
+            <div className="home-platform-swap-network">
+              <span>APPLICATION NETWORK</span>
+
+              <PlatformNetworkSwitch
+                value={platformNetwork}
+                onChange={setPlatformNetwork}
+              />
+            </div>
+
+            <RabbitSwapPanel
+              networkKey={platformNetwork}
+              walletState={walletState}
+              walletProvider={walletProvider}
+              onConnect={onConnect}
+              onSwitchNetwork={onAddNetwork}
+              toast={toast}
+              variant="home"
+            />
+
+          </div>
+
+        </div>
+      </section>
+
       <section className="home-v2-manifesto-section">
         <div className="shell home-v2-manifesto-grid">
           <div className="home-v2-manifesto-copy">
@@ -175,59 +228,6 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
             </div>
           </div>
           <Link className="inline-link light-link" to="/lcq">Deep dive into LCQ <ArrowRight size={15} /></Link>
-        </div>
-      </section>
-
-      <section className="home-platform-final home-platform-swap-only">
-        <div className="shell">
-
-          <div className="home-platform-final-head">
-            <div>
-              <span className="section-kicker">
-                RABBIT PLATFORM
-              </span>
-
-              <h2>
-                One network. One official application layer.
-              </h2>
-            </div>
-
-            <div className="home-platform-final-intro">
-              <p>
-                Wallet-connected network utilities in one coherent
-                product surface. The same official Swap interface is
-                available here and inside Rabbit Platform.
-              </p>
-
-              <Link className="button primary" to="/platform">
-                Explore Platform <span>→</span>
-              </Link>
-            </div>
-          </div>
-
-          <div className="home-platform-swap-stage">
-
-            <div className="home-platform-swap-network">
-              <span>APPLICATION NETWORK</span>
-
-              <PlatformNetworkSwitch
-                value={platformNetwork}
-                onChange={setPlatformNetwork}
-              />
-            </div>
-
-            <RabbitSwapPanel
-              networkKey={platformNetwork}
-              walletState={walletState}
-              walletProvider={walletProvider}
-              onConnect={onConnect}
-              onSwitchNetwork={onAddNetwork}
-              toast={toast}
-              variant="home"
-            />
-
-          </div>
-
         </div>
       </section>
 
