@@ -51,7 +51,7 @@ let walletConnectBootstrapProviderPromise = null
 // but session acceptance/restoration is delegated to EthereumProvider itself.
 // One migration key is used only to discard the pre-V2 persisted session once.
 const RABBIT_WC_TESTNET_CHAIN_ID = 9280
-const RABBIT_WC_SESSION_MIGRATION_KEY = 'rabbit:walletconnect:interactive-v2'
+const RABBIT_WC_SESSION_MIGRATION_KEY = 'rabbit:walletconnect:required-rabbit-v18'
 const RABBIT_WC_BATCH_MIGRATION_KEY = 'rabbit:walletconnect:batch-v7'
 const RABBIT_WC_OPTIONAL_CHAIN_MIGRATION_KEY = 'rabbit:walletconnect:optional-chain-v10'
 const RABBIT_WC_SINGLE_PAIR_MIGRATION_KEY = 'rabbit:walletconnect:single-pair-v11'
@@ -358,11 +358,15 @@ async function getWalletConnectProvider() {
         projectId: REOWN_PROJECT_ID,
         metadata: WALLETCONNECT_METADATA,
         showQrModal: true,
-        // V10: propose Rabbit Testnet in the optional WalletConnect namespace.
-        // This keeps the QR/mobile handshake compatible with wallets that accept
-        // custom EVM chains only through optionalNamespaces.
-        optionalChains: walletConnectRequestedChains(),
-        optionalMethods: ['eth_sendTransaction','wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','wallet_sendCalls','wallet_getCallsStatus','wallet_showCallsStatus','wallet_getCapabilities','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
+        // V18: Rabbit Testnet is the transaction chain required by Rabbit Platform.
+        // Other configured EVM chains remain optional for wallet interoperability.
+        chains: [RABBIT_WC_TESTNET_CHAIN_ID],
+        methods: ['eth_sendTransaction'],
+        events: ['chainChanged','accountsChanged'],
+        optionalChains: walletConnectRequestedChains().filter(
+          (chainId) => chainId !== RABBIT_WC_TESTNET_CHAIN_ID
+        ),
+        optionalMethods: ['wallet_switchEthereumChain','wallet_addEthereumChain','wallet_watchAsset','wallet_sendCalls','wallet_getCallsStatus','wallet_showCallsStatus','wallet_getCapabilities','eth_call','eth_getBalance','eth_getTransactionReceipt','personal_sign','eth_signTypedData'],
         optionalEvents: ['chainChanged','accountsChanged'],
         rpcMap,
         qrModalOptions: { themeMode: 'light' }
@@ -455,7 +459,19 @@ export async function connectWalletConnect() {
   // The init configuration already contains Rabbit Testnet in optionalChains.
   // One explicit user action = one WalletConnect pairing/QR.
   if (!provider.session) {
-    await provider.connect()
+    try {
+      await provider.connect()
+    } catch (error) {
+      if (!walletConnectNeedsCustomChainBootstrap(error)) throw error
+
+      await bootstrapRabbitTestnetViaWalletConnect()
+
+      if (provider.session) {
+        try { await provider.disconnect() } catch {}
+      }
+
+      await provider.connect()
+    }
   }
 
   const testnet = WALLET_NETWORK_LIST.find(
@@ -473,8 +489,8 @@ export async function connectWalletConnect() {
     const peerName = String(provider.session?.peer?.metadata?.name || 'This wallet')
     throw new Error(
       `${peerName} connected, but did not authorize Rabbit Testnet (eip155:9280) in this WalletConnect session. ` +
-      `No second QR was opened. If this is Rabby, open RabbitChain.org inside Rabby's built-in browser; ` +
-      `Rabby currently has a custom-chain WalletConnect namespace limitation.`
+      `This wallet does not currently expose Rabbit Testnet as an approved custom EVM chain through WalletConnect. ` +
+      `Add Rabbit Testnet in the wallet and reconnect, or use another compatible EVM wallet.`
     )
   }
 
@@ -499,6 +515,7 @@ export async function connectWalletConnect() {
 export async function restoreWalletConnect() {
   const provider = await getWalletConnectProvider()
   installWalletConnectSessionModalGuard(provider)
+  await migrateWalletConnectSessionOnce(provider)
   await migrateWalletConnectBatchSessionOnce(provider)
   await migrateWalletConnectOptionalChainOnce(provider)
   await migrateWalletConnectSinglePairOnce(provider)
