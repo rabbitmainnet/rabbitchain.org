@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Header from './components/Header'
@@ -7,6 +7,8 @@ import WalletModal from './components/WalletModal'
 import WalletDrawer from './components/WalletDrawer'
 import SearchPalette from './components/SearchPalette'
 import BackToTop from './components/BackToTop'
+import RabbitAppKitBridge from './components/RabbitAppKitBridge'
+import { openRabbitAppKit } from './lib/rabbitAppKit'
 import {
   clearWalletPreference,
   connectWallet,
@@ -112,7 +114,10 @@ export default function App() {
     toast._t = setTimeout(() => setToastMessage(''), 3000)
   }
 
-  const openWallet = () => walletState.account ? setWalletDrawerOpen(true) : setWalletModalOpen(true)
+  const openWallet = () => {
+    void openRabbitAppKit(walletState.account ? 'Account' : 'Connect')
+      .catch((error) => toast(friendlyWalletError(error, 'Wallet connection failed')))
+  }
 
   function applyWallet(wallet, state, { openDrawer = true } = {}) {
     setProvider(wallet.provider)
@@ -123,6 +128,35 @@ export default function App() {
     setWalletModalOpen(false)
     if (openDrawer) setWalletDrawerOpen(true)
   }
+
+  const handleRabbitAppKitConnected = useCallback(({ provider: nextProvider, name, state }) => {
+    setProvider(nextProvider)
+    setWalletName(name || 'Connected wallet')
+    setWalletKind('appkit')
+    setWalletState(state)
+    setWalletModalOpen(false)
+    setWalletDrawerOpen(false)
+
+    setPendingNetwork((target) => {
+      if (!target) return null
+      return Number(target.chainId) === Number(state?.chainId) ? null : target
+    })
+  }, [])
+
+  const handleRabbitAppKitDisconnected = useCallback(() => {
+    clearWalletPreference()
+    setProvider(null)
+    setWalletName(null)
+    setWalletKind(null)
+    setPendingNetwork(null)
+    setWalletState({
+      account: null,
+      chainId: null,
+      chainIdHex: null,
+    })
+    setWalletModalOpen(false)
+    setWalletDrawerOpen(false)
+  }, [])
 
   async function finishConnection(wallet, state) {
     applyWallet(wallet, state)
@@ -174,7 +208,14 @@ export default function App() {
     if (!provider) {
       setPendingNetwork(network)
       setWalletDrawerOpen(false)
-      setWalletModalOpen(true)
+      setWalletModalOpen(false)
+
+      try {
+        await openRabbitAppKit('Connect')
+      } catch (error) {
+        toast(friendlyWalletError(error, 'Wallet connection failed'))
+      }
+
       return
     }
     try {
@@ -365,8 +406,10 @@ export default function App() {
         </AnimatePresence>
       </Suspense>
       {!embeddedApp && <Footer />}
-      <WalletModal open={walletModalOpen} onClose={() => { setWalletModalOpen(false); setPendingNetwork(null) }} onSelect={selectWallet} onMetaMaskConnect={selectMetaMaskConnect} onWalletConnect={selectWalletConnect} />
-      <WalletDrawer open={walletDrawerOpen} state={walletState} walletName={walletName} onClose={() => setWalletDrawerOpen(false)} onDisconnect={disconnect} onSwitch={switchNetwork} toast={toast} />
+      <RabbitAppKitBridge
+        onConnected={handleRabbitAppKitConnected}
+        onDisconnected={handleRabbitAppKitDisconnected}
+      />
       <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
       {toastMessage && <div className="toast" role="status" aria-live="polite">{toastMessage}</div>}
       <BackToTop />
