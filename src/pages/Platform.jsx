@@ -560,24 +560,52 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
         <div className="shell platform-v2-hero-grid">
           <div className="platform-v2-copy">
             <span className="hero-eyebrow"><i /> RABBIT PLATFORM · OFFICIAL APPLICATION LAYER</span>
-            <h1>Everything you use on Rabbit. <em>One product surface.</em></h1>
-            <p>{platformNetwork === 'testnet' ? 'Wallet, swaps, liquidity, token creation, verifiable randomness and launches organized as one Testnet workspace — focused on the services available for public Testnet validation.' : 'Wallet, swaps, liquidity, staking, bridging, P2P, launches and token creation organized as one product — with every module showing its real launch state.'}</p>
-            <div className="hero-ctas"><button className="button primary" onClick={onConnect}><Wallet size={16} />{walletState?.account ? 'Manage wallet' : 'Connect wallet'}</button><button
-      className="button secondary"
-      disabled={!selectedNetwork?.walletEnabled}
-      onClick={() => selectedNetwork?.walletEnabled && onAddNetwork?.(selectedNetwork)}
-    >
-      {selectedNetwork?.walletEnabled ? `Add / switch ${selectedNetwork.shortName}` : `${selectedNetwork.shortName} coming later`}
-    </button></div>
+
+            <h1>
+              Everything Rabbit.
+              <em> One workspace.</em>
+            </h1>
+
+            <p>
+              {platformNetwork === 'testnet'
+                ? 'Swap assets, manage liquidity, create tokens and access Rabbit network tools from one official Testnet workspace.'
+                : 'Access Rabbit application modules from one official workspace, with every service showing its real network availability.'}
+            </p>
+
+            <div className="hero-ctas">
+              <button className="button primary" onClick={onConnect}>
+                <Wallet size={16} />
+                {walletState?.account ? 'Manage wallet' : 'Connect wallet'}
+              </button>
+
+              <button
+                className="button secondary"
+                disabled={!selectedNetwork?.walletEnabled}
+                onClick={() => selectedNetwork?.walletEnabled && onAddNetwork?.(selectedNetwork)}
+              >
+                {selectedNetwork?.walletEnabled
+                  ? `Add / switch ${selectedNetwork.shortName}`
+                  : `${selectedNetwork.shortName} coming later`}
+              </button>
+            </div>
+
             <div className="platform-overview-network">
-              <span>APPLICATION NETWORK</span>
+              <div>
+                <span>APPLICATION NETWORK</span>
+                <strong>{networkName}</strong>
+                <small>Chain ID {networkChainId}</small>
+              </div>
+
               <PlatformNetworkSwitch
                 value={platformNetwork}
                 onChange={selectPlatformNetwork}
               />
             </div>
 
-            <div className="platform-principles"><span><ShieldCheck size={15} />Non-custodial wallet connection</span><span><Network size={15} />{networkName} selected</span></div>
+            <div className="platform-principles">
+              <span><ShieldCheck size={15} /> Non-custodial</span>
+              <span className="platform-principle-live"><i /> {platformConfig.status}</span>
+            </div>
           </div>
 
           <div className="platform-v2-window">

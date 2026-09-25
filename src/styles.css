@@ -6329,3 +6329,192 @@ footer {
   border-color:#d6d3e6;
 }
 /* END RABBIT COMMUNITY SOCIAL CARDS V2 */
+
+/* RABBIT_PLATFORM_HERO_POLISH_V1 */
+.platform-v2-hero{
+  position:relative;
+  overflow:hidden;
+  padding:70px 0 76px;
+  background:
+    radial-gradient(650px 430px at 79% 38%,rgba(121,71,255,.13),transparent 68%),
+    radial-gradient(420px 320px at 8% 92%,rgba(227,39,170,.055),transparent 72%),
+    linear-gradient(180deg,#fdfdff 0%,#f6f6fb 100%);
+}
+
+.platform-v2-hero-grid{
+  grid-template-columns:.86fr 1.14fr;
+  gap:72px;
+}
+
+.platform-v2-copy{
+  max-width:520px;
+}
+
+.platform-v2-copy h1{
+  max-width:520px;
+  font-size:clamp(54px,5vw,74px);
+  line-height:.96;
+  letter-spacing:-.058em;
+  margin:25px 0 22px;
+}
+
+.platform-v2-copy>p{
+  max-width:500px;
+  font-size:16px;
+  line-height:1.72;
+  color:#696d7d;
+  margin-bottom:28px;
+}
+
+.platform-v2-copy .hero-ctas{
+  gap:10px;
+}
+
+.platform-overview-network{
+  margin-top:30px;
+  padding:14px 15px 14px 17px;
+  border:1px solid #dedfe8;
+  border-radius:15px;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 10px 30px rgba(31,29,61,.045);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+
+.platform-overview-network>div:first-child{
+  display:grid;
+  gap:2px;
+}
+
+.platform-overview-network>div:first-child>span{
+  font-size:9px;
+  color:#999dac;
+  letter-spacing:.13em;
+  font-weight:850;
+}
+
+.platform-overview-network>div:first-child>strong{
+  font-size:13px;
+  color:#111426;
+}
+
+.platform-overview-network>div:first-child>small{
+  font-size:10px;
+  color:#999dac;
+}
+
+.platform-principles{
+  margin-top:16px;
+  gap:8px;
+}
+
+.platform-principles span{
+  min-height:30px;
+  padding:0 10px;
+  border:1px solid #e2e3eb;
+  border-radius:999px;
+  background:rgba(255,255,255,.68);
+  font-size:10px;
+  color:#6c7080;
+}
+
+.platform-principles .platform-principle-live{
+  color:#b92394;
+}
+
+.platform-principles .platform-principle-live i{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#e327aa;
+  box-shadow:0 0 0 4px rgba(227,39,170,.09);
+}
+
+.platform-v2-window{
+  border-color:#d9dae6;
+  border-radius:24px;
+  box-shadow:
+    0 35px 90px rgba(36,32,74,.12),
+    0 5px 18px rgba(36,32,74,.045);
+  transform:translateY(2px);
+}
+
+.platform-v2-window-head{
+  height:68px;
+  padding:0 22px;
+  background:linear-gradient(180deg,#fff,#fdfdff);
+}
+
+.platform-v2-wallet{
+  padding:16px 22px;
+  background:#f8f8fc;
+}
+
+.platform-v2-module-list{
+  padding:7px 16px 14px;
+}
+
+.platform-v2-module-list>a{
+  min-height:72px;
+  grid-template-columns:30px 32px 1fr auto 18px;
+  gap:11px;
+  padding:0 5px;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease;
+}
+
+.platform-v2-module-list>a:hover{
+  background:#faf9ff;
+}
+
+.platform-v2-module-list>a:first-child{
+  margin:6px 0;
+  padding:0 10px;
+  border:1px solid #dfd7fb;
+  border-radius:13px;
+  background:linear-gradient(90deg,rgba(228,39,170,.045),rgba(84,76,255,.045));
+}
+
+.platform-v2-module-list b{
+  font-size:12px;
+}
+
+.platform-v2-module-list small{
+  font-size:10px;
+  line-height:1.4;
+}
+
+@media (max-width:980px){
+  .platform-v2-copy{
+    max-width:none;
+  }
+
+  .platform-v2-copy h1{
+    max-width:720px;
+  }
+
+  .platform-v2-hero-grid{
+    gap:42px;
+  }
+}
+
+@media (max-width:640px){
+  .platform-v2-hero{
+    padding:46px 0 52px;
+  }
+
+  .platform-v2-copy h1{
+    font-size:clamp(47px,13vw,58px);
+  }
+
+  .platform-overview-network{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .platform-principles span{
+    font-size:9px;
+  }
+}
+/* END RABBIT_PLATFORM_HERO_POLISH_V1 */
