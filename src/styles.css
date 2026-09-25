@@ -6752,3 +6752,77 @@ footer {
 }
 
 /* END RABBIT_SWAP_TOKEN_SELECTOR_UX_V1 */
+
+/* RABBIT_SWAP_TOKEN_SELECTOR_MOBILE_DESKTOP_STYLE_V1 */
+@media (max-width:680px){
+
+  .rabbit-token-backdrop{
+    display:none !important;
+  }
+
+  .rabbit-token-menu{
+    position:absolute !important;
+    z-index:50 !important;
+
+    top:calc(100% + 8px) !important;
+    left:0 !important;
+    right:auto !important;
+    bottom:auto !important;
+
+    width:min(330px,calc(100vw - 32px)) !important;
+    max-width:calc(100vw - 32px) !important;
+    max-height:min(420px,58vh) !important;
+
+    padding:8px !important;
+
+    overflow-y:auto !important;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+
+    border-radius:14px !important;
+    box-shadow:0 20px 55px rgba(18,15,38,.16) !important;
+  }
+
+  .rabbit-token-menu-head{
+    min-height:auto !important;
+    padding:8px 9px 10px !important;
+    position:static !important;
+    top:auto !important;
+    background:#fff;
+  }
+
+  .rabbit-token-menu-head b{
+    font-size:11px !important;
+  }
+
+  .rabbit-token-menu-head small{
+    font-size:9px !important;
+  }
+
+  .rabbit-token-menu-close{
+    width:32px !important;
+    height:32px !important;
+    font-size:21px !important;
+  }
+
+  .rabbit-token-search{
+    min-height:36px !important;
+    margin:8px 7px 6px !important;
+    position:static !important;
+    top:auto !important;
+  }
+
+  .rabbit-token-menu > button{
+    min-height:48px !important;
+    padding:9px !important;
+  }
+
+  .rabbit-token-menu > button b{
+    font-size:12px !important;
+  }
+
+  .rabbit-token-menu > button small{
+    font-size:9px !important;
+  }
+}
+/* END RABBIT_SWAP_TOKEN_SELECTOR_MOBILE_DESKTOP_STYLE_V1 */
