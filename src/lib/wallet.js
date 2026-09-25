@@ -3,6 +3,7 @@ import { REOWN_PROJECT_ID, WALLETCONNECT_METADATA } from '../config/walletconnec
 
 const LAST_WALLET_KEY = 'rabbit:last-wallet'
 let walletConnectProviderPromise = null
+let metaMaskConnectClientPromise = null
 
 // RABBIT_WALLETCONNECT_SESSION_MODAL_GUARD_V17
 // Keep the WalletConnect/AppKit connect modal available while pairing.
@@ -444,6 +445,86 @@ async function bootstrapRabbitTestnetViaWalletConnect() {
     if (bootstrap.session) {
       try { await bootstrap.disconnect() } catch {}
     }
+  }
+}
+
+
+async function getMetaMaskConnectClient() {
+  if (!metaMaskConnectClientPromise) {
+    metaMaskConnectClientPromise = import('@metamask/connect-evm').then(
+      async ({ createEVMClient }) => createEVMClient({
+        dapp: {
+          name: 'Rabbit Chain',
+          url: 'https://rabbitchain.org',
+        },
+        api: {
+          supportedNetworks: Object.fromEntries(
+            WALLET_NETWORK_LIST
+              .filter((network) => network.chainIdHex && network.rpcUrl)
+              .map((network) => [network.chainIdHex, network.rpcUrl])
+          ),
+        },
+      })
+    )
+  }
+
+  return metaMaskConnectClientPromise
+}
+
+export async function connectMetaMaskConnect() {
+  const network = WALLET_NETWORK_LIST.find(
+    (item) => Number(item.chainId) === RABBIT_WC_TESTNET_CHAIN_ID
+  )
+
+  if (!network) {
+    throw new Error('Rabbit Testnet configuration is unavailable.')
+  }
+
+  const client = await getMetaMaskConnectClient()
+
+  await client.connect({
+    chainIds: [network.chainIdHex],
+  })
+
+  const provider = client.getProvider()
+
+  if (!provider?.request) {
+    throw new Error('MetaMask Connect did not return an EIP-1193 provider.')
+  }
+
+  let currentChain = null
+
+  try {
+    currentChain = await provider.request({ method: 'eth_chainId' })
+  } catch {}
+
+  if (numericChainId(currentChain) !== Number(network.chainId)) {
+    try {
+      await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: network.chainIdHex }],
+      })
+    } catch (error) {
+      if (!walletUnknownChain(error)) throw error
+
+      await provider.request({
+        method: 'wallet_addEthereumChain',
+        params: [walletNetworkParams(network)],
+      })
+
+      await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: network.chainIdHex }],
+      })
+    }
+  }
+
+  return {
+    kind: 'metamask-connect',
+    name: 'MetaMask',
+    icon: null,
+    provider,
+    rdns: 'io.metamask',
   }
 }
 

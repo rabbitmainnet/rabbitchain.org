@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import { ArrowRight, QrCode, ShieldCheck, Smartphone, Wallet, X } from 'lucide-react'
 import { detectInjectedWallets } from '../lib/wallet'
 
-export default function WalletModal({ open, onClose, onSelect, onWalletConnect }) {
+export default function WalletModal({ open, onClose, onSelect, onMetaMaskConnect, onWalletConnect }) {
   const [wallets,setWallets]=useState([])
   const [loading,setLoading]=useState(false)
   const [remoteLoading,setRemoteLoading]=useState(false)
+  const [metaMaskLoading,setMetaMaskLoading]=useState(false)
 
   useEffect(()=>{
     if(!open) return
@@ -14,8 +15,16 @@ export default function WalletModal({ open, onClose, onSelect, onWalletConnect }
   },[open])
 
   useEffect(()=>{
-    if(!open) setRemoteLoading(false)
+    if(!open) {
+      setRemoteLoading(false)
+      setMetaMaskLoading(false)
+    }
   },[open])
+
+  async function openMetaMaskConnect(){
+    setMetaMaskLoading(true)
+    try{ await onMetaMaskConnect() } finally { setMetaMaskLoading(false) }
+  }
 
   async function openWalletConnect(){
     setRemoteLoading(true)
@@ -27,6 +36,14 @@ export default function WalletModal({ open, onClose, onSelect, onWalletConnect }
     <div className="wallet-modal" onMouseDown={(e)=>e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="wallet-modal-title">
       <div className="wallet-modal-head"><div><span>RABBIT WALLET</span><h3 id="wallet-modal-title">Connect a wallet</h3></div><button onClick={onClose} aria-label="Close wallet connection"><X size={18}/></button></div>
       <p className="wallet-modal-intro">Choose an installed EVM wallet or connect from another device with WalletConnect. Rabbit never asks for a seed phrase or private key.</p>
+
+      <div className="wallet-connect-featured">
+        <button type="button" onClick={openMetaMaskConnect} disabled={metaMaskLoading}>
+          <span className="wallet-connect-mark"><Smartphone size={22}/></span>
+          <span><b>MetaMask</b><small>{metaMaskLoading?'Opening MetaMask…':'Official mobile · QR · browser connection'}</small></span>
+          <ArrowRight size={17}/>
+        </button>
+      </div>
 
       <div className="wallet-connect-featured">
         <button type="button" onClick={openWalletConnect} disabled={remoteLoading}>

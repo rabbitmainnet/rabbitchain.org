@@ -10,6 +10,7 @@ import BackToTop from './components/BackToTop'
 import {
   clearWalletPreference,
   connectWallet,
+  connectMetaMaskConnect,
   connectWalletConnect,
   detectInjectedWallets,
   friendlyWalletError,
@@ -156,6 +157,16 @@ export default function App() {
       await finishConnection(wallet, state)
     } catch (error) {
       toast(friendlyWalletError(error, 'WalletConnect connection failed'))
+    }
+  }
+
+  async function selectMetaMaskConnect() {
+    try {
+      const wallet = await connectMetaMaskConnect()
+      const state = await getWalletSnapshot(wallet.provider)
+      await finishConnection(wallet, state)
+    } catch (error) {
+      toast(friendlyWalletError(error, 'MetaMask connection failed'))
     }
   }
 
@@ -354,7 +365,7 @@ export default function App() {
         </AnimatePresence>
       </Suspense>
       {!embeddedApp && <Footer />}
-      <WalletModal open={walletModalOpen} onClose={() => { setWalletModalOpen(false); setPendingNetwork(null) }} onSelect={selectWallet} onWalletConnect={selectWalletConnect} />
+      <WalletModal open={walletModalOpen} onClose={() => { setWalletModalOpen(false); setPendingNetwork(null) }} onSelect={selectWallet} onMetaMaskConnect={selectMetaMaskConnect} onWalletConnect={selectWalletConnect} />
       <WalletDrawer open={walletDrawerOpen} state={walletState} walletName={walletName} onClose={() => setWalletDrawerOpen(false)} onDisconnect={disconnect} onSwitch={switchNetwork} toast={toast} />
       <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
       {toastMessage && <div className="toast" role="status" aria-live="polite">{toastMessage}</div>}
