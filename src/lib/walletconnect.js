@@ -12,168 +12,6 @@ const RABBIT_CHAIN_HEX = '0x2440'
 const RABBIT_CAIP = 'eip155:9280'
 
 let providerPromise = null
-let walletExplorerPromise = null
-let walletExplorer = null
-
-async function ensureWalletExplorer(provider) {
-  if (walletExplorer) {
-    return walletExplorer
-  }
-
-  if (!walletExplorerPromise) {
-    walletExplorerPromise = (async () => {
-      const [
-        appKitModule,
-        networkModule,
-      ] = await Promise.all([
-        import('@reown/appkit/react'),
-        import('@reown/appkit/networks'),
-      ])
-
-      const {
-        createAppKit,
-      } = appKitModule
-
-      const {
-        defineChain,
-      } = networkModule
-
-      const network =
-        rabbitNetwork()
-
-      if (!network) {
-        throw new Error(
-          'Rabbit Testnet configuration is unavailable.'
-        )
-      }
-
-      const rabbit =
-        defineChain({
-          id: RABBIT_CHAIN_ID,
-
-          caipNetworkId:
-            RABBIT_CAIP,
-
-          chainNamespace:
-            'eip155',
-
-          name:
-            network.name,
-
-          nativeCurrency: {
-            name:
-              network.currencyName ||
-              network.currency,
-
-            symbol:
-              network.currency,
-
-            decimals: 18,
-          },
-
-          rpcUrls: {
-            default: {
-              http: [
-                network.rpcUrl,
-              ],
-            },
-
-            public: {
-              http: [
-                network.rpcUrl,
-              ],
-            },
-          },
-
-          blockExplorers:
-            network.explorerUrl
-              ? {
-                  default: {
-                    name:
-                      'Rabbit Explorer',
-
-                    url:
-                      network.explorerUrl,
-                  },
-                }
-              : undefined,
-        })
-
-      walletExplorer =
-        createAppKit({
-          projectId:
-            REOWN_PROJECT_ID,
-
-          metadata:
-            WALLETCONNECT_METADATA,
-
-          networks: [
-            rabbit,
-          ],
-
-          defaultNetwork:
-            rabbit,
-
-          universalProvider:
-            provider.signer,
-
-          manualWCControl:
-            true,
-
-          allWallets:
-            'SHOW',
-
-          enableWallets:
-            true,
-
-          enableWalletGuide:
-            true,
-
-          enableMobileFullScreen:
-            true,
-
-          themeMode:
-            'light',
-
-          features: {
-            analytics:
-              false,
-
-            email:
-              false,
-
-            socials:
-              false,
-
-            swaps:
-              false,
-
-            onramp:
-              false,
-
-            connectMethodsOrder: [
-              'wallet',
-            ],
-          },
-        })
-
-      return walletExplorer
-    })()
-  }
-
-  return walletExplorerPromise
-}
-
-export async function openWalletConnectExplorer() {
-  const provider =
-    await getProvider()
-
-  const explorer =
-    await ensureWalletExplorer(provider)
-
-  await explorer.open()
-}
-
 
 function rabbitNetwork() {
   return WALLET_NETWORK_LIST.find(
@@ -197,7 +35,11 @@ function sessionHasRabbit(session) {
         ? namespace.chains
         : []
 
-    if (chains.includes(RABBIT_CAIP)) {
+    if (
+      chains.includes(
+        RABBIT_CAIP
+      )
+    ) {
       return true
     }
 
@@ -207,10 +49,11 @@ function sessionHasRabbit(session) {
         : []
 
     if (
-      accounts.some((account) =>
-        String(account).startsWith(
-          `${RABBIT_CAIP}:`
-        )
+      accounts.some(
+        (account) =>
+          String(account).startsWith(
+            `${RABBIT_CAIP}:`
+          )
       )
     ) {
       return true
@@ -237,7 +80,8 @@ function rabbitAccount(provider) {
         : []
 
     for (const account of accounts) {
-      const value = String(account)
+      const value =
+        String(account)
 
       if (
         value.startsWith(
@@ -256,7 +100,8 @@ function rabbitAccount(provider) {
 }
 
 async function createProvider() {
-  const network = rabbitNetwork()
+  const network =
+    rabbitNetwork()
 
   if (!network?.rpcUrl) {
     throw new Error(
@@ -277,6 +122,9 @@ async function createProvider() {
     metadata:
       WALLETCONNECT_METADATA,
 
+    //
+    // Rabbit Testnet é a rede da sessão.
+    //
     chains: [
       RABBIT_CHAIN_ID,
     ],
@@ -287,10 +135,22 @@ async function createProvider() {
     },
 
     //
-    // IMPORTANTE:
-    // Reown NÃO desenha mais nosso QR.
+    // UM ÚNICO MODAL:
+    // WalletConnect/Reown cuida do QR,
+    // busca e seleção das wallets.
     //
-    showQrModal: false,
+    showQrModal: true,
+
+    qrModalOptions: {
+      themeMode:
+        'light',
+
+      enableExplorer:
+        true,
+
+      enableMobileFullScreen:
+        true,
+    },
 
     optionalMethods: [
       'eth_accounts',
@@ -299,10 +159,14 @@ async function createProvider() {
       'eth_call',
       'eth_getBalance',
       'eth_getTransactionReceipt',
+
       'eth_sign',
+      'personal_sign',
+
       'eth_signTypedData',
       'eth_signTypedData_v3',
       'eth_signTypedData_v4',
+
       'wallet_switchEthereumChain',
       'wallet_addEthereumChain',
       'wallet_watchAsset',
@@ -313,8 +177,12 @@ async function createProvider() {
       'chainChanged',
     ],
 
+    //
+    // Namespace novo para não reaproveitar
+    // sessões das tentativas anteriores.
+    //
     customStoragePrefix:
-      'rabbit-wc-9280-clean-v2',
+      'rabbit-wc-9280-official-v1',
   })
 }
 
@@ -327,23 +195,19 @@ async function getProvider() {
   return providerPromise
 }
 
-export async function connectWalletConnect(
-  onUri
-) {
-  const provider =
+export async function connectWalletConnect() {
+  let provider =
     await getProvider()
 
   //
-  // O explorer oficial fica preparado mas fechado.
-  // Ele usa exatamente o mesmo UniversalProvider.
+  // Nunca aproveita sessão inválida
+  // de outra chain.
   //
-  try {
-    await ensureWalletExplorer(provider)
-  } catch {}
-
   if (
     provider.session &&
-    !sessionHasRabbit(provider.session)
+    !sessionHasRabbit(
+      provider.session
+    )
   ) {
     try {
       await provider.disconnect()
@@ -351,37 +215,23 @@ export async function connectWalletConnect(
 
     providerPromise = null
 
-    return connectWalletConnect(onUri)
+    provider =
+      await getProvider()
   }
 
-  const handleUri = (uri) => {
-    if (
-      typeof onUri === 'function' &&
-      uri
-    ) {
-      onUri(uri)
-    }
-  }
-
-  provider.on?.(
-    'display_uri',
-    handleUri
-  )
-
-  try {
-    if (!provider.session) {
-      await provider.connect()
-    }
-  } finally {
-    provider.removeListener?.(
-      'display_uri',
-      handleUri
-    )
+  //
+  // ESTA chamada abre diretamente
+  // o modal oficial WalletConnect/Reown.
+  //
+  if (!provider.session) {
+    await provider.connect()
   }
 
   if (
     !provider.session ||
-    !sessionHasRabbit(provider.session)
+    !sessionHasRabbit(
+      provider.session
+    )
   ) {
     throw new Error(
       'This wallet did not authorize Rabbit Testnet.'
@@ -406,10 +256,6 @@ export async function connectWalletConnect(
   provider.__rabbitWalletConnect =
     true
 
-  try {
-    await walletExplorer?.close?.()
-  } catch {}
-
   const account =
     rabbitAccount(provider)
 
@@ -420,14 +266,21 @@ export async function connectWalletConnect(
   }
 
   return {
-    kind: 'walletconnect',
+    kind:
+      'walletconnect',
 
     name:
-      provider.session?.peer?.metadata?.name ||
+      provider.session
+        ?.peer
+        ?.metadata
+        ?.name ||
       'WalletConnect',
 
     icon:
-      provider.session?.peer?.metadata?.icons?.[0] ||
+      provider.session
+        ?.peer
+        ?.metadata
+        ?.icons?.[0] ||
       null,
 
     rdns:
@@ -437,8 +290,10 @@ export async function connectWalletConnect(
 
     state: {
       account,
+
       chainId:
         RABBIT_CHAIN_ID,
+
       chainIdHex:
         RABBIT_CHAIN_HEX,
     },

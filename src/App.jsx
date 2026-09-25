@@ -4,7 +4,6 @@ import { Route, Routes, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import WalletModal from './components/WalletModal'
-import WalletConnectQrModal from './components/WalletConnectQrModal'
 import WalletDrawer from './components/WalletDrawer'
 import SearchPalette from './components/SearchPalette'
 import BackToTop from './components/BackToTop'
@@ -97,8 +96,6 @@ function PageLoader() {
 export default function App() {
   const location = useLocation()
   const [walletModalOpen, setWalletModalOpen] = useState(false)
-  const [walletConnectQrOpen, setWalletConnectQrOpen] = useState(false)
-  const [walletConnectUri, setWalletConnectUri] = useState('')
   const [walletDrawerOpen, setWalletDrawerOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [provider, setProvider] = useState(null)
@@ -155,28 +152,16 @@ export default function App() {
 
   async function selectWalletConnect() {
     setWalletModalOpen(false)
-    setWalletConnectUri('')
-    setWalletConnectQrOpen(true)
 
     try {
       const wallet =
-        await connectWalletConnect(
-          (uri) => {
-            setWalletConnectUri(uri)
-          }
-        )
-
-      setWalletConnectQrOpen(false)
-      setWalletConnectUri('')
+        await connectWalletConnect()
 
       await finishConnection(
         wallet,
         wallet.state
       )
     } catch (error) {
-      setWalletConnectQrOpen(false)
-      setWalletConnectUri('')
-
       toast(
         friendlyWalletError(
           error,
@@ -439,17 +424,7 @@ export default function App() {
         </AnimatePresence>
       </Suspense>
       {!embeddedApp && <Footer />}
-      <WalletConnectQrModal
-        open={walletConnectQrOpen}
-        uri={walletConnectUri}
-        onClose={() => {
-          setWalletConnectQrOpen(false)
-          setWalletConnectUri('')
-        }}
-        toast={toast}
-      />
-
-      <WalletModal
+<WalletModal
         open={walletModalOpen}
         onClose={() => {
           setWalletModalOpen(false)
