@@ -6280,3 +6280,52 @@ footer {
 .footer-social a:hover img{
   opacity:.95;
 }
+
+/* RABBIT COMMUNITY SOCIAL CARDS V2 */
+.community-card{
+  display:flex;
+  flex-direction:column;
+}
+
+.community-card-icon{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f7f5ff;
+  border:1px solid #e5def6;
+  margin-bottom:2px;
+}
+
+.community-card-icon img{
+  width:20px;
+  height:20px;
+  display:block;
+  object-fit:contain;
+}
+
+.community-card-icon-security{
+  color:#7044e7;
+}
+
+.community-card>span{
+  margin-top:22px;
+}
+
+.community-card>b{
+  margin-top:auto;
+  padding-top:20px;
+}
+
+.community-grid>a{
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+
+.community-grid>a:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-sm);
+  border-color:#d6d3e6;
+}
+/* END RABBIT COMMUNITY SOCIAL CARDS V2 */
