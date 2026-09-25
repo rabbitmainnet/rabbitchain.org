@@ -6826,3 +6826,40 @@ footer {
   }
 }
 /* END RABBIT_SWAP_TOKEN_SELECTOR_MOBILE_DESKTOP_STYLE_V1 */
+
+/* RABBIT_SWAP_DIRECTION_ARROW_MOBILE_FIX_V1 */
+.rabbit-swap-direction button{
+  display:grid;
+  place-items:center;
+}
+
+.rabbit-swap-direction button svg{
+  display:block !important;
+  width:18px !important;
+  height:18px !important;
+  min-width:18px !important;
+  min-height:18px !important;
+  color:#7a5cff !important;
+  stroke:currentColor !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  flex:none !important;
+}
+
+@media (max-width:680px){
+  .rabbit-swap-direction button{
+    display:grid !important;
+    place-items:center !important;
+  }
+
+  .rabbit-swap-direction button svg{
+    display:block !important;
+    width:18px !important;
+    height:18px !important;
+    color:#7a5cff !important;
+    stroke:currentColor !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+}
+/* END RABBIT_SWAP_DIRECTION_ARROW_MOBILE_FIX_V1 */
