@@ -6524,3 +6524,104 @@ footer {
   border-bottom:1px solid var(--line);
 }
 /* END RABBIT_HOME_SWAP_DIVIDER_V1 */
+
+/* RABBIT_PLATFORM_HERO_MOBILE_FIX_V1 */
+@media (max-width:980px){
+  .platform-v2-hero-grid{
+    grid-template-columns:1fr;
+    gap:42px;
+  }
+
+  .platform-v2-copy,
+  .platform-v2-window{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+
+  .platform-v2-copy{
+    max-width:720px;
+  }
+
+  .platform-v2-window{
+    transform:none;
+  }
+}
+
+@media (max-width:640px){
+  .platform-v2-hero{
+    padding:42px 0 48px;
+  }
+
+  .platform-v2-copy h1{
+    max-width:none;
+    font-size:clamp(44px,13vw,58px);
+    line-height:.96;
+  }
+
+  .platform-v2-copy>p{
+    font-size:15px;
+  }
+
+  .platform-v2-copy .hero-ctas{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+
+  .platform-v2-copy .hero-ctas .button{
+    width:100%;
+  }
+
+  .platform-overview-network{
+    width:100%;
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .platform-v2-window{
+    border-radius:18px;
+  }
+
+  .platform-v2-window-head{
+    height:auto;
+    min-height:64px;
+    padding:14px 15px;
+  }
+
+  .platform-v2-wallet{
+    padding:14px 15px;
+  }
+
+  .platform-v2-module-list{
+    padding:6px 10px 12px;
+  }
+
+  .platform-v2-module-list>a{
+    min-height:72px;
+    grid-template-columns:24px 28px minmax(0,1fr) 16px;
+    gap:8px;
+    padding:8px 4px;
+  }
+
+  .platform-v2-module-list>a>em{
+    display:none;
+  }
+
+  .platform-v2-module-list b{
+    font-size:12px;
+  }
+
+  .platform-v2-module-list small{
+    font-size:9px;
+    line-height:1.35;
+  }
+
+  .platform-v2-module-list>a:first-child{
+    padding:8px;
+  }
+
+  .platform-principles{
+    gap:6px;
+  }
+}
+/* END RABBIT_PLATFORM_HERO_MOBILE_FIX_V1 */
