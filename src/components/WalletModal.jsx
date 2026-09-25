@@ -6,7 +6,6 @@ import {
 
 import {
   ArrowRight,
-  LayoutGrid,
   QrCode,
   ShieldCheck,
   Smartphone,
@@ -135,7 +134,7 @@ export default function WalletModal({
     )
 
     try {
-      await onWalletConnect(mode)
+      await onWalletConnect()
     } finally {
       setConnecting(null)
     }
@@ -199,7 +198,7 @@ export default function WalletModal({
           <button
             type="button"
             onClick={() =>
-              connectWC('qr')
+              connectWC()
             }
             disabled={
               connecting !== null
@@ -313,38 +312,7 @@ export default function WalletModal({
             )
           )}
 
-          <button
-            type="button"
-            onClick={() =>
-              connectWC('all')
-            }
-            disabled={
-              connecting !== null
-            }
-          >
-            <span className="wallet-icon">
-              <LayoutGrid
-                size={21}
-              />
-            </span>
-
-            <span>
-              <b>
-                All Wallets
-              </b>
-
-              <small>
-                {connecting === 'all'
-                  ? 'Loading wallets…'
-                  : 'Browse compatible mobile wallets'}
-              </small>
-            </span>
-
-            <Badge>
-              600+
-            </Badge>
-          </button>
-        </div>
+</div>
 
         {loading && (
           <div className="wallet-loading">

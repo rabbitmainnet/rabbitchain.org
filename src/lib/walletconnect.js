@@ -11,12 +11,6 @@ const RABBIT_CHAIN_ID = 9280
 const RABBIT_CHAIN_HEX = '0x2440'
 const RABBIT_CAIP = 'eip155:9280'
 
-const METAMASK_ID =
-  'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96'
-
-const TRUST_ID =
-  '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0'
-
 let providerPromise = null
 
 function rabbitNetwork() {
@@ -32,7 +26,9 @@ function sessionHasRabbit(session) {
 
   for (
     const namespace
-    of Object.values(session.namespaces || {})
+    of Object.values(
+      session.namespaces || {}
+    )
   ) {
     const chains =
       Array.isArray(namespace?.chains)
@@ -86,7 +82,10 @@ function rabbitAccount(provider) {
           `${RABBIT_CAIP}:`
         )
       ) {
-        return value.split(':').slice(2).join(':')
+        return value
+          .split(':')
+          .slice(2)
+          .join(':')
       }
     }
   }
@@ -116,12 +115,6 @@ async function createProvider() {
     metadata:
       WALLETCONNECT_METADATA,
 
-    //
-    // Rabbit é REQUIRED.
-    // Se a wallet não aceitar 9280,
-    // a conexão falha antes de fingir
-    // que está conectada.
-    //
     chains: [
       RABBIT_CHAIN_ID,
     ],
@@ -131,12 +124,12 @@ async function createProvider() {
         network.rpcUrl,
     },
 
-    showQrModal: true,
+    //
+    // IMPORTANTE:
+    // Reown NÃO desenha mais nosso QR.
+    //
+    showQrModal: false,
 
-    //
-    // Recursos adicionais não bloqueiam
-    // a sessão se a wallet não oferecer.
-    //
     optionalMethods: [
       'eth_accounts',
       'eth_requestAccounts',
@@ -151,10 +144,6 @@ async function createProvider() {
       'wallet_switchEthereumChain',
       'wallet_addEthereumChain',
       'wallet_watchAsset',
-      'wallet_sendCalls',
-      'wallet_getCallsStatus',
-      'wallet_showCallsStatus',
-      'wallet_getCapabilities',
     ],
 
     optionalEvents: [
@@ -162,56 +151,8 @@ async function createProvider() {
       'chainChanged',
     ],
 
-    //
-    // Não reutiliza as sessões antigas
-    // das tentativas anteriores.
-    //
     customStoragePrefix:
-      'rabbit-wc-9280-clean-v1',
-
-    qrModalOptions: {
-      themeMode:
-        'light',
-
-      enableExplorer:
-        true,
-
-      enableMobileFullScreen:
-        true,
-
-      //
-      // Trust em destaque.
-      //
-      explorerRecommendedWalletIds: [
-        TRUST_ID,
-      ],
-
-      //
-      // MetaMask fica fora daqui.
-      // Ela já tem o caminho oficial Rabbit
-      // que está funcionando.
-      //
-      explorerExcludedWalletIds: [
-        METAMASK_ID,
-      ],
-
-      themeVariables: {
-        '--wcm-font-family':
-          'Inter, system-ui, sans-serif',
-
-        '--wcm-accent-color':
-          '#635bff',
-
-        '--wcm-background-color':
-          '#ffffff',
-
-        '--wcm-container-border-radius':
-          '18px',
-
-        '--wcm-z-index':
-          '2147483000',
-      },
-    },
+      'rabbit-wc-9280-clean-v2',
   })
 }
 
@@ -225,15 +166,11 @@ async function getProvider() {
 }
 
 export async function connectWalletConnect(
-  mode = 'qr'
+  onUri
 ) {
-  let provider =
+  const provider =
     await getProvider()
 
-  //
-  // Só ocorre após clique explícito do usuário.
-  // Nunca fazemos auto-connect no carregamento.
-  //
   if (
     provider.session &&
     !sessionHasRabbit(provider.session)
@@ -243,35 +180,33 @@ export async function connectWalletConnect(
     } catch {}
 
     providerPromise = null
-    provider = await getProvider()
+
+    return connectWalletConnect(onUri)
   }
 
-  //
-  // No botão All Wallets tentamos abrir
-  // diretamente a lista completa do AppKit.
-  // Se a versão decidir usar a tela padrão,
-  // a conexão continua normalmente.
-  //
-  if (
-    mode === 'all' &&
-    !provider.session
-  ) {
-    provider.once?.(
+  const handleUri = (uri) => {
+    if (
+      typeof onUri === 'function' &&
+      uri
+    ) {
+      onUri(uri)
+    }
+  }
+
+  provider.on?.(
+    'display_uri',
+    handleUri
+  )
+
+  try {
+    if (!provider.session) {
+      await provider.connect()
+    }
+  } finally {
+    provider.removeListener?.(
       'display_uri',
-      () => {
-        window.setTimeout(() => {
-          try {
-            provider.modal?.open?.({
-              view: 'AllWallets',
-            })
-          } catch {}
-        }, 50)
-      }
+      handleUri
     )
-  }
-
-  if (!provider.session) {
-    await provider.connect()
   }
 
   if (
@@ -279,7 +214,7 @@ export async function connectWalletConnect(
     !sessionHasRabbit(provider.session)
   ) {
     throw new Error(
-      'This wallet does not support Rabbit Testnet through WalletConnect.'
+      'This wallet did not authorize Rabbit Testnet.'
     )
   }
 
@@ -311,8 +246,7 @@ export async function connectWalletConnect(
   }
 
   return {
-    kind:
-      'walletconnect',
+    kind: 'walletconnect',
 
     name:
       provider.session?.peer?.metadata?.name ||
