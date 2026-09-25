@@ -6625,3 +6625,130 @@ footer {
   }
 }
 /* END RABBIT_PLATFORM_HERO_MOBILE_FIX_V1 */
+
+/* RABBIT_SWAP_TOKEN_SELECTOR_UX_V1 */
+
+.rabbit-token-menu{
+  max-height:min(520px,65vh);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+
+.rabbit-token-backdrop{
+  display:none;
+}
+
+.rabbit-token-menu-head{
+  align-items:center;
+}
+
+.rabbit-token-menu-head > div{
+  display:grid;
+  gap:2px;
+}
+
+.rabbit-token-menu-close{
+  width:32px;
+  height:32px;
+  flex:none;
+  display:grid;
+  place-items:center;
+  border:1px solid #e5e5ed;
+  border-radius:9px;
+  background:#fff;
+  color:#4f5363;
+  font-size:21px;
+  line-height:1;
+  cursor:pointer;
+}
+
+.rabbit-token-menu-close:hover{
+  background:#f5f4f9;
+  color:#111426;
+}
+
+@media (max-width:680px){
+
+  .rabbit-token-backdrop{
+    display:block;
+    position:fixed;
+    inset:0;
+    z-index:9998;
+    border:0;
+    background:rgba(17,20,38,.34);
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+  }
+
+  .rabbit-token-menu{
+    position:fixed !important;
+    z-index:9999 !important;
+
+    top:auto !important;
+    left:10px !important;
+    right:10px !important;
+    bottom:10px !important;
+
+    width:auto !important;
+    max-width:none !important;
+    max-height:min(76dvh,620px);
+
+    padding:10px 10px calc(12px + env(safe-area-inset-bottom));
+
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+
+    border-radius:18px;
+    box-shadow:0 24px 70px rgba(17,20,38,.24);
+  }
+
+  .rabbit-token-menu-head{
+    min-height:48px;
+    padding:5px 5px 10px;
+    position:sticky;
+    top:-10px;
+    z-index:4;
+    background:#fff;
+  }
+
+  .rabbit-token-menu-head b{
+    font-size:14px;
+  }
+
+  .rabbit-token-menu-head small{
+    font-size:10px;
+  }
+
+  .rabbit-token-menu-close{
+    width:36px;
+    height:36px;
+    font-size:24px;
+  }
+
+  .rabbit-token-search{
+    min-height:44px;
+    margin:4px 2px 8px;
+    position:sticky;
+    top:38px;
+    z-index:3;
+    background:#f7f7fa;
+  }
+
+  .rabbit-token-menu > button{
+    min-height:58px;
+    padding:10px 8px;
+  }
+
+  .rabbit-token-menu > button b{
+    font-size:13px;
+  }
+
+  .rabbit-token-menu > button small{
+    font-size:10px;
+    line-height:1.35;
+  }
+}
+
+/* END RABBIT_SWAP_TOKEN_SELECTOR_UX_V1 */

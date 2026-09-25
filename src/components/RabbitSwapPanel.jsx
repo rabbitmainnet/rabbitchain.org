@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown, ArrowUpRight, CheckCircle2, RefreshCw, Search, Wallet } from 'lucide-react'
 import { NETWORKS } from '../config/networks'
 import { PLATFORM_NETWORKS } from '../config/platform'
@@ -38,10 +38,38 @@ function TokenLogo({ token }) {
   return <span className="rabbit-token-logo rabbit-token-logo-fallback">{token?.symbol?.slice(-1) || '?'}</span>
 }
 
-function TokenSelector({ token, tokens, open, onToggle, onSelect, onImportToken, otherToken }) {
+function TokenSelector({ token, tokens, open, onToggle, onClose, onSelect, onImportToken, otherToken }) {
   const [query, setQuery] = useState('')
   const [importing, setImporting] = useState(false)
+  const rootRef = useRef(null)
   const candidates = filterSwapTokens(tokens, query, otherToken)
+
+  useEffect(() => {
+    if (!open) {
+      setQuery('')
+      return undefined
+    }
+
+    const handlePointerDown = (event) => {
+      if (rootRef.current && !rootRef.current.contains(event.target)) {
+        onClose?.()
+      }
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose?.()
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [open, onClose])
   const normalized = query.trim()
   const canImport = /^0x[0-9a-fA-F]{40}$/.test(normalized)
     && !tokens.some((item) => !item.native && item.address?.toLowerCase() === normalized.toLowerCase())
@@ -61,17 +89,41 @@ function TokenSelector({ token, tokens, open, onToggle, onSelect, onImportToken,
   }
 
   return (
-    <div className="rabbit-token-selector">
-      <button type="button" className="rabbit-token-button" onClick={onToggle}>
+    <div className="rabbit-token-selector" ref={rootRef}>
+      <button
+        type="button"
+        className="rabbit-token-button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-haspopup="dialog"
+      >
         <TokenLogo token={token} />
         <span><b>{token?.symbol || 'Select token'}</b><small>{token?.name || 'Rabbit Testnet'}</small></span>
         <ArrowDown size={15} />
       </button>
 
       {open && (
-        <div className="rabbit-token-menu">
-          <div className="rabbit-token-menu-head"><b>Select token</b><small>Rabbit Testnet</small></div>
-          <div className="rabbit-token-search">
+        <>
+          <button
+            type="button"
+            className="rabbit-token-backdrop"
+            onClick={onClose}
+            aria-label="Close token selector"
+          />
+
+          <div className="rabbit-token-menu" role="dialog" aria-label="Select token">
+            <div className="rabbit-token-menu-head">
+              <div><b>Select token</b><small>Rabbit Testnet</small></div>
+              <button
+                type="button"
+                className="rabbit-token-menu-close"
+                onClick={onClose}
+                aria-label="Close token selector"
+              >
+                ×
+              </button>
+            </div>
+            <div className="rabbit-token-search">
             <Search size={14} />
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search symbol, name or 0x address" autoFocus />
           </div>
@@ -84,7 +136,8 @@ function TokenSelector({ token, tokens, open, onToggle, onSelect, onImportToken,
           {canImport && <button className="rabbit-token-import-action" type="button" disabled={importing} onClick={handleImport}><Search size={14} /><span><b>{importing ? 'Reading token…' : 'Import contract'}</b><small>{shortAddress(normalized)}</small></span></button>}
           {!candidates.length && !canImport && <p>No listed token matches. Paste an ERC-20 contract address to import it from Rabbit Testnet.</p>}
           <p>RabbitSwap Factory pool tokens are indexed automatically. Manually imported contracts are permissionless and are not endorsed by Rabbit Chain.</p>
-        </div>
+          </div>
+        </>
       )}
     </div>
   )
@@ -446,7 +499,7 @@ export default function RabbitSwapPanel({
       <div className="rabbit-swap-field">
         <div className="rabbit-swap-field-label"><label>From</label><small>Balance {balanceText}</small></div>
         <div className="rabbit-swap-field-main">
-          <TokenSelector token={fromToken} tokens={tokens} open={openSelector === 'from'} otherToken={toToken} onToggle={() => setOpenSelector(openSelector === 'from' ? null : 'from')} onImportToken={handleImportToken} onSelect={(key) => { setFromKey(key); setOpenSelector(null); setAmount(''); setQuote(null) }} />
+          <TokenSelector token={fromToken} tokens={tokens} open={openSelector === 'from'} otherToken={toToken} onToggle={() => setOpenSelector(openSelector === 'from' ? null : 'from')} onClose={() => setOpenSelector(null)} onImportToken={handleImportToken} onSelect={(key) => { setFromKey(key); setOpenSelector(null); setAmount(''); setQuote(null) }} />
           <div className="rabbit-swap-amount"><input inputMode="decimal" value={amount} onChange={(event) => setAmount(cleanDecimalInput(event.target.value))} placeholder="0.00" aria-label="Amount to swap" /><small>{fromToken?.native ? 'Native tRAB' : `${fromToken?.decimals} decimals`}</small></div>
         </div>
       </div>
@@ -456,7 +509,7 @@ export default function RabbitSwapPanel({
       <div className="rabbit-swap-field">
         <div className="rabbit-swap-field-label"><label>To</label><small>{loadingQuote ? 'Reading quote…' : 'Estimated output'}</small></div>
         <div className="rabbit-swap-field-main">
-          <TokenSelector token={toToken} tokens={tokens} open={openSelector === 'to'} otherToken={fromToken} onToggle={() => setOpenSelector(openSelector === 'to' ? null : 'to')} onImportToken={handleImportToken} onSelect={(key) => { setToKey(key); setOpenSelector(null); setQuote(null) }} />
+          <TokenSelector token={toToken} tokens={tokens} open={openSelector === 'to'} otherToken={fromToken} onToggle={() => setOpenSelector(openSelector === 'to' ? null : 'to')} onClose={() => setOpenSelector(null)} onImportToken={handleImportToken} onSelect={(key) => { setToKey(key); setOpenSelector(null); setQuote(null) }} />
           <div className="rabbit-swap-amount"><input value={outputText} readOnly placeholder="0.00" aria-label="Estimated received amount" /><small>{toToken?.native ? 'Native tRAB' : `${toToken?.decimals} decimals`}</small></div>
         </div>
       </div>
