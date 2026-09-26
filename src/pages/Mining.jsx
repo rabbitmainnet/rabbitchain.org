@@ -10,18 +10,8 @@ import {
   TerminalSquare,
 } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
-import { DOWNLOADS, RELEASE } from '../config/release'
-
-const icons = {
-  'windows-amd64': MonitorDown,
-  'linux-amd64': TerminalSquare,
-  'darwin-amd64': MonitorDown,
-  'darwin-arm64': MonitorDown,
-}
 
 export default function Mining() {
-  const downloadsReady = RELEASE.downloadsLive && DOWNLOADS.length > 0
-
   return (
     <main>
       <section className="page-hero mining-hero">
@@ -36,9 +26,9 @@ export default function Mining() {
             </p>
 
             <div className="hero-ctas">
-              <a className="button primary" href="#downloads">
-                Rabbit Core V2.3.5 <ArrowRight size={15} />
-              </a>
+              <Link className="button primary" to="/releases">
+                Rabbit Core V2.3.6 <ArrowRight size={15} />
+              </Link>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
           </div>
@@ -46,7 +36,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.3.5</b>
+              <b>V2.3.6</b>
             </div>
 
             <pre><code>
@@ -68,7 +58,7 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <h2>Rabbit Core V2.3.5 is the current public Testnet package with Liveness V4 active from block 97,991.</h2>
+            <h2>Rabbit Core V2.3.6 is the current public Testnet package with Liveness V4 active from block 97,991.</h2>
 
             <p>
               Existing miners only need to close the previous Rabbit Core, extract
@@ -78,56 +68,8 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.3.5</a>
+          <Link className="button light" to="/releases">Download V2.3.6</Link>
         </div>
-      </section>
-
-      <section className="section shell" id="downloads">
-        <SectionHeader
-          eyebrow="RABBIT CORE V2.3.5"
-          title="Official verified Testnet packages."
-          text="Use only Rabbit Core packages published by Rabbit Chain. Verify the SHA-256 before extracting or running the archive."
-        />
-
-        {downloadsReady ? (
-          <div className="download-grid">
-            {DOWNLOADS.map((download) => {
-              const Icon = icons[download.key]
-
-              return (
-                <article key={download.key}>
-                  <Icon size={22} />
-                  <span>{download.architecture}</span>
-                  <h3>{download.platform}</h3>
-                  <p>{download.format} package</p>
-
-                  <div className="download-meta">
-                    <small>VERSION</small>
-                    <b>Testnet V2.3.5</b>
-
-                    <small>SHA-256</small>
-                    <code>{download.sha256}</code>
-                  </div>
-
-                  <a
-                    className="button primary"
-                    href={download.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Download size={15} /> Download
-                  </a>
-                </article>
-              )
-            })}
-          </div>
-        ) : (
-          <div className="release-check-card">
-            <FileCheck2 size={28} />
-            <span>DOWNLOADS TEMPORARILY UNAVAILABLE</span>
-            <strong>Use only packages published on this page.</strong>
-          </div>
-        )}
       </section>
 
       <section className="mining-flow-section">
@@ -144,7 +86,7 @@ export default function Mining() {
               <h3>Download</h3>
               <p>
                 Download the official package for Windows, Linux, macOS Intel or
-                macOS Apple Silicon and compare its SHA-256 with the value displayed above.
+                macOS Apple Silicon from the official Release Center and verify its published SHA-256.
               </p>
             </article>
 
@@ -199,7 +141,7 @@ export default function Mining() {
 
             <p>
               <code>arm64</code> means Apple Silicon. <code>x86_64</code> means Intel.
-              After downloading, verify the SHA-256 shown above, extract the archive and
+              After downloading, verify the SHA-256 published in the Release Center, extract the archive and
               open <code>Start-Rabbit-Core.command</code>.
             </p>
 
@@ -554,7 +496,7 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.3.5 preserves the existing Rabbit Testnet blockchain data,
+              Rabbit Core V2.3.6 preserves the existing Rabbit Testnet blockchain data,
               encrypted wallet and persistent consensus state across normal restarts.
               If the node stops unexpectedly, Rabbit Core restarts it using the same
               data directory and waits for canonical synchronization before mining resumes.
@@ -627,7 +569,7 @@ export default function Mining() {
             <span>RELEASE SECURITY</span>
             <h2>Verify the package before running it.</h2>
             <p>
-              Compare the downloaded archive SHA-256 with this page. Rabbit Core also
+              Compare the downloaded archive SHA-256 with the official Release Center. Rabbit Core also
               includes internal checksums and validates the official Testnet genesis
               and chain ID before normal operation.
             </p>

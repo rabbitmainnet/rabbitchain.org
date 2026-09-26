@@ -7,7 +7,7 @@ const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
 const LIVENESS_V3_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.3.0-Liveness-V3-Upgrade.md'
-const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.3.5'
+const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.3.6'
 
 export default function Whitepaper() {
   return (
@@ -37,7 +37,7 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.5</strong>
-            <p>22 September 2026 · Rabbit Core Testnet V2.3.5</p>
+            <p>26 September 2026 · Rabbit Core Testnet V2.3.6</p>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -52,18 +52,18 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="Whitepaper protocol history and the current Core release are tracked together."
-          text="Whitepaper v1.5 documents the Liveness V3 protocol record; the current public software release is Rabbit Core V2.3.5 with Liveness V4 active from block 97,991."
+          text="Whitepaper v1.5 documents the Liveness V3 protocol record; the current public software release is Rabbit Core V2.3.6 with Liveness V4 active from block 97,991."
         />
 
         <div className="resource-grid">
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.3.5</h3>
+            <h3>Rabbit Core V2.3.6</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                d63b72dea47b7b9bc92e1e1d7ca0ff05ebdb4791
+                aeac6e0542c22d509ef02d3166e45487509dd0fc
               </code>
             </p>
             <p>
@@ -98,29 +98,29 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.3.5</h3>
+            <h3>Rabbit Core V2.3.6</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                791970d2071191db54cbcc3a1fb5db22ccfc9a771640f30cf7624d6fc10e143f
+                c7e02daec00e9782cf0091dfb09bd55684b9f06306e0c0c7cd686ccecc380830
               </code>
             </p>
             <p>
               Linux AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                9063b3d349172a79e61b89fb6c01c815874c82eaf63741d1034cba330125913c
+                7407ad5267c8fef977c03eeba97d3244f4cd35b0d50e3c3db3b5a24ff4ba8ae7
               </code>
             </p>
             <p>
               macOS Intel / AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                10bda73072fc8a9ddc68cc4e96e569ea76241e77553c17c4b5ca5b7a9c606271
+                0cdc0e8bd2be31b843b8dae85e46aaa8068e1f209b7e428a6d779d59858ac9ab
               </code>
             </p>
             <p>
               macOS Apple Silicon / ARM64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                6ee3b40eacd8b94d2b7b95aaa4a0a9219173226f2bd3d239f132f49448d536ba
+                391b0c97f2ce2a8e813ffe6cec057a526a45870750fe289efdcb09aebfb1d6e8
               </code>
             </p>
           </article>
@@ -188,7 +188,7 @@ export default function Whitepaper() {
             Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Current Rabbit Core V2.3.5 release <ArrowUpRight size={14} />
+            Current Rabbit Core V2.3.6 release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>
