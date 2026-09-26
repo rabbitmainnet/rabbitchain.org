@@ -38,6 +38,8 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
   // RABBIT_ACTIVE_MINERS_HOME_V1
   const [activeMiners, setActiveMiners] = useState(null)
   const [activeMinersWindow, setActiveMinersWindow] = useState(RABBIT_ACTIVE_MINERS_WINDOW)
+  const [latestBlock, setLatestBlock] = useState(null)
+  const [statsUpdatedAt, setStatsUpdatedAt] = useState(null)
 
   useEffect(() => {
     let cancelled = false
@@ -56,11 +58,22 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
         const count = Number(data?.active_miners)
         const windowBlocks = Number(data?.window_blocks)
         const chainId = Number(data?.chain_id)
+        const blockNumber = Number(data?.latest_block)
+        const updatedAt = typeof data?.updated_at === 'string' ? data.updated_at : null
 
         if (!cancelled && chainId === 9280 && Number.isInteger(count) && count >= 0) {
           setActiveMiners(count)
+
           if (Number.isInteger(windowBlocks) && windowBlocks > 0) {
             setActiveMinersWindow(windowBlocks)
+          }
+
+          if (Number.isInteger(blockNumber) && blockNumber >= 0) {
+            setLatestBlock(blockNumber)
+          }
+
+          if (updatedAt) {
+            setStatsUpdatedAt(updatedAt)
           }
         }
       } catch {
@@ -105,8 +118,18 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
             >
               <i aria-hidden="true" />
               <span>RECENT BLOCK PRODUCERS</span>
+              {activeMiners !== null && <b>LIVE</b>}
               <strong>{activeMiners ?? '—'}</strong>
-              <small>UNIQUE PRODUCERS · LAST {activeMinersWindow} BLOCKS</small>
+              <small>
+                {activeMiners === 1 ? 'UNIQUE PRODUCER' : 'UNIQUE PRODUCERS'}
+                {' · '}LAST {activeMinersWindow} BLOCKS
+                {latestBlock !== null ? ` · LATEST #${latestBlock.toLocaleString('en-US')}` : ''}
+              </small>
+              {statsUpdatedAt && (
+                <em>
+                  UPDATED {Math.max(0, Math.floor((Date.now() - new Date(statsUpdatedAt).getTime()) / 1000))}s AGO
+                </em>
+              )}
             </div>
           </div>
         </div>

@@ -6899,3 +6899,95 @@ footer {
   }
 }
 /* END RABBIT_SWAP_DIRECTION_ARROW_CENTER_FIX_V1 */
+
+/* HOME NETWORK STATS V2 */
+.home-active-miners{
+  margin-top:18px;
+  padding:14px 16px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+  display:grid;
+  grid-template-columns:auto auto auto 1fr;
+  align-items:center;
+  gap:7px 10px;
+  max-width:560px;
+}
+
+.home-active-miners>i{
+  width:7px;
+  height:7px;
+  border-radius:999px;
+  background:#6b7280;
+  box-shadow:0 0 0 4px rgba(107,114,128,.08);
+}
+
+.home-active-miners.is-live>i{
+  background:#36d98b;
+  box-shadow:0 0 0 4px rgba(54,217,139,.10),0 0 18px rgba(54,217,139,.22);
+}
+
+.home-active-miners>span{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.11em;
+  color:#8b90a0;
+}
+
+.home-active-miners>b{
+  justify-self:start;
+  padding:3px 7px;
+  border:1px solid rgba(54,217,139,.22);
+  border-radius:999px;
+  background:rgba(54,217,139,.07);
+  color:#65e5a4;
+  font-size:8px;
+  line-height:1;
+  letter-spacing:.11em;
+  font-style:normal;
+}
+
+.home-active-miners>strong{
+  grid-column:1/2;
+  font-size:25px;
+  line-height:1;
+  font-weight:700;
+  color:#f4f5f7;
+}
+
+.home-active-miners>small{
+  grid-column:2/5;
+  align-self:center;
+  color:#8b90a0;
+  font-size:9px;
+  line-height:1.4;
+  letter-spacing:.07em;
+}
+
+.home-active-miners>em{
+  grid-column:2/5;
+  margin-top:-2px;
+  color:#5f6472;
+  font-size:8px;
+  line-height:1.3;
+  letter-spacing:.07em;
+  font-style:normal;
+}
+
+@media (max-width: 700px){
+  .home-active-miners{
+    grid-template-columns:auto auto auto;
+    padding:13px 14px;
+    gap:7px 8px;
+  }
+
+  .home-active-miners>strong{
+    grid-column:1/2;
+    font-size:22px;
+  }
+
+  .home-active-miners>small,
+  .home-active-miners>em{
+    grid-column:2/4;
+  }
+}
