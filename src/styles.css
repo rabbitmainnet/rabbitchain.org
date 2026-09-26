@@ -7058,3 +7058,55 @@ footer {
     white-space:normal;
   }
 }
+
+/* HOME NETWORK STATS MOBILE FINAL */
+@media (max-width:700px){
+  .home-active-miners{
+    margin-top:16px;
+    padding-top:14px;
+    gap:6px;
+  }
+
+  .home-active-miners__top{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+
+  .home-active-miners__top>b{
+    display:none;
+  }
+
+  .home-active-miners__title>span{
+    font-size:9px;
+    letter-spacing:.10em;
+  }
+
+  .home-active-miners>strong{
+    width:100%;
+    font-size:26px;
+    line-height:1;
+    text-align:center;
+    margin:2px 0 0;
+  }
+
+  .home-active-miners__meta{
+    width:100%;
+    display:block;
+    text-align:center;
+  }
+
+  .home-active-miners__meta>small{
+    display:none;
+  }
+
+  .home-active-miners__meta>em{
+    display:block;
+    width:100%;
+    text-align:center;
+    font-size:8px;
+    line-height:1.35;
+    white-space:normal;
+  }
+}
