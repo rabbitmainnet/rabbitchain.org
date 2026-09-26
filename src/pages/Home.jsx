@@ -116,20 +116,28 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
                 ? `${activeMiners} unique Rabbit Testnet producers observed in the last ${activeMinersWindow} blocks`
                 : 'Rabbit Testnet recent producer count loading'}
             >
-              <i aria-hidden="true" />
-              <span>RECENT BLOCK PRODUCERS</span>
-              {activeMiners !== null && <b>LIVE</b>}
+              <div className="home-active-miners__top">
+                <div className="home-active-miners__title">
+                  <i aria-hidden="true" />
+                  <span>LIVE PRODUCER ACTIVITY</span>
+                </div>
+                {activeMiners !== null && <b>LIVE</b>}
+              </div>
+
               <strong>{activeMiners ?? '—'}</strong>
-              <small>
-                {activeMiners === 1 ? 'UNIQUE PRODUCER' : 'UNIQUE PRODUCERS'}
-                {' · '}LAST {activeMinersWindow} BLOCKS
-                {latestBlock !== null ? ` · LATEST #${latestBlock.toLocaleString('en-US')}` : ''}
-              </small>
-              {statsUpdatedAt && (
+
+              <div className="home-active-miners__meta">
+                <small>
+                  {activeMiners === 1
+                    ? 'UNIQUE PRODUCER OBSERVED'
+                    : 'UNIQUE PRODUCERS OBSERVED'}
+                </small>
+
                 <em>
-                  UPDATED {Math.max(0, Math.floor((Date.now() - new Date(statsUpdatedAt).getTime()) / 1000))}s AGO
+                  LAST {activeMinersWindow} BLOCKS
+                  {latestBlock !== null ? ` · LATEST #${latestBlock.toLocaleString('en-US')}` : ''}
                 </em>
-              )}
+              </div>
             </div>
           </div>
         </div>
