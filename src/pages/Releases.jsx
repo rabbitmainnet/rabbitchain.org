@@ -27,6 +27,58 @@ export default function Releases() {
 
   return (
     <main>
+      <style>{`
+        .release-long-text {
+          display: block;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          overflow-wrap: anywhere;
+          word-break: break-word;
+          white-space: normal;
+          line-height: 1.55;
+        }
+
+        .release-command {
+          display: block;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          overflow-x: auto;
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+          word-break: break-word;
+          line-height: 1.55;
+        }
+
+        .download-grid > article,
+        .operator-cards > article,
+        .mining-steps > article {
+          min-width: 0;
+        }
+
+        .download-meta {
+          min-width: 0;
+        }
+
+        .download-meta code {
+          display: block;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          overflow-wrap: anywhere;
+          word-break: break-word;
+          white-space: normal;
+        }
+
+        @media (max-width: 720px) {
+          .release-long-text,
+          .release-command,
+          .download-meta code {
+            font-size: 0.78rem;
+          }
+        }
+      `}</style>
       <section className="page-hero releases-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
@@ -130,7 +182,7 @@ export default function Releases() {
                     <b>{RELEASE.requiredVersion}</b>
 
                     <small>SHA-256</small>
-                    <code>{download.sha256}</code>
+                    <code className="release-long-text">{download.sha256}</code>
                   </div>
 
                   <a
@@ -252,19 +304,19 @@ export default function Releases() {
           <article>
             <MonitorDown size={22} />
             <h3>Windows PowerShell</h3>
-            <pre><code>Get-FileHash .\rabbit-core-testnet-v2.3.6-windows-amd64.zip -Algorithm SHA256</code></pre>
+            <pre className="release-command"><code>Get-FileHash .\rabbit-core-testnet-v2.3.6-windows-amd64.zip -Algorithm SHA256</code></pre>
           </article>
 
           <article>
             <TerminalSquare size={22} />
             <h3>Linux</h3>
-            <pre><code>sha256sum rabbit-core-testnet-v2.3.6-linux-amd64.tar.gz</code></pre>
+            <pre className="release-command"><code>sha256sum rabbit-core-testnet-v2.3.6-linux-amd64.tar.gz</code></pre>
           </article>
 
           <article>
             <TerminalSquare size={22} />
             <h3>macOS</h3>
-            <pre><code>shasum -a 256 rabbit-core-testnet-v2.3.6-darwin-*.tar.gz</code></pre>
+            <pre className="release-command"><code>shasum -a 256 rabbit-core-testnet-v2.3.6-darwin-*.tar.gz</code></pre>
           </article>
         </div>
       </section>
@@ -324,7 +376,7 @@ export default function Releases() {
             <article key={bootnode}>
               <Network size={22} />
               <h3>Bootnode {index + 1}</h3>
-              <code>{bootnode}</code>
+              <code className="release-long-text">{bootnode}</code>
             </article>
           ))}
         </div>
@@ -357,7 +409,7 @@ export default function Releases() {
                 Release: <code>{RELEASE.tag}</code>
               </p>
               <p>
-                Commit: <code>{RELEASE.commit}</code>
+                Commit: <code className="release-long-text">{RELEASE.commit}</code>
               </p>
               <a href={RELEASE.url} target="_blank" rel="noreferrer">
                 Open official GitHub release
