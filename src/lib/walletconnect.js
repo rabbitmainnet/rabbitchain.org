@@ -213,10 +213,10 @@ export async function connectWalletConnect() {
       await provider.disconnect()
     } catch {}
 
-    providerPromise = null
-
-    provider =
-      await getProvider()
+    //
+    // NÃO recriar EthereumProvider aqui.
+    // Reutilizamos o mesmo Core/UniversalProvider.
+    //
   }
 
   //
@@ -227,6 +227,7 @@ export async function connectWalletConnect() {
     await provider.connect()
   }
 
+<<<<<<< HEAD
   if (
     !provider.session ||
     !sessionHasRabbit(
@@ -236,6 +237,104 @@ export async function connectWalletConnect() {
     throw new Error(
       'This wallet did not authorize Rabbit Testnet.'
     )
+=======
+  const auth =
+    rabbitAuthorization(provider)
+
+  const walletName =
+    provider.session
+      ?.peer
+      ?.metadata
+      ?.name ||
+    'WalletConnect'
+
+  const diagnostic = {
+    wallet:
+      walletName,
+
+    providerChainId:
+      provider.chainId,
+
+    providerAccounts:
+      provider.accounts || [],
+
+    rabbitChain:
+      auth.chainAuthorized,
+
+    rabbitAccount:
+      auth.account || null,
+
+    sendTransaction:
+      auth.canSendTransaction,
+
+    rabbitReady:
+      auth.ready,
+
+    namespaces:
+      provider.session?.namespaces || {},
+  }
+
+  console.info(
+    '[Rabbit WalletConnect DIAG]\n' +
+    JSON.stringify(
+      diagnostic,
+      null,
+      2
+    )
+  )
+
+  //
+  // IMPORTANTE:
+  // sessão WalletConnect pode existir sem Rabbit.
+  // Não chamamos disconnect() aqui.
+  //
+  if (!auth.ready) {
+    let reason =
+      `${walletName} connected, but Rabbit Testnet is not ready.`
+
+    if (!auth.chainAuthorized) {
+      reason =
+        `${walletName} connected, but it did not authorize Rabbit Testnet (9280).`
+    } else if (!auth.account) {
+      reason =
+        `${walletName} authorized Rabbit Testnet but returned no Rabbit account.`
+    } else if (!auth.canSendTransaction) {
+      reason =
+        `${walletName} connected to Rabbit Testnet but did not authorize transactions.`
+    }
+
+    return {
+      kind:
+        'walletconnect',
+
+      name:
+        walletName,
+
+      icon:
+        provider.session
+          ?.peer
+          ?.metadata
+          ?.icons?.[0] ||
+        null,
+
+      rdns:
+        'walletconnect',
+
+      provider,
+
+      rabbitReady:
+        false,
+
+      rabbitReason:
+        reason,
+
+      state: {
+        account: null,
+        chainId: null,
+        chainIdHex: null,
+      },
+    }
+>>>>>>> c94eebe (fix: preserve WalletConnect provider session)
   }
 
   const network =

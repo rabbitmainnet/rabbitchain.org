@@ -1,19 +1,20 @@
 import { NETWORKS } from './networks'
 
-export const RELEASE_TAG = 'v2.3.7'
-export const RELEASE_COMMIT = '250f3924d103cfed348edfe12952ed1e022f8eee'
-export const REQUIRED_VERSION = 'V2.3.7'
+export const RELEASE_TAG = 'v2.3.8'
+export const RELEASE_COMMIT = 'dcc01e7eebfbcf20b65d5423a48a9f00128af6ad'
+export const REQUIRED_VERSION = 'V2.3.8'
 export const STABILIZATION_BLOCK = 50500
 export const FAIRNESS_BLOCK = 73000
 export const LIVENESS_V3_BLOCK = 77000
 export const LIVENESS_V4_BLOCK = 97991
 export const LIVENESS_V5_BLOCK = 115000
+export const LIVENESS_V6_BLOCK = 115022
 
 export const RELEASE_URL =
-  'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.3.7'
+  'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.3.8'
 
 export const RELEASE_DOWNLOAD_BASE =
-  'https://github.com/rabbitmainnet/rabbit-geth/releases/download/v2.3.7'
+  'https://github.com/rabbitmainnet/rabbit-geth/releases/download/v2.3.8'
 
 export const DOWNLOADS = [
   {
@@ -21,32 +22,32 @@ export const DOWNLOADS = [
     platform: 'Windows',
     architecture: 'AMD64',
     format: 'ZIP',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.7-windows-amd64.zip`,
-    sha256: '72aa91727e1e48de75ed86f1d332416d15ac4a5fbaf4f6c8cde72ce01077e43e',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.8-windows-amd64.zip`,
+    sha256: '84e5abcd512878277e136463ecbf367481fa7f095d416587813ff3be3dd443ab',
   },
   {
     key: 'linux-amd64',
     platform: 'Linux',
     architecture: 'AMD64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.7-linux-amd64.tar.gz`,
-    sha256: '81ed60df9eb2aec77a153187fb23a2fe5dcdffac9b233edc26ba9ed02f9ed809',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.8-linux-amd64.tar.gz`,
+    sha256: '4c523d348dbedd482115ae4e0c326afa7569e8ed5c0482c507a0c6722355e4fc',
   },
   {
     key: 'darwin-amd64',
     platform: 'macOS',
     architecture: 'Intel / AMD64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.7-darwin-amd64.tar.gz`,
-    sha256: '00d16c77f5237912fd9b3b8951a9bc273f31597faf4840469046857b8fb89ab2',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.8-darwin-amd64.tar.gz`,
+    sha256: '7be25be2c5e4caa0db3e50b6d8cba743a135647dd5b02f6800687d56aecb0328',
   },
   {
     key: 'darwin-arm64',
     platform: 'macOS',
     architecture: 'Apple Silicon / ARM64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.7-darwin-arm64.tar.gz`,
-    sha256: 'cb00e81b455765f605febab0424f829e3417ffbac1e6a57b2bfd85610fc9a016',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.3.8-darwin-arm64.tar.gz`,
+    sha256: '391cd37ca622ec79883558c31be1262a55c3181c784a5c7950784064568a4274',
   },
 ]
 

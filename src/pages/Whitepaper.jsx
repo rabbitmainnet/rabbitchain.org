@@ -7,7 +7,7 @@ const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
 const LIVENESS_V3_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.3.0-Liveness-V3-Upgrade.md'
-const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.3.7'
+const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.3.8'
 
 export default function Whitepaper() {
   return (
@@ -37,7 +37,7 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.5</strong>
-            <p>27 September 2026 · Rabbit Core Testnet V2.3.7</p>
+            <p>27 September 2026 · Rabbit Core Testnet V2.3.8</p>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -52,14 +52,14 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="Whitepaper protocol history and the current Core release are tracked together."
-          text="Whitepaper v1.5 documents the Liveness V3 protocol record; the current public software release is Rabbit Core V2.3.7 with Consensus Liveness V5 activating at block 115,000 while Liveness V4 remains preserved in historical consensus from block 97,991."
+          text="Whitepaper v1.5 documents the Liveness V3 protocol record; the current public software release is Rabbit Core V2.3.8 with Consensus Liveness V6 activating at block 115,022 while Liveness V4 remains preserved in historical consensus from block 97,991."
         />
 
         <div className="resource-grid">
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.3.7</h3>
+            <h3>Rabbit Core V2.3.8</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -90,7 +90,7 @@ export default function Whitepaper() {
             <p>
               Genesis SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                0459632e7eab30c9b28c9f0acf039a5dcaad1af63ebdc7c40f22bdd6d7306eaa
+                0b9d6535e6c3613577e54a5c9e8002181111d9e4a2e040ae12f642add11d5037
               </code>
             </p>
           </article>
@@ -98,29 +98,29 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.3.7</h3>
+            <h3>Rabbit Core V2.3.8</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                72aa91727e1e48de75ed86f1d332416d15ac4a5fbaf4f6c8cde72ce01077e43e
+                84e5abcd512878277e136463ecbf367481fa7f095d416587813ff3be3dd443ab
               </code>
             </p>
             <p>
               Linux AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                81ed60df9eb2aec77a153187fb23a2fe5dcdffac9b233edc26ba9ed02f9ed809
+                4c523d348dbedd482115ae4e0c326afa7569e8ed5c0482c507a0c6722355e4fc
               </code>
             </p>
             <p>
               macOS Intel / AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                00d16c77f5237912fd9b3b8951a9bc273f31597faf4840469046857b8fb89ab2
+                7be25be2c5e4caa0db3e50b6d8cba743a135647dd5b02f6800687d56aecb0328
               </code>
             </p>
             <p>
               macOS Apple Silicon / ARM64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                cb00e81b455765f605febab0424f829e3417ffbac1e6a57b2bfd85610fc9a016
+                391cd37ca622ec79883558c31be1262a55c3181c784a5c7950784064568a4274
               </code>
             </p>
           </article>
@@ -188,7 +188,7 @@ export default function Whitepaper() {
             Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Current Rabbit Core V2.3.7 release <ArrowUpRight size={14} />
+            Current Rabbit Core V2.3.8 release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>
