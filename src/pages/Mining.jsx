@@ -10,79 +10,10 @@ import {
   TerminalSquare,
 } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
-import { DOWNLOADS, RELEASE } from '../config/release'
-
-const downloadIcons = {
-  'windows-amd64': MonitorDown,
-  'linux-amd64': TerminalSquare,
-  'darwin-amd64': MonitorDown,
-  'darwin-arm64': MonitorDown,
-}
 
 export default function Mining() {
   return (
     <main>
-      <style>{`
-        .mining-downloads {
-          position: relative;
-        }
-
-        .mining-downloads .download-grid {
-          align-items: stretch;
-        }
-
-        .mining-downloads .download-grid > article {
-          min-width: 0;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .mining-downloads .download-grid > article > span {
-          margin-top: 18px;
-        }
-
-        .mining-downloads .download-meta {
-          min-width: 0;
-          margin-top: auto;
-          padding-top: 18px;
-        }
-
-        .mining-downloads .button.primary {
-          width: 100%;
-          justify-content: center;
-          margin-top: 20px;
-        }
-
-        .mining-download-footer {
-          margin-top: 28px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 20px;
-          flex-wrap: wrap;
-        }
-
-        .mining-download-footer p {
-          margin: 0;
-          max-width: 720px;
-        }
-
-        .mining-download-footer .button {
-          flex: 0 0 auto;
-        }
-
-        @media (max-width: 720px) {
-          .mining-download-footer {
-            align-items: stretch;
-          }
-
-          .mining-download-footer .button {
-            width: 100%;
-            justify-content: center;
-          }
-        }
-      `}</style>
       <section className="page-hero mining-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
@@ -95,9 +26,9 @@ export default function Mining() {
             </p>
 
             <div className="hero-ctas">
-              <a className="button primary" href="#downloads">
-                Rabbit Core V2.3.6 <ArrowRight size={15} />
-              </a>
+              <Link className="button primary" to="/releases">
+                Rabbit Core V2.3.7 <ArrowRight size={15} />
+              </Link>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
           </div>
@@ -105,7 +36,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.3.6</b>
+              <b>V2.3.7</b>
             </div>
 
             <pre><code>
@@ -127,7 +58,7 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <h2>Rabbit Core V2.3.6 is the current public Testnet package with Liveness V4 active from block 97,991.</h2>
+            <h2>Rabbit Core V2.3.7 is the required public Testnet package. Consensus Liveness V5 activates at block 115,000 while the existing Testnet chain and historical consensus activations are preserved.</h2>
 
             <p>
               Existing miners only need to close the previous Rabbit Core, extract
@@ -137,56 +68,7 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.3.6</a>
-        </div>
-      </section>
-
-      <section className="section shell mining-downloads" id="downloads">
-        <SectionHeader
-          eyebrow="DOWNLOAD RABBIT CORE"
-          title="Choose your system and start mining."
-          text="Download the current verified Rabbit Core package here. Full SHA-256 verification, upgrade instructions and release details are available in the Release Center."
-        />
-
-        <div className="download-grid">
-          {DOWNLOADS.map((download) => {
-            const Icon = downloadIcons[download.key]
-
-            return (
-              <article key={download.key}>
-                <Icon size={22} />
-                <span>{download.architecture}</span>
-                <h3>{download.platform}</h3>
-                <p>{download.format} package</p>
-
-                <div className="download-meta">
-                  <small>VERSION</small>
-                  <b>{RELEASE.requiredVersion}</b>
-                </div>
-
-                <a
-                  className="button primary"
-                  href={download.url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Download size={15} /> Download
-                </a>
-              </article>
-            )
-          })}
-        </div>
-
-        <div className="mining-download-footer">
-          <p>
-            Already mining? Keep your existing Rabbit Testnet data and wallet.
-            Full verification hashes and safe upgrade instructions are available
-            in the official Release Center.
-          </p>
-
-          <Link className="button secondary" to="/releases">
-            SHA-256, upgrade & release details
-          </Link>
+          <Link className="button light" to="/releases">Download V2.3.7</Link>
         </div>
       </section>
 
@@ -614,7 +496,7 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.3.6 preserves the existing Rabbit Testnet blockchain data,
+              Rabbit Core V2.3.7 preserves the existing Rabbit Testnet blockchain data,
               encrypted wallet and persistent consensus state across normal restarts.
               If the node stops unexpectedly, Rabbit Core restarts it using the same
               data directory and waits for canonical synchronization before mining resumes.

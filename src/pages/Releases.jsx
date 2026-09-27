@@ -27,69 +27,17 @@ export default function Releases() {
 
   return (
     <main>
-      <style>{`
-        .release-long-text {
-          display: block;
-          width: 100%;
-          max-width: 100%;
-          box-sizing: border-box;
-          overflow-wrap: anywhere;
-          word-break: break-word;
-          white-space: normal;
-          line-height: 1.55;
-        }
-
-        .release-command {
-          display: block;
-          width: 100%;
-          max-width: 100%;
-          box-sizing: border-box;
-          overflow-x: auto;
-          white-space: pre-wrap;
-          overflow-wrap: anywhere;
-          word-break: break-word;
-          line-height: 1.55;
-        }
-
-        .download-grid > article,
-        .operator-cards > article,
-        .mining-steps > article {
-          min-width: 0;
-        }
-
-        .download-meta {
-          min-width: 0;
-        }
-
-        .download-meta code {
-          display: block;
-          width: 100%;
-          max-width: 100%;
-          box-sizing: border-box;
-          overflow-wrap: anywhere;
-          word-break: break-word;
-          white-space: normal;
-        }
-
-        @media (max-width: 720px) {
-          .release-long-text,
-          .release-command,
-          .download-meta code {
-            font-size: 0.78rem;
-          }
-        }
-      `}</style>
       <section className="page-hero releases-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
             <span className="hero-eyebrow"><i /> OFFICIAL RABBIT CORE RELEASE</span>
 
             <h1>
-              Rabbit Core Testnet V2.3.6 <em>current.</em>
+              Rabbit Core Testnet V2.3.7 <em>current.</em>
             </h1>
 
             <p>
-              V2.3.6 is the current Rabbit Core release for the public Rabbit Chain
+              V2.3.7 is the current Rabbit Core release for the public Rabbit Chain
               Testnet. This release refreshes the official P2P bootstrap infrastructure
               after the Rabbit Testnet servers were migrated. It does not reset the
               Testnet and does not introduce a new consensus activation.
@@ -97,7 +45,7 @@ export default function Releases() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                <Download size={15} /> Download V2.3.6
+                <Download size={15} /> Download V2.3.7
               </a>
 
               <a
@@ -114,7 +62,7 @@ export default function Releases() {
           <div className="release-check-card">
             <FileCheck2 size={28} />
 
-            <span>PUBLIC TESTNET V2.3.6</span>
+            <span>PUBLIC TESTNET V2.3.7</span>
 
             <strong>
               Windows + Linux + macOS verified packages
@@ -144,7 +92,7 @@ export default function Releases() {
             </h2>
 
             <p>
-              Close the previous Rabbit Core normally, extract V2.3.6 into a new
+              Close the previous Rabbit Core normally, extract V2.3.7 into a new
               program folder and start it normally. Keep your existing TestnetV2
               data directory, encrypted keystore, blockchain data and persistent
               participation state.
@@ -182,7 +130,7 @@ export default function Releases() {
                     <b>{RELEASE.requiredVersion}</b>
 
                     <small>SHA-256</small>
-                    <code className="release-long-text">{download.sha256}</code>
+                    <code>{download.sha256}</code>
                   </div>
 
                   <a
@@ -210,7 +158,7 @@ export default function Releases() {
         <SectionHeader
           eyebrow="EXISTING MINERS"
           title="Upgrade without deleting your wallet or blockchain."
-          text="V2.3.6 is designed as an in-place Rabbit Core software update. Your persistent Rabbit Testnet data remains in its normal data directory."
+          text="V2.3.7 is designed as an in-place Rabbit Core software update. Your persistent Rabbit Testnet data remains in its normal data directory."
         />
 
         <div className="mining-steps">
@@ -237,7 +185,7 @@ export default function Releases() {
           <article>
             <span>03</span>
             <HardDrive size={21} />
-            <h3>Extract V2.3.6</h3>
+            <h3>Extract V2.3.7</h3>
             <p>
               Extract the new release into a new program folder. The program files
               and your persistent Rabbit data directory are separate.
@@ -304,19 +252,19 @@ export default function Releases() {
           <article>
             <MonitorDown size={22} />
             <h3>Windows PowerShell</h3>
-            <pre className="release-command"><code>Get-FileHash .\rabbit-core-testnet-v2.3.6-windows-amd64.zip -Algorithm SHA256</code></pre>
+            <pre><code>Get-FileHash .\rabbit-core-testnet-v2.3.7-windows-amd64.zip -Algorithm SHA256</code></pre>
           </article>
 
           <article>
             <TerminalSquare size={22} />
             <h3>Linux</h3>
-            <pre className="release-command"><code>sha256sum rabbit-core-testnet-v2.3.6-linux-amd64.tar.gz</code></pre>
+            <pre><code>sha256sum rabbit-core-testnet-v2.3.7-linux-amd64.tar.gz</code></pre>
           </article>
 
           <article>
             <TerminalSquare size={22} />
             <h3>macOS</h3>
-            <pre className="release-command"><code>shasum -a 256 rabbit-core-testnet-v2.3.6-darwin-*.tar.gz</code></pre>
+            <pre><code>shasum -a 256 rabbit-core-testnet-v2.3.7-darwin-*.tar.gz</code></pre>
           </article>
         </div>
       </section>
@@ -376,7 +324,7 @@ export default function Releases() {
             <article key={bootnode}>
               <Network size={22} />
               <h3>Bootnode {index + 1}</h3>
-              <code className="release-long-text">{bootnode}</code>
+              <code>{bootnode}</code>
             </article>
           ))}
         </div>
@@ -386,16 +334,16 @@ export default function Releases() {
         <div className="operator-split">
           <div>
             <span className="section-kicker">RELEASE SCOPE</span>
-            <h2>V2.3.6 updates Rabbit Testnet bootstrap infrastructure.</h2>
+            <h2>V2.3.7 activates Consensus Liveness V5 at block 115,000.</h2>
 
             <p>
               The existing public Testnet chain is preserved. Liveness V4 remains
-              active from block 97,991, and the previous Testnet consensus history
+              active historically from block 97,991. Liveness V5 activates at block 115,000, and the previous Testnet consensus history
               remains unchanged.
             </p>
 
             <p>
-              The V2.3.6 packages contain the current official Rabbit Testnet
+              The V2.3.7 packages contain the current official Rabbit Testnet
               discovery nodes so new and existing nodes can reconnect to the
               public P2P mesh.
             </p>
@@ -409,7 +357,7 @@ export default function Releases() {
                 Release: <code>{RELEASE.tag}</code>
               </p>
               <p>
-                Commit: <code className="release-long-text">{RELEASE.commit}</code>
+                Commit: <code>{RELEASE.commit}</code>
               </p>
               <a href={RELEASE.url} target="_blank" rel="noreferrer">
                 Open official GitHub release
