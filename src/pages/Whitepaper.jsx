@@ -7,7 +7,7 @@ const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
 const LIVENESS_V3_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.3.0-Liveness-V3-Upgrade.md'
-const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.3.8'
+const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.4.0'
 
 export default function Whitepaper() {
   return (
@@ -37,7 +37,7 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.5</strong>
-            <p>27 September 2026 · Rabbit Core Testnet V2.3.8</p>
+            <p>30 September 2026 · Rabbit Core Testnet V2.4.0</p>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -52,18 +52,18 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="Whitepaper protocol history and the current Core release are tracked together."
-          text="Whitepaper v1.5 documents the Liveness V3 protocol record; the current public software release is Rabbit Core V2.3.8 with Consensus Liveness V6 activating at block 115,022 while Liveness V4 remains preserved in historical consensus from block 97,991."
+          text="Whitepaper v1.5 preserves the earlier public consensus record; the current software release is Rabbit Core V2.4.0, with Rabbit VRF DKG preparation at block 136,065 and Rabbit VRF plus the consensus liveness fork scheduled for block 136,193."
         />
 
         <div className="resource-grid">
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.3.8</h3>
+            <h3>Rabbit Core V2.4.0</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                aeac6e0542c22d509ef02d3166e45487509dd0fc
+                68974ea4c520262070088b23a09530124c477648
               </code>
             </p>
             <p>
@@ -90,7 +90,7 @@ export default function Whitepaper() {
             <p>
               Genesis SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                0b9d6535e6c3613577e54a5c9e8002181111d9e4a2e040ae12f642add11d5037
+                36017cac04b88ccddf81f1f963dafe227071f9963925a2616aa7f41b3f24299b
               </code>
             </p>
           </article>
@@ -98,29 +98,29 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.3.8</h3>
+            <h3>Rabbit Core V2.4.0</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                84e5abcd512878277e136463ecbf367481fa7f095d416587813ff3be3dd443ab
+                5621762e53b0388d52c55f15d8148403a6d639bfcebdc9a7f5ca101915e09e3f
               </code>
             </p>
             <p>
               Linux AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                4c523d348dbedd482115ae4e0c326afa7569e8ed5c0482c507a0c6722355e4fc
+                94a81ee418cac9574c10a6af5e0073535e704a441177ef42f2a285f8fae937ac
               </code>
             </p>
             <p>
               macOS Intel / AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                7be25be2c5e4caa0db3e50b6d8cba743a135647dd5b02f6800687d56aecb0328
+                bf292a4b1a84b1dc5a7def34908f908b6c3ef28da6d9163af29c0af4629bbc01
               </code>
             </p>
             <p>
               macOS Apple Silicon / ARM64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                391cd37ca622ec79883558c31be1262a55c3181c784a5c7950784064568a4274
+                1c1aa68eaeede17bea184f5d33c8dcddce5cb1214ea0f55fc8c9cf562bfde430
               </code>
             </p>
           </article>
@@ -188,7 +188,7 @@ export default function Whitepaper() {
             Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Current Rabbit Core V2.3.8 release <ArrowUpRight size={14} />
+            Current Rabbit Core V2.4.0 release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>

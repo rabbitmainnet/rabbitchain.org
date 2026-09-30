@@ -177,7 +177,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
 
           <div>
             <span>STATUS</span>
-            <strong>{statusText === 'LIVE' ? 'Live' : statusText === 'COMING LATER' ? 'Coming later' : 'Pre-launch'}</strong>
+            <strong>{statusText === 'LIVE' ? 'Live' : statusText === 'COMING LATER' ? 'Coming later' : statusText === 'ACTIVATION 136193' ? 'Activation 136193' : 'Pre-launch'}</strong>
             <small>Contracts not published yet</small>
           </div>
         </div>
@@ -199,7 +199,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
     const walletNetwork = NETWORKS[networkKey]
     const correctNetwork = connected && walletState?.chainId === Number(walletNetwork?.chainId)
 
-    let actionLabel = 'Request Randomness · Coming Soon'
+    let actionLabel = 'Request Randomness · Activates at 136193'
     let actionDisabled = true
     let actionHandler
 
@@ -400,7 +400,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
 
           <p>
             Consensus-secured · No trusted oracle operator ·
-            No centralized randomness API · Transparent protocol pricing ·
+            No centralized randomness API · Base fee 0.001 tRUSD/request · Transparent protocol pricing ·
             EVM-native integration
           </p>
         </div>
@@ -412,7 +412,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
           </h3>
 
           <p>
-            Developers will be able to request Rabbit VRF directly from
+            After block 136193 is crossed and publicly validated, developers will be able to request Rabbit VRF directly from
             smart contracts. The final public request ABI will be published
             with Rabbit VRF Testnet activation.
           </p>
@@ -428,7 +428,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
         </button>
 
         <p className="product-disclaimer">
-          Rabbit VRF public requests are not enabled on Rabbit Testnet yet.
+          Rabbit VRF public requests are not live yet. DKG preparation begins at block 136065 and protocol activation is scheduled for block 136193.
           This interface is an integration preview and does not submit randomness transactions.
         </p>
       </div>

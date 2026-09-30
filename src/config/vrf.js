@@ -1,5 +1,8 @@
 export const RABBIT_VRF = Object.freeze({
   enabled: false,
+  publicRequestsLive: false,
+  dkgPreparationBlock: 136065,
+  activationBlock: 136193,
 
   coordinator: '0xdFc21aeA108e3F527E5f236ebf354dc8262719da',
 
@@ -16,7 +19,7 @@ export const RABBIT_VRF = Object.freeze({
     },
   },
 
-  baseFeeTrusdBaseUnits: 10_000,
+  baseFeeTrusdBaseUnits: 1_000,
 
   twap: {
     minimumWindowSeconds: 1800,
@@ -25,5 +28,5 @@ export const RABBIT_VRF = Object.freeze({
     ringSize: 16,
   },
 
-  status: 'Protocol integration in progress',
+  status: 'TESTNET ACTIVATION SCHEDULED · BLOCK 136193',
 })

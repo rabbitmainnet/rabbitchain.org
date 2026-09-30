@@ -5,5 +5,7 @@ Official GitHub: https://github.com/rabbitmainnet
 Official X: https://x.com/rabbit_mainnet
 
 Rabbit Chain is a permissionless EVM Layer 1 powered by LCQ Consensus. Rabbit Testnet (Chain ID 9280) is the first public network. Rabbit Mainnet (Chain ID 928) follows validation.
+Current Rabbit Core Testnet release: v2.4.0 (source commit 68974ea4c520262070088b23a09530124c477648).
+Rabbit VRF DKG preparation is scheduled for block 136065. Rabbit VRF protocol and the consensus liveness fork are scheduled for block 136193. Public Rabbit VRF requests are not considered live until the activation block is crossed and publicly validated.
 
 Key routes: /testnet, /mainnet, /lcq, /platform, /developers, /docs, /security, /releases, /status.

@@ -59,6 +59,7 @@ export function platformModuleStatus(networkKey, tool) {
   if (!network) return 'UNAVAILABLE'
   if (networkKey === 'testnet' && platformModuleLive(networkKey, tool) && (tool === 'swap' || tool === 'liquidity' || tool === 'factory')) return 'TESTNET BETA'
   if (platformModuleLive(networkKey, tool)) return 'LIVE'
+  if (networkKey === 'testnet' && tool === 'vrf') return 'ACTIVATION 136193'
   if (networkKey === 'mainnet' && !network.networkLive) return 'COMING LATER'
   return 'PRE-LAUNCH'
 }
