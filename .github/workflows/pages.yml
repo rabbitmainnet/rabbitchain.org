@@ -77,6 +77,7 @@ jobs:
           done
 
           cp dist/index.html dist/404.html
+          for tool in swap liquidity staking bridge p2p launchpool factory vrf faucet; do mkdir -p "dist/platform/$tool"; cp dist/index.html "dist/platform/$tool/index.html"; done
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
