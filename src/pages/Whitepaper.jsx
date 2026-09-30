@@ -90,7 +90,7 @@ export default function Whitepaper() {
             <p>
               Genesis SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                36017cac04b88ccddf81f1f963dafe227071f9963925a2616aa7f41b3f24299b
+                e77f2510ef880dead675cda146fb8dbc31375b17daebc800584b1c29c6ae1fb6
               </code>
             </p>
           </article>
