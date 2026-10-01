@@ -428,7 +428,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
         </button>
 
         <p className="product-disclaimer">
-          Rabbit VRF public requests are not live yet. DKG preparation begins at block 136065 and protocol activation is scheduled for block 136193.
+          Rabbit VRF is active on the public Testnet. DKG preparation started at block 136065, and Rabbit VRF protocol plus the VRF liveness rules activated at block 136193.
           This interface is an integration preview and does not submit randomness transactions.
         </p>
       </div>

@@ -96,7 +96,7 @@ export default function Mining() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.4.1 <ArrowRight size={15} />
+                Rabbit Core V2.4.2 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -105,7 +105,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.4.1</b>
+              <b>V2.4.2</b>
             </div>
 
             <pre><code>
@@ -127,7 +127,7 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <h2>Rabbit Core V2.4.1 is the required public Testnet package for the Rabbit VRF fork. DKG preparation begins at block 136,065; Rabbit VRF and the VRF liveness rules activate at block 136,193 while the existing Testnet chain and prior history are preserved.</h2>
+            <h2>Rabbit Core V2.4.2 is the required public Testnet package. DKG preparation started at block 136,065; Rabbit VRF and the VRF liveness rules activated at block 136,193 and are active while the existing Testnet chain and prior history remain preserved.</h2>
 
             <p>
               Existing miners only need to close the previous Rabbit Core, extract
@@ -137,7 +137,7 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.4.1</a>
+          <a className="button light" href="#downloads">Download V2.4.2</a>
         </div>
       </section>
 
@@ -614,10 +614,10 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.4.1 is an in-place Testnet upgrade. Keep your existing
+              Rabbit Core V2.4.2 is an in-place Testnet upgrade. Keep your existing
               Rabbit Testnet datadir, blockchain data, wallet/keystore, node identity
               and persistent participation / consensus state. Do not reset or delete
-              them. Close the previous Rabbit Core normally, verify the V2.4.1 package
+              them. Close the previous Rabbit Core normally, verify the V2.4.2 package
               SHA-256, extract it into a new software directory and continue using the
               existing Testnet data.
             </p>
