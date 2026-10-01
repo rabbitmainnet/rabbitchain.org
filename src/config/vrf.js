@@ -1,5 +1,5 @@
 export const RABBIT_VRF = Object.freeze({
-  enabled: false,
+  enabled: true,
   publicRequestsLive: false,
   dkgPreparationBlock: 136065,
   activationBlock: 136193,
@@ -28,5 +28,5 @@ export const RABBIT_VRF = Object.freeze({
     ringSize: 16,
   },
 
-  status: 'TESTNET ACTIVATION SCHEDULED · BLOCK 136193',
+  status: 'TESTNET LIVE · RABBIT VRF ACTIVE',
 })

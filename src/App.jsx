@@ -30,6 +30,7 @@ const Developers = lazy(() => import('./pages/Developers'))
 const Docs = lazy(() => import('./pages/Docs'))
 const Community = lazy(() => import('./pages/Community'))
 const Platform = lazy(() => import('./pages/Platform'))
+const Vrf = lazy(() => import('./pages/Vrf'))
 const ExplorerSwap = lazy(() => import('./pages/ExplorerSwap'))
 const ExplorerPlatformTools = lazy(() => import('./pages/ExplorerPlatformTools'))
 const Whitepaper = lazy(() => import('./pages/Whitepaper'))
@@ -53,6 +54,7 @@ const META = {
   '/developers': ['Developers — Rabbit Chain', 'Rabbit EVM, JSON-RPC, wallet and developer integration resources.'],
   '/docs': ['Documentation — Rabbit Chain', 'Official Rabbit Chain protocol and network documentation.'],
   '/platform': ['Rabbit Platform', 'Official wallet-connected application layer for Rabbit Chain.'],
+  '/vrf': ['Rabbit VRF — Verifiable Randomness', 'Rabbit VRF is the native verifiable randomness protocol for Rabbit Chain. Test the live public Testnet coordinator and inspect canonical VRF requests.'],
   '/rab': ['RAB — Rabbit Chain Native Asset', 'Rabbit Testnet uses tRAB; the future Rabbit Mainnet will use RAB.'],
   '/security': ['Security — Rabbit Chain', 'Official Rabbit Chain domain, wallet and release verification guidance.'],
   '/releases': ['Releases — Rabbit Chain', 'Official Rabbit Core V2.4.2 Rabbit VRF release, verified downloads, SHA-256 hashes and upgrade instructions for Rabbit Testnet.'],
@@ -366,6 +368,8 @@ export default function App() {
             <Route path="/docs" element={<Page><Docs /></Page>} />
             <Route path="/community" element={<Page><Community /></Page>} />
             <Route path="/platform" element={<Page><Platform walletState={walletState} walletProvider={provider} onConnect={openWallet} onAddNetwork={switchNetwork} toast={toast} /></Page>} />
+            <Route path="/vrf" element={<Page><Vrf walletState={walletState} walletProvider={provider} onConnect={openWallet} onAddNetwork={switchNetwork} toast={toast} /></Page>} />
+            <Route path="/platform/vrf" element={<Page><Vrf walletState={walletState} walletProvider={provider} onConnect={openWallet} onAddNetwork={switchNetwork} toast={toast} /></Page>} />
             <Route path="/platform/:tool" element={<Page><Platform walletState={walletState} walletProvider={provider} onConnect={openWallet} onAddNetwork={switchNetwork} toast={toast} /></Page>} />
             <Route
               path="/embed/swap"

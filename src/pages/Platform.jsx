@@ -31,8 +31,8 @@ const tools = {
   },
 }
 
-const toolOrder = ['swap', 'liquidity', 'staking', 'bridge', 'p2p', 'launchpool', 'factory', 'vrf', 'faucet']
-const testnetToolOrder = ['swap', 'liquidity', 'factory', 'vrf', 'launchpool', 'faucet']
+const toolOrder = ['swap', 'liquidity', 'staking', 'bridge', 'p2p', 'vrf', 'factory', 'launchpool', 'faucet']
+const testnetToolOrder = ['swap', 'liquidity', 'factory', 'launchpool', 'vrf', 'faucet']
 
 
 function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwork, networkKey, toast }) {
@@ -240,7 +240,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
           <div>
             <label>
               <span>BASE PROTOCOL FEE</span>
-              <input disabled value="0.01 tRUSD / request" readOnly />
+              <input disabled value="0.001 tRUSD / request" readOnly />
             </label>
             <label>
               <span>COORDINATOR</span>
@@ -412,9 +412,9 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
           </h3>
 
           <p>
-            After block 136193 is crossed and publicly validated, developers will be able to request Rabbit VRF directly from
-            smart contracts. The final public request ABI will be published
-            with Rabbit VRF Testnet activation.
+            Developers can integrate Rabbit VRF on the public Testnet now. The coordinator is live at
+            0xdFc21aeA108e3F527E5f236ebf354dc8262719da, and the public developer flow can now evolve into fee quote,
+            request submission, request lookup, and fulfillment verification directly from this interface.
           </p>
         </div>
 
@@ -429,7 +429,8 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
 
         <p className="product-disclaimer">
           Rabbit VRF is active on the public Testnet. DKG preparation started at block 136065, and Rabbit VRF protocol plus the VRF liveness rules activated at block 136193.
-          This interface is an integration preview and does not submit randomness transactions.
+          This interface is the public Rabbit VRF integration area. The next step is enabling live request submission,
+          request tracking, and fulfillment visibility for Testnet users.
         </p>
       </div>
     )
@@ -522,15 +523,6 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
                   </Link>
                 )
               })}
-              {platformNetwork === 'testnet' && selectedNetwork?.walletEnabled && (
-                <button
-                  type="button"
-                  className="platform-testnet-nav-network"
-                  onClick={() => onAddNetwork?.(selectedNetwork)}
-                >
-                  + Testnet
-                </button>
-              )}
             </nav>
           </aside>
 

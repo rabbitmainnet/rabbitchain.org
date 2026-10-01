@@ -30,6 +30,7 @@ const groups = [
     intro: 'EVM tooling with Rabbit network parameters.',
     links: [
       ['Developers', 'EVM, JSON-RPC and integration paths', '/developers'],
+      ['Rabbit VRF', 'Verifiable randomness and Testnet playground', '/vrf'],
       ['Documentation', 'Protocol and network reference', '/docs'],
       ['Releases', 'Official binaries and verification', '/releases'],
       ['GitHub', 'Open-source repositories', 'https://github.com/rabbitmainnet'],
