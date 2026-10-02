@@ -1,6 +1,6 @@
 export const RABBIT_VRF = Object.freeze({
   enabled: true,
-  publicRequestsLive: false,
+  publicRequestsLive: true,
   dkgPreparationBlock: 136065,
   activationBlock: 136193,
 
