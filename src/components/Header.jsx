@@ -84,7 +84,7 @@ export default function Header({ walletState, onWalletClick, onOpenSearch }) {
         <div className="shell announcement-inner">
           <span className="notranslate" translate="no">
             <i />
-            RABBIT TESTNET · V2.4.2 REQUIRED · RABBIT VRF ACTIVE · FORK 136,193
+            RABBIT TESTNET · V2.4.3 REQUIRED · LIVENESS RECOVERY · RABBIT VRF ACTIVE
           </span>
           <Link to="/releases">Upgrade instructions <span>→</span></Link>
         </div>
