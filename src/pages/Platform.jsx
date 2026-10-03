@@ -412,9 +412,9 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
           </h3>
 
           <p>
-            Developers can integrate Rabbit VRF on the public Testnet now. The coordinator is live at
-            0xdFc21aeA108e3F527E5f236ebf354dc8262719da, and the public developer flow can now evolve into fee quote,
-            request submission, request lookup, and fulfillment verification directly from this interface.
+            Developers can test the Rabbit VRF coordinator at
+            0xdFc21aeA108e3F527E5f236ebf354dc8262719da. Use the playground to
+            quote fees, submit experimental requests and inspect canonical fulfillment.
           </p>
         </div>
 
@@ -428,9 +428,9 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
         </button>
 
         <p className="product-disclaimer">
-          Rabbit VRF is active on the public Testnet. DKG preparation started at block 136065, and Rabbit VRF protocol plus the VRF liveness rules activated at block 136193.
-          This interface is the public Rabbit VRF integration area. The next step is enabling live request submission,
-          request tracking, and fulfillment visibility for Testnet users.
+          Rabbit VRF protocol rules activated at block 136193 after DKG preparation at 136065.
+          V2.4.4 improves DKG and request retry recovery. Testnet requests can remain pending;
+          use randomness only after canonical completion has been verified.
         </p>
       </div>
     )

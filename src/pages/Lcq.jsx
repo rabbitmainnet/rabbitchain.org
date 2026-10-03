@@ -1,3 +1,4 @@
+import ReleaseNotice from '../components/ReleaseNotice'
 import { Link } from 'react-router-dom'
 import {
   Activity, ArrowRight, CheckCircle2, Clock3, Cpu, GitBranch,
@@ -23,6 +24,7 @@ const principles = [
 export default function Lcq() {
   return (
     <main>
+      <ReleaseNotice />
       <section className="lcq-v2-hero">
         <div className="shell lcq-v2-hero-grid">
           <div className="lcq-v2-copy">

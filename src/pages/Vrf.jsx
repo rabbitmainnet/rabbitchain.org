@@ -341,7 +341,7 @@ export default function Vrf({
 
       setRequestId(emittedRequestId)
       await inspect(emittedRequestId)
-      toast?.('Rabbit VRF request confirmed.')
+      toast?.('Request transaction confirmed. Randomness may still be pending.')
     } catch (error) {
       toast?.(error?.message || 'Rabbit VRF request failed.')
     } finally {
@@ -407,6 +407,8 @@ export default function Vrf({
             <p>
               Rabbit VRF exposes consensus-secured randomness directly to EVM applications
               without a centralized randomness API or trusted oracle operator.
+              Public fulfillment is under Testnet validation; a transaction receipt
+              confirms submission, not completed randomness.
             </p>
 
             <div className="hero-ctas">
@@ -441,7 +443,7 @@ export default function Vrf({
               <div className="vrf-hero-status">
                 <span>VERIFIABLE RANDOM FUNCTION</span>
                 <strong>Consensus-secured randomness for Rabbit Chain.</strong>
-                <small>Rabbit Core V2.4.2 · Protocol active since block 136,193</small>
+                <small>Rabbit Core V2.4.4 · Protocol rules active since block 136,193</small>
               </div>
             </div>
 
@@ -449,7 +451,7 @@ export default function Vrf({
               <div><span>NETWORK</span><strong>Rabbit Testnet</strong></div>
               <div><span>CHAIN ID</span><strong>9280</strong></div>
               <div><span>BASE TARGET</span><strong>0.001 tRUSD</strong></div>
-              <div><span>STATUS</span><strong>ACTIVE</strong></div>
+              <div><span>STATUS</span><strong>TESTNET VALIDATION</strong></div>
             </div>
           </div>
         </div>
@@ -592,7 +594,7 @@ export default function Vrf({
               <Wallet size={17} />
               <span>
                 <b>Public requests</b>
-                <small>{RABBIT_VRF.publicRequestsLive ? 'Enabled' : 'Final browser validation in progress'}</small>
+                <small>{RABBIT_VRF.publicRequestsLive ? 'Experimental · inspect canonical completion' : 'Validation in progress'}</small>
               </span>
             </div>
 
@@ -709,7 +711,9 @@ bytes32 requestId =
           </div>
 
           <p>
-            Rabbit VRF is live on Rabbit Testnet, Chain ID 9280.
+            Rabbit VRF protocol rules are enabled on Testnet, Chain ID 9280.
+            Public request testing is experimental; settle only after the request
+            reports canonical completion.
             Rabbit Mainnet has not launched and Rabbit VRF must not be presented
             as a Mainnet service yet.
           </p>
@@ -1141,11 +1145,12 @@ function settleRound(
 
         <div className="shell vrf-faq-grid">
           <article>
-            <h3>Is Rabbit VRF live?</h3>
+            <h3>What is active on Testnet?</h3>
             <p>
-              Yes on the public Rabbit Testnet. DKG preparation started at block
-              136,065 and Rabbit VRF plus its liveness rules activated at block
-              136,193.
+              Protocol rules activated on Testnet at block 136,193, after DKG
+              preparation at 136,065. V2.4.4 improves DKG and retry recovery.
+              Request submission and a successful transaction receipt do not prove
+              fulfillment: inspect the request and wait for canonical completion.
             </p>
           </article>
 

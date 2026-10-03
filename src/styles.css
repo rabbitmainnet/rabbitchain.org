@@ -7507,3 +7507,10 @@ footer {
     padding-inline:10px;
   }
 }
+
+/* Current Testnet release notice. */
+.release-update-notice{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:24px;margin-bottom:24px;padding:24px;border:1px solid var(--line);border-radius:16px;background:#f7f5ff;color:#171927}
+.release-update-notice strong{display:block;font-size:16px;line-height:1.5}
+.release-update-notice p{max-width:900px;margin:8px 0 0;font-size:13px;line-height:1.65}
+.release-update-notice .button{flex-shrink:0}
+@media(max-width:720px){.release-update-notice{flex-direction:column;align-items:stretch;padding:18px;gap:16px}.release-update-notice .button{width:100%;justify-content:center}}

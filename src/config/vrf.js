@@ -28,5 +28,5 @@ export const RABBIT_VRF = Object.freeze({
     ringSize: 16,
   },
 
-  status: 'TESTNET LIVE · RABBIT VRF ACTIVE',
+  status: 'TESTNET · PROTOCOL ACTIVE · FULFILLMENT VALIDATION',
 })

@@ -1,3 +1,4 @@
+import ReleaseNotice from '../components/ReleaseNotice'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, BookOpen, FileText, ShieldCheck } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
@@ -7,11 +8,12 @@ const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
 const LIVENESS_V3_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.3.0-Liveness-V3-Upgrade.md'
-const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.4.3'
+const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.4.4'
 
 export default function Whitepaper() {
   return (
     <main>
+      <ReleaseNotice />
       <section className="page-hero whitepaper-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
@@ -37,7 +39,7 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.5</strong>
-            <p>2 October 2026 · Rabbit Core Testnet V2.4.3</p>
+            <p>Current software: Rabbit Core Testnet V2.4.4</p>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -52,14 +54,14 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="Whitepaper protocol history and the current Core release are tracked together."
-          text="Whitepaper v1.5 preserves the earlier public consensus record; the current software release is Rabbit Core V2.4.3. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 and are active on the public Testnet."
+          text="Whitepaper v1.5 preserves the earlier public consensus record; the current software release is Rabbit Core V2.4.4. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 on the public Testnet. V2.4.4 schedules the V5 mining reward correction for block 153,601 and improves VRF runtime recovery. Protocol activation does not prove every request has completed."
         />
 
         <div className="resource-grid">
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.4.3</h3>
+            <h3>Rabbit Core V2.4.4</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -90,7 +92,7 @@ export default function Whitepaper() {
             <p>
               Genesis SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                e77f2510ef880dead675cda146fb8dbc31375b17daebc800584b1c29c6ae1fb6
+                17bfe51321f6e7befe8719ee35c34b1b876fda3e93672204903bd7b6d6bb69ba
               </code>
             </p>
           </article>
@@ -98,7 +100,7 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.4.3</h3>
+            <h3>Rabbit Core V2.4.4</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -188,7 +190,7 @@ export default function Whitepaper() {
             Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Current Rabbit Core V2.4.3 release <ArrowUpRight size={14} />
+            Current Rabbit Core V2.4.4 release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>

@@ -1,3 +1,4 @@
+import ReleaseNotice from '../components/ReleaseNotice'
 import { Link } from 'react-router-dom'
 import { ArrowRight, CheckCircle2, Code2, Cpu, FlaskConical, Globe2, Network, Plus, Radio, ShieldCheck, Wallet } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
@@ -8,6 +9,7 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
   const n = NETWORKS.testnet
   return (
     <main>
+      <ReleaseNotice />
       <section className="page-hero testnet-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">

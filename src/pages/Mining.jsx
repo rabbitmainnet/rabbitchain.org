@@ -1,3 +1,4 @@
+import ReleaseNotice from '../components/ReleaseNotice'
 import { Link } from 'react-router-dom'
 import {
   ArrowRight,
@@ -22,6 +23,7 @@ const downloadIcons = {
 export default function Mining() {
   return (
     <main>
+      <ReleaseNotice />
       <style>{`
         .mining-downloads {
           position: relative;
@@ -96,7 +98,7 @@ export default function Mining() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.4.3 <ArrowRight size={15} />
+                Rabbit Core V2.4.4 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -105,7 +107,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.4.3</b>
+              <b>V2.4.4</b>
             </div>
 
             <pre><code>
@@ -127,7 +129,7 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <h2>Rabbit Core V2.4.3 is the required public Testnet package. It includes the consensus liveness recovery while preserving the existing Testnet chain, wallets, WorkSeats, prior history and the active Rabbit VRF rules.</h2>
+            <h2>Rabbit Core V2.4.4 is the required public Testnet package. It includes the V5 reward correction scheduled for block 153,601 and VRF DKG and request retry recovery. Existing chain history, wallets and WorkSeats are preserved.</h2>
 
             <p>
               Existing miners only need to close the previous Rabbit Core, extract
@@ -137,7 +139,28 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.4.3</a>
+          <a className="button light" href="#downloads">Download V2.4.4</a>
+        </div>
+      </section>
+
+      <section className="section shell" id="storage">
+        <SectionHeader eyebrow="DATA STORAGE" title="Choose the drive for blockchain data." text="The program folder and blockchain data directory are separate. Extracting Rabbit Core on E: does not move the default data directory away from C:." />
+        <div className="operator-cards">
+          <article>
+            <HardDrive size={22} /><h3>Check space before synchronization</h3>
+            <p>Use a drive with room for the growing blockchain. Stop Rabbit Core with Ctrl+C if the data drive is nearly full. Never delete the keystore or chain data to make room during an upgrade.</p>
+          </article>
+          <article>
+            <MonitorDown size={22} /><h3>Windows: use another data drive</h3>
+            <p>From PowerShell in the extracted program folder:</p>
+            <pre className="release-command"><code>{String.raw`.\rabbit-core.exe --data-dir "E:\RabbitChain\TestnetV2"`}</code></pre>
+            <p>For an existing wallet, first stop all Rabbit processes and copy the complete existing TestnetV2 directory to that location. Retain the original copy. A new empty directory can create a different wallet and starts synchronization from scratch.</p>
+          </article>
+          <article>
+            <TerminalSquare size={22} /><h3>Linux and macOS: explicit data directory</h3>
+            <pre className="release-command"><code>{'./rabbit-core --data-dir "/path/on/data-drive/RabbitChain/TestnetV2"'}</code></pre>
+            <p>Use an absolute path on a mounted, writable drive. If migrating, copy the complete directory while stopped, then verify the displayed wallet address and data path before continuing.</p>
+          </article>
         </div>
       </section>
 
@@ -614,10 +637,10 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.4.3 is an in-place Testnet upgrade. Keep your existing
+              Rabbit Core V2.4.4 is an in-place Testnet upgrade. Keep your existing
               Rabbit Testnet datadir, blockchain data, wallet/keystore, node identity
               and persistent participation / consensus state. Do not reset or delete
-              them. Close the previous Rabbit Core normally, verify the V2.4.3 package
+              them. Close the previous Rabbit Core normally, verify the V2.4.4 package
               SHA-256, extract it into a new software directory and continue using the
               existing Testnet data.
             </p>
@@ -663,8 +686,10 @@ export default function Mining() {
             <h2>Producer and committee rewards are visible in Rabbit Miner.</h2>
 
             <p>
-              The current Testnet block reward is 1.2 tRAB. The protocol allocates
-              70% to the selected producer and 30% to the eligible committee.
+              The configured Testnet block reward is 1.2 tRAB: 70% for the producer
+              and 30% for eligible committee participation. V2.4.4 corrects V5-header
+              reward settlement from block 153,601; earlier blocks are not repaid
+              automatically. Verify actual credits against canonical state.
             </p>
           </div>
 
@@ -674,7 +699,7 @@ export default function Mining() {
               <h3>Current split</h3>
               <ul>
                 <li>🐇 Producer: 0.84 tRAB</li>
-                <li>🥕 Committee: 0.36 tRAB total</li>
+                <li>🥕 Eligible committee: up to 0.36 tRAB total</li>
                 <li>Displayed balance updates as canonical rewards arrive</li>
               </ul>
             </article>
