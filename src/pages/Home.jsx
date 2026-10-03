@@ -1,4 +1,3 @@
-import ReleaseNotice from '../components/ReleaseNotice'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
@@ -93,7 +92,6 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
 
   return (
     <main className="home-page-v13">
-      <ReleaseNotice />
       <section className="home-v2-hero">
         <div className="shell home-v2-hero-grid">
           <div className="home-v2-copy">
