@@ -98,7 +98,7 @@ export default function Mining() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.4.4 <ArrowRight size={15} />
+                Rabbit Core V2.4.5 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -107,7 +107,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.4.4</b>
+              <b>V2.4.5</b>
             </div>
 
             <pre><code>
@@ -129,7 +129,7 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <h2>Rabbit Core V2.4.4 is the required public Testnet package. It includes the V5 reward correction scheduled for block 153,601 and VRF DKG and request retry recovery. Existing chain history, wallets and WorkSeats are preserved.</h2>
+            <h2>Rabbit Core V2.4.5 is the required public Testnet package. It includes the V5 reward correction scheduled for block 153,601 and VRF DKG and request retry recovery. Existing chain history, wallets and WorkSeats are preserved.</h2>
 
             <p>
               Existing miners only need to close the previous Rabbit Core, extract
@@ -139,7 +139,7 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.4.4</a>
+          <a className="button light" href="#downloads">Download V2.4.5</a>
         </div>
       </section>
 
@@ -637,10 +637,10 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.4.4 is an in-place Testnet upgrade. Keep your existing
+              Rabbit Core V2.4.5 is an in-place Testnet upgrade. Keep your existing
               Rabbit Testnet datadir, blockchain data, wallet/keystore, node identity
               and persistent participation / consensus state. Do not reset or delete
-              them. Close the previous Rabbit Core normally, verify the V2.4.4 package
+              them. Close the previous Rabbit Core normally, verify the V2.4.5 package
               SHA-256, extract it into a new software directory and continue using the
               existing Testnet data.
             </p>
@@ -687,7 +687,7 @@ export default function Mining() {
 
             <p>
               The configured Testnet block reward is 1.2 tRAB: 70% for the producer
-              and 30% for eligible committee participation. V2.4.4 corrects V5-header
+              and 30% for eligible committee participation. V2.4.5 corrects V5-header
               reward settlement from block 153,601; earlier blocks are not repaid
               automatically. Verify actual credits against canonical state.
             </p>
