@@ -7507,3 +7507,29 @@ footer {
     padding-inline:10px;
   }
 }
+
+/* Rabbit VRF inside Rabbit Explorer */
+.vrf-explorer-embed > section:not(#playground) {
+  display: none !important;
+}
+
+.vrf-explorer-embed #playground {
+  margin: 0;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.vrf-explorer-embed #playground .shell {
+  width: min(1180px, calc(100% - 32px));
+}
+
+@media (max-width: 720px) {
+  .vrf-explorer-embed #playground {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .vrf-explorer-embed #playground .shell {
+    width: min(100% - 20px, 1180px);
+  }
+}

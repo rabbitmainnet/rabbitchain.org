@@ -4,6 +4,7 @@ import { SafeAppProvider } from '@safe-global/safe-apps-provider'
 import RabbitFaucetPanel from '../components/RabbitFaucetPanel'
 import RabbitLiquidityPanel from '../components/RabbitLiquidityPanel'
 import RabbitTokenFactoryPanel from '../components/RabbitTokenFactoryPanel'
+import Vrf from './Vrf'
 
 const RABBIT_CHAIN_ID = 9280
 
@@ -19,6 +20,11 @@ const TOOLS = {
   factory: {
     title: 'Rabbit Token Factory',
     Component: RabbitTokenFactoryPanel,
+  },
+  vrf: {
+    title: 'Rabbit VRF',
+    Component: Vrf,
+    embedded: true,
   },
 }
 
@@ -220,7 +226,9 @@ export default function ExplorerPlatformTools({ tool, toast }) {
           walletProvider={session.provider}
           onConnect={() => {}}
           onSwitchNetwork={() => {}}
+          onAddNetwork={() => {}}
           toast={toast}
+          embedded={Boolean(config.embedded)}
         />
       </div>
     </main>

@@ -176,6 +176,7 @@ export default function Vrf({
   onConnect,
   onAddNetwork,
   toast,
+  embedded = false,
 }) {
   const [feeWei, setFeeWei] = useState(null)
   const [feeError, setFeeError] = useState('')
@@ -360,7 +361,7 @@ export default function Vrf({
           : 'Request randomness'
 
   return (
-    <main>
+    <main className={embedded ? 'vrf-explorer-embed' : undefined}>
       <section className="vrf-platform-toolbar">
         <div className="vrf-platform-toolbar-inner">
           <nav aria-label="Rabbit Platform">

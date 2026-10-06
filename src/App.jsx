@@ -423,6 +423,15 @@ export default function App() {
               path="/embed/mining"
               element={<Mining />}
             />
+            <Route
+              path="/embed/vrf"
+              element={
+                <ExplorerPlatformTools
+                  tool="vrf"
+                  toast={toast}
+                />
+              }
+            />
             <Route path="*" element={<Page><NotFound /></Page>} />
           </Routes>
         </AnimatePresence>
