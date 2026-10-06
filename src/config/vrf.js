@@ -3,6 +3,7 @@ export const RABBIT_VRF = Object.freeze({
   publicRequestsLive: true,
   dkgPreparationBlock: 136065,
   activationBlock: 136193,
+  availabilityV2Block: 173057,
 
   coordinator: '0xdFc21aeA108e3F527E5f236ebf354dc8262719da',
 

@@ -1,3 +1,4 @@
+import { RELEASE_COMMIT, RELEASE_URL, DOWNLOADS } from '../config/release'
 import ReleaseNotice from '../components/ReleaseNotice'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, BookOpen, FileText, ShieldCheck } from 'lucide-react'
@@ -8,7 +9,7 @@ const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
 const LIVENESS_V3_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.3.0-Liveness-V3-Upgrade.md'
-const CORE_RELEASE = 'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.4.5'
+const CORE_RELEASE = RELEASE_URL
 
 export default function Whitepaper() {
   return (
@@ -39,7 +40,7 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.5</strong>
-            <p>Current software: Rabbit Core Testnet V2.4.5</p>
+            <p>Current software: Rabbit Core Testnet V2.4.6</p>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -54,25 +55,26 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="Whitepaper protocol history and the current Core release are tracked together."
-          text="Whitepaper v1.5 preserves the earlier public consensus record; the current software release is Rabbit Core V2.4.5. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 on the public Testnet. V2.4.5 schedules the V5 mining reward correction for block 153,601 and improves VRF runtime recovery. Protocol activation does not prove every request has completed."
+          text="Whitepaper v1.5 preserves the earlier public consensus record; the current software release is Rabbit Core V2.4.6. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 on the public Testnet. V2.4.6 adds VRF availability V2 at block 173,057 and improves synchronization, mining recovery and VRF runtime delivery. The V5 mining reward correction remains active from block 153,601. Protocol activation does not prove every request has completed."
         />
 
         <div className="resource-grid">
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.4.5</h3>
+            <h3>Rabbit Core V2.4.6</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                079cddbcb09ad4009d038b48365cf8af6858fad3
+                {RELEASE_COMMIT}
               </code>
             </p>
             <p>
               Consensus hardening: block 50,000.<br />
               Consensus stabilization: block 50,500.<br />
                Fairness/Liveness: block 73,000.<br />
-                Liveness V3: block 77,000.
+                Liveness V3: block 77,000.<br />
+                VRF availability V2: block 173,057.
             </p>
             <a href={CORE_RELEASE} target="_blank" rel="noreferrer">
               Official release <ArrowUpRight size={14} />
@@ -100,29 +102,29 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.4.5</h3>
+            <h3>Rabbit Core V2.4.6</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                61e981cbd8bde6d56e6785367e13eb08c7b0294588b4c2020cfd7302b8459c60
+                {DOWNLOADS.find((item) => item.key === 'windows-amd64').sha256}
               </code>
             </p>
             <p>
               Linux AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                8e87f4dcdc3e3525f46d2e45ea2c61bd55b68170dd03ed1b18cd1c78511fe3e4
+                {DOWNLOADS.find((item) => item.key === 'linux-amd64').sha256}
               </code>
             </p>
             <p>
               macOS Intel / AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                ae6cd97d3321c7b6d90df6b804a2b0866c633d420eff8a0253efca7b8347ed9c
+                {DOWNLOADS.find((item) => item.key === 'darwin-amd64').sha256}
               </code>
             </p>
             <p>
               macOS Apple Silicon / ARM64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                e2d800ae07a0ec466145365dcf3bd93fc8381c7d5308637a5a3a552ce01fd4a3
+                {DOWNLOADS.find((item) => item.key === 'darwin-arm64').sha256}
               </code>
             </p>
           </article>
@@ -190,7 +192,7 @@ export default function Whitepaper() {
             Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Current Rabbit Core V2.4.5 release <ArrowUpRight size={14} />
+            Current Rabbit Core V2.4.6 release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>

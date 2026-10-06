@@ -5,8 +5,8 @@ Official GitHub: https://github.com/rabbitmainnet
 Official X: https://x.com/rabbit_mainnet
 
 Rabbit Chain is a permissionless EVM Layer 1 powered by LCQ Consensus. Rabbit Testnet (Chain ID 9280) is the first public network. Rabbit Mainnet (Chain ID 928) follows validation.
-Current Rabbit Core Testnet release: v2.4.5 (source commit 56db31a4fcfe3a93297fb633ccb41a6cb14167e8).
-Rabbit Core v2.4.5 fixes Windows VRF DKG key persistence. This update requires no new hard fork and preserves the existing genesis, activation schedule, wallets and blockchain data. Keep the operating-system clock synchronized. VRF completion must be verified through canonical request status, randomness and proof; local key creation alone is not completion.
+Current Rabbit Core Testnet release: v2.4.6 (source commit 632e59f8509be0fcc8046794a589d9c4ef5fdecf).
+Rabbit Core v2.4.6 improves chain convergence, synchronization, mining recovery and VRF delivery. It requires the VRF availability V2 hard fork at block 173057. Earlier fork heights and the existing genesis, wallets and blockchain data are preserved. Keep the operating-system clock synchronized. VRF completion must be verified through canonical request status, randomness and proof; local key creation alone is not completion.
 Rabbit VRF DKG preparation started at block 136065. Rabbit VRF protocol and the VRF liveness rules activated at block 136193. Protocol activation is distinct from verified fulfillment. Public request testing is experimental: inspect canonical completion before using randomness.
 
 Extracting software on another drive does not move the data directory. Rabbit Core supports --data-dir; existing users must stop all Rabbit processes, copy the complete data directory and verify their existing wallet before using another location.

@@ -87,19 +87,19 @@ export default function Releases() {
             <span className="hero-eyebrow"><i /> OFFICIAL RABBIT CORE RELEASE</span>
 
             <h1>
-              Rabbit Core Testnet V2.4.5 <em>current.</em>
+              Rabbit Core Testnet V2.4.6 <em>current.</em>
             </h1>
 
             <p>
-              V2.4.5 corrects mining reward settlement for V5 headers from block
-              153,601 and improves Rabbit VRF DKG delivery, local shares and pending
-              request retries. Update before activation. Existing chain history,
+              V2.4.6 improves chain convergence, synchronization, mining recovery and
+              Rabbit VRF artifact delivery. VRF availability V2 activates at block
+              173,057. Update before that block. Existing chain history,
               wallets and participation state are preserved.
             </p>
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                <Download size={15} /> Download V2.4.5
+                <Download size={15} /> Download V2.4.6
               </a>
 
               <a
@@ -116,7 +116,7 @@ export default function Releases() {
           <div className="release-check-card">
             <FileCheck2 size={28} />
 
-            <span>PUBLIC TESTNET V2.4.5</span>
+            <span>PUBLIC TESTNET V2.4.6</span>
 
             <strong>
               Windows + Linux + macOS verified packages
@@ -146,7 +146,7 @@ export default function Releases() {
             </h2>
 
             <p>
-              Close the previous Rabbit Core normally, extract V2.4.5 into a new
+              Close the previous Rabbit Core normally, extract V2.4.6 into a new
               program folder and start it with the same data directory. Moving the
               program folder does not move blockchain storage. Keep your existing TestnetV2
               data directory, encrypted keystore, blockchain data and persistent
@@ -213,7 +213,7 @@ export default function Releases() {
         <SectionHeader
           eyebrow="EXISTING MINERS"
           title="Upgrade without deleting your wallet or blockchain."
-          text="V2.4.5 is an in-place Rabbit Core upgrade. Keep the existing Rabbit Testnet datadir, blockchain, wallet/keystore, node identity and persistent participation / consensus state. Do not reset or delete them."
+          text="V2.4.6 is an in-place Rabbit Core upgrade. Keep the existing Rabbit Testnet datadir, blockchain, wallet/keystore, node identity and persistent participation / consensus state. Do not reset or delete them."
         />
 
         <div className="mining-steps">
@@ -232,7 +232,8 @@ export default function Releases() {
             <ShieldCheck size={21} />
             <h3>Windows clock and VRF update</h3>
             <p>
-              Version 2.4.5 fixes Windows VRF key persistence without a new hard fork.
+              Version 2.4.6 requires the VRF availability V2 hard fork at block 173,057.
+              It also includes the Windows VRF key persistence fix.
               Update one miner at a time. In Windows Settings, open Time &amp; language,
               enable automatic time and select Sync now. An inaccurate clock can
               cause block in the future errors and pause mining.
@@ -249,7 +250,7 @@ export default function Releases() {
           <article>
             <span>03</span>
             <HardDrive size={21} />
-            <h3>Extract V2.4.5</h3>
+            <h3>Extract V2.4.6</h3>
             <p>
               Extract the new release into a new program folder. The program files
               and your persistent Rabbit data directory are separate.
@@ -316,19 +317,19 @@ export default function Releases() {
           <article>
             <MonitorDown size={22} />
             <h3>Windows PowerShell</h3>
-            <pre className="release-command"><code>Get-FileHash .\rabbit-core-testnet-v2.4.5-windows-amd64.zip -Algorithm SHA256</code></pre>
+            <pre className="release-command"><code>Get-FileHash .\rabbit-core-testnet-v2.4.6-windows-amd64.zip -Algorithm SHA256</code></pre>
           </article>
 
           <article>
             <TerminalSquare size={22} />
             <h3>Linux</h3>
-            <pre className="release-command"><code>sha256sum rabbit-core-testnet-v2.4.5-linux-amd64.tar.gz</code></pre>
+            <pre className="release-command"><code>sha256sum rabbit-core-testnet-v2.4.6-linux-amd64.tar.gz</code></pre>
           </article>
 
           <article>
             <TerminalSquare size={22} />
             <h3>macOS</h3>
-            <pre className="release-command"><code>shasum -a 256 rabbit-core-testnet-v2.4.5-darwin-*.tar.gz</code></pre>
+            <pre className="release-command"><code>shasum -a 256 rabbit-core-testnet-v2.4.6-darwin-*.tar.gz</code></pre>
           </article>
         </div>
       </section>
@@ -398,16 +399,17 @@ export default function Releases() {
         <div className="operator-split">
           <div>
             <span className="section-kicker">RELEASE SCOPE</span>
-            <h2>V2.4.2 activated Rabbit VRF and the VRF liveness rules at block 136,193.</h2>
+            <h2>V2.4.6 adds VRF availability V2 at block 173,057.</h2>
 
             <p>
-              The existing public Testnet chain is preserved. Liveness V4 remains
+              The existing public Testnet chain is preserved. Rabbit VRF protocol rules
+              have been active since block 136,193. Liveness V4 remains
               active historically from block 97,991. Liveness V5 activated at block 115,000, and the previous Testnet consensus history
               remains unchanged.
             </p>
 
             <p>
-              The V2.4.5 packages contain the current official Rabbit Testnet
+              The V2.4.6 packages contain the current official Rabbit Testnet
               discovery nodes so new and existing nodes can reconnect to the
               public P2P mesh.
             </p>

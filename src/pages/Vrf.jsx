@@ -443,7 +443,7 @@ export default function Vrf({
               <div className="vrf-hero-status">
                 <span>VERIFIABLE RANDOM FUNCTION</span>
                 <strong>Consensus-secured randomness for Rabbit Chain.</strong>
-                <small>Rabbit Core V2.4.5 · Protocol rules active since block 136,193</small>
+                <small>Rabbit Core V2.4.6 · Protocol since 136,193 · Availability V2 fork at 173,057</small>
               </div>
             </div>
 
@@ -1148,7 +1148,8 @@ function settleRound(
             <h3>What is active on Testnet?</h3>
             <p>
               Protocol rules activated on Testnet at block 136,193, after DKG
-              preparation at 136,065. V2.4.5 improves DKG and retry recovery.
+              preparation at 136,065. V2.4.6 introduces the availability V2 fork at
+              block 173,057 and improves DKG transport and request recovery.
               Request submission and a successful transaction receipt do not prove
               fulfillment: inspect the request and wait for canonical completion.
             </p>
