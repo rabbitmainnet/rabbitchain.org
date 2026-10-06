@@ -98,7 +98,7 @@ export default function Mining() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.4.6 <ArrowRight size={15} />
+                Rabbit Core V2.4.7 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -107,7 +107,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.4.6</b>
+              <b>V2.4.7</b>
             </div>
 
             <pre><code>
@@ -129,7 +129,7 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <h2>Rabbit Core V2.4.6 is the required public Testnet package. It adds the VRF availability V2 fork at block 173,057, chain convergence, synchronization and mining recovery fixes. Upgrade before block 173,057. The V5 reward correction remains active from block 153,601. Existing chain history, wallets and WorkSeats are preserved.</h2>
+            <h2>Rabbit Core V2.4.7 is the current public Testnet package. It relays authenticated, encrypted VRF evaluations and verified partial signatures through public peers, including when miners cannot connect directly. No new hard fork is introduced. Existing chain history, wallets and WorkSeats are preserved.</h2>
 
             <p>
               Existing miners only need to close the previous Rabbit Core, extract
@@ -139,7 +139,7 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.4.6</a>
+          <a className="button light" href="#downloads">Download V2.4.7</a>
         </div>
       </section>
 
@@ -637,10 +637,10 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.4.6 is an in-place Testnet upgrade. Keep your existing
+              Rabbit Core V2.4.7 is an in-place Testnet upgrade. Keep your existing
               Rabbit Testnet datadir, blockchain data, wallet/keystore, node identity
               and persistent participation / consensus state. Do not reset or delete
-              them. Close the previous Rabbit Core normally, verify the V2.4.6 package
+              them. Close the previous Rabbit Core normally, verify the V2.4.7 package
               SHA-256, extract it into a new software directory and continue using the
               existing Testnet data.
             </p>
