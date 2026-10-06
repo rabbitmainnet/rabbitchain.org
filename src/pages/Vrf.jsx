@@ -443,7 +443,7 @@ export default function Vrf({
               <div className="vrf-hero-status">
                 <span>VERIFIABLE RANDOM FUNCTION</span>
                 <strong>Consensus-secured randomness for Rabbit Chain.</strong>
-                <small>Rabbit Core V2.4.7 · Authenticated VRF relay · No new hard fork</small>
+                <small>Rabbit Core V2.4.8 · Authenticated VRF relay · No new hard fork</small>
               </div>
             </div>
 
@@ -1149,7 +1149,7 @@ function settleRound(
             <p>
               Protocol rules activated on Testnet at block 136,193, after DKG
               preparation at 136,065. Availability V2 activated at block 173,057.
-              V2.4.7 adds authenticated VRF relay through public peers without
+              V2.4.8 includes authenticated VRF relay through public peers without
               a new hard fork. Users and contracts do not need to mine to request randomness.
               Request submission and a successful transaction receipt do not prove
               fulfillment: inspect the request and wait for canonical completion.
