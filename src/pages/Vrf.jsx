@@ -208,7 +208,7 @@ export default function Vrf({
   onAddNetwork,
   toast,
 }) {
-  const [activeTab, setActiveTab] = useState('requests')
+  const [activeTab, setActiveTab] = useState('create')
   const [feeWei, setFeeWei] = useState(null)
   const [feeError, setFeeError] = useState('')
   const [appDataHash, setAppDataHash] = useState(ZERO_HASH)
@@ -570,6 +570,7 @@ export default function Vrf({
       <section className="platform-v2-hero vrf-v2-hero">
         <div className="shell platform-v2-hero-grid">
           <div className="platform-v2-copy">
+            <img className="vrf-workspace-logo" src="/rabbit-vrf-logo.png" alt="Rabbit VRF" />
             <span className="hero-eyebrow"><i /> RABBIT VRF · TESTNET LIVE</span>
 
             <h1>
@@ -631,7 +632,7 @@ export default function Vrf({
       </section>
 
       <div className="shell vrf-workspace-tabs" role="tablist" aria-label="VRF workspace">
-        {[['requests','My requests'],['create','New request'],['developers','Developers']].map(([key,label]) => <button key={key} id={`vrf-tab-${key}`} role="tab" aria-selected={activeTab === key} aria-controls={`vrf-panel-${key}`} onClick={() => setActiveTab(key)}>{label}</button>)}
+        {[['create','New request'],['requests','My requests'],['developers','Developers']].map(([key,label]) => <button key={key} id={`vrf-tab-${key}`} role="tab" aria-selected={activeTab === key} aria-controls={`vrf-panel-${key}`} onClick={() => setActiveTab(key)}>{label}</button>)}
       </div>
       <div id="vrf-panel-requests" role="tabpanel" aria-labelledby="vrf-tab-requests" hidden={activeTab !== 'requests'}>
       <section className="platform-v2-product vrf-dashboard" id="my-requests">
@@ -818,46 +819,7 @@ export default function Vrf({
             </div>
           </div>
 
-          <aside className="product-context">
-            <span>LIVE PROTOCOL</span>
-            <h3>Rabbit VRF Coordinator V1</h3>
-            <p>
-              Consensus-installed EVM facade for canonical Rabbit VRF requests and fulfillment state.
-            </p>
 
-            <div>
-              <ShieldCheck size={17} />
-              <span>
-                <b>Coordinator</b>
-                <small>{shortHex(RABBIT_VRF.coordinator, 12, 10)}</small>
-              </span>
-            </div>
-
-            <div>
-              <Network size={17} />
-              <span>
-                <b>Activation</b>
-                <small>DKG 136,065 · VRF 136,193</small>
-              </span>
-            </div>
-
-            <div>
-              <Wallet size={17} />
-              <span>
-                <b>Public requests</b>
-                <small>{RABBIT_VRF.publicRequestsLive ? 'Open to users and contracts · no mining required' : 'Validation in progress'}</small>
-              </span>
-            </div>
-
-            <a
-              className="button secondary"
-              href={`${NETWORKS.testnet.explorerUrl}/address/${RABBIT_VRF.coordinator}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View coordinator <ArrowUpRight size={14} />
-            </a>
-          </aside>
         </div>
       </section>
 
