@@ -29,5 +29,5 @@ export const RABBIT_VRF = Object.freeze({
     ringSize: 16,
   },
 
-  status: 'TESTNET · PROTOCOL ACTIVE · FULFILLMENT VALIDATION',
+  status: 'TESTNET · PUBLIC REQUESTS · ASYNCHRONOUS FULFILLMENT',
 })

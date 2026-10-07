@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ArrowRight,
@@ -103,6 +103,7 @@ async function rpc(method, params = [], provider = null) {
   const response = await fetch(NETWORKS.testnet.rpcUrl, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
+    signal: AbortSignal.timeout(15000),
     body: JSON.stringify({
       jsonrpc: '2.0',
       id: Date.now(),
@@ -111,6 +112,7 @@ async function rpc(method, params = [], provider = null) {
     }),
   })
 
+  if (!response.ok) throw new Error('Rabbit RPC is temporarily unavailable. Please try again.')
   const payload = await response.json()
 
   if (payload.error) {
@@ -170,6 +172,31 @@ function statusName(value) {
   return 'PENDING'
 }
 
+function requestIdFromReceipt(receipt) {
+  let emittedRequestId = ''
+
+      for (const log of receipt.logs || []) {
+        if (String(log.address).toLowerCase() !== RABBIT_VRF.coordinator.toLowerCase()) continue
+
+        try {
+          const decoded = decodeEventLog({
+            abi: VRF_ABI,
+            data: log.data,
+            topics: log.topics,
+          })
+
+          if (decoded.eventName === 'RandomnessRequested') {
+            emittedRequestId = decoded.args.requestId
+            break
+          }
+        } catch {
+          // Ignore unrelated coordinator logs.
+        }
+      }
+
+  return emittedRequestId
+}
+
 export default function Vrf({
   walletState,
   walletProvider,
@@ -184,6 +211,47 @@ export default function Vrf({
   const [request, setRequest] = useState(null)
   const [inspectError, setInspectError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [trackedId, setTrackedId] = useState('')
+  const [transactionHash, setTransactionHash] = useState('')
+  const [requestTimestamp, setRequestTimestamp] = useState(null)
+  const [clock, setClock] = useState(Date.now())
+  const inspectionSequence = useRef(0)
+
+  async function copyValue(value) {
+    try {
+      await navigator.clipboard.writeText(value)
+      toast?.('Copied to clipboard.')
+    } catch { toast?.('Copy unavailable. Select and copy the value below.') }
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => setClock(Date.now()), 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    try {
+      const savedTransaction = localStorage.getItem('rabbit-vrf-last-transaction')
+      if (/^0x[0-9a-fA-F]{64}$/.test(savedTransaction || '')) setTransactionHash(savedTransaction)
+      const saved = localStorage.getItem('rabbit-vrf-last-request')
+      if (/^0x[0-9a-fA-F]{64}$/.test(saved || '')) {
+        setRequestId(saved)
+        inspect(saved)
+      }
+    } catch { /* Storage is optional. */ }
+    return () => { inspectionSequence.current += 1 }
+  }, [])
+
+  useEffect(() => {
+    if (!trackedId || request?.requestId !== trackedId || Number(request?.status) !== 1) return undefined
+    let busy = false
+    const timer = setInterval(async () => {
+      if (busy) return
+      busy = true
+      try { await inspect(trackedId) } finally { busy = false }
+    }, 10000)
+    return () => clearInterval(timer)
+  }, [trackedId, request?.requestId, request?.status])
 
   const connected = Boolean(walletState?.account)
   const correctNetwork = chainNumber(walletState?.chainId) === NETWORKS.testnet.chainId
@@ -209,11 +277,17 @@ export default function Vrf({
     const clean = String(id || '').trim()
 
     if (!/^0x[0-9a-fA-F]{64}$/.test(clean)) {
+      inspectionSequence.current += 1
+      setTrackedId('')
+      setRequestTimestamp(null)
       setInspectError('Enter a valid bytes32 Rabbit VRF request ID.')
       setRequest(null)
       return
     }
 
+    const sequence = ++inspectionSequence.current
+    setTrackedId(clean)
+    if (request?.requestId !== clean) { setRequest(null); setRequestTimestamp(null) }
     try {
       setInspectError('')
 
@@ -233,6 +307,8 @@ export default function Vrf({
         status,
       ] = result
 
+      if (sequence !== inspectionSequence.current) return
+      try { localStorage.setItem('rabbit-vrf-last-request', clean) } catch { /* Optional. */ }
       setRequest({
         requestId: clean,
         requester,
@@ -247,9 +323,19 @@ export default function Vrf({
         proofHash,
         status,
       })
+      setRequestTimestamp(null)
+      if (Number(status) !== 0) {
+        try {
+          const block = await rpc('eth_getBlockByNumber', [`0x${BigInt(requestBlock).toString(16)}`, false])
+          if (sequence === inspectionSequence.current && block) {
+            setRequestTimestamp(Number(BigInt(block.timestamp)) * 1000)
+          }
+        } catch { /* Request state remains usable without timestamps. */ }
+      }
     } catch (error) {
+      if (sequence !== inspectionSequence.current) return
       setInspectError(error?.message || 'Unable to read this request.')
-      setRequest(null)
+      // Keep the last successful pending state so automatic retries continue.
     }
   }
 
@@ -261,6 +347,18 @@ export default function Vrf({
     }
 
     throw new Error('Transaction submitted, but the receipt is still pending.')
+  }
+
+  async function recoverRequest() {
+    try {
+      const receipt = await rpc('eth_getTransactionReceipt', [transactionHash])
+      if (!receipt) { toast?.('Transaction is still pending. Try again shortly.'); return }
+      if (chainNumber(receipt.status) !== 1) throw new Error('Transaction reverted. No VRF request was created.')
+      const id = requestIdFromReceipt(receipt)
+      if (!id) throw new Error('No Rabbit VRF request event was found in this transaction.')
+      setRequestId(id)
+      await inspect(id)
+    } catch (error) { toast?.(error?.message || 'Unable to recover the request ID.') }
   }
 
   async function submitRequest() {
@@ -310,30 +408,14 @@ export default function Vrf({
         walletProvider,
       )
 
+      setTransactionHash(hash)
+      try { localStorage.setItem('rabbit-vrf-last-transaction', hash) } catch { /* Optional. */ }
       toast?.('Rabbit VRF request submitted. Waiting for receipt.')
 
       const receipt = await waitForReceipt(hash)
+      if (chainNumber(receipt.status) !== 1) throw new Error('Transaction reverted. No VRF request was created.')
 
-      let emittedRequestId = ''
-
-      for (const log of receipt.logs || []) {
-        if (String(log.address).toLowerCase() !== RABBIT_VRF.coordinator.toLowerCase()) continue
-
-        try {
-          const decoded = decodeEventLog({
-            abi: VRF_ABI,
-            data: log.data,
-            topics: log.topics,
-          })
-
-          if (decoded.eventName === 'RandomnessRequested') {
-            emittedRequestId = decoded.args.requestId
-            break
-          }
-        } catch {
-          // Ignore unrelated coordinator logs.
-        }
-      }
+      const emittedRequestId = requestIdFromReceipt(receipt)
 
       if (!emittedRequestId) {
         throw new Error('Transaction confirmed, but RandomnessRequested was not found.')
@@ -387,6 +469,8 @@ export default function Vrf({
               onChange={(key) => {
                 if (key === 'testnet') {
                   onAddNetwork?.(NETWORKS.testnet)
+                } else {
+                  toast?.('Rabbit VRF is available on Testnet only. Mainnet has not launched.')
                 }
               }}
             />
@@ -407,8 +491,8 @@ export default function Vrf({
             <p>
               Rabbit VRF exposes consensus-secured randomness directly to EVM applications
               without a centralized randomness API or trusted oracle operator.
-              Public fulfillment is under Testnet validation; a transaction receipt
-              confirms submission, not completed randomness.
+              Anyone can request randomness on Rabbit Testnet. No mining or node
+              setup is required. Submit a request, follow its status and inspect the on-chain result.
             </p>
 
             <div className="hero-ctas">
@@ -443,7 +527,7 @@ export default function Vrf({
               <div className="vrf-hero-status">
                 <span>VERIFIABLE RANDOM FUNCTION</span>
                 <strong>Consensus-secured randomness for Rabbit Chain.</strong>
-                <small>Rabbit Core V2.4.8 · Authenticated VRF relay · No new hard fork</small>
+                <small>For games, NFT reveals, draws and EVM applications.</small>
               </div>
             </div>
 
@@ -451,7 +535,7 @@ export default function Vrf({
               <div><span>NETWORK</span><strong>Rabbit Testnet</strong></div>
               <div><span>CHAIN ID</span><strong>9280</strong></div>
               <div><span>BASE TARGET</span><strong>0.001 tRUSD</strong></div>
-              <div><span>STATUS</span><strong>TESTNET VALIDATION</strong></div>
+              <div><span>STATUS</span><strong>PUBLIC TESTNET</strong></div>
             </div>
           </div>
         </div>
@@ -465,7 +549,8 @@ export default function Vrf({
           </div>
           <p>
             The playground reads the live Rabbit VRF coordinator directly.
-            Public request submission stays gated until the final browser flow is validated.
+            Connect your wallet to try it, or inspect any request without connecting.
+            Fulfillment is asynchronous; a confirmed transaction is the first step.
           </p>
         </div>
 
@@ -494,6 +579,19 @@ export default function Vrf({
 
             {feeError && <p className="vrf-error">{feeError}</p>}
 
+            <div className="vrf-quick-start">
+              <strong>Your first request</strong>
+              <ol>
+                <li>Connect an EVM wallet and switch to Rabbit Testnet.</li>
+                <li>Get test tokens from the <Link to="/platform/faucet">Faucet</Link> for the request fee and gas.</li>
+                <li>Request randomness and approve the transaction in your wallet.</li>
+                <li>Keep this page open. Pending requests refresh automatically every 10 seconds.</li>
+              </ol>
+              <p>You do not need to mine. Test tokens have no real monetary value.</p>
+            </div>
+            <details className="vrf-advanced">
+              <summary>Advanced: application context hash</summary>
+              <p>Leave the default for a simple test. Developers can supply a bytes32 commitment to their application's inputs.</p>
             <div className="factory-form">
               <label>
                 <span>APP DATA HASH · BYTES32</span>
@@ -504,6 +602,7 @@ export default function Vrf({
                 />
               </label>
             </div>
+            </details>
 
             <button
               type="button"
@@ -514,6 +613,13 @@ export default function Vrf({
               {buttonLabel}
             </button>
 
+            {transactionHash && (
+              <p className="vrf-transaction" role="status">
+                Transaction submitted: <a href={`${NETWORKS.testnet.explorerUrl}/tx/${transactionHash}`} target="_blank" rel="noreferrer">View in Explorer <ArrowUpRight size={12} /></a>
+                <button className="copy-button" type="button" disabled={submitting} onClick={recoverRequest}>Recover request ID</button>
+                <small>If confirmation takes longer, the transaction link remains available. Use “Recover request ID” below if the transaction was confirmed after the initial wait.</small>
+              </p>
+            )}
             <p className="product-disclaimer">
               Current Rabbit VRF V1 requires callbackGasLimit = 0. The exact quoted native fee
               must be supplied as msg.value. Callback execution is not enabled in the current public flow.
@@ -530,6 +636,7 @@ export default function Vrf({
                   value={requestId}
                   onChange={(event) => setRequestId(event.target.value)}
                   placeholder="0x… requestId"
+                  aria-label="Rabbit VRF request ID"
                   spellCheck="false"
                 />
                 <button type="button" onClick={() => inspect()}>
@@ -540,7 +647,17 @@ export default function Vrf({
               {inspectError && <p className="vrf-error">{inspectError}</p>}
 
               {request && (
-                <div className="vrf-result-grid">
+                <div className="vrf-result-grid" aria-live="polite">
+                  <div className="wide vrf-request-progress">
+                    <strong>{Number(request.status) === 2 ? 'Randomness is ready' : Number(request.status) === 1 ? 'Waiting for consensus fulfillment' : 'Request not found'}</strong>
+                    <p>{Number(request.status) === 2 ? 'The result is stored on-chain. Copy it or inspect the associated proof hash.' : Number(request.status) === 1 ? 'This request is still pending. Timing depends on network participation and committee readiness. Do not submit another request just because this one is taking longer.' : 'Check the request ID and make sure it belongs to Rabbit Testnet.'}</p>
+                    {Number(request.status) === 1 && requestTimestamp && <small>Waiting since submission: {Math.max(0, Math.floor((clock-requestTimestamp)/60000))} min · refreshes every 10 seconds</small>}
+                    <div className="vrf-result-actions">
+                      <button type="button" onClick={() => copyValue(request.requestId)}>Copy request ID</button>
+                      <button type="button" onClick={() => inspect(request.requestId)}>Refresh status</button>
+                      {Number(request.status) !== 0 && <a href={`${NETWORKS.testnet.explorerUrl}/block/${String(request.requestBlock)}`} target="_blank" rel="noreferrer">Request block ↗</a>}
+                    </div>
+                  </div>
                   <div><span>STATUS</span><strong>{statusName(request.status)}</strong></div>
                   <div><span>REQUEST BLOCK</span><strong>{String(request.requestBlock)}</strong></div>
                   <div><span>EPOCH</span><strong>{String(request.epoch)}</strong></div>
@@ -555,12 +672,15 @@ export default function Vrf({
 
                   <div className="wide">
                     <span>RANDOMNESS</span>
-                    <strong title={request.randomness}>{shortHex(request.randomness, 18, 12)}</strong>
+                    <code className="vrf-full-hash">{request.randomness}</code>
+                    {Number(request.status) === 2 && <button className="copy-button vrf-copy" type="button" onClick={() => copyValue(request.randomness)}>Copy randomness</button>}
                   </div>
 
                   <div className="wide">
                     <span>PROOF HASH</span>
-                    <strong title={request.proofHash}>{shortHex(request.proofHash, 18, 12)}</strong>
+                    <code className="vrf-full-hash">{request.proofHash}</code>
+                    {Number(request.status) === 2 && <button className="copy-button vrf-copy" type="button" onClick={() => copyValue(request.proofHash)}>Copy proof hash</button>}
+                    <small>A proof hash identifies the proof; this page reads on-chain state and does not independently verify its cryptography.</small>
                   </div>
                 </div>
               )}
@@ -594,7 +714,7 @@ export default function Vrf({
               <Wallet size={17} />
               <span>
                 <b>Public requests</b>
-                <small>{RABBIT_VRF.publicRequestsLive ? 'Experimental · inspect canonical completion' : 'Validation in progress'}</small>
+                <small>{RABBIT_VRF.publicRequestsLive ? 'Open to users and contracts · no mining required' : 'Validation in progress'}</small>
               </span>
             </div>
 
@@ -624,25 +744,25 @@ export default function Vrf({
 
           <div className="platform-v2-stack-rail">
             <div>
-              <small>04</small>
+              <small>01</small>
               <span>APPLICATION</span>
               <strong>requestRandomness(0, appDataHash)</strong>
             </div>
             <i />
             <div>
-              <small>03</small>
+              <small>02</small>
               <span>COORDINATOR</span>
               <strong>Canonical requestId · exact protocol fee</strong>
             </div>
             <i />
             <div className="accent">
-              <small>02</small>
+              <small>03</small>
               <span>RABBIT CONSENSUS</span>
               <strong>DKG · threshold VRF · liveness rules</strong>
             </div>
             <i />
             <div>
-              <small>01</small>
+              <small>04</small>
               <span>RESULT</span>
               <strong>Randomness · proofHash · epoch · round</strong>
             </div>
@@ -650,7 +770,9 @@ export default function Vrf({
         </div>
       </section>
 
-      <section className="rpc-section" id="integration">
+      <details className="shell vrf-developer-details" id="integration" open>
+        <summary>Developer integration · Solidity examples and application design</summary>
+      <section className="rpc-section" id="integration-examples">
         <div className="shell rpc-grid">
           <div>
             <span className="section-kicker">DEVELOPER INTEGRATION</span>
@@ -682,6 +804,8 @@ bytes32 requestId =
     );`}</pre>
         </div>
       </section>
+
+      </details>
 
       <section className="platform-v2-product">
         <div className="shell platform-v2-product-head">
@@ -861,6 +985,8 @@ bytes32 requestId =
         </div>
       </section>
 
+      <details className="shell vrf-developer-details">
+        <summary>Game integration · examples and fairness checklist</summary>
       <section className="platform-v2-product vrf-gaming-section" id="gaming">
         <div className="shell platform-v2-product-head">
           <div>
@@ -1135,6 +1261,8 @@ function settleRound(
         </div>
       </section>
 
+      </details>
+
       <section className="platform-v2-product vrf-faq">
         <div className="shell platform-v2-product-head">
           <div>
@@ -1144,6 +1272,19 @@ function settleRound(
         </div>
 
         <div className="shell vrf-faq-grid">
+          <article>
+            <h3>Do I need to mine or run a node?</h3>
+            <p>No. Anyone with an EVM wallet on Rabbit Testnet and enough tRAB for the quoted fee and transaction gas can request randomness. Developers can also request from a smart contract.</p>
+          </article>
+          <article>
+            <h3>Why is my request still pending?</h3>
+            <p>Submission and fulfillment are separate stages. Timing varies with network participation and committee readiness. This page checks pending requests every 10 seconds. Keep the request ID, inspect its status and wait for FULFILLED before using the result. A slow request does not need to be submitted again.</p>
+          </article>
+          <article>
+            <h3>How is the VRF fee distributed?</h3>
+            <p>At successful fulfillment, the protocol allocates 30% to the fulfillment block producer, 50% equally among the participants included in that request's validated VRF proof, and 20% plus integer rounding remainders to Rabbit Allocation. Transaction gas and mining block rewards are separate. Mining alone does not guarantee a share of a particular VRF fee.</p>
+          </article>
+
           <article>
             <h3>What is active on Testnet?</h3>
             <p>

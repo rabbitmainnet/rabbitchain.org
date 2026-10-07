@@ -7514,3 +7514,17 @@ footer {
 .release-update-notice p{max-width:900px;margin:8px 0 0;font-size:13px;line-height:1.65}
 .release-update-notice .button{flex-shrink:0}
 @media(max-width:720px){.release-update-notice{flex-direction:column;align-items:stretch;padding:18px;gap:16px}.release-update-notice .button{width:100%;justify-content:center}}
+
+/* Rabbit VRF user flow — reuses existing Rabbit panels and theme. */
+.vrf-quick-start{margin:18px 0;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--bg,#fff)}
+.vrf-quick-start ol{padding-left:20px;margin:12px 0;display:grid;gap:9px;font-size:13px;line-height:1.6}
+.vrf-quick-start p,.vrf-advanced p,.vrf-request-progress p{font-size:12px;line-height:1.7;color:var(--muted,#737887)}
+.vrf-advanced{margin:16px 0}.vrf-advanced summary,.vrf-developer-details>summary{cursor:pointer;font-weight:700;padding:14px 0}
+.vrf-transaction{font-size:13px;line-height:1.7;overflow-wrap:anywhere}.vrf-transaction small{display:block;color:var(--muted,#737887)}
+.vrf-request-progress{padding:18px!important}.vrf-result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.vrf-result-actions button,.vrf-result-actions a,.vrf-copy{font:inherit;font-size:12px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:transparent;color:inherit;cursor:pointer;text-decoration:none}
+.vrf-copy{margin-top:8px}.vrf-full-hash{display:block;overflow-wrap:anywhere;white-space:normal;font-size:12px;line-height:1.7;margin-top:6px;user-select:all}
+.vrf-result-grid small{display:block;font-size:11px;line-height:1.6;margin-top:6px;color:var(--muted,#737887)}
+.vrf-developer-details{margin-top:36px;margin-bottom:36px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.vrf-developer-details>summary{padding:24px 0;font-size:18px}.vrf-developer-details .shell{max-width:100%;width:100%}
+@media(max-width:640px){.vrf-result-actions>*{flex:1;text-align:center}.vrf-developer-details>summary{font-size:15px}.vrf-quick-start{padding:14px}}
