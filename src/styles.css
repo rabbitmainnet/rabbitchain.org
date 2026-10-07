@@ -7579,3 +7579,10 @@ footer {
 .vrf-workspace-clean .vrf-developer-start>.vrf-developer-details>p{font-size:13px;line-height:1.7;color:#797d8d}
 .vrf-workspace-clean .vrf-developer-details .vrf-guide-grid{width:100%;margin-bottom:20px;grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(max-width:760px){.vrf-workspace-clean .vrf-simple-steps,.vrf-workspace-clean .vrf-developer-details .vrf-guide-grid{grid-template-columns:1fr}.vrf-workspace-clean .vrf-simple-steps article{border-right:0;border-bottom:1px solid var(--line)}.vrf-workspace-clean .vrf-simple-steps article:last-child{border-bottom:0}.vrf-workspace-clean .vrf-guide-grid article{padding:20px}}
+
+/* Text copy actions must not inherit the global 32px icon button size. */
+.vrf-workspace-clean .vrf-playground .copy-button{width:auto!important;height:auto!important;min-height:36px;display:inline-flex!important;align-items:center;justify-content:center;gap:6px;padding:8px 12px;white-space:nowrap;line-height:1.4;font-size:12px;border:1px solid var(--line);border-radius:8px;background:#f7f5fc;color:#7144e7;position:static;max-width:100%;box-sizing:border-box}
+.vrf-workspace-clean .vrf-playground .vrf-copy{margin:10px 0 4px}
+.vrf-workspace-clean .vrf-result-grid small{margin-top:8px;clear:both}
+.vrf-workspace-clean .vrf-playground .copy-button:hover{background:#eee8fb}
+.vrf-workspace-clean .vrf-playground .copy-button:focus-visible{outline:2px solid #7144e7;outline-offset:3px}
