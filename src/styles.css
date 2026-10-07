@@ -7563,3 +7563,19 @@ footer {
 .vrf-workspace-clean .vrf-reference>.vrf-developer-details{margin:16px}
 .vrf-workspace-clean .vrf-reference .platform-v2-stack-rail strong{overflow-wrap:anywhere;font-size:12px}
 }
+
+/* Center the constrained hero itself, not only its text. */
+.vrf-workspace-clean .platform-v2-hero-grid{display:flex!important;justify-content:center!important;gap:0!important}
+.vrf-workspace-clean .platform-v2-copy{width:100%!important;max-width:760px!important;margin-inline:auto!important;min-width:0}
+.vrf-workspace-clean .platform-v2-copy h1{max-width:740px!important}
+.vrf-workspace-clean .vrf-developer-start>.platform-v2-product-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.vrf-workspace-clean .vrf-developer-start>.platform-v2-product-head p{max-width:660px;margin:0 auto}
+.vrf-workspace-clean .vrf-simple-steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+.vrf-workspace-clean .vrf-guide-grid article{min-height:0;padding:24px}
+.vrf-workspace-clean .vrf-guide-grid article>span{margin-bottom:18px;color:#7144e7}
+.vrf-workspace-clean .vrf-simple-steps code{display:block;margin-top:18px;font-size:10px;line-height:1.6;color:#7144e7;overflow-wrap:anywhere}
+.vrf-workspace-clean .vrf-developer-start>.vrf-developer-details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:0 22px}
+.vrf-workspace-clean .vrf-developer-start>.vrf-developer-details>summary{font-size:14px;padding:20px 0}
+.vrf-workspace-clean .vrf-developer-start>.vrf-developer-details>p{font-size:13px;line-height:1.7;color:#797d8d}
+.vrf-workspace-clean .vrf-developer-details .vrf-guide-grid{width:100%;margin-bottom:20px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:760px){.vrf-workspace-clean .vrf-simple-steps,.vrf-workspace-clean .vrf-developer-details .vrf-guide-grid{grid-template-columns:1fr}.vrf-workspace-clean .vrf-simple-steps article{border-right:0;border-bottom:1px solid var(--line)}.vrf-workspace-clean .vrf-simple-steps article:last-child{border-bottom:0}.vrf-workspace-clean .vrf-guide-grid article{padding:20px}}
