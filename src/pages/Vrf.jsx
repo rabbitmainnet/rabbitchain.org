@@ -208,6 +208,7 @@ export default function Vrf({
   onAddNetwork,
   toast,
 }) {
+  const [activeTab, setActiveTab] = useState('requests')
   const [feeWei, setFeeWei] = useState(null)
   const [feeError, setFeeError] = useState('')
   const [appDataHash, setAppDataHash] = useState(ZERO_HASH)
@@ -530,7 +531,7 @@ export default function Vrf({
           : 'Request randomness'
 
   return (
-    <main>
+    <main className="vrf-workspace-clean">
       <section className="vrf-platform-toolbar">
         <div className="vrf-platform-toolbar-inner">
           <nav aria-label="Rabbit Platform">
@@ -584,10 +585,10 @@ export default function Vrf({
             </p>
 
             <div className="hero-ctas">
-              <a className="button primary" href="#playground">
+              <a className="button primary" href="#playground" onClick={() => setActiveTab('create')}>
                 New request <ArrowRight size={15} />
               </a>
-              <a className="button secondary" href="#integration">
+              <a className="button secondary" href="#developer-start" onClick={() => setActiveTab('developers')}>
                 Developer integration
               </a>
             </div>
@@ -629,13 +630,17 @@ export default function Vrf({
         </div>
       </section>
 
+      <div className="shell vrf-workspace-tabs" role="tablist" aria-label="VRF workspace">
+        {[['requests','My requests'],['create','New request'],['developers','Developers']].map(([key,label]) => <button key={key} id={`vrf-tab-${key}`} role="tab" aria-selected={activeTab === key} aria-controls={`vrf-panel-${key}`} onClick={() => setActiveTab(key)}>{label}</button>)}
+      </div>
+      <div id="vrf-panel-requests" role="tabpanel" aria-labelledby="vrf-tab-requests" hidden={activeTab !== 'requests'}>
       <section className="platform-v2-product vrf-dashboard" id="my-requests">
         <div className="shell">
           <div className="vrf-dashboard-head">
             <div><span className="section-kicker">YOUR WORKSPACE</span><h2>My requests</h2><p>Requests made by your connected wallet, read directly from Rabbit Testnet.</p></div>
             <div className="hero-ctas">
               <button className="button secondary" disabled={!connected || historyLoading} onClick={loadHistory}>{historyLoading ? 'Loading history…' : 'Refresh'}</button>
-              <a className="button primary" href="#playground">New request <ArrowRight size={15}/></a>
+              <a className="button primary" href="#playground" onClick={() => setActiveTab('create')}>New request <ArrowRight size={15}/></a>
             </div>
           </div>
           {!connected ? <div className="product-panel vrf-wallet-empty"><Wallet size={28}/><h3>Your randomness workspace</h3><p>Connect your wallet to view previous requests, pending requests and verified results.</p><button className="button primary" onClick={onConnect}>Connect wallet</button></div> : <>
@@ -651,12 +656,12 @@ export default function Vrf({
               {!historyLoading && !historyError && history.length === 0 && <div className="vrf-wallet-empty"><h3>No requests yet</h3><p>Create your first request to receive verifiable randomness.</p></div>}
               <div className="vrf-history-scroll"><table className="vrf-history-table"><thead><tr><th>Request ID</th><th>Status</th><th>Block</th><th>Protocol fee</th><th>Transaction</th><th>Result</th></tr></thead><tbody>
                 {history.filter(row => historyFilter === 'all' || row.status === (historyFilter === 'pending' ? 1 : 2)).map(row => <tr key={row.id}>
-                  <td><button className="vrf-history-id" title={row.id} onClick={() => {setRequestId(row.id); inspect(row.id); document.getElementById('playground')?.scrollIntoView({behavior:'smooth'})}}>{shortHex(row.id)}</button></td>
+                  <td><button className="vrf-history-id" title={row.id} onClick={() => {setRequestId(row.id); inspect(row.id); setActiveTab('create'); document.getElementById('playground')?.scrollIntoView({behavior:'smooth'})}}>{shortHex(row.id)}</button></td>
                   <td><span className={`vrf-status-pill ${row.status === 2 ? 'complete' : ''}`}>{row.status === null ? 'Checking' : statusName(row.status)}</span></td>
                   <td><a href={`${NETWORKS.testnet.explorerUrl}/block/${row.block}`} target="_blank" rel="noreferrer">{row.block.toLocaleString()}</a></td>
                   <td>{nativeAmount(row.fee)} tRAB</td>
                   <td><a href={`${NETWORKS.testnet.explorerUrl}/tx/${row.tx}`} target="_blank" rel="noreferrer">{shortHex(row.tx,6,4)} ↗</a></td>
-                  <td><button className="button secondary" onClick={() => {setRequestId(row.id); inspect(row.id); document.getElementById('playground')?.scrollIntoView({behavior:'smooth'})}}>View {row.status === 2 ? 'result' : 'request'}</button></td>
+                  <td><button className="button secondary" onClick={() => {setRequestId(row.id); inspect(row.id); setActiveTab('create'); document.getElementById('playground')?.scrollIntoView({behavior:'smooth'})}}>View {row.status === 2 ? 'result' : 'request'}</button></td>
                 </tr>)}
               </tbody></table></div>
               {historyLoading && <p className="vrf-history-note">Searching the chain for this wallet. Results appear as they are found.</p>}
@@ -665,6 +670,8 @@ export default function Vrf({
         </div>
       </section>
 
+      </div>
+      <div id="vrf-panel-create" role="tabpanel" aria-labelledby="vrf-tab-create" hidden={activeTab !== 'create'}>
       <section className="platform-v2-product" id="playground">
         <div className="shell platform-v2-product-head">
           <div>
@@ -854,6 +861,27 @@ export default function Vrf({
         </div>
       </section>
 
+      </div>
+      <div id="vrf-panel-developers" role="tabpanel" aria-labelledby="vrf-tab-developers" hidden={activeTab !== 'developers'}>
+      <section className="platform-v2-product vrf-developer-start" id="developer-start">
+        <div className="shell platform-v2-product-head"><div><span className="section-kicker">DEVELOPER QUICKSTART</span><h2>Build a complete request flow.</h2></div><p>Direct payment per request. No subscription, mining setup or private node is required for an application to request randomness.</p></div>
+        <div className="shell vrf-guide-grid">
+          <article><span>01</span><h3>Submit and persist</h3><p>Read quoteRequestFee(0) immediately before sending. Pay exactly that amount in native tRAB, plus transaction gas. Save the transaction hash before waiting for confirmation.</p></article>
+          <article><span>02</span><h3>Recover the request ID</h3><p>Decode RandomnessRequested from the coordinator receipt. A wallet transaction returns a transaction hash, not the Solidity return value. Save requestId together with your application round.</p></article>
+          <article><span>03</span><h3>Read fulfillment</h3><p>Poll getRequest(requestId). Status 0 means not found, 1 means pending and 2 means fulfilled. A successful request transaction does not mean the random value is ready.</p></article>
+          <article><span>04</span><h3>Settle exactly once</h3><p>Use the fulfilled value only for its original request and frozen application inputs. A contract should read the coordinator on-chain and reject duplicate settlement.</p></article>
+        </div>
+        <div className="shell vrf-explain-box"><div><span>CURRENT V1 INTEGRATION</span><h3>Read the result; do not wait for a callback.</h3><p>The supported request path uses callbackGasLimit = 0. Fulfillment updates coordinator state. Your application reads getRequest and handles settlement separately. proofHash identifies the protocol proof; it is not the complete proof payload.</p></div><div><span>NETWORK & COST</span><h3>Rabbit Testnet · 9280</h3><p>Use the coordinator address shown in the request panel and the public Rabbit Testnet RPC. The protocol quote is denominated in native tRAB. Gas is additional. The tRUSD pricing target is not an ERC-20 payment instruction.</p></div></div>
+        <details className="shell vrf-developer-details"><summary>JavaScript quickstart · viem · submit, recover and read</summary><p>Install viem in your application. This browser example assumes an injected EVM wallet. For WalletConnect, pass your connected wallet's EIP-1193 provider to custom().</p><pre className="vrf-sdk-code" style={{padding:24, borderRadius:14, background:"#f3f1fa", color:"#40445a", overflowX:"auto", fontSize:12, lineHeight:1.8}}>{DEV_QUICKSTART}</pre><p>Call submitVrf from a user action, persist its hash, then call recoverRequest once the receipt is available. Persist that requestId and periodically call readVrf. Handle rejected signatures, reverted transactions and temporary RPC errors separately.</p></details>
+        <div className="shell vrf-guide-grid">
+          <article><h3>Commit your context</h3><p>For a real round, compute appDataHash from immutable inputs with abi.encode: application address, round ID and participants or rules. Store the same context in your application before seeing the result. Zero hash is suitable for a protocol test.</p></article>
+          <article><h3>Recover after interruption</h3><p>Keep the transaction hash and request ID in durable application storage. A browser reload or timeout must resume the existing request. The wallet dashboard also discovers requests from indexed coordinator events.</p></article>
+          <article><h3>Map randomness carefully</h3><p>Use domain-separated hashes to derive multiple draws from one result. Simple modulo has statistical bias unless the outcome count divides the sample space; use rejection sampling when exact uniformity matters.</p></article>
+          <article><h3>Show honest states</h3><p>Separate awaiting signature, transaction pending, request pending and fulfilled. Fulfillment is asynchronous and depends on network availability. Do not promise a fixed response time or show a zero value as a completed result.</p></article>
+        </div>
+      </section>
+
+      <details className="shell vrf-developer-details vrf-reference"><summary>Protocol reference, Solidity and application patterns</summary>
       <section className="platform-v2-stack">
         <div className="shell platform-v2-stack-grid">
           <div>
@@ -891,24 +919,6 @@ export default function Vrf({
               <strong>Randomness · proofHash · epoch · round</strong>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="platform-v2-product vrf-developer-start" id="developer-start">
-        <div className="shell platform-v2-product-head"><div><span className="section-kicker">DEVELOPER QUICKSTART</span><h2>Build a complete request flow.</h2></div><p>Direct payment per request. No subscription, mining setup or private node is required for an application to request randomness.</p></div>
-        <div className="shell vrf-guide-grid">
-          <article><span>01</span><h3>Submit and persist</h3><p>Read quoteRequestFee(0) immediately before sending. Pay exactly that amount in native tRAB, plus transaction gas. Save the transaction hash before waiting for confirmation.</p></article>
-          <article><span>02</span><h3>Recover the request ID</h3><p>Decode RandomnessRequested from the coordinator receipt. A wallet transaction returns a transaction hash, not the Solidity return value. Save requestId together with your application round.</p></article>
-          <article><span>03</span><h3>Read fulfillment</h3><p>Poll getRequest(requestId). Status 0 means not found, 1 means pending and 2 means fulfilled. A successful request transaction does not mean the random value is ready.</p></article>
-          <article><span>04</span><h3>Settle exactly once</h3><p>Use the fulfilled value only for its original request and frozen application inputs. A contract should read the coordinator on-chain and reject duplicate settlement.</p></article>
-        </div>
-        <div className="shell vrf-explain-box"><div><span>CURRENT V1 INTEGRATION</span><h3>Read the result; do not wait for a callback.</h3><p>The supported request path uses callbackGasLimit = 0. Fulfillment updates coordinator state. Your application reads getRequest and handles settlement separately. proofHash identifies the protocol proof; it is not the complete proof payload.</p></div><div><span>NETWORK & COST</span><h3>Rabbit Testnet · 9280</h3><p>Use the coordinator address shown in the request panel and the public Rabbit Testnet RPC. The protocol quote is denominated in native tRAB. Gas is additional. The tRUSD pricing target is not an ERC-20 payment instruction.</p></div></div>
-        <details className="shell vrf-developer-details"><summary>JavaScript quickstart · viem · submit, recover and read</summary><p>Install viem in your application. This browser example assumes an injected EVM wallet. For WalletConnect, pass your connected wallet's EIP-1193 provider to custom().</p><pre className="vrf-sdk-code" style={{padding:24, borderRadius:14, background:"#f3f1fa", color:"#40445a", overflowX:"auto", fontSize:12, lineHeight:1.8}}>{DEV_QUICKSTART}</pre><p>Call submitVrf from a user action, persist its hash, then call recoverRequest once the receipt is available. Persist that requestId and periodically call readVrf. Handle rejected signatures, reverted transactions and temporary RPC errors separately.</p></details>
-        <div className="shell vrf-guide-grid">
-          <article><h3>Commit your context</h3><p>For a real round, compute appDataHash from immutable inputs with abi.encode: application address, round ID and participants or rules. Store the same context in your application before seeing the result. Zero hash is suitable for a protocol test.</p></article>
-          <article><h3>Recover after interruption</h3><p>Keep the transaction hash and request ID in durable application storage. A browser reload or timeout must resume the existing request. The wallet dashboard also discovers requests from indexed coordinator events.</p></article>
-          <article><h3>Map randomness carefully</h3><p>Use domain-separated hashes to derive multiple draws from one result. Simple modulo has statistical bias unless the outcome count divides the sample space; use rejection sampling when exact uniformity matters.</p></article>
-          <article><h3>Show honest states</h3><p>Separate awaiting signature, transaction pending, request pending and fulfilled. Fulfillment is asynchronous and depends on network availability. Do not promise a fixed response time or show a zero value as a completed result.</p></article>
         </div>
       </section>
 
@@ -1505,6 +1515,8 @@ function settleRound(
           </a>
         </div>
       </section>
+      </details>
+      </div>
     </main>
   )
 }
