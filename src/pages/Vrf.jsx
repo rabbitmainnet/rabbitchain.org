@@ -20,6 +20,8 @@ import {
   decodeFunctionResult,
   encodeFunctionData,
   formatEther,
+  keccak256,
+  toHex,
 } from 'viem'
 import { NETWORKS } from '../config/networks'
 import { RABBIT_VRF } from '../config/vrf'
@@ -215,7 +217,89 @@ export default function Vrf({
   const [transactionHash, setTransactionHash] = useState('')
   const [requestTimestamp, setRequestTimestamp] = useState(null)
   const [clock, setClock] = useState(Date.now())
+  const [history, setHistory] = useState([])
+  const [historyLoading, setHistoryLoading] = useState(false)
+  const [historyError, setHistoryError] = useState('')
+  const [historyProgress, setHistoryProgress] = useState('')
+  const [historyFilter, setHistoryFilter] = useState('all')
+  const historySequence = useRef(0)
   const inspectionSequence = useRef(0)
+
+  async function loadHistory() {
+    const sequence = ++historySequence.current
+    const account = walletState?.account
+    if (!account) return
+    setHistoryLoading(true)
+    setHistoryError('')
+    try {
+      const head = Number(BigInt(await rpc('eth_blockNumber')))
+      const topic = keccak256(toHex('RandomnessRequested(bytes32,address,uint64,uint32,bytes32,uint256)'))
+      const walletTopic = `0x${account.slice(2).toLowerCase().padStart(64, '0')}`
+      const found = new Map()
+      for (let end = head; end >= RABBIT_VRF.activationBlock; end -= 1000) {
+        if (sequence !== historySequence.current) return
+        const start = Math.max(RABBIT_VRF.activationBlock, end - 999)
+        setHistoryProgress(`Reading blocks ${start.toLocaleString()}–${end.toLocaleString()}`)
+        const logs = await rpc('eth_getLogs', [{
+          address: RABBIT_VRF.coordinator,
+          fromBlock: toHex(start), toBlock: toHex(end),
+          topics: [topic, null, walletTopic],
+        }])
+        for (const log of logs) {
+          if (log.removed) continue
+          const event = decodeEventLog({abi: VRF_ABI, data: log.data, topics: log.topics})
+          if (event.args.requester.toLowerCase() !== account.toLowerCase()) continue
+          found.set(event.args.requestId, {id: event.args.requestId, tx: log.transactionHash,
+            block: Number(BigInt(log.blockNumber)), fee: event.args.feePaid, status: null})
+        }
+        if (sequence === historySequence.current) setHistory([...found.values()].sort((a,b) => b.block-a.block))
+      }
+      const rows = [...found.values()].sort((a,b) => b.block-a.block)
+      // Bound concurrency for the public RPC; every row is confirmed against current state.
+      for (let start = 0; start < rows.length; start += 4) {
+        const batch = await Promise.all(rows.slice(start, start+4).map(async row => {
+          const value = await readCoordinator('getRequest', [row.id])
+          return {...row, status: Number(value[10]), randomness: value[8], proofHash: value[9]}
+        }))
+        rows.splice(start, batch.length, ...batch)
+        if (sequence !== historySequence.current) return
+        setHistory([...rows])
+      }
+      setHistoryProgress(`Wallet history checked through block ${head.toLocaleString()}`)
+    } catch (error) {
+      if (sequence === historySequence.current) setHistoryError(error?.message || 'Could not load wallet history. Please retry.')
+    } finally {
+      if (sequence === historySequence.current) setHistoryLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    setHistory([])
+    setHistoryError('')
+    setHistoryProgress('')
+    setHistoryLoading(false)
+    if (walletState?.account) loadHistory()
+    return () => { historySequence.current += 1 }
+  }, [walletState?.account])
+
+  useEffect(() => {
+    if (!history.some(row => row.status === 1)) return
+    let cancelled = false
+    let busy = false
+    const timer = setInterval(async () => {
+      if (busy) return
+      busy = true
+      try {
+        const updates = await Promise.all(history.filter(row => row.status === 1).map(async row => {
+          const value = await readCoordinator('getRequest', [row.id])
+          return {...row, status: Number(value[10]), randomness: value[8], proofHash: value[9]}
+        }))
+        if (!cancelled) setHistory(current => current.map(row => updates.find(value => value.id === row.id) || row))
+      } catch { /* Preserve rows and retry pending requests next cycle. */ }
+      finally { busy = false }
+    }, 15000)
+    return () => { cancelled = true; clearInterval(timer) }
+  }, [history])
 
   async function copyValue(value) {
     try {
@@ -358,6 +442,7 @@ export default function Vrf({
       if (!id) throw new Error('No Rabbit VRF request event was found in this transaction.')
       setRequestId(id)
       await inspect(id)
+      loadHistory()
     } catch (error) { toast?.(error?.message || 'Unable to recover the request ID.') }
   }
 
@@ -423,6 +508,7 @@ export default function Vrf({
 
       setRequestId(emittedRequestId)
       await inspect(emittedRequestId)
+      loadHistory()
       toast?.('Request transaction confirmed. Randomness may still be pending.')
     } catch (error) {
       toast?.(error?.message || 'Rabbit VRF request failed.')
@@ -497,7 +583,7 @@ export default function Vrf({
 
             <div className="hero-ctas">
               <a className="button primary" href="#playground">
-                Test Rabbit VRF <ArrowRight size={15} />
+                New request <ArrowRight size={15} />
               </a>
               <a className="button secondary" href="#integration">
                 Developer integration
@@ -541,14 +627,50 @@ export default function Vrf({
         </div>
       </section>
 
+      <section className="platform-v2-product vrf-dashboard" id="my-requests">
+        <div className="shell">
+          <div className="vrf-dashboard-head">
+            <div><span className="section-kicker">YOUR WORKSPACE</span><h2>My requests</h2><p>Requests made by your connected wallet, read directly from Rabbit Testnet.</p></div>
+            <div className="hero-ctas">
+              <button className="button secondary" disabled={!connected || historyLoading} onClick={loadHistory}>{historyLoading ? 'Loading history…' : 'Refresh'}</button>
+              <a className="button primary" href="#playground">New request <ArrowRight size={15}/></a>
+            </div>
+          </div>
+          {!connected ? <div className="product-panel vrf-wallet-empty"><Wallet size={28}/><h3>Your randomness workspace</h3><p>Connect your wallet to view previous requests, pending requests and verified results.</p><button className="button primary" onClick={onConnect}>Connect wallet</button></div> : <>
+            <div className="vrf-dashboard-stats">
+              <div><span>CONNECTED WALLET</span><strong>{shortHex(walletState.account)}</strong></div>
+              <div><span>REQUESTS FOUND</span><strong>{history.length}</strong></div>
+              <div><span>PENDING</span><strong>{history.filter(row => row.status === 1).length}</strong></div>
+              <div><span>FULFILLED</span><strong>{history.filter(row => row.status === 2).length}</strong></div>
+            </div>
+            <div className="product-panel vrf-history-panel">
+              <div className="vrf-history-toolbar"><div className="vrf-history-tabs">{['all','pending','fulfilled'].map(value => <button key={value} aria-pressed={historyFilter === value} onClick={() => setHistoryFilter(value)}>{value}</button>)}</div><small>{historyProgress || 'Preparing wallet history…'}</small></div>
+              {historyError && <p className="vrf-error">History is incomplete: {historyError} Use Refresh to retry.</p>}
+              {!historyLoading && !historyError && history.length === 0 && <div className="vrf-wallet-empty"><h3>No requests yet</h3><p>Create your first request to receive verifiable randomness.</p></div>}
+              <div className="vrf-history-scroll"><table className="vrf-history-table"><thead><tr><th>Request ID</th><th>Status</th><th>Block</th><th>Protocol fee</th><th>Transaction</th><th>Result</th></tr></thead><tbody>
+                {history.filter(row => historyFilter === 'all' || row.status === (historyFilter === 'pending' ? 1 : 2)).map(row => <tr key={row.id}>
+                  <td><button className="vrf-history-id" title={row.id} onClick={() => {setRequestId(row.id); inspect(row.id); document.getElementById('playground')?.scrollIntoView({behavior:'smooth'})}}>{shortHex(row.id)}</button></td>
+                  <td><span className={`vrf-status-pill ${row.status === 2 ? 'complete' : ''}`}>{row.status === null ? 'Checking' : statusName(row.status)}</span></td>
+                  <td><a href={`${NETWORKS.testnet.explorerUrl}/block/${row.block}`} target="_blank" rel="noreferrer">{row.block.toLocaleString()}</a></td>
+                  <td>{nativeAmount(row.fee)} tRAB</td>
+                  <td><a href={`${NETWORKS.testnet.explorerUrl}/tx/${row.tx}`} target="_blank" rel="noreferrer">{shortHex(row.tx,6,4)} ↗</a></td>
+                  <td><button className="button secondary" onClick={() => {setRequestId(row.id); inspect(row.id); document.getElementById('playground')?.scrollIntoView({behavior:'smooth'})}}>View {row.status === 2 ? 'result' : 'request'}</button></td>
+                </tr>)}
+              </tbody></table></div>
+              {historyLoading && <p className="vrf-history-note">Searching the chain for this wallet. Results appear as they are found.</p>}
+            </div>
+          </>}
+        </div>
+      </section>
+
       <section className="platform-v2-product" id="playground">
         <div className="shell platform-v2-product-head">
           <div>
-            <span className="section-kicker">VRF PLAYGROUND</span>
+            <span className="section-kicker">NEW REQUEST</span>
             <h2>Request. Track. Verify.</h2>
           </div>
           <p>
-            The playground reads the live Rabbit VRF coordinator directly.
+            Request randomness directly from the Rabbit VRF coordinator.
             Connect your wallet to try it, or inspect any request without connecting.
             Fulfillment is asynchronous; a confirmed transaction is the first step.
           </p>
@@ -770,7 +892,7 @@ export default function Vrf({
         </div>
       </section>
 
-      <details className="shell vrf-developer-details" id="integration" open>
+      <details className="shell vrf-developer-details" id="integration">
         <summary>Developer integration · Solidity examples and application design</summary>
       <section className="rpc-section" id="integration-examples">
         <div className="shell rpc-grid">
