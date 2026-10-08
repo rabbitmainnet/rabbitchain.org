@@ -13,7 +13,7 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
       <section className="page-hero testnet-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
-            <span className="hero-eyebrow"><i /> FIRST PUBLIC NETWORK · CHAIN ID 9280 · V2.4.8 · AUTHENTICATED VRF RELAY</span>
+            <span className="hero-eyebrow"><i /> FIRST PUBLIC NETWORK · CHAIN ID 9280 · V2.4.9 · AUTHENTICATED VRF RELAY</span>
             <h1>Rabbit Testnet is the <em>public launch path.</em></h1>
             <p>Miners, node operators, wallets and developers use the Testnet to validate the complete Rabbit network before Mainnet.</p>
             <div className="hero-ctas"><button className="button primary" onClick={onConnect}><Wallet size={16} />{walletState.account ? 'Manage wallet' : 'Connect wallet'}</button><button className="button secondary" onClick={() => onAddNetwork(n)}><Plus size={15} />Add Rabbit Testnet</button></div>
