@@ -87,19 +87,19 @@ export default function Releases() {
             <span className="hero-eyebrow"><i /> OFFICIAL RABBIT CORE RELEASE</span>
 
             <h1>
-              Rabbit Core Testnet V2.4.9 <em>current.</em>
+              Rabbit Core Testnet V2.4.10 <em>current.</em>
             </h1>
 
             <p>
-              V2.4.9 relays authenticated, encrypted VRF evaluations and verified
+              V2.4.10 relays authenticated, encrypted VRF evaluations and verified
               partial signatures through public peers when miners have no direct
-              connection. V2.4.9 improves live block import and production recovery: nodes briefly wait for an incoming direct-extension block before starting recovery, and a shorter conflicting peer no longer keeps production paused. Consensus activation heights, reward rules and VRF rules remain unchanged. No new hard fork is introduced. Existing chain history,
+              connection. V2.4.10 improves live block import and production recovery: nodes briefly wait for an incoming direct-extension block before starting recovery, and a shorter conflicting peer no longer keeps production paused. Consensus activation heights, reward rules and VRF rules remain unchanged. No new hard fork is introduced. Existing chain history,
               wallets and participation state are preserved.
             </p>
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                <Download size={15} /> Download V2.4.9
+                <Download size={15} /> Download V2.4.10
               </a>
 
               <a
@@ -116,7 +116,7 @@ export default function Releases() {
           <div className="release-check-card">
             <FileCheck2 size={28} />
 
-            <span>PUBLIC TESTNET V2.4.9</span>
+            <span>PUBLIC TESTNET V2.4.10</span>
 
             <strong>
               Windows + Linux + macOS verified packages
@@ -146,7 +146,7 @@ export default function Releases() {
             </h2>
 
             <p>
-              Close the previous Rabbit Core normally, extract V2.4.9 into a new
+              Close the previous Rabbit Core normally, extract V2.4.10 into a new
               program folder and start it with the same data directory. Moving the
               program folder does not move blockchain storage. Keep your existing TestnetV2
               data directory, encrypted keystore, blockchain data and persistent
@@ -213,7 +213,7 @@ export default function Releases() {
         <SectionHeader
           eyebrow="EXISTING MINERS"
           title="Upgrade without deleting your wallet or blockchain."
-          text="V2.4.9 is an in-place Rabbit Core upgrade. Keep the existing Rabbit Testnet datadir, blockchain, wallet/keystore, node identity and persistent participation / consensus state. Do not reset or delete them."
+          text="V2.4.10 is an in-place Rabbit Core upgrade. Keep the existing Rabbit Testnet datadir, blockchain, wallet/keystore, node identity and persistent participation / consensus state. Do not reset or delete them."
         />
 
         <div className="mining-steps">
@@ -250,7 +250,7 @@ export default function Releases() {
           <article>
             <span>03</span>
             <HardDrive size={21} />
-            <h3>Extract V2.4.9</h3>
+            <h3>Extract V2.4.10</h3>
             <p>
               Extract the new release into a new program folder. The program files
               and your persistent Rabbit data directory are separate.
@@ -317,19 +317,19 @@ export default function Releases() {
           <article>
             <MonitorDown size={22} />
             <h3>Windows PowerShell</h3>
-            <pre className="release-command"><code>Get-FileHash .\rabbit-core-testnet-v2.4.9-windows-amd64.zip -Algorithm SHA256</code></pre>
+            <pre className="release-command"><code>Get-FileHash .\rabbit-core-testnet-v2.4.10-windows-amd64.zip -Algorithm SHA256</code></pre>
           </article>
 
           <article>
             <TerminalSquare size={22} />
             <h3>Linux</h3>
-            <pre className="release-command"><code>sha256sum rabbit-core-testnet-v2.4.9-linux-amd64.tar.gz</code></pre>
+            <pre className="release-command"><code>sha256sum rabbit-core-testnet-v2.4.10-linux-amd64.tar.gz</code></pre>
           </article>
 
           <article>
             <TerminalSquare size={22} />
             <h3>macOS</h3>
-            <pre className="release-command"><code>shasum -a 256 rabbit-core-testnet-v2.4.9-darwin-*.tar.gz</code></pre>
+            <pre className="release-command"><code>shasum -a 256 rabbit-core-testnet-v2.4.10-darwin-*.tar.gz</code></pre>
           </article>
         </div>
       </section>
@@ -399,7 +399,7 @@ export default function Releases() {
         <div className="operator-split">
           <div>
             <span className="section-kicker">RELEASE SCOPE</span>
-            <h2>V2.4.9 also fixes Rabbit Core initialization and restart after the Availability V2 fork by preserving its persisted activation schedule when applying the original official genesis. No new hard fork is introduced. V2.4.9 includes authenticated VRF relay without a new hard fork.</h2>
+            <h2>V2.4.10 also fixes Rabbit Core initialization and restart after the Availability V2 fork by preserving its persisted activation schedule when applying the original official genesis. No new hard fork is introduced. V2.4.10 includes authenticated VRF relay without a new hard fork.</h2>
 
             <p>
               The existing public Testnet chain and reward rules are preserved.
@@ -411,7 +411,7 @@ export default function Releases() {
             </p>
 
             <p>
-              The V2.4.9 packages contain the current official Rabbit Testnet
+              The V2.4.10 packages contain the current official Rabbit Testnet
               discovery nodes so new and existing nodes can reconnect to the
               public P2P mesh.
             </p>
