@@ -13,6 +13,7 @@ import RabbitSwapPanel from '../components/RabbitSwapPanel'
 import RabbitFaucetPanel from '../components/RabbitFaucetPanel'
 import RabbitLiquidityPanel from '../components/RabbitLiquidityPanel'
 import RabbitTokenFactoryPanel from '../components/RabbitTokenFactoryPanel'
+import RabbitLaunchpoolPanel from '../components/RabbitLaunchpoolPanel'
 
 const tools = {
   swap: { icon: Repeat2, label: 'SWAP', title: 'Rabbit Swap', intro: 'Trade Rabbit Testnet assets through the verified RabbitSwap Router and live liquidity pools.' },
@@ -77,11 +78,21 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
     )
   }
 
+  if (tool === 'launchpool' && networkKey === 'testnet') {
+    return <RabbitLaunchpoolPanel
+      walletState={walletState}
+      walletProvider={walletProvider}
+      onConnect={onConnect}
+      onSwitchNetwork={onSwitchNetwork}
+      toast={toast}
+    />
+  }
+
   if (tool === 'launchpool') {
     return (
       <div className="product-panel">
         <div className="product-panel-title"><div><Icon size={20} /><span>{entry.label}</span></div><b>{statusText}</b></div>
-        <div className="launchpool-card"><span>OFFICIAL CAMPAIGNS</span><h3>No active launchpools.</h3><p>Future campaigns can surface project details, participation windows and contract references here.</p><div><small>STATUS</small><strong>Waiting for public activation</strong></div></div>
+        <div className="product-empty compact"><h3>Launchpool is not available on this network.</h3></div>
       </div>
     )
   }
