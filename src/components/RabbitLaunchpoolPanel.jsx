@@ -212,7 +212,80 @@ export default function RabbitLaunchpoolPanel({
       functionName: 'launchIdOf', args: [token]
     })
     if (current !== 0n) throw Error('Token already registered')
-    await write(CFG.registry, ABI.registry, 'registerLaunch', [token])
+    if (!account)
+      throw Error('Connect your creator wallet first')
+
+    const factory = '0x7edF729000e7fE79bf5De16B23f28b997dd5cD31'
+    const factoryAbi = [
+      {
+        type: 'function',
+        name: 'isFactoryToken',
+        stateMutability: 'view',
+        inputs: [{ name: 'token', type: 'address' }],
+        outputs: [{ type: 'bool' }]
+      },
+      {
+        type: 'function',
+        name: 'creatorTokenCount',
+        stateMutability: 'view',
+        inputs: [{ name: 'creator', type: 'address' }],
+        outputs: [{ type: 'uint256' }]
+      },
+      {
+        type: 'function',
+        name: 'getCreatorTokensPaginated',
+        stateMutability: 'view',
+        inputs: [
+          { name: 'creator', type: 'address' },
+          { name: 'start', type: 'uint256' },
+          { name: 'limit', type: 'uint256' }
+        ],
+        outputs: [{ type: 'address[]' }]
+      }
+    ]
+
+    const isFactoryToken = await client.readContract({
+      address: factory, abi: factoryAbi,
+      functionName: 'isFactoryToken', args: [token]
+    })
+
+    if (!isFactoryToken)
+      throw Error('Only Rabbit Token Factory tokens can be registered')
+
+    const total = await client.readContract({
+      address: factory, abi: factoryAbi,
+      functionName: 'creatorTokenCount', args: [account]
+    })
+
+    let creatorTokenIndex = null
+
+    // Use index-by-index queries, matching the verified Factory API.
+    // Stop as soon as the requested token is found.
+    for (let i = 0n; i < total; i += 1n) {
+      const tokens = await client.readContract({
+        address: factory, abi: factoryAbi,
+        functionName: 'getCreatorTokensPaginated',
+        args: [account, i, 1n]
+      })
+
+      if (
+        tokens.length === 1 &&
+        tokens[0].toLowerCase() === token.toLowerCase()
+      ) {
+        creatorTokenIndex = i
+        break
+      }
+    }
+
+    if (creatorTokenIndex === null)
+      throw Error('This token does not belong to the connected creator wallet')
+
+    await write(
+      CFG.registry,
+      ABI.registry,
+      'registerLaunch',
+      [token, creatorTokenIndex]
+    )
   }
 
   async function create() {
