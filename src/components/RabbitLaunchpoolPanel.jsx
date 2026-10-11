@@ -54,6 +54,7 @@ export default function RabbitLaunchpoolPanel({
   const [inventory, setInventory] = useState('')
   const [startPrice, setStartPrice] = useState('')
   const [showLegacy, setShowLegacy] = useState(false)
+  const [activeTab, setActiveTab] = useState('explore')
   const [payment, setPayment] = useState('native')
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
@@ -404,11 +405,15 @@ export default function RabbitLaunchpoolPanel({
   const [marketSearch, setMarketSearch] = useState('')
   const [marketFilter, setMarketFilter] = useState('all')
 
-  const activeMarkets = markets.filter(
+  const freshMarkets = markets.filter(m => m.version === 3)
+  const legacyMarkets = markets.filter(m => m.version === 2)
+  const visibleMarkets = showLegacy ? legacyMarkets : freshMarkets
+  const myLaunches = freshMarkets.filter(m => account && m.fields?.creator?.toLowerCase() === account.toLowerCase())
+  const activeMarkets = freshMarkets.filter(
     m => m.fields?.active && !m.graduated
   ).length
 
-  const matchingMarkets = markets.filter(m => {
+  const matchingMarkets = (activeTab === 'mine' ? myLaunches : visibleMarkets).filter(m => {
     const state = m.graduated ? 'graduated'
       : m.fields?.active ? 'active' : 'pending'
     if (marketFilter !== 'all' && marketFilter !== state) return false
@@ -474,71 +479,17 @@ export default function RabbitLaunchpoolPanel({
         </div>
       </section>
 
-      <section className="rlp-stats">
-        <div className="rlp-stat">
-          <div className="rlp-stat-icon">▣</div>
-          <div><small>Total markets</small><strong>{count}</strong></div>
-        </div>
-        <div className="rlp-stat">
-          <div className="rlp-stat-icon">↗</div>
-          <div><small>Active markets</small>
-            <strong>{activeMarkets}</strong></div>
-        </div>
-        <div className="rlp-stat">
-          <div className="rlp-stat-icon">◈</div>
-          <div><small>Graduated markets</small>
-            <strong>{markets.filter(m => m.graduated).length}</strong></div>
-        </div>
-        <div className="rlp-stat">
-          <div className="rlp-stat-icon">♧</div>
-          <div><small>Permanent LP infrastructure</small>
-            <strong className="rlp-ready">Deployed</strong></div>
-        </div>
-      </section>
+      <nav className="rlp-clean-tabs" aria-label="Launchpool navigation">
+        <button className={activeTab === 'explore' ? 'chosen' : ''} onClick={() => {setActiveTab('explore'); setShowLegacy(false)}} type="button">Explore launches</button>
+        <button className={activeTab === 'create' ? 'chosen' : ''} onClick={() => setActiveTab('create')} type="button">+ Create launch</button>
+        <button className={activeTab === 'mine' ? 'chosen' : ''} onClick={() => {setActiveTab('mine'); setShowLegacy(false)}} type="button">My launches</button>
+      </nav>
 
-      <section className="rlp-section">
+      {activeTab === 'create' && <section className="rlp-section rlp-create" id="rabbit-launch-form">
         <div className="rlp-heading">
           <div>
-            <h2>◈ Launchpool Infrastructure</h2>
-            <p>Active V3 infrastructure and preserved V2 market contracts.</p>
-          </div>
-          <a className="rlp-text-link"
-             href={CFG.explorer} target="_blank" rel="noreferrer">
-            Rabbit Explorer ↗
-          </a>
-        </div>
-        <div className="rlp-contract-grid">
-          {[
-            ['Registry V3', V3.registry, '◇'],
-            ['Market V3', V3.market, '▣'],
-            ['Fee Vault V3', V3.feeVault, '◈'],
-            ['Market V2 (legacy)', CFG.market, '▣'],
-            ['Permanent LP Lock', V3.lpLock, '♧']
-          ].map(([name,address,symbol]) => (
-            <div className="rlp-contract" key={name}>
-              <div className="rlp-contract-icon">{symbol}</div>
-              <div className="rlp-contract-name">
-                <strong>{name}</strong>
-                <small>{compact(address)}</small>
-              </div>
-              <button title="Copy contract address" type="button"
-                onClick={() => {
-                  navigator.clipboard?.writeText(address)
-                  setMessage('Contract address copied.')
-                }}>⧉</button>
-              <a title="View verified contract"
-                 href={`${CFG.explorer}/address/${address}`}
-                 target="_blank" rel="noreferrer">↗</a>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="rlp-section rlp-create" id="rabbit-launch-form">
-        <div className="rlp-heading">
-          <div>
-            <h2><span className="rlp-plus">+</span> Launch Your Token</h2>
-            <p>Three choices. Transparent pricing. Permanent liquidity by design.</p>
+            <h2><span className="rlp-plus">+</span> Create a Launch</h2>
+            <p>Set your token, supply and starting price. We prepare the rest.</p>
           </div>
           <span className="rlp-test-label">RABBIT TESTNET · 9280</span>
         </div>
@@ -587,45 +538,29 @@ export default function RabbitLaunchpoolPanel({
           </div>
         </div>
         <div className="rlp-v3-preview" aria-live="polite">
-          <h3>Live launch preview</h3>
+          <h3>Your launch at a glance</h3>
           <div className="rlp-v3-distribution"><span>80% · Bonding-curve sale</span>
             <strong>{launchPreview?.sale || '—'}</strong></div>
           <div className="rlp-v3-distribution"><span>20% · Permanent LP inventory</span>
             <strong>{launchPreview?.lp || '—'}</strong></div>
           <div className="rlp-v3-bar"><span /><span /></div>
-          <p>The full amount is deposited into the Market. All sale tokens must
-            be sold to reach the graduation target. At graduation, the reserved
-            LP tokens and accumulated trading reserve are supplied to RabbitSwap.
-            The initial LP tokens are permanently locked.</p>
+          <p>After the sale goal is reached, anyone can complete graduation to RabbitSwap. The initial LP is permanently locked.</p>
         </div>
         <div className="rlp-form-actions">
           <button type="button" className="rlp-primary"
             disabled={busy || !account || !correctChain || !v3Ready || !launchPreview || !startPrice}
             onClick={() => run(launchV3)}>
-            {busy ? 'Processing…' : v3Ready ? '↗ Approve & Launch' : 'V3 Launch · Awaiting Deployment'}
+            {busy ? 'Processing…' : 'Launch Token →'}
           </button>
         </div>
         <p className="rlp-footnote">Registration (when required) and ERC-20 approval
           are separate wallet transactions. Market creation, price configuration,
           80/20 allocation and activation occur in one on-chain V3 transaction.
           Graduation itself requires another permissionless transaction when the target is met.</p>
-        <details className="rlp-v3-legacy">
-          <summary>Existing V2 launch controls · advanced / legacy</summary>
-          <p>Legacy V2 creation requires manual configuration and does not include
-            the new pending-market cancellation. Do not send tokens unless you
-            understand the irreversible custody and graduation conditions.</p>
-          <div className="rlp-form-actions">
-            <button type="button" className="rlp-secondary"
-              disabled={busy || !account || !correctChain}
-              onClick={() => run(register)}>Register token (V2)</button>
-            <button type="button" className="rlp-secondary"
-              disabled={busy || !account || !correctChain}
-              onClick={() => run(create)}>Create manual V2 market</button>
-          </div>
-        </details>
-      </section>
 
-      <section className="rlp-section rlp-v3-guide" id="rabbit-launch-guide">
+      </section>}
+
+      {activeTab === 'create' && <section className="rlp-section rlp-v3-guide" id="rabbit-launch-guide">
         <div className="rlp-heading"><div><h2>◈ How Rabbit Launchpool Works</h2>
           <p>A simple, transparent process for creators and traders.</p></div></div>
         <div className="rlp-v3-steps">
@@ -663,13 +598,13 @@ export default function RabbitLaunchpoolPanel({
             no equivalent pending-market cancellation. Review all transactions
             and contract addresses before approval.</p></details>
         </div>
-      </section>
+      </section>}
 
-      <section className="rlp-section rlp-market-section">
+      {activeTab !== 'create' && <section className="rlp-section rlp-market-section">
         <div className="rlp-heading rlp-market-toolbar">
           <div>
-            <h2>◈ On-chain Markets</h2>
-            <p>Discover and trade real Rabbit Testnet launch markets.</p>
+            <h2>{activeTab === 'mine' ? 'My Launches' : showLegacy ? 'Previous Launches' : 'Discover Launches'}</h2>
+            <p>{showLegacy ? 'Older markets remain accessible for existing holders.' : 'Explore live launches and trade directly on Rabbit Chain.'}</p>
           </div>
           <div className="rlp-toolbar-actions">
             <input aria-label="Search markets"
@@ -689,66 +624,36 @@ export default function RabbitLaunchpoolPanel({
           </div>
         </div>
 
-        <div className="rlp-market-table-wrap">
-          <table className="rlp-market-table">
-            <thead><tr>
-              <th>#</th><th>Token</th><th>Status</th>
-              <th>Progress</th><th>Inventory / Sold</th>
-              <th>Reserve</th><th>Payment</th><th>Actions</th>
-            </tr></thead>
-            <tbody>
-              {matchingMarkets.map(item => {
-                const f = item.fields || {}
-                const asset = f.paymentAsset?.toLowerCase() === zeroAddress
-                  ? 'tRAB' : 'tRUSD'
-                const dec = item.decimals || 18
-                const total = BigInt(f.inventory || 0) + BigInt(f.sold || 0)
-                const sold = BigInt(f.sold || 0)
-                const progress = total > 0n
-                  ? Number(sold * 10000n / total) / 100
-                  : 0
-                const state = item.graduated ? 'Graduated'
-                  : f.active ? 'Active' : 'Pending'
-                return (
-                  <tr key={item.key}>
-                    <td>V{item.version} · #{item.id}</td>
-                    <td>
-                      <div className="rlp-token">
-                        <span className="rlp-token-avatar">
-                          {String(item.symbol || 'R')[0]}
-                        </span>
-                        <span><strong>{item.symbol || 'TOKEN'}</strong>
-                          <small>{compact(f.token)}</small></span>
-                      </div>
-                    </td>
-                    <td><span className={'rlp-status ' + state.toLowerCase()}>
-                      {state}</span></td>
-                    <td>
-                      <div className="rlp-progress">
-                        <strong>{progress.toFixed(1)}%</strong>
-                        <div><span style={{width: `${progress}%`}} /></div>
-                      </div>
-                    </td>
-                    <td>
-                      {amountDisplay(f.sold, dec)}
-                      <small> / {amountDisplay(total, dec)}</small>
-                    </td>
-                    <td>{amountDisplay(f.reserve, asset === 'tRAB' ? 18 : 6)}
-                    </td>
-                    <td><span className="rlp-payment-token"><img src={asset === "tRAB" ? "/testnet-assets/trab.png" : "/launchpool-assets/trusd.png"} alt="" /><strong>{asset}</strong></span></td>
-                    <td><button className="rlp-row-action" type="button"
-                      onClick={() => setSelected(
-                        selected === item.key ? null : item.key
-                      )}>
-                      {selected === item.key ? 'Close' : 'Trade / Details'}
-                    </button></td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+        <div className="rlp-clean-market-grid">
+          {matchingMarkets.map(item => {
+            const f = item.fields || {}
+            const dec = item.decimals || 18
+            const asset = f.paymentAsset?.toLowerCase() === zeroAddress ? 'tRAB' : 'tRUSD'
+            const total = BigInt(f.inventory || 0) + BigInt(f.sold || 0)
+            const sold = BigInt(f.sold || 0)
+            const progress = total > 0n ? Math.min(100, Number(sold * 10000n / total) / 100) : 0
+            const status = item.graduated ? 'Graduated' : f.active ? 'Live' : 'Preparing'
+            return <article className="rlp-clean-market-card" key={item.key}>
+              <div className="rlp-clean-card-head">
+                <div className="rlp-token">
+                  <span className="rlp-token-avatar">{String(item.symbol || 'R')[0]}</span>
+                  <span><strong>{item.symbol || 'TOKEN'}</strong><small>{compact(f.token)}</small></span>
+                </div>
+                <span className={'rlp-status ' + (item.graduated ? 'graduated' : f.active ? 'active' : 'pending')}>{status}</span>
+              </div>
+              <div className="rlp-clean-card-stats">
+                <div><small>Sold</small><strong>{amountDisplay(f.sold, dec)}</strong></div>
+                <div><small>Raised</small><strong>{amountDisplay(f.reserve, asset === 'tRAB' ? 18 : 6)} {asset}</strong></div>
+              </div>
+              <div className="rlp-clean-progress-label"><span>Launch progress</span><strong>{progress.toFixed(1)}%</strong></div>
+              <div className="rlp-progress"><div><span style={{width: `${progress}%`}} /></div></div>
+              <button type="button" className="rlp-primary rlp-clean-card-button"
+                onClick={() => setSelected(selected === item.key ? null : item.key)}>
+                {selected === item.key ? 'Close details' : item.graduated ? 'View launch' : f.active ? 'Trade token →' : 'View details →'}
+              </button>
+            </article>
+          })}
         </div>
-
         {matchingMarkets.length === 0 && (
           <div className="rlp-empty">
             <div>◇</div>
@@ -761,7 +666,7 @@ export default function RabbitLaunchpoolPanel({
           </div>
         )}
 
-        {markets.filter(item => selected === item.key).map(item => (
+        {(activeTab === 'mine' ? myLaunches : visibleMarkets).filter(item => selected === item.key).map(item => (
           <div key={item.key} className="rlp-details">
             <div className="rlp-heading">
               <h2>{item.symbol || 'Token'} · V{item.version} Market #{item.id}</h2>
@@ -795,7 +700,21 @@ export default function RabbitLaunchpoolPanel({
             </a>
           </div>
         ))}
-      </section>
+      </section>}
+
+      {activeTab !== 'create' && <div className="rlp-clean-footer-tools">
+        <details>
+          <summary>Previous launches & contract information</summary>
+          <p>Older markets are kept separate. Their funds and on-chain contracts have not been deleted.</p>
+          <button type="button" className="rlp-secondary" onClick={() => {setShowLegacy(!showLegacy); setSelected(null); setActiveTab('explore')}}>
+            {showLegacy ? 'Return to current launches' : 'View previous markets'}
+          </button>
+          <div className="rlp-clean-contract-links">
+            <a href={`${CFG.explorer}/address/${V3.market}`} target="_blank" rel="noreferrer">Current market contract ↗</a>
+            <a href={`${CFG.explorer}/address/${CFG.market}`} target="_blank" rel="noreferrer">Previous market contract ↗</a>
+          </div>
+        </details>
+      </div>}
 
       {message && <p className="rlp-message" role="status">{message}</p>}
       <p className="rlp-bottom-note">

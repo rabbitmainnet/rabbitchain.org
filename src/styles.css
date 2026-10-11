@@ -9051,3 +9051,23 @@ footer {
 .rabbit-lp-v2 .rlp-v3-faq p { margin:13px 0 0; line-height:1.7; }
 @media(max-width:980px) { .rabbit-lp-v2 .rlp-v3-steps { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:580px) { .rabbit-lp-v2 .rlp-v3-steps { grid-template-columns:1fr; } .rabbit-lp-v2 .rlp-v3-preview { padding:16px; } }
+
+/* Rabbit Launchpool — clean creator experience */
+.rabbit-lp-v2 .rlp-clean-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 28px;padding:7px;border:1px solid rgba(150,175,215,.2);border-radius:18px;background:rgba(90,115,155,.07)}
+.rabbit-lp-v2 .rlp-clean-tabs button{flex:1;min-width:145px;border:0;border-radius:12px;padding:14px 18px;color:inherit;background:transparent;font-weight:700;cursor:pointer;transition:.2s}
+.rabbit-lp-v2 .rlp-clean-tabs button.chosen{background:linear-gradient(120deg,rgba(34,197,145,.25),rgba(34,197,145,.08));box-shadow:0 3px 14px rgba(0,0,0,.08);outline:1px solid rgba(34,197,145,.28)}
+.rabbit-lp-v2 .rlp-clean-market-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
+.rabbit-lp-v2 .rlp-clean-market-card{display:flex;flex-direction:column;gap:18px;padding:22px;border:1px solid rgba(145,170,210,.20);border-radius:20px;background:linear-gradient(145deg,rgba(96,125,160,.10),rgba(50,75,115,.025));min-width:0}
+.rabbit-lp-v2 .rlp-clean-card-head,.rabbit-lp-v2 .rlp-clean-card-stats,.rabbit-lp-v2 .rlp-clean-progress-label{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.rabbit-lp-v2 .rlp-clean-card-stats{align-items:flex-start}
+.rabbit-lp-v2 .rlp-clean-card-stats>div{display:grid;gap:7px;min-width:0}
+.rabbit-lp-v2 .rlp-clean-card-stats small,.rabbit-lp-v2 .rlp-clean-progress-label span{font-size:.8rem;opacity:.72}
+.rabbit-lp-v2 .rlp-clean-card-stats strong{overflow-wrap:anywhere}
+.rabbit-lp-v2 .rlp-clean-card-button{margin-top:auto;width:100%}
+.rabbit-lp-v2 .rlp-clean-footer-tools{margin:12px 0 36px}
+.rabbit-lp-v2 .rlp-clean-footer-tools details{border:1px solid rgba(145,170,210,.15);border-radius:14px;padding:16px 20px}
+.rabbit-lp-v2 .rlp-clean-footer-tools summary{cursor:pointer;font-weight:650}
+.rabbit-lp-v2 .rlp-clean-contract-links{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}
+.rabbit-lp-v2 .rlp-clean-contract-links a{color:inherit;text-decoration:underline}
+@media(max-width:1100px){.rabbit-lp-v2 .rlp-clean-market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.rabbit-lp-v2 .rlp-clean-market-grid{grid-template-columns:1fr}.rabbit-lp-v2 .rlp-clean-tabs{gap:3px}.rabbit-lp-v2 .rlp-clean-tabs button{min-width:0;font-size:.83rem;padding:12px 8px}.rabbit-lp-v2 .rlp-clean-market-card{padding:18px}}
