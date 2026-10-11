@@ -51,6 +51,8 @@ export default function RabbitLaunchpoolPanel({
   const [count, setCount] = useState(0)
   const [token, setToken] = useState('')
   const [inventory, setInventory] = useState('')
+  const [startPrice, setStartPrice] = useState('')
+  const [showLegacy, setShowLegacy] = useState(false)
   const [payment, setPayment] = useState('native')
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
@@ -322,6 +324,64 @@ export default function RabbitLaunchpoolPanel({
     )
   }
 
+  const v3Ready = Boolean(CFG.v3Market)
+  const launchPreview = (() => {
+    try {
+      if (!/^\d+(?:\.\d+)?$/.test(inventory) || !Number(inventory)) return null
+      // Preview uses decimal-independent display only; transaction uses token.decimals.
+      const units = inventory.split('.')
+      const precision = units[1]?.length || 0
+      const full = BigInt(units[0] + (units[1] || ''))
+      const lp = full / 5n
+      const show = v => formatUnits(v, precision)
+      return { sale: show(full - lp), lp: show(lp) }
+    } catch { return null }
+  })()
+
+  async function launchV3() {
+    if (!v3Ready) throw Error('Launchpool V3 is awaiting verified testnet deployment')
+    const decimals = await ensureToken()
+    const amount = parseUnits(inventory, decimals)
+    const price = parseUnits(startPrice, 18)
+    if (amount < 5n || price <= 0n || price > 10n ** 24n)
+      throw Error('Check token quantity and starting price')
+    if (amount / 5n === 0n) throw Error('Amount too small for permanent liquidity')
+
+    const registered = await client.readContract({
+      address: CFG.registry, abi: ABI.registry,
+      functionName: 'launchIdOf', args: [token]
+    })
+    if (registered === 0n) {
+      setMessage('Step 1/3: Register your token from Rabbit Token Factory...')
+      await register()
+    }
+
+    const exists = await client.readContract({
+      address: CFG.market, abi: ABI.market,
+      functionName: 'marketIdOf',
+      args: [token, payment === 'native' ? zeroAddress : CFG.tRUSD]
+    })
+    if (exists !== 0n) throw Error('This token already has a market for this payment asset')
+
+    const balance = await client.readContract({
+      address: token, abi: erc20, functionName: 'balanceOf', args: [account]
+    })
+    if (balance < amount) throw Error('Insufficient token balance. Enter an amount you own.')
+    const allowance = await client.readContract({
+      address: token, abi: erc20, functionName: 'allowance',
+      args: [account, CFG.market]
+    })
+    if (allowance < amount) {
+      setMessage('Step 2/3: Approve your tokens in the wallet...')
+      await write(token, erc20, 'approve', [CFG.market, amount])
+    }
+    setMessage('Step 3/3: Confirm the complete launch in your wallet...')
+    await write(CFG.market, ABI.market, 'launchSimple', [
+      token, payment === 'native' ? zeroAddress : CFG.tRUSD,
+      amount, price, 0n
+    ])
+  }
+
   const walletAction = !account
     ? onConnect
     : !correctChain
@@ -368,9 +428,8 @@ export default function RabbitLaunchpoolPanel({
           </h1>
           <div className="rlp-tag">TESTNET 9280</div>
           <p>
-            Register a token, create a bonding-curve market and trade
-            directly on Rabbit Chain. Initial graduation liquidity is
-            permanently locked.
+            Explore on-chain token launches, transparent bonding-curve trading
+            and RabbitSwap graduation with permanently locked initial liquidity.
           </p>
           <div className="rlp-features">
             <div><b>◈</b><span><strong>Permissionless</strong>
@@ -432,7 +491,7 @@ export default function RabbitLaunchpoolPanel({
         <div className="rlp-heading">
           <div>
             <h2>◈ Launchpool Infrastructure</h2>
-            <p>Verified smart contracts on Rabbit Testnet.</p>
+            <p>On-chain contract addresses for the currently selected testnet Market.</p>
           </div>
           <a className="rlp-text-link"
              href={CFG.explorer} target="_blank" rel="noreferrer">
@@ -465,71 +524,135 @@ export default function RabbitLaunchpoolPanel({
         </div>
       </section>
 
-      <section className="rlp-section rlp-create">
+      <section className="rlp-section rlp-create" id="rabbit-launch-form">
         <div className="rlp-heading">
           <div>
-            <h2><span className="rlp-plus">+</span>
-              Create a Launchpool Market
-            </h2>
-            <p>Launch a token from the existing Rabbit Token Factory.</p>
+            <h2><span className="rlp-plus">+</span> Launch Your Token</h2>
+            <p>Three choices. Transparent pricing. Permanent liquidity by design.</p>
           </div>
           <span className="rlp-test-label">RABBIT TESTNET · 9280</span>
         </div>
-
-        {walletAction && (
-          <button className="rlp-primary rlp-connect" type="button"
-            onClick={walletAction}>
-            {!account ? 'Connect wallet' : 'Switch to Rabbit Testnet'}
-          </button>
-        )}
-
+        {!v3Ready && <p className="rlp-v3-notice" role="status">
+          <strong>V3 launch is being prepared.</strong> This preview does not send tokens.
+          The existing V2 markets remain accessible below. Launching with V3 will
+          be enabled only after its new Market contract is deployed and checked.
+        </p>}
+        {walletAction && <button className="rlp-primary rlp-connect" type="button"
+          onClick={walletAction}>
+          {!account ? 'Connect wallet' : 'Switch to Rabbit Testnet'}
+        </button>}
         <div className="rlp-form-grid">
           <label className="rlp-token-field">
-            <span>Token contract address</span>
-            <input value={token}
-              onChange={e => setToken(e.target.value.trim())}
-              placeholder="0x..." spellCheck="false" />
+            <span>1 · Your token address</span>
+            <input value={token} onChange={e => setToken(e.target.value.trim())}
+              placeholder="0x..." spellCheck="false" autoComplete="off" />
+            <small>Created with Rabbit Token Factory, using your connected creator wallet.</small>
           </label>
           <label>
-            <span>Curve inventory</span>
-            <input value={inventory}
-              onChange={e => setInventory(e.target.value.trim())}
-              placeholder="100000" inputMode="decimal" />
+            <span>2 · Total tokens to launch</span>
+            <input value={inventory} onChange={e => setInventory(e.target.value.trim())}
+              placeholder="1000000000" inputMode="decimal" />
+            <small>Any supported token amount within on-chain arithmetic and your balance.</small>
+          </label>
+          <label>
+            <span>3 · Starting price per token</span>
+            <input value={startPrice} onChange={e => setStartPrice(e.target.value.trim())}
+              placeholder="0.000001" inputMode="decimal" />
+            <small>Quoted in the selected payment token. Fixed initial curve (slope 0).</small>
           </label>
           <div className="rlp-payment-field">
             <span>Payment asset</span>
             <div className="rlp-payment-options">
-              <button type="button"
-                className={payment === 'native' ? 'chosen' : ''}
+              <button type="button" className={payment === 'native' ? 'chosen' : ''}
                 onClick={() => setPayment('native')}>
-                <img className="rlp-real-token-logo" src="/testnet-assets/trab.png" alt="tRAB" /><span><strong>tRAB</strong>
-                  <small>Native Rabbit</small></span>
+                <img className="rlp-real-token-logo" src="/testnet-assets/trab.png" alt="" />
+                <span><strong>tRAB</strong><small>Native Rabbit</small></span>
               </button>
-              <button type="button"
-                className={payment === 'trusd' ? 'chosen' : ''}
+              <button type="button" className={payment === 'trusd' ? 'chosen' : ''}
                 onClick={() => setPayment('trusd')}>
-                <img className="rlp-real-token-logo" src="/launchpool-assets/trusd.png" alt="tRUSD" /><span><strong>tRUSD</strong>
-                  <small>Testnet USD</small></span>
+                <img className="rlp-real-token-logo" src="/launchpool-assets/trusd.png" alt="" />
+                <span><strong>tRUSD</strong><small>Testnet USD</small></span>
               </button>
             </div>
           </div>
         </div>
+        <div className="rlp-v3-preview" aria-live="polite">
+          <h3>Live launch preview</h3>
+          <div className="rlp-v3-distribution"><span>80% · Bonding-curve sale</span>
+            <strong>{launchPreview?.sale || '—'}</strong></div>
+          <div className="rlp-v3-distribution"><span>20% · Permanent LP inventory</span>
+            <strong>{launchPreview?.lp || '—'}</strong></div>
+          <div className="rlp-v3-bar"><span /><span /></div>
+          <p>The full amount is deposited into the Market. All sale tokens must
+            be sold to reach the graduation target. At graduation, the reserved
+            LP tokens and accumulated trading reserve are supplied to RabbitSwap.
+            The initial LP tokens are permanently locked.</p>
+        </div>
         <div className="rlp-form-actions">
-          <button type="button" className="rlp-secondary"
-            disabled={busy || !account || !correctChain}
-            onClick={() => run(register)}>
-            Register token
-          </button>
           <button type="button" className="rlp-primary"
-            disabled={busy || !account || !correctChain}
-            onClick={() => run(create)}>
-            {busy ? 'Processing...' : '↗ Create market'}
+            disabled={busy || !account || !correctChain || !v3Ready || !launchPreview || !startPrice}
+            onClick={() => run(launchV3)}>
+            {busy ? 'Processing…' : v3Ready ? '↗ Approve & Launch' : 'V3 Launch · Awaiting Deployment'}
           </button>
         </div>
-        <p className="rlp-footnote">
-          Creating a market transfers token inventory to the on-chain
-          Market contract. Configure its curve and graduation before activation.
-        </p>
+        <p className="rlp-footnote">Registration (when required) and ERC-20 approval
+          are separate wallet transactions. Market creation, price configuration,
+          80/20 allocation and activation occur in one on-chain V3 transaction.
+          Graduation itself requires another permissionless transaction when the target is met.</p>
+        <details className="rlp-v3-legacy">
+          <summary>Existing V2 launch controls · advanced / legacy</summary>
+          <p>Legacy V2 creation requires manual configuration and does not include
+            the new pending-market cancellation. Do not send tokens unless you
+            understand the irreversible custody and graduation conditions.</p>
+          <div className="rlp-form-actions">
+            <button type="button" className="rlp-secondary"
+              disabled={busy || !account || !correctChain || v3Ready}
+              onClick={() => run(register)}>Register token (V2)</button>
+            <button type="button" className="rlp-secondary"
+              disabled={busy || !account || !correctChain || v3Ready}
+              onClick={() => run(create)}>Create manual V2 market</button>
+          </div>
+        </details>
+      </section>
+
+      <section className="rlp-section rlp-v3-guide" id="rabbit-launch-guide">
+        <div className="rlp-heading"><div><h2>◈ How Rabbit Launchpool Works</h2>
+          <p>A simple, transparent process for creators and traders.</p></div></div>
+        <div className="rlp-v3-steps">
+          <article><b>01</b><h3>Create your token</h3><p>Create a compatible ERC-20 token
+            with Rabbit Token Factory. The connected wallet must be its creator.</p></article>
+          <article><b>02</b><h3>Choose your launch</h3><p>Enter the total tokens,
+            starting price and tRAB or tRUSD payment currency. Review the 80/20 split.</p></article>
+          <article><b>03</b><h3>Approve & launch</h3><p>Approve the token transfer.
+            The V3 Market configures the sale and graduation in one launch transaction.</p></article>
+          <article><b>04</b><h3>Trade & graduate</h3><p>Buyers purchase or sell on the curve.
+            After the sales target, anyone can trigger graduation to RabbitSwap.</p></article>
+        </div>
+        <h3>Frequently Asked Questions</h3>
+        <div className="rlp-v3-faq">
+          <details><summary>What happens to the initial liquidity?</summary><p>
+            On successful graduation, the LP tokens for the initial RabbitSwap
+            liquidity are sent to the permanent LP lock and cannot be withdrawn.</p></details>
+          <details><summary>Can I launch one billion or one trillion tokens?</summary><p>
+            V3 local tests include one-trillion-token inventory and graduation.
+            Actual deposits depend on your wallet balance, token decimals,
+            contract limits and the chosen price.</p></details>
+          <details><summary>Does graduation happen automatically?</summary><p>
+            The on-chain graduation is permissionless after the sales goal is reached,
+            but it still requires someone to submit a transaction and a clean,
+            compatible RabbitSwap pair. A failed graduation leaves the market
+            reserves intact when the transaction reverts.</p></details>
+          <details><summary>What fees and risks should I know?</summary><p>
+            The Market uses a 1% trade fee, plus network transaction gas.
+            Bonding-curve prices and token values can change. Initial LP locking
+            does not guarantee a token's safety, future liquidity or value.
+            Testnet tokens have no guaranteed monetary value.</p></details>
+          <details><summary>Can I cancel or recover tokens?</summary><p>
+            V3 supports cancellation of a pending market under contract conditions;
+            activated markets have different rules. The legacy V2 contract has
+            no equivalent pending-market cancellation. Review all transactions
+            and contract addresses before approval.</p></details>
+        </div>
       </section>
 
       <section className="rlp-section rlp-market-section">

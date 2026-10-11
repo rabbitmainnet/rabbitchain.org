@@ -9028,3 +9028,26 @@ footer {
 }
 
 /* END RABBIT LAUNCHPOOL COMPACT HERO V6 */
+
+/* Rabbit Launchpool V3 · additive styling preserving the existing visual theme */
+.rabbit-lp-v2 .rlp-v3-notice { padding: 14px 18px; margin: 12px 0 20px; border: 1px solid rgba(251,191,36,.35); background: rgba(251,191,36,.06); border-radius: 14px; line-height: 1.6; }
+.rabbit-lp-v2 .rlp-v3-preview { margin: 22px 0; padding: 22px; border: 1px solid rgba(160,180,220,.18); border-radius: 18px; background: rgba(100,120,180,.06); }
+.rabbit-lp-v2 .rlp-v3-preview h3 { margin: 0 0 16px; }
+.rabbit-lp-v2 .rlp-v3-distribution { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 0; flex-wrap:wrap; }
+.rabbit-lp-v2 .rlp-v3-distribution strong { overflow-wrap:anywhere; }
+.rabbit-lp-v2 .rlp-v3-bar { display:flex; width:100%; height:9px; overflow:hidden; border-radius:99px; margin:12px 0 18px; }
+.rabbit-lp-v2 .rlp-v3-bar span:first-child { width:80%; background:#2ecb95; }
+.rabbit-lp-v2 .rlp-v3-bar span:last-child { width:20%; background:#7689f1; }
+.rabbit-lp-v2 .rlp-v3-preview p, .rabbit-lp-v2 .rlp-v3-legacy p { line-height:1.7; opacity:.85; }
+.rabbit-lp-v2 .rlp-v3-legacy { margin-top:22px; padding:16px 18px; border:1px solid rgba(160,180,220,.18); border-radius:14px; }
+.rabbit-lp-v2 .rlp-v3-legacy summary, .rabbit-lp-v2 .rlp-v3-faq summary { cursor:pointer; font-weight:650; }
+.rabbit-lp-v2 .rlp-v3-steps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin:20px 0 28px; }
+.rabbit-lp-v2 .rlp-v3-steps article { padding:20px; border:1px solid rgba(160,180,220,.16); border-radius:16px; background:rgba(100,120,180,.05); }
+.rabbit-lp-v2 .rlp-v3-steps article b { color:#2ecb95; font-size:1.15rem; }
+.rabbit-lp-v2 .rlp-v3-steps h3 { font-size:1.05rem; margin:12px 0 8px; }
+.rabbit-lp-v2 .rlp-v3-steps p { line-height:1.65; margin:0; }
+.rabbit-lp-v2 .rlp-v3-faq { display:grid; gap:10px; margin-top:15px; }
+.rabbit-lp-v2 .rlp-v3-faq details { padding:16px 18px; border:1px solid rgba(160,180,220,.16); border-radius:12px; }
+.rabbit-lp-v2 .rlp-v3-faq p { margin:13px 0 0; line-height:1.7; }
+@media(max-width:980px) { .rabbit-lp-v2 .rlp-v3-steps { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:580px) { .rabbit-lp-v2 .rlp-v3-steps { grid-template-columns:1fr; } .rabbit-lp-v2 .rlp-v3-preview { padding:16px; } }
