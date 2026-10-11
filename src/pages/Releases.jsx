@@ -233,7 +233,7 @@ export default function Releases() {
             <ShieldCheck size={21} />
             <h3>Windows clock and VRF update</h3>
             <p>
-              Version 2.4.9 includes authenticated VRF relay without a new hard fork.
+              Version 2.4.11 includes authenticated VRF relay without a new hard fork.
               It retains the existing Windows VRF key persistence fix.
               Update one miner at a time. In Windows Settings, open Time &amp; language,
               enable automatic time and select Sync now. An inaccurate clock can
