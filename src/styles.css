@@ -9071,3 +9071,15 @@ footer {
 .rabbit-lp-v2 .rlp-clean-contract-links a{color:inherit;text-decoration:underline}
 @media(max-width:1100px){.rabbit-lp-v2 .rlp-clean-market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.rabbit-lp-v2 .rlp-clean-market-grid{grid-template-columns:1fr}.rabbit-lp-v2 .rlp-clean-tabs{gap:3px}.rabbit-lp-v2 .rlp-clean-tabs button{min-width:0;font-size:.83rem;padding:12px 8px}.rabbit-lp-v2 .rlp-clean-market-card{padding:18px}}
+
+/* Simplified public V3 graduation - legacy controls remain available only for old markets. */
+.rabbit-lp-v2 .rlp-graduation-simple{margin-top:18px;padding:20px;border:1px solid rgba(145,170,210,.24);border-radius:18px;background:rgba(106,114,160,.045)}
+.rabbit-lp-v2 .rlp-graduation-simple-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap}
+.rabbit-lp-v2 .rlp-graduation-simple h3{margin:0 0 7px;font-size:1.06rem}
+.rabbit-lp-v2 .rlp-graduation-simple p{margin:7px 0 12px;line-height:1.55;opacity:.82}
+.rabbit-lp-v2 .rlp-graduation-tag{border-radius:99px;background:rgba(41,175,124,.12);color:inherit;padding:6px 11px;font-size:.76rem;font-weight:650}
+.rabbit-lp-v2 .rlp-graduation-progress-caption{display:flex;justify-content:space-between;gap:10px;font-size:.86rem;margin:15px 0 7px}
+.rabbit-lp-v2 .rlp-graduation-progress{width:100%;height:8px;background:rgba(145,170,210,.20);overflow:hidden;border-radius:99px}
+.rabbit-lp-v2 .rlp-graduation-progress>span{display:block;height:100%;background:linear-gradient(90deg,#31c48d,#7933ed);border-radius:inherit}
+.rabbit-lp-v2 .rlp-graduation-good{font-weight:700}
+.rabbit-lp-v2 .rlp-graduation-simple .rlp-primary{padding:12px 19px}

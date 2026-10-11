@@ -6,6 +6,7 @@ import {
 import { Flame, RefreshCw, ShieldCheck, ExternalLink } from 'lucide-react'
 import RabbitLaunchTradePanel from './RabbitLaunchTradePanel'
 import RabbitLaunchCreatorPanel from './RabbitLaunchCreatorPanel'
+import RabbitLaunchGraduationPanel from './RabbitLaunchGraduationPanel'
 import {
   RABBIT_LAUNCHPOOL_TESTNET as CFG,
   RABBIT_LAUNCHPOOL_ABI as ABI
@@ -687,12 +688,21 @@ export default function RabbitLaunchpoolPanel({
                 onRefresh={refresh}
               />
             )}
-            <RabbitLaunchCreatorPanel
-              item={item}
-              walletState={walletState}
-              walletProvider={walletProvider}
-              onRefresh={refresh}
-            />
+            {item.version === 3 ? (
+              <RabbitLaunchGraduationPanel
+                item={item}
+                walletState={walletState}
+                walletProvider={walletProvider}
+                onRefresh={refresh}
+              />
+            ) : (
+              <RabbitLaunchCreatorPanel
+                item={item}
+                walletState={walletState}
+                walletProvider={walletProvider}
+                onRefresh={refresh}
+              />
+            )}
             <a className="rlp-text-link"
               href={`${CFG.explorer}/address/${item.fields?.token || (item.version === 3 ? V3.market : CFG.market)}`}
               target="_blank" rel="noreferrer">
