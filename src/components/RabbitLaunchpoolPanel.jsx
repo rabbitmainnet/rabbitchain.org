@@ -10,6 +10,7 @@ import {
   RABBIT_LAUNCHPOOL_TESTNET as CFG,
   RABBIT_LAUNCHPOOL_ABI as ABI
 } from '../config/launchpool'
+import { RABBIT_LAUNCHPOOL_V3 as V3, RABBIT_LAUNCHPOOL_V3_ABI as V3_ABI } from '../config/launchpool-v3'
 
 const erc20 = [
   { type: 'function', name: 'decimals', stateMutability: 'view',
@@ -59,72 +60,81 @@ export default function RabbitLaunchpoolPanel({
   const [selected, setSelected] = useState(null)
 
   const refresh = useCallback(async () => {
-    try {
+    const sources = [
+      { version: 3, config: V3, abi: V3_ABI },
+      { version: 2, config: CFG, abi: ABI }
+    ]
+    const results = await Promise.allSettled(sources.map(async source => {
       const n = await client.readContract({
-        address: CFG.market, abi: ABI.market, functionName: 'marketCount'
+        address: source.config.market, abi: source.abi.market,
+        functionName: 'marketCount'
       })
       const total = Number(n)
       const first = Math.max(1, total - 49)
       const rows = []
       for (let id = first; id <= total; id++) {
         try {
-          const data = await client.readContract({
-            address: CFG.market, abi: ABI.market,
-            functionName: 'markets', args: [BigInt(id)]
-          })
-          const graduated = await client.readContract({
-            address: CFG.market, abi: ABI.market,
-            functionName: 'graduated', args: [BigInt(id)]
-          })
-          const getter = ABI.market.find(
-            item => item.type === 'function' && item.name === 'markets'
+          const [data, graduated] = await Promise.all([
+            client.readContract({
+              address: source.config.market, abi: source.abi.market,
+              functionName: 'markets', args: [BigInt(id)]
+            }),
+            client.readContract({
+              address: source.config.market, abi: source.abi.market,
+              functionName: 'graduated', args: [BigInt(id)]
+            })
+          ])
+          const getter = source.abi.market.find(
+            x => x.type === 'function' && x.name === 'markets'
           )
           const fields = Object.fromEntries(
-            (getter?.outputs || []).map((output, index) => [
-              output.name || `field${index}`,
-              present(data[index])
+            getter.outputs.map((output, index) => [
+              output.name || `field${index}`, present(data[index])
             ])
           )
-
           let symbol = 'TOKEN'
           let decimals = 18
           if (fields.token) {
             try {
               const [tokenSymbol, tokenDecimals] = await Promise.all([
                 client.readContract({
-                  address: fields.token,
-                  abi: erc20,
-                  functionName: 'symbol'
+                  address: fields.token, abi: erc20, functionName: 'symbol'
                 }),
                 client.readContract({
-                  address: fields.token,
-                  abi: erc20,
-                  functionName: 'decimals'
+                  address: fields.token, abi: erc20, functionName: 'decimals'
                 })
               ])
               symbol = tokenSymbol
               decimals = Number(tokenDecimals)
             } catch {}
           }
-
           rows.push({
-            id,
-            data: present(data),
-            fields,
-            symbol,
-            decimals,
-            graduated
+            id, key: `${source.version}-${id}`, version: source.version,
+            data: present(data), fields, symbol, decimals, graduated
           })
-        } catch (e) {
-          rows.push({ id, error: e.shortMessage || e.message })
+        } catch (error) {
+          rows.push({
+            id, key: `${source.version}-${id}`, version: source.version,
+            error: error.shortMessage || error.message
+          })
         }
       }
-      setCount(total)
-      setMarkets(rows.reverse())
-      setMessage('')
-    } catch (e) {
-      setMessage(`Unable to load markets: ${e.shortMessage || e.message}`)
-    }
+      return { total, rows: rows.reverse() }
+    }))
+    const rows = []
+    let total = 0
+    const failures = []
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        total += result.value.total
+        rows.push(...result.value.rows)
+      } else {
+        failures.push(`V${sources[index].version}: ${result.reason?.shortMessage || result.reason?.message}`)
+      }
+    })
+    setCount(total)
+    setMarkets(rows)
+    setMessage(failures.length ? `Some markets could not load. ${failures.join('; ')}` : '')
   }, [])
 
   useEffect(() => { refresh() }, [refresh])
@@ -207,10 +217,10 @@ export default function RabbitLaunchpoolPanel({
     return decimals
   }
 
-  async function register() {
+  async function register(config = CFG, abi = ABI) {
     await ensureToken()
     const current = await client.readContract({
-      address: CFG.registry, abi: ABI.registry,
+      address: config.registry, abi: abi.registry,
       functionName: 'launchIdOf', args: [token]
     })
     if (current !== 0n) throw Error('Token already registered')
@@ -283,8 +293,8 @@ export default function RabbitLaunchpoolPanel({
       throw Error('This token does not belong to the connected creator wallet')
 
     await write(
-      CFG.registry,
-      ABI.registry,
+      config.registry,
+      abi.registry,
       'registerLaunch',
       [token, creatorTokenIndex]
     )
@@ -324,7 +334,7 @@ export default function RabbitLaunchpoolPanel({
     )
   }
 
-  const v3Ready = Boolean(CFG.v3Market)
+  const v3Ready = Boolean(V3.market)
   const launchPreview = (() => {
     try {
       if (!/^\d+(?:\.\d+)?$/.test(inventory) || !Number(inventory)) return null
@@ -339,46 +349,45 @@ export default function RabbitLaunchpoolPanel({
   })()
 
   async function launchV3() {
-    if (!v3Ready) throw Error('Launchpool V3 is awaiting verified testnet deployment')
+    if (!v3Ready) throw Error('V3 Market is not configured')
+    if (!account) throw Error('Connect your creator wallet')
     const decimals = await ensureToken()
     const amount = parseUnits(inventory, decimals)
     const price = parseUnits(startPrice, 18)
     if (amount < 5n || price <= 0n || price > 10n ** 24n)
       throw Error('Check token quantity and starting price')
-    if (amount / 5n === 0n) throw Error('Amount too small for permanent liquidity')
-
-    const registered = await client.readContract({
-      address: CFG.registry, abi: ABI.registry,
-      functionName: 'launchIdOf', args: [token]
-    })
+    const asset = payment === 'native' ? zeroAddress : V3.tRUSD
+    const [registered, exists, balance] = await Promise.all([
+      client.readContract({
+        address: V3.registry, abi: V3_ABI.registry,
+        functionName: 'launchIdOf', args: [token]
+      }),
+      client.readContract({
+        address: V3.market, abi: V3_ABI.market,
+        functionName: 'marketIdOf', args: [token, asset]
+      }),
+      client.readContract({
+        address: token, abi: erc20,
+        functionName: 'balanceOf', args: [account]
+      })
+    ])
+    if (exists !== 0n) throw Error('V3 market already exists for this token and payment asset')
+    if (balance < amount) throw Error('Insufficient token balance')
     if (registered === 0n) {
-      setMessage('Step 1/3: Register your token from Rabbit Token Factory...')
-      await register()
+      setMessage('Step 1/3: Registering your Rabbit Token Factory token in V3...')
+      await register(V3, V3_ABI)
     }
-
-    const exists = await client.readContract({
-      address: CFG.market, abi: ABI.market,
-      functionName: 'marketIdOf',
-      args: [token, payment === 'native' ? zeroAddress : CFG.tRUSD]
-    })
-    if (exists !== 0n) throw Error('This token already has a market for this payment asset')
-
-    const balance = await client.readContract({
-      address: token, abi: erc20, functionName: 'balanceOf', args: [account]
-    })
-    if (balance < amount) throw Error('Insufficient token balance. Enter an amount you own.')
     const allowance = await client.readContract({
       address: token, abi: erc20, functionName: 'allowance',
-      args: [account, CFG.market]
+      args: [account, V3.market]
     })
     if (allowance < amount) {
-      setMessage('Step 2/3: Approve your tokens in the wallet...')
-      await write(token, erc20, 'approve', [CFG.market, amount])
+      setMessage('Step 2/3: Approve your token inventory for V3...')
+      await write(token, erc20, 'approve', [V3.market, amount])
     }
     setMessage('Step 3/3: Confirm the complete launch in your wallet...')
-    await write(CFG.market, ABI.market, 'launchSimple', [
-      token, payment === 'native' ? zeroAddress : CFG.tRUSD,
-      amount, price, 0n
+    await write(V3.market, V3_ABI.market, 'launchSimple', [
+      token, asset, amount, price, 0n
     ])
   }
 
@@ -405,7 +414,7 @@ export default function RabbitLaunchpoolPanel({
     if (marketFilter !== 'all' && marketFilter !== state) return false
     const q = marketSearch.toLowerCase().trim()
     return !q || [
-      String(m.id), m.symbol, m.fields?.token,
+      String(m.id), `v${m.version}`, m.symbol, m.fields?.token,
       m.fields?.creator
     ].some(v => String(v || '').toLowerCase().includes(q))
   })
@@ -491,7 +500,7 @@ export default function RabbitLaunchpoolPanel({
         <div className="rlp-heading">
           <div>
             <h2>◈ Launchpool Infrastructure</h2>
-            <p>On-chain contract addresses for the currently selected testnet Market.</p>
+            <p>Active V3 infrastructure and preserved V2 market contracts.</p>
           </div>
           <a className="rlp-text-link"
              href={CFG.explorer} target="_blank" rel="noreferrer">
@@ -500,10 +509,11 @@ export default function RabbitLaunchpoolPanel({
         </div>
         <div className="rlp-contract-grid">
           {[
-            ['Registry', CFG.registry, '◇'],
-            ['Market', CFG.market, '▣'],
-            ['Fee Vault', CFG.feeVault, '◈'],
-            ['Permanent LP Lock', CFG.lpLock, '♧']
+            ['Registry V3', V3.registry, '◇'],
+            ['Market V3', V3.market, '▣'],
+            ['Fee Vault V3', V3.feeVault, '◈'],
+            ['Market V2 (legacy)', CFG.market, '▣'],
+            ['Permanent LP Lock', V3.lpLock, '♧']
           ].map(([name,address,symbol]) => (
             <div className="rlp-contract" key={name}>
               <div className="rlp-contract-icon">{symbol}</div>
@@ -606,10 +616,10 @@ export default function RabbitLaunchpoolPanel({
             understand the irreversible custody and graduation conditions.</p>
           <div className="rlp-form-actions">
             <button type="button" className="rlp-secondary"
-              disabled={busy || !account || !correctChain || v3Ready}
+              disabled={busy || !account || !correctChain}
               onClick={() => run(register)}>Register token (V2)</button>
             <button type="button" className="rlp-secondary"
-              disabled={busy || !account || !correctChain || v3Ready}
+              disabled={busy || !account || !correctChain}
               onClick={() => run(create)}>Create manual V2 market</button>
           </div>
         </details>
@@ -700,8 +710,8 @@ export default function RabbitLaunchpoolPanel({
                 const state = item.graduated ? 'Graduated'
                   : f.active ? 'Active' : 'Pending'
                 return (
-                  <tr key={item.id}>
-                    <td>{item.id}</td>
+                  <tr key={item.key}>
+                    <td>V{item.version} · #{item.id}</td>
                     <td>
                       <div className="rlp-token">
                         <span className="rlp-token-avatar">
@@ -728,9 +738,9 @@ export default function RabbitLaunchpoolPanel({
                     <td><span className="rlp-payment-token"><img src={asset === "tRAB" ? "/testnet-assets/trab.png" : "/launchpool-assets/trusd.png"} alt="" /><strong>{asset}</strong></span></td>
                     <td><button className="rlp-row-action" type="button"
                       onClick={() => setSelected(
-                        selected === item.id ? null : item.id
+                        selected === item.key ? null : item.key
                       )}>
-                      {selected === item.id ? 'Close' : 'Trade / Details'}
+                      {selected === item.key ? 'Close' : 'Trade / Details'}
                     </button></td>
                   </tr>
                 )
@@ -751,10 +761,10 @@ export default function RabbitLaunchpoolPanel({
           </div>
         )}
 
-        {markets.filter(item => selected === item.id).map(item => (
-          <div key={item.id} className="rlp-details">
+        {markets.filter(item => selected === item.key).map(item => (
+          <div key={item.key} className="rlp-details">
             <div className="rlp-heading">
-              <h2>{item.symbol || 'Token'} · Market #{item.id}</h2>
+              <h2>{item.symbol || 'Token'} · V{item.version} Market #{item.id}</h2>
               <button type="button" onClick={() => setSelected(null)}>
                 Close ×
               </button>
@@ -779,7 +789,7 @@ export default function RabbitLaunchpoolPanel({
               onRefresh={refresh}
             />
             <a className="rlp-text-link"
-              href={`${CFG.explorer}/address/${item.fields?.token || CFG.market}`}
+              href={`${CFG.explorer}/address/${item.fields?.token || (item.version === 3 ? V3.market : CFG.market)}`}
               target="_blank" rel="noreferrer">
               View token on Rabbit Explorer ↗
             </a>

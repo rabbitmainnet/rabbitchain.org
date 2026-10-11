@@ -4,9 +4,10 @@ import {
   formatUnits, parseUnits, zeroAddress
 } from 'viem'
 import {
-  RABBIT_LAUNCHPOOL_TESTNET as CFG,
-  RABBIT_LAUNCHPOOL_ABI as ABI
+  RABBIT_LAUNCHPOOL_TESTNET as LEGACY_CFG,
+  RABBIT_LAUNCHPOOL_ABI as LEGACY_ABI
 } from '../config/launchpool'
+import { RABBIT_LAUNCHPOOL_V3 as V3_CFG, RABBIT_LAUNCHPOOL_V3_ABI as V3_ABI } from '../config/launchpool-v3'
 
 const WAD = 10n ** 18n
 const SCALE = 10n ** 12n
@@ -35,7 +36,7 @@ const ERC20 = [
 ]
 
 const rpc = createPublicClient({
-  transport: http(CFG.rpc, { timeout: 20000 })
+  transport: http(LEGACY_CFG.rpc, { timeout: 20000 })
 })
 
 function ceilDiv(a, b) {
@@ -123,6 +124,8 @@ export default function RabbitLaunchTradePanel({
   walletProvider,
   onRefresh
 }) {
+  const CFG = item.version === 3 ? V3_CFG : LEGACY_CFG
+  const ABI = item.version === 3 ? V3_ABI : LEGACY_ABI
   const [side, setSide] = useState('buy')
   const [amount, setAmount] = useState('')
   const [slippage, setSlippage] = useState('100')
@@ -144,7 +147,7 @@ export default function RabbitLaunchTradePanel({
       if (!cancelled) setRecoveryMode(null)
     })
     return () => { cancelled = true }
-  }, [item.id])
+  }, [item.id, item.version])
 
   const fields = item.fields || {}
   const account = walletState?.account

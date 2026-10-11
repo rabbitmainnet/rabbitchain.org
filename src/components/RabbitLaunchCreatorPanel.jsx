@@ -4,11 +4,12 @@ import {
   parseUnits
 } from 'viem'
 import {
-  RABBIT_LAUNCHPOOL_TESTNET as CFG,
-  RABBIT_LAUNCHPOOL_ABI as ABI
+  RABBIT_LAUNCHPOOL_TESTNET as LEGACY_CFG,
+  RABBIT_LAUNCHPOOL_ABI as LEGACY_ABI
 } from '../config/launchpool'
+import { RABBIT_LAUNCHPOOL_V3 as V3_CFG, RABBIT_LAUNCHPOOL_V3_ABI as V3_ABI } from '../config/launchpool-v3'
 
-const rpc = createPublicClient({ transport: http(CFG.rpc) })
+const rpc = createPublicClient({ transport: http(LEGACY_CFG.rpc) })
 
 const erc20 = [
   {
@@ -26,6 +27,8 @@ const erc20 = [
 export default function RabbitLaunchCreatorPanel({
   item, walletState, walletProvider, onRefresh
 }) {
+  const CFG = item.version === 3 ? V3_CFG : LEGACY_CFG
+  const ABI = item.version === 3 ? V3_ABI : LEGACY_ABI
   const [basePrice, setBasePrice] = useState('')
   const [slope, setSlope] = useState('')
   const [lpAmount, setLpAmount] = useState('')
@@ -278,6 +281,16 @@ export default function RabbitLaunchCreatorPanel({
         onClick={() => execute(activate)}>
         {busy ? 'Processing...' : 'Activate Launch Market'}
       </button>
+
+      {item.version === 3 && !fields.active && !item.graduated && (
+        <button type="button" disabled={busy || !chainOK}
+          onClick={() => execute(async () => {
+            if (!window.confirm('Cancel this pending V3 market and return its token inventory?')) return
+            await transact(CFG.market, ABI.market, 'cancelPendingMarket', [marketId])
+          })}>
+          Cancel Pending Market · Return Tokens
+        </button>
+      )}
 
       <button
         type="button"
