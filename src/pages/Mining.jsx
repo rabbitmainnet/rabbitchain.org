@@ -98,7 +98,7 @@ export default function Mining() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.4.10 <ArrowRight size={15} />
+                Rabbit Core V2.4.11 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -107,7 +107,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.4.10</b>
+              <b>V2.4.11</b>
             </div>
 
             <pre><code>
@@ -129,7 +129,8 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <h2>Rabbit Core V2.4.10 is the current public Testnet package. It relays authenticated, encrypted VRF evaluations and verified partial signatures through public peers, including when miners cannot connect directly. V2.4.10 also fixes Rabbit Core initialization and restart after the Availability V2 fork by preserving its persisted activation schedule when applying the original official genesis. V2.4.10 improves live block import and production recovery: nodes briefly wait for an incoming direct-extension block before starting recovery, and a shorter conflicting peer no longer keeps production paused. Consensus activation heights, reward rules and VRF rules remain unchanged. No new hard fork is introduced.  Existing chain history, wallets and WorkSeats are preserved.</h2>
+            <p>V2.4.11 isolates outgoing LCQ messages in bounded per-peer queues so a slow peer does not block delivery to other peers. It retries failed asynchronous recovery downloads and reports canonical penalties in English, including the end block and remaining blocks. Normal operational status refreshes approximately every 10 to 12 seconds.</p>
+            <h2>Rabbit Core V2.4.11 is the current public Testnet package. It relays authenticated, encrypted VRF evaluations and verified partial signatures through public peers, including when miners cannot connect directly. V2.4.11 also fixes Rabbit Core initialization and restart after the Availability V2 fork by preserving its persisted activation schedule when applying the original official genesis. V2.4.11 improves live block import and production recovery: nodes briefly wait for an incoming direct-extension block before starting recovery, and a shorter conflicting peer no longer keeps production paused. Consensus activation heights, reward rules and VRF rules remain unchanged. No new hard fork is introduced.  Existing chain history, wallets and WorkSeats are preserved.</h2>
 
             <p>
               Existing miners only need to close the previous Rabbit Core, extract
@@ -139,7 +140,7 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.4.10</a>
+          <a className="button light" href="#downloads">Download V2.4.11</a>
         </div>
       </section>
 
@@ -603,9 +604,19 @@ export default function Mining() {
             <article>
               <Cpu size={22} />
               <h3>Mining status</h3>
+              <p>Operational status refreshes approximately every 10 to 12 seconds.
+              A persistent seat does not guarantee immediate production.
+              A missed-turn penalty identifies the consensus reason; the node log
+              is needed to investigate the underlying connection or synchronization failure.</p>
+
               <ul>
                 <li><code>LCQ PENDING</code> — admission accepted, activation pending</li>
                 <li><code>LCQ ACTIVE</code> — wallet has an active consensus seat</li>
+                <li><code>PENALIZED</code> - missed assigned production turns; shows the end block and remaining blocks</li>
+                <li><code>PENALTY ENDED</code> - penalty expired; synchronization and selection are still required</li>
+                <li><code>NO PEERS</code> - no connected peers</li>
+                <li><code>REGISTRY STATUS UNAVAILABLE</code> - penalty status could not be verified</li>
+
                 <li>🐇 PRODUCER — wallet produced the canonical block</li>
                 <li>🥕 COMMITTEE — wallet received committee reward</li>
               </ul>
@@ -637,10 +648,10 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.4.10 is an in-place Testnet upgrade. Keep your existing
+              Rabbit Core V2.4.11 is an in-place Testnet upgrade. Keep your existing
               Rabbit Testnet datadir, blockchain data, wallet/keystore, node identity
               and persistent participation / consensus state. Do not reset or delete
-              them. Close the previous Rabbit Core normally, verify the V2.4.10 package
+              them. Close the previous Rabbit Core normally, verify the V2.4.11 package
               SHA-256, extract it into a new software directory and continue using the
               existing Testnet data.
             </p>
