@@ -196,7 +196,23 @@ export default function RabbitLaunchV3Flow({
       transport: custom(walletProvider)
     })
 
-    const hash = await wallet.writeContract(request)
+    const hash = await wallet.writeContract({
+      ...request,
+      chain: {
+        id: 9280,
+        name: 'Rabbit Testnet',
+        nativeCurrency: {
+          name: 'Rabbit',
+          symbol: 'tRAB',
+          decimals: 18
+        },
+        rpcUrls: {
+          default: {
+            http: ['https://rpc-testnet.rabbitchain.org']
+          }
+        }
+      }
+    })
 
     const receipt = await client.waitForTransactionReceipt({
       hash, timeout: 180000
