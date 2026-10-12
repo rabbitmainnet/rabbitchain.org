@@ -742,6 +742,8 @@ export default function RabbitLaunchpoolPanel({
                 onRefresh={refresh}
               />
             )}
+            <details className="rabbit-trade-more">
+              <summary>Project details · Fair draw · Liquidity & graduation</summary>
             {item.version === 3 && item.marketAddress?.toLowerCase() === V3VRF.market.toLowerCase() && <RabbitLaunchVRFPanel item={item} walletState={walletState} walletProvider={walletProvider} />}
             {item.version === 3 ? (
               <RabbitLaunchGraduationPanel
@@ -758,6 +760,7 @@ export default function RabbitLaunchpoolPanel({
                 onRefresh={refresh}
               />
             )}
+            </details>
             <a className="rlp-text-link"
               href={`${CFG.explorer}/address/${item.fields?.token || (item.version === 3 ? V3.market : CFG.market)}`}
               target="_blank" rel="noreferrer">

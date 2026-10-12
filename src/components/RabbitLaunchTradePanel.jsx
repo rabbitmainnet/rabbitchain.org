@@ -133,6 +133,8 @@ export default function RabbitLaunchTradePanel({
   const [pending, setPending] = useState(false)
   const [message, setMessage] = useState('')
   const [recoveryMode, setRecoveryMode] = useState(null)
+  const [walletBalance, setWalletBalance] = useState(null)
+  const [balanceError, setBalanceError] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -157,6 +159,63 @@ export default function RabbitLaunchTradePanel({
   const symbol = item.symbol || 'TOKEN'
   const asset = fields.paymentAsset?.toLowerCase() === zeroAddress
     ? 'tRAB' : 'tRUSD'
+
+  useEffect(() => {
+    let cancelled = false
+    setWalletBalance(null)
+    setBalanceError('')
+    if (!account || !correctChain || !fields.token) return
+    const fetchBalance = fields.paymentAsset?.toLowerCase() === zeroAddress
+      ? rpc.getBalance({ address: account })
+      : rpc.readContract({ address: CFG.tRUSD, abi: ERC20,
+          functionName: 'balanceOf', args: [account] })
+    const requested = side === 'sell'
+      ? rpc.readContract({ address: fields.token, abi: ERC20,
+          functionName: 'balanceOf', args: [account] })
+      : fetchBalance
+    requested.then(value => {
+      if (!cancelled) setWalletBalance(value)
+    }).catch(() => {
+      if (!cancelled) setBalanceError('Balance unavailable. Check your wallet.')
+    })
+    return () => { cancelled = true }
+  }, [account, correctChain, side, fields.token, fields.paymentAsset, CFG.tRUSD, item.key])
+
+  const balanceDecimals = side === 'sell' ? decimals : asset === 'tRUSD' ? 6 : 18
+  const balanceSymbol = side === 'sell' ? symbol : asset
+  const balanceText = walletBalance === null ? '—' :
+    Number(formatUnits(walletBalance, balanceDecimals)).toLocaleString('en-US', {
+      maximumFractionDigits: 6
+    })
+
+  function setQuickAmount(value) {
+    setAmount(value)
+    setMessage('')
+  }
+
+  function setMaxAmount() {
+    if (walletBalance === null) return
+    if (side === 'sell') {
+      setQuickAmount(formatUnits(walletBalance, decimals))
+      return
+    }
+    // Price is denominated in the payment asset, but the curve API buys TOKEN units.
+    // A safe upper bound for token units is found using the same on-chain curve.
+    const reserve = asset === 'tRAB' ? 10n ** 15n : 0n
+    const budget = walletBalance > reserve ? walletBalance - reserve : 0n
+    let low = 0n
+    let high = BigInt(fields.inventory || 0)
+    while (low < high) {
+      const mid = (low + high + 1n) / 2n
+      try {
+        const q = calculate(fields, decimals, formatUnits(mid, decimals),
+          'buy', slippage, Boolean(recoveryMode))
+        if (q.limit <= budget) low = mid
+        else high = mid - 1n
+      } catch { high = mid - 1n }
+    }
+    setQuickAmount(low > 0n ? formatUnits(low, decimals) : '')
+  }
 
   const quotation = useMemo(() => {
     try {
@@ -374,6 +433,7 @@ export default function RabbitLaunchTradePanel({
       }
 
       setAmount('')
+      setWalletBalance(null)
       setMessage(
         side === 'buy'
           ? 'Purchase confirmed! You can now add the token to your wallet.'
@@ -387,100 +447,98 @@ export default function RabbitLaunchTradePanel({
     }
   }
 
+  const quote = quotation.result
+  const ready = Boolean(!pending && account && correctChain && quote &&
+    fields.active && !item.graduated)
+  const hasFunds = walletBalance === null || !quote || (
+    side === 'buy' ? quote.limit <= walletBalance : quote.amount <= walletBalance
+  )
+
   return (
-    <section className="rabbit-launch-trade">
-      <div className="rabbit-launch-trade-tabs">
-        <button
-          type="button"
-          className={side === 'buy' ? 'active' : ''}
-          onClick={() => { setSide('buy'); setMessage('') }}
-        >
-          Buy
-        </button>
-        <button
-          type="button"
-          className={side === 'sell' ? 'active' : ''}
-          onClick={() => { setSide('sell'); setMessage('') }}
-        >
-          Sell
-        </button>
+    <section className="rabbit-launch-trade rabbit-trade-simple" aria-label={`${symbol} trading`}>
+      <div className="rabbit-trade-head">
+        <div>
+          <span className="rabbit-trade-eyebrow">RABBIT CHAIN · LIVE MARKET</span>
+          <h3>Trade {symbol}</h3>
+          <p>Buy or sell directly on Rabbit Testnet. No VRF registration needed to trade.</p>
+        </div>
+        <span className="rabbit-trade-live">● Live</span>
       </div>
 
-      <label>
-        <span>AMOUNT · {symbol}</span>
-        <input
-          inputMode="decimal"
-          placeholder="0.0"
-          value={amount}
-          onChange={e => setAmount(e.target.value)}
-        />
-      </label>
+      <div className="rabbit-launch-trade-tabs" role="group" aria-label="Trade direction">
+        <button type="button" className={side === 'buy' ? 'active' : ''}
+          aria-pressed={side === 'buy'} disabled={pending}
+          onClick={() => { setSide('buy'); setAmount(''); setMessage('') }}>Buy</button>
+        <button type="button" className={side === 'sell' ? 'active' : ''}
+          aria-pressed={side === 'sell'} disabled={pending}
+          onClick={() => { setSide('sell'); setAmount(''); setMessage('') }}>Sell</button>
+      </div>
 
-      <label>
-        <span>SLIPPAGE TOLERANCE</span>
-        <select
-          value={slippage}
-          onChange={e => setSlippage(e.target.value)}
-        >
-          <option value="50">0.5%</option>
-          <option value="100">1%</option>
-          <option value="200">2%</option>
-        </select>
-      </label>
-
-      {quotation.result && (
-        <div className="rabbit-launch-trade-quote">
-          <p>
-            <span>{side === 'buy' ? 'Estimated cost' : 'Estimated return'}</span>
-            <strong>
-              {formatUnits(
-                quotation.result.payable,
-                quotation.result.paymentDecimals
-              )} {asset}
-            </strong>
-          </p>
-          <p>
-            <span>Trading fee</span>
-            <strong>
-              {formatUnits(
-                quotation.result.fee,
-                quotation.result.paymentDecimals
-              )} {asset}
-            </strong>
-          </p>
-          <p>
-            <span>{side === 'buy' ? 'Maximum payment' : 'Minimum received'}</span>
-            <strong>
-              {formatUnits(
-                quotation.result.limit,
-                quotation.result.paymentDecimals
-              )} {asset}
-            </strong>
-          </p>
+      <div className="rabbit-trade-amount-card">
+        <div className="rabbit-trade-line">
+          <label htmlFor={`rabbit-amount-${item.key}`}>
+            {side === 'buy' ? 'How many tokens do you want?' : 'How many tokens do you want to sell?'}
+          </label>
+          <span className="rabbit-trade-balance">Balance: {balanceText} {balanceSymbol}</span>
         </div>
-      )}
+        <div className="rabbit-trade-entry">
+          <input id={`rabbit-amount-${item.key}`} type="text" inputMode="decimal"
+            autoComplete="off" placeholder="0.0" value={amount} disabled={pending}
+            onChange={e => { setAmount(e.target.value); setMessage('') }} />
+          <strong>{symbol}</strong>
+        </div>
+        <div className="rabbit-trade-quick">
+          {[10, 100, 1000].map(n => (
+            <button key={n} type="button" disabled={pending}
+              onClick={() => setQuickAmount(String(n))}>{n.toLocaleString('en-US')}</button>
+          ))}
+          <button type="button" disabled={pending || walletBalance === null || recoveryMode === null}
+            onClick={setMaxAmount}>Max</button>
+        </div>
+        {balanceError && <p role="status" className="rabbit-trade-warning">{balanceError}</p>}
+      </div>
 
-      {quotation.error && (
-        <p className="product-disclaimer">{quotation.error}</p>
-      )}
+      <div className="rabbit-launch-trade-quote rabbit-trade-receipt" aria-live="polite">
+        <p className="rabbit-trade-receive">
+          <span>{side === 'buy' ? 'You pay (estimated)' : 'You receive (estimated)'}</span>
+          <strong>{quote ? formatUnits(quote.payable, quote.paymentDecimals) : '—'} {asset}</strong>
+        </p>
+        {quote && <>
+          <p><span>Network market fee (1%)</span>
+            <strong>{formatUnits(quote.fee, quote.paymentDecimals)} {asset}</strong></p>
+          <p><span>{side === 'buy' ? 'Maximum payment' : 'Minimum received'} (slippage protected)</span>
+            <strong>{formatUnits(quote.limit, quote.paymentDecimals)} {asset}</strong></p>
+        </>}
+        <p className="rabbit-trade-note">Quote uses the current on-chain market curve. The market is checked again before signing.</p>
+      </div>
 
-      <button
-        type="button"
-        className="product-action"
-        disabled={
-          pending || !account || !correctChain ||
-          !quotation.result || !fields.active || item.graduated
-        }
-        onClick={submit}
-      >
-        {pending ? 'Confirming...' : `${side === 'buy' ? 'Buy' : 'Sell'} ${symbol}`}
+      <details className="rabbit-trade-settings">
+        <summary>Trading settings · Slippage {(Number(slippage) / 100).toLocaleString('en-US')}%</summary>
+        <label htmlFor={`rabbit-slippage-${item.key}`}>Maximum price movement</label>
+        <select id={`rabbit-slippage-${item.key}`} value={slippage}
+          onChange={e => setSlippage(e.target.value)} disabled={pending}>
+          <option value="50">0.5% · Strict</option>
+          <option value="100">1% · Standard</option>
+          <option value="200">2% · Flexible</option>
+        </select>
+        <p>Transactions that exceed your limit are rejected by the contract.</p>
+      </details>
+
+      {quotation.error && <p role="alert" className="rabbit-trade-warning">{quotation.error}</p>}
+      {!hasFunds && <p role="alert" className="rabbit-trade-warning">
+        Insufficient {balanceSymbol} balance for this trade. Enter a smaller amount.
+      </p>}
+      {!account && <p className="rabbit-trade-warning">Connect your wallet to trade.</p>}
+      {account && !correctChain && <p className="rabbit-trade-warning">Switch to Rabbit Testnet (9280).</p>}
+
+      <button type="button" className="product-action rabbit-trade-submit"
+        disabled={!ready || !hasFunds} onClick={submit}>
+        {pending ? 'Confirm in your wallet…' : side === 'buy' ? `Buy ${symbol}` : `Sell ${symbol}`}
       </button>
-
-      {message && <p role="status" className="product-disclaimer">{message}</p>}
-
-      <p className="product-disclaimer">
-        Rabbit Testnet only · 1% trading fee. Quotes may change before
-        confirmation. Transactions require wallet approval.
+      {message && <p role="status" className="rabbit-trade-feedback">{message}</p>}
+      <p className="rabbit-trade-footnote">
+        Testnet tokens only. Buying with tRUSD or selling tokens may need a one-time wallet approval.
+        Quotes and payments are enforced by the deployed market contract.
       </p>
     </section>
   )
