@@ -1,6 +1,7 @@
+import RabbitLaunchpoolPanel from './components/RabbitLaunchpoolPanel'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import WalletModal from './components/WalletModal'
@@ -422,6 +423,20 @@ export default function App() {
             <Route
               path="/embed/mining"
               element={<Mining />}
+            />
+            <Route
+              path="/launchpool/*"
+              element={
+                <Page>
+                  <RabbitLaunchpoolPanel
+                    walletState={walletState}
+                    walletProvider={provider}
+                    onConnect={openWallet}
+                    onSwitchNetwork={switchNetwork}
+                    toast={toast}
+                  />
+                </Page>
+              }
             />
             <Route path="*" element={<Page><NotFound /></Page>} />
           </Routes>

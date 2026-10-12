@@ -126,6 +126,7 @@ export default function RabbitLaunchTradePanel({
 }) {
   const CFG = item.version === 3 ? V3_CFG : LEGACY_CFG
   const ABI = item.version === 3 ? V3_ABI : LEGACY_ABI
+  const marketAddress = item.marketAddress || CFG.market
   const [side, setSide] = useState('buy')
   const [amount, setAmount] = useState('')
   const [slippage, setSlippage] = useState('100')
@@ -137,7 +138,7 @@ export default function RabbitLaunchTradePanel({
     let cancelled = false
     setRecoveryMode(null)
     rpc.readContract({
-      address: CFG.market,
+      address: marketAddress,
       abi: ABI.market,
       functionName: 'graduationRecoveryMode',
       args: [BigInt(item.id)]
@@ -147,7 +148,7 @@ export default function RabbitLaunchTradePanel({
       if (!cancelled) setRecoveryMode(null)
     })
     return () => { cancelled = true }
-  }, [item.id, item.version])
+  }, [item.id, item.version, marketAddress])
 
   const fields = item.fields || {}
   const account = walletState?.account
@@ -196,7 +197,7 @@ export default function RabbitLaunchTradePanel({
 
       // Confirm that the quote still respects the latest on-chain market.
       const updated = await rpc.readContract({
-        address: CFG.market,
+        address: marketAddress,
         abi: ABI.market,
         functionName: 'markets',
         args: [BigInt(item.id)]
@@ -219,7 +220,7 @@ export default function RabbitLaunchTradePanel({
       if (!fresh.active) throw Error('Market is no longer active')
 
       const alreadyGraduated = await rpc.readContract({
-        address: CFG.market,
+        address: marketAddress,
         abi: ABI.market,
         functionName: 'graduated',
         args: [BigInt(item.id)]
@@ -228,7 +229,7 @@ export default function RabbitLaunchTradePanel({
         throw Error('This market has already graduated to RabbitSwap')
 
       const liveRecovery = await rpc.readContract({
-        address: CFG.market,
+        address: marketAddress,
         abi: ABI.market,
         functionName: 'graduationRecoveryMode',
         args: [BigInt(item.id)]
@@ -296,14 +297,14 @@ export default function RabbitLaunchTradePanel({
 
       // ERC-20 approval may take time. Recheck the market afterwards.
       if (side === 'buy' && q.trusd) {
-        await approveIfNeeded(CFG.tRUSD, CFG.market, q.limit)
+        await approveIfNeeded(CFG.tRUSD, marketAddress, q.limit)
       }
       if (side === 'sell') {
-        await approveIfNeeded(fields.token, CFG.market, q.amount)
+        await approveIfNeeded(fields.token, marketAddress, q.amount)
       }
 
       const latestMarket = await rpc.readContract({
-        address: CFG.market,
+        address: marketAddress,
         abi: ABI.market,
         functionName: 'markets',
         args: [BigInt(item.id)]
@@ -316,13 +317,13 @@ export default function RabbitLaunchTradePanel({
 
       const [latestRecovery, latestGraduated] = await Promise.all([
         rpc.readContract({
-          address: CFG.market,
+          address: marketAddress,
           abi: ABI.market,
           functionName: 'graduationRecoveryMode',
           args: [BigInt(item.id)]
         }),
         rpc.readContract({
-          address: CFG.market,
+          address: marketAddress,
           abi: ABI.market,
           functionName: 'graduated',
           args: [BigInt(item.id)]
@@ -353,20 +354,20 @@ export default function RabbitLaunchTradePanel({
       if (side === 'buy') {
         if (q.trusd) {
           await send(
-            CFG.market, ABI.market, 'buyToken',
+            marketAddress, ABI.market, 'buyToken',
             [BigInt(item.id), q.amount, q.limit]
           )
         } else {
           // Solidity buyNative requires msg.value == exact total.
           await send(
-            CFG.market, ABI.market, 'buyNative',
+            marketAddress, ABI.market, 'buyNative',
             [BigInt(item.id), q.amount, q.limit],
             finalQuote.payable
           )
         }
       } else {
         await send(
-          CFG.market, ABI.market,
+          marketAddress, ABI.market,
           q.trusd ? 'sellToken' : 'sellNative',
           [BigInt(item.id), q.amount, q.limit]
         )

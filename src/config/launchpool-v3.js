@@ -17,3 +17,14 @@ export const RABBIT_LAUNCHPOOL_V3 = Object.freeze({
 })
 
 export const RABBIT_LAUNCHPOOL_V3_ABI = ABIS
+
+
+// Rabbit Launchpool V3 — mandatory on-chain VRF.
+// Existing V3 contracts remain available for older launches.
+export const RABBIT_LAUNCHPOOL_V3_VRF = Object.freeze({
+  ...RABBIT_LAUNCHPOOL_V3,
+  market: '0x83273047c7aa7a7621cb4b3cc855b7fbae61560d',
+  feeVault: '0xbc354a2f5efc85c0d2c0af0b1655bbc3e9044372',
+  vrfFactory: '0x4ffe7e4debf8a897629af714c270181d470591f9',
+  mandatoryVRF: true
+})

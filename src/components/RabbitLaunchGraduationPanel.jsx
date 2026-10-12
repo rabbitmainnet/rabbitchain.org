@@ -12,15 +12,16 @@ export default function RabbitLaunchGraduationPanel({ item, walletState, walletP
   const account = walletState?.account
   const networkOK = Number(walletState?.chainId) === 9280
   const marketId = BigInt(item.id)
+  const marketAddress = item.marketAddress || CFG.market
 
   const load = useCallback(async () => {
     const functions = ['graduationEnabled', 'graduationTargetSold', 'graduationLPInventory', 'graduated', 'graduationRecoveryMode', 'graduationInfrastructureReady']
     const values = await Promise.all(functions.map(name => rpc.readContract({
-      address: CFG.market, abi: ABI.market, functionName: name,
+      address: marketAddress, abi: ABI.market, functionName: name,
       args: name === 'graduationInfrastructureReady' ? [] : [marketId]
     })))
     return Object.fromEntries(functions.map((name, index) => [name, values[index]]))
-  }, [item.id])
+  }, [item.id, marketAddress])
 
   useEffect(() => {
     let mounted = true
@@ -44,7 +45,7 @@ export default function RabbitLaunchGraduationPanel({ item, walletState, walletP
     setMessage('')
     try {
       const fresh = await load()
-      const latest = await rpc.readContract({ address: CFG.market, abi: ABI.market, functionName: 'markets', args: [marketId] })
+      const latest = await rpc.readContract({ address: marketAddress, abi: ABI.market, functionName: 'markets', args: [marketId] })
       const fields = ABI.market.find(entry => entry.type === 'function' && entry.name === 'markets').outputs
       const market = Object.fromEntries(fields.map((field, i) => [field.name, latest[i]]))
       if (!fresh.graduationInfrastructureReady || !fresh.graduationEnabled || !fresh.graduationLPInventory ||
@@ -59,7 +60,7 @@ export default function RabbitLaunchGraduationPanel({ item, walletState, walletP
         throw Error('Wallet account or network changed. Reconnect and try again.')
       if (!window.confirm('Graduate this market to RabbitSwap? Initial liquidity LP tokens will be permanently locked.')) return
       const parameters = {
-        account, address: CFG.market, abi: ABI.market,
+        account, address: marketAddress, abi: ABI.market,
         functionName: 'graduateMarket', args: [marketId, BigInt(Math.floor(Date.now() / 1000) + 1200)], chain: null
       }
       await rpc.simulateContract(parameters)

@@ -7,11 +7,18 @@ import { Flame, RefreshCw, ShieldCheck, ExternalLink } from 'lucide-react'
 import RabbitLaunchTradePanel from './RabbitLaunchTradePanel'
 import RabbitLaunchCreatorPanel from './RabbitLaunchCreatorPanel'
 import RabbitLaunchGraduationPanel from './RabbitLaunchGraduationPanel'
+import RabbitLaunchVRFPanel from './RabbitLaunchVRFPanel'
+import RabbitLaunchV3Flow from './RabbitLaunchV3Flow'
+import RabbitLaunchVRFDiscover from './RabbitLaunchVRFDiscover'
+import {
+  VRF_FACTORY_GATE_ABI, VRF_ROUND_GATE_ABI,
+  VRF_ALLOCATIONS_GATE_ABI
+} from '../config/launchpool-vrf-gate'
 import {
   RABBIT_LAUNCHPOOL_TESTNET as CFG,
   RABBIT_LAUNCHPOOL_ABI as ABI
 } from '../config/launchpool'
-import { RABBIT_LAUNCHPOOL_V3 as V3, RABBIT_LAUNCHPOOL_V3_ABI as V3_ABI } from '../config/launchpool-v3'
+import { RABBIT_LAUNCHPOOL_V3 as V3, RABBIT_LAUNCHPOOL_V3_VRF as V3VRF, RABBIT_LAUNCHPOOL_V3_ABI as V3_ABI } from '../config/launchpool-v3'
 
 const erc20 = [
   { type: 'function', name: 'decimals', stateMutability: 'view',
@@ -63,6 +70,7 @@ export default function RabbitLaunchpoolPanel({
 
   const refresh = useCallback(async () => {
     const sources = [
+      { version: 3, config: V3VRF, abi: V3_ABI },
       { version: 3, config: V3, abi: V3_ABI },
       { version: 2, config: CFG, abi: ABI }
     ]
@@ -111,12 +119,12 @@ export default function RabbitLaunchpoolPanel({
             } catch {}
           }
           rows.push({
-            id, key: `${source.version}-${id}`, version: source.version,
+            id, key: `${source.config.market.toLowerCase()}-${id}`, version: source.version, marketAddress: source.config.market,
             data: present(data), fields, symbol, decimals, graduated
           })
         } catch (error) {
           rows.push({
-            id, key: `${source.version}-${id}`, version: source.version,
+            id, key: `${source.config.market.toLowerCase()}-${id}`, version: source.version, marketAddress: source.config.market,
             error: error.shortMessage || error.message
           })
         }
@@ -365,7 +373,7 @@ export default function RabbitLaunchpoolPanel({
         functionName: 'launchIdOf', args: [token]
       }),
       client.readContract({
-        address: V3.market, abi: V3_ABI.market,
+        address: V3VRF.market, abi: V3_ABI.market,
         functionName: 'marketIdOf', args: [token, asset]
       }),
       client.readContract({
@@ -376,19 +384,46 @@ export default function RabbitLaunchpoolPanel({
     if (exists !== 0n) throw Error('V3 market already exists for this token and payment asset')
     if (balance < amount) throw Error('Insufficient token balance')
     if (registered === 0n) {
-      setMessage('Step 1/3: Registering your Rabbit Token Factory token in V3...')
+      setMessage('Registering token. Create its VRF round next.')
       await register(V3, V3_ABI)
+      return
     }
+
+    const [round, allocations] = await Promise.all([
+      client.readContract({
+        address: V3VRF.vrfFactory, abi: VRF_FACTORY_GATE_ABI,
+        functionName: 'roundOfLaunch', args: [registered]
+      }),
+      client.readContract({
+        address: V3VRF.vrfFactory, abi: VRF_FACTORY_GATE_ABI,
+        functionName: 'allocationsOfLaunch', args: [registered]
+      })
+    ])
+
+    if (round === zeroAddress || allocations === zeroAddress)
+      throw Error('Create and fund the mandatory VRF round first.')
+
+    const [settled, cancelled, funded, processed, refunded] =
+      await Promise.all([
+        client.readContract({address:round, abi:VRF_ROUND_GATE_ABI, functionName:'settled'}),
+        client.readContract({address:round, abi:VRF_ROUND_GATE_ABI, functionName:'cancelled'}),
+        client.readContract({address:allocations, abi:VRF_ALLOCATIONS_GATE_ABI, functionName:'funded'}),
+        client.readContract({address:allocations, abi:VRF_ALLOCATIONS_GATE_ABI, functionName:'processed'}),
+        client.readContract({address:allocations, abi:VRF_ALLOCATIONS_GATE_ABI, functionName:'refunded'})
+      ])
+
+    if (!settled || cancelled || !funded || !processed || refunded)
+      throw Error('Complete Rabbit VRF allocations before launching.')
     const allowance = await client.readContract({
       address: token, abi: erc20, functionName: 'allowance',
-      args: [account, V3.market]
+      args: [account, V3VRF.market]
     })
     if (allowance < amount) {
-      setMessage('Step 2/3: Approve your token inventory for V3...')
-      await write(token, erc20, 'approve', [V3.market, amount])
+      setMessage('Approve inventory for Rabbit V3 VRF Market...')
+      await write(token, erc20, 'approve', [V3VRF.market, amount])
     }
-    setMessage('Step 3/3: Confirm the complete launch in your wallet...')
-    await write(V3.market, V3_ABI.market, 'launchSimple', [
+    setMessage('Confirm mandatory VRF launch...')
+    await write(V3VRF.market, V3_ABI.market, 'launchSimple', [
       token, asset, amount, price, 0n
     ])
   }
@@ -538,6 +573,16 @@ export default function RabbitLaunchpoolPanel({
             </div>
           </div>
         </div>
+        <RabbitLaunchV3Flow
+          token={token}
+          walletState={walletState}
+          walletProvider={walletProvider}
+          onRegister={async () => {
+            if (!account) throw Error('Connect creator wallet')
+            if (!v3Ready) throw Error('Launchpool V3 unavailable')
+            await register(V3, V3_ABI)
+          }}
+        />
         <div className="rlp-v3-preview" aria-live="polite">
           <h3>Your launch at a glance</h3>
           <div className="rlp-v3-distribution"><span>80% · Bonding-curve sale</span>
@@ -600,6 +645,15 @@ export default function RabbitLaunchpoolPanel({
             and contract addresses before approval.</p></details>
         </div>
       </section>}
+
+      {activeTab === 'explore' && (
+        <RabbitLaunchVRFDiscover
+          onSelectToken={address => {
+            setToken(address)
+            setActiveTab('create')
+          }}
+        />
+      )}
 
       {activeTab !== 'create' && <section className="rlp-section rlp-market-section">
         <div className="rlp-heading rlp-market-toolbar">
@@ -688,6 +742,7 @@ export default function RabbitLaunchpoolPanel({
                 onRefresh={refresh}
               />
             )}
+            {item.version === 3 && item.marketAddress?.toLowerCase() === V3VRF.market.toLowerCase() && <RabbitLaunchVRFPanel item={item} walletState={walletState} walletProvider={walletProvider} />}
             {item.version === 3 ? (
               <RabbitLaunchGraduationPanel
                 item={item}
