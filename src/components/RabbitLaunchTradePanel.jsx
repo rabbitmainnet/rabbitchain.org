@@ -447,6 +447,49 @@ export default function RabbitLaunchTradePanel({
     }
   }
 
+  // Read the graduation target directly from the corresponding V3 market.
+  const [graduationTarget, setGraduationTarget] = useState(null)
+
+  useEffect(() => {
+    let active = true
+    setGraduationTarget(null)
+    if (item.version !== 3) return undefined
+
+    rpc.readContract({
+      address: item.marketAddress || V3_CFG.market,
+      abi: V3_ABI.market,
+      functionName: 'graduationTargetSold',
+      args: [BigInt(item.id)]
+    }).then(value => {
+      if (active) setGraduationTarget(value)
+    }).catch(() => {
+      if (active) setGraduationTarget(null)
+    })
+
+    return () => { active = false }
+  }, [item.version, item.id, item.marketAddress, fields?.sold])
+
+  const remainingTokens = graduationTarget !== null && fields
+    ? graduationTarget > BigInt(fields.sold)
+      ? graduationTarget - BigInt(fields.sold)
+      : 0n
+    : null
+
+  const remainingQuote = useMemo(() => {
+    if (!fields?.active || remainingTokens === null ||
+        remainingTokens <= 0n || remainingTokens > BigInt(fields.inventory)) {
+      return null
+    }
+    try {
+      return calculate(
+        fields, decimals, formatUnits(remainingTokens, decimals),
+        'buy', slippage, Boolean(recoveryMode)
+      )
+    } catch {
+      return null
+    }
+  }, [fields, decimals, remainingTokens, slippage, recoveryMode])
+
   const quote = quotation.result
   const ready = Boolean(!pending && account && correctChain && quote &&
     fields.active && !item.graduated)
@@ -487,6 +530,47 @@ export default function RabbitLaunchTradePanel({
             onChange={e => { setAmount(e.target.value); setMessage('') }} />
           <strong>{symbol}</strong>
         </div>
+        {side === 'buy' && remainingQuote && (
+          <div className="rabbit-launch-trade-quote" style={{
+            marginTop: 12, marginBottom: 12,
+            padding: 14, borderRadius: 12,
+            border: '1px solid #dcd0f6',
+            background: '#f8f5ff'
+          }}>
+            <strong style={{ display: 'block', marginBottom: 6 }}>
+              Complete this launch
+            </strong>
+            <p style={{ margin: '4px 0', overflowWrap: 'anywhere' }}>
+              Remaining: {formatUnits(remainingTokens, decimals)} {symbol}
+            </p>
+            <p style={{ margin: '4px 0' }}>
+              Estimated total (includes 1% trading fee):
+              <strong style={{ display: 'block', fontSize: 19 }}>
+                {formatUnits(remainingQuote.payable, remainingQuote.paymentDecimals)} {asset}
+              </strong>
+            </p>
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => {
+                setSide('buy')
+                setAmount(formatUnits(remainingTokens, decimals))
+                setMessage('')
+              }}
+              style={{
+                width: '100%', marginTop: 8, border: 0,
+                borderRadius: 9, padding: '11px 14px',
+                background: '#792de8', color: 'white',
+                fontWeight: 700, cursor: 'pointer'
+              }}
+            >
+              Buy Remaining {symbol}
+            </button>
+            <p style={{ fontSize: 11, margin: '8px 0 0' }}>
+              Fills the order only. Review the live quote and confirm in your wallet.
+            </p>
+          </div>
+        )}
         <div className="rabbit-trade-quick">
           {[10, 100, 1000].map(n => (
             <button key={n} type="button" disabled={pending}
