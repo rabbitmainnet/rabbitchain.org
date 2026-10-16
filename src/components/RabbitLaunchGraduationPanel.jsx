@@ -37,7 +37,13 @@ export default function RabbitLaunchGraduationPanel({ item, walletState, walletP
   const ready = Boolean(state && state.graduationEnabled && state.graduationLPInventory > 0n &&
     state.graduationInfrastructureReady && !state.graduated && !state.graduationRecoveryMode &&
     item.fields?.active && target > 0n && sold >= target)
-  const percentage = target > 0n ? Math.min(100, Number(sold * 10000n / target) / 100) : 0
+  // Four decimal places without rounding an incomplete sale to 100%.
+  const percentage = target > 0n
+    ? Number((sold * 1000000n) / target) / 10000
+    : 0
+  const remaining = target > sold ? target - sold : 0n
+  const decimals = item.decimals ?? 18
+  const symbol = item.symbol || 'tokens'
 
   async function graduate() {
     if (busy) return
@@ -85,9 +91,33 @@ export default function RabbitLaunchGraduationPanel({ item, walletState, walletP
       </div>
       {error ? <p role="status">Unable to load graduation status: {error}</p> : !state ? <p>Checking graduation status…</p> : (
         <>
-          <div className="rlp-graduation-progress-caption"><span>Sales target</span><strong>{percentage.toFixed(1)}%</strong></div>
-          <div className="rlp-graduation-progress"><span style={{ width: `${percentage}%` }} /></div>
-          <p>{formatUnits(sold, item.decimals || 18)} / {formatUnits(target, item.decimals || 18)} {item.symbol || 'tokens'} sold toward graduation</p>
+          <div className="rlp-graduation-progress-caption">
+            <span>Sales target</span>
+            <strong>{percentage.toFixed(4)}%</strong>
+          </div>
+          <div className="rlp-graduation-progress">
+            <span style={{ width: `${Math.min(100, percentage)}%` }} />
+          </div>
+          <p>{formatUnits(sold, decimals)} / {formatUnits(target, decimals)} {symbol} sold toward graduation</p>
+          {!state.graduated && remaining > 0n && (
+            <div role="status" style={{
+              padding: '14px 16px',
+              margin: '12px 0',
+              border: '1px solid var(--rlp-border, #ddd)',
+              borderRadius: 12
+            }}>
+              <div style={{ fontSize: 13, opacity: 0.8 }}>
+                Tokens remaining to complete the sale
+              </div>
+              <strong style={{ fontSize: 20, overflowWrap: 'anywhere' }}>
+                {formatUnits(remaining, decimals)} {symbol}
+              </strong>
+              <div style={{ fontSize: 12, marginTop: 6, opacity: 0.8 }}>
+                Liquidity graduation starts after the full sales target
+                and all on-chain requirements are satisfied.
+              </div>
+            </div>
+          )}
           {state.graduated ? <p className="rlp-graduation-good">Graduated to RabbitSwap.</p> :
             state.graduationRecoveryMode ? <p>Graduation recovery is active for this market.</p> :
             ready ? <button type="button" className="rlp-primary" disabled={busy || !account || !networkOK} onClick={graduate}>{busy ? 'Confirming graduation…' : 'Complete Graduation →'}</button> :
