@@ -220,6 +220,17 @@ export default function Vrf({
   const [transactionHash, setTransactionHash] = useState('')
   const [requestTimestamp, setRequestTimestamp] = useState(null)
   const [vrfTiming, setVrfTiming] = useState(null)
+  const [vrfRequestClocks, setVrfRequestClocks] = useState(() => {
+    try {
+      const value = JSON.parse(
+        localStorage.getItem('rabbit-vrf-request-clocks-v1') || '{}'
+      )
+      return value && typeof value === 'object' && !Array.isArray(value)
+        ? value : {}
+    } catch {
+      return {}
+    }
+  })
   const [vrfDurations, setVrfDurations] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem('rabbit-vrf-durations-v1') || '{}')
@@ -303,10 +314,31 @@ export default function Vrf({
       if (busy) return
       busy = true
       try {
-        const updates = await Promise.all(history.filter(row => row.status === 1).map(async row => {
-          const value = await readCoordinator('getRequest', [row.id])
-          return {...row, status: Number(value[10]), randomness: value[8], proofHash: value[9]}
-        }))
+        const pending = history.filter(row => row.status === 1)
+        const updates = []
+
+        // RPC reads are batched to avoid an unbounded burst.
+        for (let offset = 0; offset < pending.length; offset += 8) {
+          if (cancelled) return
+
+          const batch = await Promise.allSettled(
+            pending.slice(offset, offset + 8).map(async row => {
+              const value = await readCoordinator('getRequest', [row.id])
+              return {
+                ...row,
+                status: Number(value[10]),
+                randomness: value[8],
+                proofHash: value[9],
+              }
+            })
+          )
+
+          for (const result of batch) {
+            if (result.status === 'fulfilled') {
+              updates.push(result.value)
+            }
+          }
+        }
         if (!cancelled) setHistory(current => current.map(row => updates.find(value => value.id === row.id) || row))
       } catch { /* Preserve rows and retry pending requests next cycle. */ }
       finally { busy = false }
@@ -374,6 +406,105 @@ export default function Vrf({
       return next
     })
   }, [vrfTiming])
+
+  // One independent clock for every pending wallet-history request.
+  // The start is the canonical request-block timestamp, not a guessed send time.
+  useEffect(() => {
+    let cancelled = false
+
+    const missing = history.filter(row =>
+      row.status === 1 &&
+      !vrfRequestClocks[row.id.toLowerCase()]
+    )
+
+    async function loadRequestClocks() {
+      for (let offset = 0; offset < missing.length; offset += 4) {
+        if (cancelled) return
+
+        const batch = await Promise.all(
+          missing.slice(offset, offset + 4).map(async row => {
+            try {
+              const block = await rpc(
+                'eth_getBlockByNumber',
+                [`0x${row.block.toString(16)}`, false]
+              )
+              if (!block?.timestamp) return null
+
+              return {
+                id: row.id.toLowerCase(),
+                startedAt: Number(BigInt(block.timestamp)) * 1000,
+                account: walletState.account.toLowerCase(),
+              }
+            } catch {
+              return null
+            }
+          })
+        )
+
+        if (cancelled) return
+
+        setVrfRequestClocks(previous => {
+          const next = { ...previous }
+          let changed = false
+
+          for (const item of batch) {
+            if (!item || next[item.id]) continue
+            next[item.id] = {
+              startedAt: item.startedAt,
+              finishedAt: null,
+              account: item.account,
+            }
+            changed = true
+          }
+
+          return changed ? next : previous
+        })
+      }
+    }
+
+    if (missing.length) loadRequestClocks()
+    return () => { cancelled = true }
+  }, [history, walletState?.account])
+
+  // Freeze each request separately when the history observes FULFILLED.
+  useEffect(() => {
+    const completed = history.filter(row => {
+      const entry = vrfRequestClocks[row.id.toLowerCase()]
+      return row.status === 2 &&
+        entry &&
+        entry.finishedAt === null &&
+        entry.account === walletState?.account?.toLowerCase()
+    })
+
+    if (!completed.length) return
+
+    const detectedAt = Date.now()
+
+    setVrfRequestClocks(previous => {
+      const next = { ...previous }
+      let changed = false
+
+      for (const row of completed) {
+        const key = row.id.toLowerCase()
+        const entry = next[key]
+        if (!entry || entry.finishedAt !== null) continue
+
+        next[key] = { ...entry, finishedAt: detectedAt }
+        changed = true
+      }
+
+      return changed ? next : previous
+    })
+  }, [history, vrfRequestClocks, walletState?.account])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        'rabbit-vrf-request-clocks-v1',
+        JSON.stringify(vrfRequestClocks)
+      )
+    } catch { /* Storage is optional. */ }
+  }, [vrfRequestClocks])
 
   useEffect(() => {
     const timer = setInterval(() => setClock(Date.now()), 1000)
@@ -571,7 +702,24 @@ export default function Vrf({
         try {
           const block = await rpc('eth_getBlockByNumber', [`0x${BigInt(requestBlock).toString(16)}`, false])
           if (sequence === inspectionSequence.current && block) {
-            setRequestTimestamp(Number(BigInt(block.timestamp)) * 1000)
+            const startedAt = Number(BigInt(block.timestamp)) * 1000
+            setRequestTimestamp(startedAt)
+
+            if (Number(status) === 1) {
+              const key = clean.toLowerCase()
+              setVrfRequestClocks(previous => {
+                if (previous[key]) return previous
+
+                return {
+                  ...previous,
+                  [key]: {
+                    startedAt,
+                    finishedAt: null,
+                    account: requester.toLowerCase(),
+                  },
+                }
+              })
+            }
           }
         } catch { /* Request state remains usable without timestamps. */ }
       }
@@ -834,9 +982,42 @@ export default function Vrf({
                   <td><a href={`${NETWORKS.testnet.explorerUrl}/block/${row.block}`} target="_blank" rel="noreferrer">{row.block.toLocaleString()}</a></td>
                   <td>{nativeAmount(row.fee)} tRAB</td>
                   <td style={{whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums'}}>
-                    {Number.isFinite(vrfDurations[row.id.toLowerCase()])
-                      ? `${vrfDurations[row.id.toLowerCase()].toFixed(1)}s`
-                      : '—'}
+                    {(() => {
+                      const key = row.id.toLowerCase()
+                      const observed = vrfDurations[key]
+                      const tracked = vrfRequestClocks[key]
+                      const sameWallet =
+                        tracked?.account === walletState?.account?.toLowerCase()
+
+                      if (
+                        Number.isFinite(observed) &&
+                        row.status === 2 &&
+                        row.tx?.toLowerCase() ===
+                          vrfTiming?.hash?.toLowerCase() &&
+                        vrfTiming?.id?.toLowerCase() === key
+                      ) {
+                        return `${observed.toFixed(1)}s`
+                      }
+
+                      if (!sameWallet || !Number.isFinite(tracked?.startedAt)) {
+                        return row.status === 1 ? 'Loading…' : '—'
+                      }
+
+                      const endpoint = tracked.finishedAt ?? clock
+                      const elapsed = Math.max(
+                        0,
+                        Math.floor((endpoint - tracked.startedAt) / 1000)
+                      )
+                      const minutes = Math.floor(elapsed / 60)
+                      const seconds = String(elapsed % 60).padStart(2, '0')
+
+                      return (
+                        <span title="Approximate: request-block timestamp to browser detection">
+                          {minutes}:{seconds}
+                          {row.status === 1 ? ' · live' : ' · approx.'}
+                        </span>
+                      )
+                    })()}
                   </td>
                   <td><a href={`${NETWORKS.testnet.explorerUrl}/tx/${row.tx}`} target="_blank" rel="noreferrer">{shortHex(row.tx,6,4)} ↗</a></td>
                   <td><button className="button secondary" onClick={() => {setRequestId(row.id); inspect(row.id); setActiveTab('create'); document.getElementById('playground')?.scrollIntoView({behavior:'smooth'})}}>View {row.status === 2 ? 'result' : 'request'}</button></td>
