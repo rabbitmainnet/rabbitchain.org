@@ -219,6 +219,16 @@ export default function Vrf({
   const [trackedId, setTrackedId] = useState('')
   const [transactionHash, setTransactionHash] = useState('')
   const [requestTimestamp, setRequestTimestamp] = useState(null)
+  const [vrfTiming, setVrfTiming] = useState(null)
+  const [vrfDurations, setVrfDurations] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('rabbit-vrf-durations-v1') || '{}')
+      return saved && typeof saved === 'object' && !Array.isArray(saved)
+        ? saved : {}
+    } catch {
+      return {}
+    }
+  })
   const [clock, setClock] = useState(Date.now())
   const [history, setHistory] = useState([])
   const [historyLoading, setHistoryLoading] = useState(false)
@@ -312,6 +322,60 @@ export default function Vrf({
   }
 
   useEffect(() => {
+    try {
+      const saved = JSON.parse(
+        localStorage.getItem('rabbit-vrf-active-timing') || 'null'
+      )
+      if (
+        saved &&
+        /^0x[0-9a-fA-F]{64}$/.test(saved.hash || '') &&
+        Number.isFinite(saved.startedAt) &&
+        saved.startedAt > 0 &&
+        (saved.id === null ||
+          /^0x[0-9a-fA-F]{64}$/.test(saved.id || ''))
+      ) {
+        setVrfTiming({
+          hash: saved.hash,
+          id: saved.id,
+          startedAt: saved.startedAt,
+          finishedAt: Number.isFinite(saved.finishedAt)
+            ? saved.finishedAt
+            : null,
+        })
+      }
+    } catch { /* Browser storage is optional. */ }
+  }, [])
+
+  useEffect(() => {
+    if (!vrfTiming) return
+    try {
+      localStorage.setItem(
+        'rabbit-vrf-active-timing',
+        JSON.stringify(vrfTiming)
+      )
+    } catch { /* Browser storage is optional. */ }
+  }, [vrfTiming])
+
+  useEffect(() => {
+    if (!vrfTiming?.id || !vrfTiming.finishedAt ||
+        vrfTiming.failed || !Number.isFinite(vrfTiming.startedAt)) return
+
+    const id = vrfTiming.id.toLowerCase()
+    const seconds = Math.max(
+      0, (vrfTiming.finishedAt - vrfTiming.startedAt) / 1000
+    )
+
+    setVrfDurations(previous => {
+      if (previous[id] !== undefined) return previous
+      const next = { ...previous, [id]: seconds }
+      try {
+        localStorage.setItem('rabbit-vrf-durations-v1', JSON.stringify(next))
+      } catch { /* Optional storage */ }
+      return next
+    })
+  }, [vrfTiming])
+
+  useEffect(() => {
     const timer = setInterval(() => setClock(Date.now()), 1000)
     return () => clearInterval(timer)
   }, [])
@@ -339,6 +403,79 @@ export default function Vrf({
     }, 10000)
     return () => clearInterval(timer)
   }, [trackedId, request?.requestId, request?.status])
+
+  // Independent tracking of the submitted VRF transaction.
+  // Never depends on the manually selected inspector request.
+  useEffect(() => {
+    if (!vrfTiming?.hash || vrfTiming.finishedAt !== null) {
+      return undefined
+    }
+
+    let cancelled = false
+    let timer
+    const hash = vrfTiming.hash
+
+    async function check() {
+      if (cancelled) return
+
+      try {
+        let id = vrfTiming.id
+
+        if (!id) {
+          const receipt = await rpc('eth_getTransactionReceipt', [hash])
+          if (cancelled) return
+
+          if (receipt) {
+            if (chainNumber(receipt.status) !== 1) {
+              setVrfTiming(previous =>
+                previous?.hash === hash && previous.finishedAt === null
+                  ? { ...previous, failed: true, finishedAt: Date.now() }
+                  : previous
+              )
+              return
+            }
+
+            id = requestIdFromReceipt(receipt)
+            if (id) {
+              setVrfTiming(previous =>
+                previous?.hash === hash && !previous.id
+                  ? { ...previous, id }
+                  : previous
+              )
+              setRequestId(id)
+            }
+          }
+        }
+
+        if (id) {
+          const result = await readCoordinator('getRequest', [id])
+          if (cancelled) return
+
+          if (Number(result[10]) === 2) {
+            setVrfTiming(previous =>
+              previous?.hash === hash &&
+              (!previous.id || previous.id.toLowerCase() === id.toLowerCase()) &&
+              previous.finishedAt === null
+                ? { ...previous, id, finishedAt: Date.now() }
+                : previous
+            )
+            return
+          }
+        }
+      } catch {
+        // Temporary RPC errors do not invalidate the transaction.
+      } finally {
+        if (!cancelled) timer = setTimeout(check, 5000)
+      }
+    }
+
+    timer = setTimeout(check, 1000)
+
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [vrfTiming?.hash, vrfTiming?.id, vrfTiming?.finishedAt])
 
   const connected = Boolean(walletState?.account)
   const correctNetwork = chainNumber(walletState?.chainId) === NETWORKS.testnet.chainId
@@ -395,6 +532,25 @@ export default function Vrf({
       ] = result
 
       if (sequence !== inspectionSequence.current) return
+
+      if (Number(status) === 2) {
+        setVrfTiming(previous => {
+          if (!previous || previous.finishedAt !== null) return previous
+
+          const sameId =
+            previous.id?.toLowerCase() === clean.toLowerCase()
+
+          // Never finish a timer for an unrelated inspected request.
+          if (!sameId) return previous
+
+          return {
+            ...previous,
+            id: clean,
+            finishedAt: Date.now(),
+          }
+        })
+      }
+
       try { localStorage.setItem('rabbit-vrf-last-request', clean) } catch { /* Optional. */ }
       setRequest({
         requestId: clean,
@@ -444,6 +600,11 @@ export default function Vrf({
       const id = requestIdFromReceipt(receipt)
       if (!id) throw new Error('No Rabbit VRF request event was found in this transaction.')
       setRequestId(id)
+      setVrfTiming(previous =>
+        previous?.hash?.toLowerCase() === transactionHash.toLowerCase()
+          ? { ...previous, id }
+          : previous
+      )
       await inspect(id)
       loadHistory()
     } catch (error) { toast?.(error?.message || 'Unable to recover the request ID.') }
@@ -497,6 +658,12 @@ export default function Vrf({
       )
 
       setTransactionHash(hash)
+      setVrfTiming({
+        hash,
+        id: null,
+        startedAt: Date.now(),
+        finishedAt: null,
+      })
       try { localStorage.setItem('rabbit-vrf-last-transaction', hash) } catch { /* Optional. */ }
       toast?.('Rabbit VRF request submitted. Waiting for receipt.')
 
@@ -510,6 +677,11 @@ export default function Vrf({
       }
 
       setRequestId(emittedRequestId)
+      setVrfTiming(previous =>
+        previous?.hash === hash
+          ? { ...previous, id: emittedRequestId }
+          : previous
+      )
       await inspect(emittedRequestId)
       loadHistory()
       toast?.('Request transaction confirmed. Randomness may still be pending.')
@@ -655,12 +827,17 @@ export default function Vrf({
               <div className="vrf-history-toolbar"><div className="vrf-history-tabs">{['all','pending','fulfilled'].map(value => <button key={value} aria-pressed={historyFilter === value} onClick={() => setHistoryFilter(value)}>{value}</button>)}</div><small>{historyProgress || 'Preparing wallet history…'}</small></div>
               {historyError && <p className="vrf-error">History is incomplete: {historyError} Use Refresh to retry.</p>}
               {!historyLoading && !historyError && history.length === 0 && <div className="vrf-wallet-empty"><h3>No requests yet</h3><p>Create your first request to receive verifiable randomness.</p></div>}
-              <div className="vrf-history-scroll"><table className="vrf-history-table"><thead><tr><th>Request ID</th><th>Status</th><th>Block</th><th>Protocol fee</th><th>Transaction</th><th>Result</th></tr></thead><tbody>
+              <div className="vrf-history-scroll"><table className="vrf-history-table"><thead><tr><th>Request ID</th><th>Status</th><th>Block</th><th>Protocol fee</th><th>Response time</th><th>Transaction</th><th>Result</th></tr></thead><tbody>
                 {history.filter(row => historyFilter === 'all' || row.status === (historyFilter === 'pending' ? 1 : 2)).map(row => <tr key={row.id}>
                   <td><button className="vrf-history-id" title={row.id} onClick={() => {setRequestId(row.id); inspect(row.id); setActiveTab('create'); document.getElementById('playground')?.scrollIntoView({behavior:'smooth'})}}>{shortHex(row.id)}</button></td>
                   <td><span className={`vrf-status-pill ${row.status === 2 ? 'complete' : ''}`}>{row.status === null ? 'Checking' : statusName(row.status)}</span></td>
                   <td><a href={`${NETWORKS.testnet.explorerUrl}/block/${row.block}`} target="_blank" rel="noreferrer">{row.block.toLocaleString()}</a></td>
                   <td>{nativeAmount(row.fee)} tRAB</td>
+                  <td style={{whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums'}}>
+                    {Number.isFinite(vrfDurations[row.id.toLowerCase()])
+                      ? `${vrfDurations[row.id.toLowerCase()].toFixed(1)}s`
+                      : '—'}
+                  </td>
                   <td><a href={`${NETWORKS.testnet.explorerUrl}/tx/${row.tx}`} target="_blank" rel="noreferrer">{shortHex(row.tx,6,4)} ↗</a></td>
                   <td><button className="button secondary" onClick={() => {setRequestId(row.id); inspect(row.id); setActiveTab('create'); document.getElementById('playground')?.scrollIntoView({behavior:'smooth'})}}>View {row.status === 2 ? 'result' : 'request'}</button></td>
                 </tr>)}
@@ -745,6 +922,123 @@ export default function Vrf({
               {buttonLabel}
             </button>
 
+            {vrfTiming && (() => {
+              const elapsed = Math.max(
+                0,
+                (vrfTiming.finishedAt ?? clock) - vrfTiming.startedAt
+              )
+              const minutes = String(Math.floor(elapsed / 60000)).padStart(2, '0')
+              const seconds = String(Math.floor((elapsed % 60000) / 1000)).padStart(2, '0')
+              const tenths = Math.floor((elapsed % 1000) / 100)
+              const failed = Boolean(vrfTiming.failed)
+              const done = vrfTiming.finishedAt !== null && !failed
+              const label = failed
+                ? 'Transaction failed'
+                : done
+                  ? 'Fulfilled'
+                  : vrfTiming.id
+                    ? 'Pending'
+                    : 'Confirming'
+
+              return (
+                <div style={{
+                  margin: '14px 0',
+                  padding: '15px 18px',
+                  background: '#fff',
+                  border: '1px solid #e1e3ed',
+                  borderRadius: 12,
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 12,
+                    flexWrap: 'wrap',
+                  }}>
+                    <strong style={{
+                      color: '#171729',
+                      fontSize: 13,
+                    }}>
+                      Rabbit VRF · Request status
+                    </strong>
+                    <span style={{
+                      padding: '5px 10px',
+                      borderRadius: 7,
+                      background: failed
+                        ? '#fff1f1'
+                        : done
+                          ? '#edf8f2'
+                          : '#f3f0fc',
+                      color: failed
+                        ? '#b42318'
+                        : done
+                          ? '#16845b'
+                          : '#6846bd',
+                      fontSize: 11,
+                      fontWeight: 700,
+                    }}>
+                      {label}
+                    </span>
+                  </div>
+
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: 12,
+                    marginTop: 14,
+                  }}>
+                    <div>
+                      <div style={{
+                        fontSize: 10,
+                        letterSpacing: '0.06em',
+                        color: '#777b90',
+                        marginBottom: 4,
+                      }}>
+                        {done ? 'OBSERVED RESPONSE TIME' : 'ELAPSED TIME'}
+                      </div>
+                      <div style={{
+                        color: '#171729',
+                        fontSize: 31,
+                        fontWeight: 750,
+                        fontVariantNumeric: 'tabular-nums',
+                        lineHeight: 1.15,
+                      }}>
+                        {minutes}:{seconds}
+                        <span style={{
+                          fontSize: 17,
+                          color: '#777b90',
+                        }}>.{tenths}</span>
+                      </div>
+                    </div>
+
+                    <span style={{
+                      fontSize: 12,
+                      color: '#70758a',
+                    }}>
+                      {failed
+                        ? 'Transaction reverted'
+                        : done
+                          ? 'Randomness ready'
+                          : vrfTiming.id
+                            ? 'Waiting for VRF'
+                            : 'Waiting for confirmation'}
+                    </span>
+                  </div>
+
+                  <div style={{
+                    marginTop: 11,
+                    color: '#9699a8',
+                    fontSize: 10,
+                    lineHeight: 1.5,
+                  }}>
+                    Browser-observed timing · Approximate, includes RPC detection delay
+                  </div>
+                </div>
+              )
+            })()}
+
             {transactionHash && (
               <p className="vrf-transaction" role="status">
                 Transaction submitted: <a href={`${NETWORKS.testnet.explorerUrl}/tx/${transactionHash}`} target="_blank" rel="noreferrer">View in Explorer <ArrowUpRight size={12} /></a>
@@ -783,7 +1077,22 @@ export default function Vrf({
                   <div className="wide vrf-request-progress">
                     <strong>{Number(request.status) === 2 ? 'Randomness is ready' : Number(request.status) === 1 ? 'Waiting for consensus fulfillment' : 'Request not found'}</strong>
                     <p>{Number(request.status) === 2 ? 'The result is stored on-chain. Copy it or inspect the associated proof hash.' : Number(request.status) === 1 ? 'This request is still pending. Timing depends on network participation and committee readiness. Do not submit another request just because this one is taking longer.' : 'Check the request ID and make sure it belongs to Rabbit Testnet.'}</p>
-                    {Number(request.status) === 1 && requestTimestamp && <small>Waiting since submission: {Math.max(0, Math.floor((clock-requestTimestamp)/60000))} min · refreshes every 10 seconds</small>}
+                    {Number(request.status) === 1 && requestTimestamp && (
+                      <small>
+                        Waiting since request block: {
+                          Math.max(0, Math.floor(
+                            (clock - requestTimestamp) / 1000
+                          ))
+                        } seconds · status refreshes every 10 seconds
+                      </small>
+                    )}
+                    {Number(request.status) === 2 &&
+                      vrfTiming?.id?.toLowerCase() !==
+                        request.requestId.toLowerCase() && (
+                        <small>
+                          Fulfilled on-chain · historical duration not recorded
+                        </small>
+                      )}
                     <div className="vrf-result-actions">
                       <button type="button" onClick={() => copyValue(request.requestId)}>Copy request ID</button>
                       <button type="button" onClick={() => inspect(request.requestId)}>Refresh status</button>
