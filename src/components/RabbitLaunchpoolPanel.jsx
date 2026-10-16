@@ -698,7 +698,14 @@ export default function RabbitLaunchpoolPanel({
               </div>
               <div className="rlp-clean-card-stats">
                 <div><small>Sold</small><strong>{amountDisplay(f.sold, dec)}</strong></div>
-                <div><small>Raised</small><strong>{amountDisplay(f.reserve, asset === 'tRAB' ? 18 : 6)} {asset}</strong></div>
+                <div>
+                  <small>{item.graduated ? 'Liquidity' : 'Reserve for LP'}</small>
+                  <strong>
+                    {item.graduated
+                      ? 'On RabbitSwap'
+                      : `${amountDisplay(f.reserve, asset === 'tRAB' ? 18 : 6)} ${asset}`}
+                  </strong>
+                </div>
               </div>
               <div className="rlp-clean-progress-label"><span>Launch progress</span><strong>{progress.toFixed(1)}%</strong></div>
               <div className="rlp-progress"><div><span style={{width: `${progress}%`}} /></div></div>
@@ -734,7 +741,32 @@ export default function RabbitLaunchpoolPanel({
               onClick={() => addTokenToWallet(item.fields.token)}>
               + Add Token to Wallet
             </button>
-            {item.fields?.token && item.fields?.basePrice && (
+            {item.graduated && (
+              <div style={{
+                padding: 16,
+                borderRadius: 14,
+                border: '1px solid #e4d6fa',
+                background: '#f8f5ff',
+                marginBottom: 16
+              }}>
+                <h3 style={{ margin: '0 0 6px' }}>Trading is now on RabbitSwap</h3>
+                <p style={{ margin: '0 0 12px' }}>
+                  This launch has graduated. Bonding-curve trading is closed.
+                </p>
+                <a href="/platform/swap"
+                   className="rlp-primary"
+                   style={{
+                     display: 'block',
+                     textAlign: 'center',
+                     textDecoration: 'none',
+                     padding: 12,
+                     borderRadius: 10
+                   }}>
+                  Trade on RabbitSwap →
+                </a>
+              </div>
+            )}
+            {!item.graduated && item.fields?.token && item.fields?.basePrice && (
               <RabbitLaunchTradePanel
                 item={item}
                 walletState={walletState}
