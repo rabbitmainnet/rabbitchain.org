@@ -5,7 +5,8 @@ import { ArrowRight, ArrowUpRight, BookOpen, FileText, ShieldCheck } from 'lucid
 import SectionHeader from '../components/SectionHeader'
 
 const WHITEPAPER_REPO = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper'
-const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.5.pdf'
+const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.7.pdf'
+const WHITEPAPER_ODT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.7.odt'
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
 const LIVENESS_V3_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.3.0-Liveness-V3-Upgrade.md'
@@ -18,8 +19,8 @@ export default function Whitepaper() {
       <section className="page-hero whitepaper-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
-            <span className="hero-eyebrow"><i /> OFFICIAL TECHNICAL WHITEPAPER · v1.5</span>
-            <h1>Public Testnet V2 <em>Liveness V3 Edition.</em></h1>
+            <span className="hero-eyebrow"><i /> OFFICIAL TECHNICAL WHITEPAPER · v1.7</span>
+            <h1>Public Testnet V2 <em>Technical Edition v1.7.</em></h1>
             <p>
               Rabbit Chain is a permissionless, EVM-compatible Layer 1 built around
               Live Consensus Queue (LCQ). Work qualifies participation; canonical
@@ -29,7 +30,10 @@ export default function Whitepaper() {
 
             <div className="hero-ctas">
               <a className="button primary" href={WHITEPAPER_PDF} target="_blank" rel="noreferrer">
-                Whitepaper PDF v1.5 <ArrowUpRight size={14} />
+                Whitepaper PDF v1.7 <ArrowUpRight size={14} />
+              </a>
+              <a className="button secondary" href={WHITEPAPER_ODT} target="_blank" rel="noreferrer">
+                Whitepaper ODT v1.7 <ArrowUpRight size={14} />
               </a>
               <a className="button secondary" href={WHITEPAPER_REPO} target="_blank" rel="noreferrer">
                 Source repository <ArrowUpRight size={14} />
@@ -39,7 +43,7 @@ export default function Whitepaper() {
 
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
-            <strong>Technical Whitepaper v1.5</strong>
+            <strong>Technical Whitepaper v1.7</strong>
             <p>Current software: Rabbit Core Testnet V2.4.13</p>
             <section>
               <span>CHAIN ID 9280</span>
@@ -55,7 +59,7 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="Whitepaper protocol history and the current Core release are tracked together."
-          text="Whitepaper v1.5 preserves the earlier public consensus record; the current software release is Rabbit Core V2.4.13. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 on the public Testnet. Availability V2 activated at block 173,057 in V2.4.6. V2.4.13 includes authenticated VRF relay without changing consensus activation heights or introducing a new hard fork. The V5 mining reward correction remains active from block 153,601. Protocol activation does not prove every request has completed."
+          text="Whitepaper v1.7 documents the current public Testnet while preserving earlier LCQ consensus and protocol activation history; the current software release is Rabbit Core V2.4.13. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 on the public Testnet. Availability V2 activated at block 173,057 in V2.4.6. V2.4.13 includes authenticated VRF relay without changing consensus activation heights or introducing a new hard fork. The V5 mining reward correction remains active from block 153,601. Protocol activation does not prove every request has completed."
         />
 
         <div className="resource-grid">
