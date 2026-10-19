@@ -440,7 +440,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
 
         <p className="product-disclaimer">
           Rabbit VRF protocol rules activated at block 136193 after DKG preparation at 136065.
-          V2.4.11 includes authenticated VRF relay without a new hard fork. Any user or contract can request randomness without mining. Testnet requests can remain pending;
+          V2.4.13 includes authenticated VRF relay without a new hard fork. Any user or contract can request randomness without mining. Testnet requests can remain pending;
           use randomness only after canonical completion has been verified.
         </p>
       </div>

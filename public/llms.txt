@@ -5,17 +5,17 @@ Official GitHub: https://github.com/rabbitmainnet
 Official X: https://x.com/rabbit_mainnet
 
 Rabbit Chain is a permissionless EVM Layer 1 powered by LCQ Consensus. Rabbit Testnet (Chain ID 9280) is the first public network. Rabbit Mainnet (Chain ID 928) follows validation.
-Current Rabbit Core Testnet release: v2.4.11 (source commit 79e183b9b48a3173848e0a8430f68bbd792e5bea).
-Rabbit Core v2.4.11 relays authenticated encrypted DKG evaluations and verified VRF partial signatures through public peers when miners have no direct connection. It introduces no new hard fork. Availability V2 activated at block 173057 in v2.4.6. Any user or contract can request VRF without mining. Earlier fork heights and the existing genesis, wallets and blockchain data are preserved. Keep the operating-system clock synchronized. VRF completion must be verified through canonical request status, randomness and proof; local key creation alone is not completion.
+Current Rabbit Core Testnet release: v2.4.13 (source commit 8e42d4fec6769dd44a593b552bfc570df227a6ac).
+Rabbit Core v2.4.13 adds verified automatic multipart blockchain bootstrap, resumable downloads, progress reporting and wallet-first initialization for new miners. Existing miners retain their data. Earlier releases added authenticated encrypted DKG evaluations and verified VRF partial signatures through public peers when miners have no direct connection. It introduces no new hard fork. Availability V2 activated at block 173057 in v2.4.6. Any user or contract can request VRF without mining. Earlier fork heights and the existing genesis, wallets and blockchain data are preserved. Keep the operating-system clock synchronized. VRF completion must be verified through canonical request status, randomness and proof; local key creation alone is not completion.
 Rabbit VRF DKG preparation started at block 136065. Rabbit VRF protocol and the VRF liveness rules activated at block 136193. Protocol activation is distinct from verified fulfillment. Public request testing is experimental: inspect canonical completion before using randomness.
 
 Extracting software on another drive does not move the data directory. Rabbit Core supports --data-dir; existing users must stop all Rabbit processes, copy the complete data directory and verify their existing wallet before using another location.
 
 Key routes: /testnet, /mainnet, /lcq, /platform, /developers, /docs, /security, /releases, /status.
 
-V2.4.11 also fixes Rabbit Core initialization and restart after the Availability V2 fork by preserving its persisted activation schedule when applying the original official genesis. No new hard fork is introduced.
+Earlier releases also fixed Rabbit Core initialization and restart after the Availability V2 fork by preserving its persisted activation schedule when applying the original official genesis. No new hard fork is introduced.
 
-V2.4.11 improves live block import and production recovery: nodes briefly wait for an incoming direct-extension block before starting recovery, and a shorter conflicting peer no longer keeps production paused. Consensus activation heights, reward rules and VRF rules remain unchanged.
+Earlier releases improved live block import and production recovery: nodes briefly wait for an incoming direct-extension block before starting recovery, and a shorter conflicting peer no longer keeps production paused. Consensus activation heights, reward rules and VRF rules remain unchanged.
 
-V2.4.11 isolates outgoing LCQ messages in bounded per-peer queues so a slow peer does not block delivery to other peers. It retries failed asynchronous recovery downloads and reports canonical penalties in English, including the end block and remaining blocks. Normal operational status refreshes approximately every 10 to 12 seconds.
+Earlier releases isolated outgoing LCQ messages in bounded per-peer queues so a slow peer does not block delivery to other peers. It retries failed asynchronous recovery downloads and reports canonical penalties in English, including the end block and remaining blocks. Normal operational status refreshes approximately every 10 to 12 seconds.
 PENALIZED reports missed assigned production turns, the canonical penalty end block and remaining blocks. It does not prove the underlying technical cause. Penalty expiry still requires synchronization and selection.
