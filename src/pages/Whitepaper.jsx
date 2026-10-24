@@ -1,5 +1,4 @@
 import { RELEASE_COMMIT, RELEASE_URL, DOWNLOADS } from '../config/release'
-import ReleaseNotice from '../components/ReleaseNotice'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, BookOpen, FileText, ShieldCheck } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
@@ -15,7 +14,6 @@ const CORE_RELEASE = RELEASE_URL
 export default function Whitepaper() {
   return (
     <main>
-      <ReleaseNotice />
       <section className="page-hero whitepaper-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
@@ -44,7 +42,7 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.7</strong>
-            <p>Current software: Rabbit Core Testnet V2.4.13</p>
+            <p>Current software: Rabbit Core Testnet V2.4.14</p>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -59,14 +57,14 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="Whitepaper protocol history and the current Core release are tracked together."
-          text="Whitepaper v1.7 documents the current public Testnet while preserving earlier LCQ consensus and protocol activation history; the current software release is Rabbit Core V2.4.13. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 on the public Testnet. Availability V2 activated at block 173,057 in V2.4.6. V2.4.13 includes authenticated VRF relay without changing consensus activation heights or introducing a new hard fork. The V5 mining reward correction remains active from block 153,601. Protocol activation does not prove every request has completed."
+          text="Whitepaper v1.7 documents the current public Testnet while preserving earlier LCQ consensus and protocol activation history; the current software release is Rabbit Core V2.4.14. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 on the public Testnet. Availability V2 activated at block 173,057 in V2.4.6. V2.4.14 includes authenticated VRF relay while preserving historical fork heights and scheduling new rules at Testnet block 320,000. The V5 mining reward correction remains active from block 153,601. From block 320,000 the VRF base target is US$0.005 equivalent, with 50% development allocation, 30% validated signers and 20% fulfillment producer. Mining rewards remain 70/30. The downloadable v1.7 document is a historical reference; this page records the v2.4.14 addendum. Protocol activation does not prove every request has completed."
         />
 
         <div className="resource-grid">
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.4.13</h3>
+            <h3>Rabbit Core V2.4.14</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -98,7 +96,7 @@ export default function Whitepaper() {
             <p>
               Genesis SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
-                17bfe51321f6e7befe8719ee35c34b1b876fda3e93672204903bd7b6d6bb69ba
+                4970159f077b62b7aa9bde1f81cb61ae837b42ef64861d7b23241e1af4d75c9f
               </code>
             </p>
           </article>
@@ -106,7 +104,7 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.4.13</h3>
+            <h3>Rabbit Core V2.4.14</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -196,7 +194,7 @@ export default function Whitepaper() {
             Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Current Rabbit Core V2.4.13 release <ArrowUpRight size={14} />
+            Current Rabbit Core V2.4.14 release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>

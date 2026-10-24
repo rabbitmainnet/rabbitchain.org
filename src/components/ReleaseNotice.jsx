@@ -3,12 +3,12 @@ import { RELEASE } from '../config/release'
 
 export default function ReleaseNotice() {
   return (
-    <aside className="release-update-notice shell" aria-label="Testnet software update">
+    <aside className="release-update-notice shell" aria-label="Rabbit Testnet fork update">
       <div>
-        <strong>Rabbit Core {RELEASE.requiredVersion}: automatic bootstrap for new miners.</strong>
-        <p>New installations create or reuse an encrypted mining wallet, download and verify the official Testnet bootstrap, synchronize remaining blocks and start LCQ participation automatically. Existing miners must preserve their wallet, blockchain and participation data. No new hard fork is introduced.</p>
+        <strong>Rabbit Core {RELEASE.requiredVersion}: Testnet fork at block 320,000.</strong>
+        <p>Upgrade miners and nodes before activation. Keep your existing blockchain, encrypted wallet, node identity and participation data. Fresh installations retain automatic verified bootstrap. Blocks remain at a 10-second target; mining rewards remain 70% producer / 30% committee.</p>
       </div>
-      <Link className="button secondary" to="/releases">Download and upgrade</Link>
+      <Link className="button secondary" to="/releases">Downloads and upgrade guide</Link>
     </aside>
   )
 }

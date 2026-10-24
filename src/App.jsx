@@ -1,3 +1,4 @@
+import ReleaseNotice from './components/ReleaseNotice'
 import RabbitLaunchpoolPanel from './components/RabbitLaunchpoolPanel'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -50,7 +51,7 @@ const META = {
   '/testnet': ['Rabbit Testnet — Chain ID 9280', 'Connect a wallet, add Rabbit Testnet and follow the official public launch path.'],
   '/mainnet': ['Rabbit Mainnet — Chain ID 928', 'Rabbit Mainnet is the production network planned after public Testnet validation.'],
   '/lcq': ['LCQ Consensus — Rabbit Chain', 'Work, eligibility, live queue, producer opportunity and committee participation on Rabbit Chain.'],
-  '/mining': ['Mining — Rabbit Chain', 'Download Rabbit Core V2.4.13 for Rabbit Testnet. Automatic verified blockchain bootstrap, encrypted wallet setup, verified packages and safe upgrades preserving your existing wallet and blockchain data. No new hard fork.'],
+  '/mining': ['Mining — Rabbit Chain', 'Download Rabbit Core V2.4.14 for Rabbit Testnet. Automatic verified blockchain bootstrap, encrypted wallet setup, verified packages and safe upgrades preserving your existing wallet and blockchain data. Testnet fork scheduled at block 320,000.'],
   '/nodes': ['Run a Node — Rabbit Chain', 'Operate independent Rabbit P2P and RPC infrastructure.'],
   '/developers': ['Developers — Rabbit Chain', 'Rabbit EVM, JSON-RPC, wallet and developer integration resources.'],
   '/docs': ['Documentation — Rabbit Chain', 'Official Rabbit Chain protocol and network documentation.'],
@@ -58,9 +59,9 @@ const META = {
   '/vrf': ['Rabbit VRF — Verifiable Randomness', 'Rabbit VRF is the native verifiable randomness protocol for Rabbit Chain. Test the live public Testnet coordinator and inspect canonical VRF requests.'],
   '/rab': ['RAB — Rabbit Chain Native Asset', 'Rabbit Testnet uses tRAB; the future Rabbit Mainnet will use RAB.'],
   '/security': ['Security — Rabbit Chain', 'Official Rabbit Chain domain, wallet and release verification guidance.'],
-  '/releases': ['Releases — Rabbit Chain', 'Official Rabbit Core V2.4.13 with automatic bootstrap, verified downloads, SHA-256 hashes and safe upgrade instructions. No new hard fork.'],
+  '/releases': ['Releases — Rabbit Chain', 'Official Rabbit Core V2.4.14 with automatic bootstrap, verified downloads, SHA-256 hashes and safe upgrade instructions. Testnet fork scheduled at block 320,000.'],
   '/about': ['About Rabbit Chain', 'Rabbit Chain project principles, architecture and public launch model.'],
-  '/whitepaper': ['Whitepaper — Rabbit Chain', 'Rabbit Chain technical architecture, LCQ consensus history and Rabbit Core V2.4.13 authenticated VRF relay, preserving prior Testnet history.'],
+  '/whitepaper': ['Whitepaper — Rabbit Chain', 'Rabbit Chain technical architecture, LCQ consensus history and Rabbit Core V2.4.14 authenticated VRF relay, preserving prior Testnet history.'],
   '/community': ['Community — Rabbit Chain', 'Official Rabbit Chain GitHub, X, Discord, Instagram, Facebook and community resources.'],
   '/status': ['Network Status — Rabbit Chain', 'Official Rabbit Testnet RPC, WebSocket, explorer, downloads and planned-service status.'],
   '/privacy-policy': ['Privacy Policy — Rabbit Chain', 'Rabbit Chain privacy policy.'],
@@ -356,6 +357,7 @@ export default function App() {
   return (
     <div className={`app-shell${embeddedApp ? ' rabbit-embed-shell' : ''}`}>
       {!embeddedApp && <Header walletState={walletState} onWalletClick={openWallet} onOpenSearch={() => setSearchOpen(true)} />}
+      {!embeddedApp && <ReleaseNotice />}
       <Suspense fallback={<PageLoader />}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>

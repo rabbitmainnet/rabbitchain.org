@@ -1,4 +1,3 @@
-import ReleaseNotice from '../components/ReleaseNotice'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Database, Globe2, HardDrive, Network, Radio, Server, ShieldCheck, TerminalSquare } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
@@ -6,7 +5,6 @@ import SectionHeader from '../components/SectionHeader'
 export default function Nodes() {
   return (
     <main>
-      <ReleaseNotice />
       <section className="page-hero nodes-hero"><div className="shell page-hero-grid"><div className="page-hero-copy"><span className="hero-eyebrow"><i /> PERMISSIONLESS P2P INFRASTRUCTURE</span><h1>Run Rabbit. <em>Own your network access.</em></h1><p>Independent nodes are how wallets, developers, miners and infrastructure providers avoid depending on a single RPC operator.</p><div className="hero-ctas"><a className="button primary" href="#roles">Node roles <ArrowRight size={15} /></a><Link className="button secondary" to="/developers">RPC guide</Link></div></div><div className="node-map"><div className="node-map-head"><span>RABBIT P2P</span><b>INDEPENDENT NODES</b></div><div className="node-map-body"><div className="node-core"><img src="/rabbit-mark.png" alt="" /><strong>RABBIT</strong><small>P2P NETWORK</small></div>{['MINER','RPC','ARCHIVE','EXPLORER','APP','NODE'].map((label, i) => <span className={`node-dot n${i}`} key={label}>{label}</span>)}</div><div className="node-map-foot"><span>PEER DISCOVERY</span><span>BLOCK PROPAGATION</span><span>TX PROPAGATION</span></div></div></div></section>
 
       <section className="section shell" id="roles"><SectionHeader eyebrow="NODE ROLES" title="One client can serve different infrastructure goals." text="Rabbit should support independent operation instead of forcing every participant through the same hosted endpoint." /><div className="node-role-grid"><article><Network size={21} /><span>P2P</span><h3>Full node</h3><p>Join peer discovery, synchronize the chain and propagate blocks and transactions.</p></article><article><Radio size={21} /><span>ACCESS</span><h3>RPC node</h3><p>Expose controlled JSON-RPC and WebSocket access for applications or private tooling.</p></article><article><Database size={21} /><span>HISTORY</span><h3>Archive / index</h3><p>Retain deeper historical data for analytics, explorers and infrastructure services.</p></article><article><Server size={21} /><span>SERVICE</span><h3>Community infrastructure</h3><p>Operate independent RPC, indexing or explorer services without becoming a consensus administrator.</p></article></div></section>

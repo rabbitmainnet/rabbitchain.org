@@ -1,4 +1,3 @@
-import ReleaseNotice from '../components/ReleaseNotice'
 import { Link } from 'react-router-dom'
 import {
   Activity, ArrowRight, CheckCircle2, Clock3, Cpu, GitBranch,
@@ -24,13 +23,12 @@ const principles = [
 export default function Lcq() {
   return (
     <main>
-      <ReleaseNotice />
       <section className="lcq-v2-hero">
         <div className="shell lcq-v2-hero-grid">
           <div className="lcq-v2-copy">
             <span className="hero-eyebrow"><i /> CORE TECHNOLOGY · LIVE CONSENSUS QUEUE</span>
             <h1>Work opens the door. <em>LCQ decides what comes next.</em></h1>
-            <p>Rabbit separates valid participation from permanent control of block production. Eligibility and producer coordination are resolved by protocol rules.</p>
+            <p>Rabbit separates valid participation from permanent control of block production. Eligibility and producer coordination are resolved by protocol rules. At Testnet block 320,000, admission V2 keeps valid WorkSeats in the producer queue without requiring a separate registry heartbeat; active jail exclusions remain enforced. Mining rewards remain 70/30.</p>
             <div className="hero-ctas"><a className="button primary" href="#flow">See the flow <ArrowRight size={15} /></a><a className="button secondary" href="#architecture">Architecture</a></div>
             <div className="lcq-v2-facts"><div><span>CONSENSUS</span><strong>LCQ</strong></div><div><span>EXECUTION</span><strong>EVM</strong></div><div><span>BLOCK TARGET</span><strong>~10s</strong></div><div><span>REWARD</span><strong>70 / 30</strong></div></div>
           </div>

@@ -251,7 +251,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
           <div>
             <label>
               <span>BASE PROTOCOL FEE</span>
-              <input disabled value="0.001 tRUSD / request" readOnly />
+              <input disabled value="0.005 tRUSD from block 320,000 / request" readOnly />
             </label>
             <label>
               <span>COORDINATOR</span>
@@ -411,7 +411,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
 
           <p>
             Consensus-secured · No trusted oracle operator ·
-            No centralized randomness API · Base fee 0.001 tRUSD/request · Transparent protocol pricing ·
+            No centralized randomness API · Base fee 0.005 tRUSD/request from block 320,000 · Transparent protocol pricing ·
             EVM-native integration
           </p>
         </div>
@@ -440,7 +440,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
 
         <p className="product-disclaimer">
           Rabbit VRF protocol rules activated at block 136193 after DKG preparation at 136065.
-          V2.4.13 includes authenticated VRF relay without a new hard fork. Any user or contract can request randomness without mining. Testnet requests can remain pending;
+          V2.4.14 includes authenticated VRF relay with new VRF economics and WorkSeat admission scheduled at Testnet block 320,000. Any user or contract can request randomness without mining. Testnet requests can remain pending;
           use randomness only after canonical completion has been verified.
         </p>
       </div>

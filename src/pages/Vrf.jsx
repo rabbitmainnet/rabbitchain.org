@@ -944,7 +944,7 @@ export default function Vrf({
             <div className="protocol-map-foot">
               <div><span>NETWORK</span><strong>Rabbit Testnet</strong></div>
               <div><span>CHAIN ID</span><strong>9280</strong></div>
-              <div><span>BASE TARGET</span><strong>0.001 tRUSD</strong></div>
+              <div><span>BASE TARGET</span><strong>0.005 tRUSD from block 320,000</strong></div>
               <div><span>STATUS</span><strong>PUBLIC TESTNET</strong></div>
             </div>
           </div>
@@ -1062,7 +1062,7 @@ export default function Vrf({
 
               <div>
                 <span>PRICING TARGET</span>
-                <strong>0.001 tRUSD</strong>
+                <strong>0.005 tRUSD from block 320,000</strong>
                 <small>Converted by the protocol to native tRAB</small>
               </div>
             </div>
@@ -1521,7 +1521,7 @@ bytes32 requestId =
             <span>FEES</span>
             <h3>Why does the fee show tRAB?</h3>
             <p>
-              The protocol pricing target is 0.001 tRUSD per request, but the
+              The protocol pricing target is 0.005 tRUSD from block 320,000 per request, but the
               coordinator returns the current payable amount in native wei.
               Applications should always use quoteRequestFee(0) and never
               hard-code the payable tRAB amount.
@@ -1558,7 +1558,7 @@ bytes32 requestId =
               <div><span>Chain ID</span><strong>9280 · 0x2440</strong></div>
               <div><span>Coordinator</span><strong>{RABBIT_VRF.coordinator}</strong></div>
               <div><span>Callback gas</span><strong>0 · required in V1</strong></div>
-              <div><span>Pricing target</span><strong>0.001 tRUSD / request</strong></div>
+              <div><span>Pricing target</span><strong>0.005 tRUSD from block 320,000 / request</strong></div>
               <div><span>Mainnet</span><strong>NOT LAUNCHED</strong></div>
             </div>
           </div>
@@ -1883,11 +1883,11 @@ function settleRound(
           </article>
           <article>
             <h3>Why is my request still pending?</h3>
-            <p>Submission and fulfillment are separate stages. Timing varies with network participation and committee readiness. This page checks pending requests every 10 seconds. Keep the request ID, inspect its status and wait for FULFILLED before using the result. A slow request does not need to be submitted again.</p>
+            <p>Submission, early proof delivery and canonical fulfillment are separate stages. Two local SSD-backed tests verified all 48 early proofs in 0.176–1.242 seconds after observed inclusion, including requests across an epoch transition. This is not a public-network SLA; transaction inclusion adds waiting time. Blocks retain a 10-second target. Timing varies with network participation and committee readiness. This page checks pending requests every 10 seconds. Keep the request ID, inspect its status and wait for FULFILLED before using the result. A slow request does not need to be submitted again.</p>
           </article>
           <article>
             <h3>How is the VRF fee distributed?</h3>
-            <p>At successful fulfillment, the protocol allocates 30% to the fulfillment block producer, 50% equally among the participants included in that request's validated VRF proof, and 20% plus integer rounding remainders to Rabbit Allocation. Transaction gas and mining block rewards are separate. Mining alone does not guarantee a share of a particular VRF fee.</p>
+            <p>Before block 320,000, VRF fees use the historical 30% producer / 50% validated signers / 20% allocation split. From block 320,000, successful fulfillment allocates 20% to the fulfillment block producer, 30% equally among the validated VRF signers, and 50% plus integer rounding remainders to the existing development allocation address. Pending requests retain their recorded fee; the split follows the fulfillment block. Transaction gas and 70/30 mining rewards are separate.</p>
           </article>
 
           <article>
@@ -1895,8 +1895,8 @@ function settleRound(
             <p>
               Protocol rules activated on Testnet at block 136,193, after DKG
               preparation at 136,065. Availability V2 activated at block 173,057.
-              V2.4.13 includes authenticated VRF relay through public peers without
-              a new hard fork. Users and contracts do not need to mine to request randomness.
+              V2.4.14 includes authenticated VRF relay through public peers with new rules scheduled
+              at Testnet block 320,000. Users and contracts do not need to mine to request randomness.
               Request submission and a successful transaction receipt do not prove
               fulfillment: inspect the request and wait for canonical completion.
             </p>
@@ -1913,7 +1913,7 @@ function settleRound(
           <article>
             <h3>What do I pay?</h3>
             <p>
-              The pricing target is 0.001 tRUSD per request. The coordinator
+              The pricing target is 0.005 tRUSD from block 320,000 per request. The coordinator
               converts that pricing model into the exact native tRAB value
               returned by quoteRequestFee(0). Normal transaction gas is separate.
             </p>

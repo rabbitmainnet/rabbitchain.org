@@ -1,4 +1,3 @@
-import ReleaseNotice from '../components/ReleaseNotice'
 import { Link } from 'react-router-dom'
 import { ArrowRight, CheckCircle2, Code2, Cpu, FlaskConical, Globe2, Network, Plus, Radio, ShieldCheck, Wallet } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
@@ -9,11 +8,10 @@ export default function Testnet({ walletState, onConnect, onAddNetwork }) {
   const n = NETWORKS.testnet
   return (
     <main>
-      <ReleaseNotice />
       <section className="page-hero testnet-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
-            <span className="hero-eyebrow"><i /> FIRST PUBLIC NETWORK · CHAIN ID 9280 · V2.4.13 · AUTOMATIC BOOTSTRAP</span>
+            <span className="hero-eyebrow"><i /> FIRST PUBLIC NETWORK · CHAIN ID 9280 · V2.4.14 · AUTOMATIC BOOTSTRAP</span>
             <h1>Rabbit Testnet is the <em>public launch path.</em></h1>
             <p>Miners, node operators, wallets and developers use the Testnet to validate the complete Rabbit network before Mainnet.</p>
             <div className="hero-ctas"><button className="button primary" onClick={onConnect}><Wallet size={16} />{walletState.account ? 'Manage wallet' : 'Connect wallet'}</button><button className="button secondary" onClick={() => onAddNetwork(n)}><Plus size={15} />Add Rabbit Testnet</button></div>
