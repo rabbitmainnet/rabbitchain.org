@@ -1895,7 +1895,7 @@ function settleRound(
             <p>
               Protocol rules activated on Testnet at block 136,193, after DKG
               preparation at 136,065. Availability V2 activated at block 173,057.
-              V2.4.14 includes authenticated VRF relay through public peers with new rules scheduled
+              V2.4.15 includes authenticated VRF relay through public peers with new rules scheduled
               at Testnet block 320,000. Users and contracts do not need to mine to request randomness.
               Request submission and a successful transaction receipt do not prove
               fulfillment: inspect the request and wait for canonical completion.
