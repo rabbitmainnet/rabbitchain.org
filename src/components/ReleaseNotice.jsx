@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom'
-import { RELEASE } from '../config/release'
 
 export default function ReleaseNotice() {
   return (
-    <aside className="release-update-notice shell" aria-label="Testnet software update">
+    <aside className="release-update-notice shell" aria-label="Rabbit Testnet fork update">
       <div>
-        <strong>Rabbit Core {RELEASE.requiredVersion}: automatic bootstrap for new miners.</strong>
-        <p>New installations create or reuse an encrypted mining wallet, download and verify the official Testnet bootstrap, synchronize remaining blocks and start LCQ participation automatically. Existing miners must preserve their wallet, blockchain and participation data. No new hard fork is introduced.</p>
+        <strong>Rabbit Core v2.4.14: Testnet fork scheduled at block 320,000.</strong>
+        <p>The v2.4.14 release is undergoing final validation; new downloads are not public yet. Existing downloads remain available. Preserve your blockchain, encrypted wallet, node identity and participation data. From activation, VRF pricing targets 0.005 tRUSD with 50% development / 30% validated signers / 20% fulfillment producer. Blocks retain a 10-second target and mining rewards remain 70/30.</p>
       </div>
-      <Link className="button secondary" to="/releases">Download and upgrade</Link>
+      <Link className="button secondary" to="/releases">Current downloads and upgrade guide</Link>
     </aside>
   )
 }

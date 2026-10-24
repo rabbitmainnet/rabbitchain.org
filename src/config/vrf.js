@@ -20,7 +20,9 @@ export const RABBIT_VRF = Object.freeze({
     },
   },
 
-  baseFeeTrusdBaseUnits: 1_000,
+  baseFeeTrusdBaseUnits: 1_000, // Historical target; always use the live contract quote.
+  economicsV2Block: 320000,
+  economicsV2BaseFeeTrusdBaseUnits: 5_000,
 
   twap: {
     minimumWindowSeconds: 1800,
