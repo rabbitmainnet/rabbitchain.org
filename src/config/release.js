@@ -27,14 +27,6 @@ export const RELEASE_DOWNLOAD_BASE =
 
 export const DOWNLOADS = [
   {
-    key: 'windows-amd64',
-    platform: 'Windows',
-    architecture: 'AMD64',
-    format: 'ZIP',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.14-windows-amd64.zip`,
-    sha256: 'c8a51a1df653ef29910b2afedd3f6a116351f35bbade6598b35f2e18b784c696',
-  },
-  {
     key: 'linux-amd64',
     platform: 'Linux',
     architecture: 'AMD64',
