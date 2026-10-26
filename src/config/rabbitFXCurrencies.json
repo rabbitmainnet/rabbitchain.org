@@ -1,0 +1,196 @@
+{
+  "chainId": 9280,
+  "protocol": "Rabbit Global FX",
+  "mode": "PERMISSIONLESS_MULTIFIAT",
+  "collateral": "tRAB",
+  "oracle": {
+    "address": "0xFC07196A209b1Db77E9B20f5600155BB6643D2Af",
+    "status": "PRICE_AND_DECENTRALIZATION_VALIDATION_PENDING"
+  },
+  "currencies": [
+    {
+      "code": "USD",
+      "symbol": "fxUSD",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "BRL",
+      "symbol": "fxBRL",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "EUR",
+      "symbol": "fxEUR",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "JPY",
+      "symbol": "fxJPY",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "GBP",
+      "symbol": "fxGBP",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "CAD",
+      "symbol": "fxCAD",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "CHF",
+      "symbol": "fxCHF",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "AUD",
+      "symbol": "fxAUD",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "CNY",
+      "symbol": "fxCNY",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "INR",
+      "symbol": "fxINR",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "MXN",
+      "symbol": "fxMXN",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "ARS",
+      "symbol": "fxARS",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "KRW",
+      "symbol": "fxKRW",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "SGD",
+      "symbol": "fxSGD",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "ZAR",
+      "symbol": "fxZAR",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "TRY",
+      "symbol": "fxTRY",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "RUB",
+      "symbol": "fxRUB",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "AED",
+      "symbol": "fxAED",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "SAR",
+      "symbol": "fxSAR",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "NZD",
+      "symbol": "fxNZD",
+      "vault": null,
+      "token": null,
+      "status": "NOT_DEPLOYED",
+      "mintEnabled": false,
+      "redeemEnabled": false
+    }
+  ],
+  "excludedExperimentalContracts": {
+    "preMintedFxBRL": "0x6660947C9df9C70089dEA4d03256CEb6cBe9E56D",
+    "legacyFxUSD": "0xF3A52963edFb2519B0049C31F6856DbaECb4E3dB"
+  }
+}

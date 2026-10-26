@@ -1,0 +1,210 @@
+{
+  "chainId": 9280,
+  "source": "European Central Bank",
+  "sourceDate": "2026-10-23",
+  "sourceAgeDaysAtBuild": 3,
+  "base": "USD",
+  "kind": "REFERENCE_ONLY",
+  "currencies": [
+    {
+      "code": "USD",
+      "symbol": "fxUSD",
+      "usdPerUnit": "1",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "BRL",
+      "symbol": "fxBRL",
+      "usdPerUnit": "0.1981588032220943613348676640",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "EUR",
+      "symbol": "fxEUR",
+      "usdPerUnit": "1.1193",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "JPY",
+      "symbol": "fxJPY",
+      "usdPerUnit": "0.006377414392342316677112415247",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "GBP",
+      "symbol": "fxGBP",
+      "usdPerUnit": "1.336828778903114848079495509",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "CAD",
+      "symbol": "fxCAD",
+      "usdPerUnit": "0.7145228215767634854771784232",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "CHF",
+      "symbol": "fxCHF",
+      "usdPerUnit": "1.213070337054297171344965861",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "AUD",
+      "symbol": "fxAUD",
+      "usdPerUnit": "0.7022397891963109354413702240",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "CNY",
+      "symbol": "fxCNY",
+      "usdPerUnit": "0.1499196356817572997589070453",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "INR",
+      "symbol": "fxINR",
+      "usdPerUnit": "0.01053240740740740740740740741",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "MXN",
+      "symbol": "fxMXN",
+      "usdPerUnit": "0.05324270071256647607812544595",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "ARS",
+      "symbol": "fxARS",
+      "usdPerUnit": null,
+      "referenceAvailable": false,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "KRW",
+      "symbol": "fxKRW",
+      "usdPerUnit": "0.0007550288034753045613372367551",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "SGD",
+      "symbol": "fxSGD",
+      "usdPerUnit": "0.7821802935010482180293501048",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "ZAR",
+      "symbol": "fxZAR",
+      "usdPerUnit": "0.06024965415525064997281687184",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "TRY",
+      "symbol": "fxTRY",
+      "usdPerUnit": "0.02010543994683096377859407417",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "RUB",
+      "symbol": "fxRUB",
+      "usdPerUnit": null,
+      "referenceAvailable": false,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "AED",
+      "symbol": "fxAED",
+      "usdPerUnit": null,
+      "referenceAvailable": false,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "SAR",
+      "symbol": "fxSAR",
+      "usdPerUnit": null,
+      "referenceAvailable": false,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    },
+    {
+      "code": "NZD",
+      "symbol": "fxNZD",
+      "usdPerUnit": "0.5686922060766182298546895641",
+      "referenceAvailable": true,
+      "vault": null,
+      "token": null,
+      "mintEnabled": false,
+      "redeemEnabled": false
+    }
+  ]
+}

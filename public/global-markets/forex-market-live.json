@@ -1,0 +1,389 @@
+{
+    "project":  "Rabbit Global Markets",
+    "chainId":  9280,
+    "feedType":  "INTRADAY",
+    "maxAgeSeconds":  900,
+    "maxDeviationBps":  "100",
+    "oraclePublished":  false,
+    "currencies":  {
+                       "AED":  {
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "marketPrice":  "3.6730000972747803",
+                                   "unit":  "AED per USD",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "YahooFinance",
+                                                       "pair":  "USD/AED",
+                                                       "rate":  "3.6730000972747803",
+                                                       "observedAt":  1793037318,
+                                                       "observedAtUTC":  "2026-10-26T17:55:18+00:00",
+                                                       "ageSeconds":  5
+                                                   }
+                                               ],
+                                   "deviationBps":  null,
+                                   "approvedForOracle":  false,
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "ARS":  {
+                                   "unit":  "ARS per USD",
+                                   "deviationBps":  "0.7543290013080012949530910578",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "1540.5988",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/ARS",
+                                                       "rate":  "1540.5988",
+                                                       "bid":  "1540.5938",
+                                                       "ask":  "1540.6038",
+                                                       "observedAt":  1793052058,
+                                                       "observedAtUTC":  "2026-10-26T22:00:58.0000000Z",
+                                                       "ageSeconds":  609
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "AUD":  {
+                                   "unit":  "AUD per USD",
+                                   "deviationBps":  "1.673239809556021056535180114",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "1.42529325",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/AUD",
+                                                       "rate":  "1.42529325",
+                                                       "bid":  "1.4251917",
+                                                       "ask":  "1.4253948",
+                                                       "observedAt":  1793052074,
+                                                       "observedAtUTC":  "2026-10-26T22:01:14.0000000Z",
+                                                       "ageSeconds":  892
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "BRL":  {
+                                   "unit":  "BRL per USD",
+                                   "deviationBps":  "35.69159948110348540349461793",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "5.3769",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/BRL",
+                                                       "rate":  "5.3769",
+                                                       "bid":  "5.3767",
+                                                       "ask":  "5.3771",
+                                                       "observedAt":  1793050210,
+                                                       "observedAtUTC":  "2026-10-26T21:30:10.0000000Z",
+                                                       "ageSeconds":  653
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "CAD":  {
+                                   "unit":  "CAD per USD",
+                                   "deviationBps":  "2.355172061479911095753824975",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "1.401695",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/CAD",
+                                                       "rate":  "1.401695",
+                                                       "bid":  "1.4016",
+                                                       "ask":  "1.40179",
+                                                       "observedAt":  1793052064,
+                                                       "observedAtUTC":  "2026-10-26T22:01:04.0000000Z",
+                                                       "ageSeconds":  603
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "CHF":  {
+                                   "unit":  "CHF per USD",
+                                   "deviationBps":  "1.149477858785899422082550335",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "0.82707",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/CHF",
+                                                       "rate":  "0.82707",
+                                                       "bid":  "0.82657",
+                                                       "ask":  "0.82757",
+                                                       "observedAt":  1793051539,
+                                                       "observedAtUTC":  "2026-10-26T21:52:19.0000000Z",
+                                                       "ageSeconds":  843
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "CNY":  {
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "marketPrice":  "6.658299922943115",
+                                   "unit":  "CNY per USD",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "YahooFinance",
+                                                       "pair":  "USD/CNY",
+                                                       "rate":  "6.658299922943115",
+                                                       "observedAt":  1793037155,
+                                                       "observedAtUTC":  "2026-10-26T17:52:35+00:00",
+                                                       "ageSeconds":  168
+                                                   }
+                                               ],
+                                   "deviationBps":  null,
+                                   "approvedForOracle":  false,
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "EUR":  {
+                                   "unit":  "EUR per USD",
+                                   "deviationBps":  "1.678687731200653937971387080",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "0.89496",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/EUR",
+                                                       "rate":  "0.89496",
+                                                       "bid":  "0.89494",
+                                                       "ask":  "0.89498",
+                                                       "observedAt":  1793052382,
+                                                       "observedAtUTC":  "2026-10-26T22:06:22.0000000Z",
+                                                       "ageSeconds":  884
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "GBP":  {
+                                   "unit":  "GBP per USD",
+                                   "deviationBps":  "0.5345528048987546068224877721",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "0.7496252",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/GBP",
+                                                       "rate":  "0.7496252",
+                                                       "bid":  "0.749569",
+                                                       "ask":  "0.7496814",
+                                                       "observedAt":  1793052370,
+                                                       "observedAtUTC":  "2026-10-26T22:06:10.0000000Z",
+                                                       "ageSeconds":  896
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "INR":  {
+                                   "unit":  "INR per USD",
+                                   "deviationBps":  null,
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "95.18465",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/INR",
+                                                       "rate":  "95.18465",
+                                                       "bid":  "95.1844",
+                                                       "ask":  "95.1849",
+                                                       "observedAt":  1793048561,
+                                                       "observedAtUTC":  "2026-10-26T21:02:41.0000000Z",
+                                                       "ageSeconds":  161
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "JPY":  {
+                                   "unit":  "JPY per USD",
+                                   "deviationBps":  "0.5399326820516126259777818029",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "157.497",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/JPY",
+                                                       "rate":  "157.497",
+                                                       "bid":  "157.487",
+                                                       "ask":  "157.507",
+                                                       "observedAt":  1793051154,
+                                                       "observedAtUTC":  "2026-10-26T21:45:54.0000000Z",
+                                                       "ageSeconds":  613
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "KRW":  {
+                                   "unit":  "KRW per USD",
+                                   "deviationBps":  "6.866151693807176556335622964",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "1325.42",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/KRW",
+                                                       "rate":  "1325.42",
+                                                       "bid":  "1324.42",
+                                                       "ask":  "1326.42",
+                                                       "observedAt":  1793051161,
+                                                       "observedAtUTC":  "2026-10-26T21:46:01.0000000Z",
+                                                       "ageSeconds":  606
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "MXN":  {
+                                   "unit":  "MXN per USD",
+                                   "deviationBps":  "8.904763923089392240537027671",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "18.5689",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/MXN",
+                                                       "rate":  "18.5689",
+                                                       "bid":  "18.5539",
+                                                       "ask":  "18.5839",
+                                                       "observedAt":  1793052382,
+                                                       "observedAtUTC":  "2026-10-26T22:06:22.0000000Z",
+                                                       "ageSeconds":  884
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "NZD":  {
+                                   "unit":  "NZD per USD",
+                                   "deviationBps":  "1.621683308769326579577437583",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "1.759955",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/NZD",
+                                                       "rate":  "1.759955",
+                                                       "bid":  "1.75953",
+                                                       "ask":  "1.76038",
+                                                       "observedAt":  1793051135,
+                                                       "observedAtUTC":  "2026-10-26T21:45:35.0000000Z",
+                                                       "ageSeconds":  632
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "RUB":  {
+                                   "unit":  "RUB per USD",
+                                   "deviationBps":  null,
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "80.7990375",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/RUB",
+                                                       "rate":  "80.7990375",
+                                                       "bid":  "80.795011",
+                                                       "ask":  "80.803064",
+                                                       "observedAt":  1793051113,
+                                                       "observedAtUTC":  "2026-10-26T21:45:13.0000000Z",
+                                                       "ageSeconds":  654
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "SAR":  {
+                                   "status":  "NO_FRESH_MARKET_QUOTE",
+                                   "marketPrice":  null,
+                                   "unit":  "SAR per USD",
+                                   "sources":  [
+
+                                               ],
+                                   "deviationBps":  null,
+                                   "approvedForOracle":  false,
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "SGD":  {
+                                   "unit":  "SGD per USD",
+                                   "deviationBps":  "0.5858389754895302869711091025",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "1.280895",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/SGD",
+                                                       "rate":  "1.280895",
+                                                       "bid":  "1.28072",
+                                                       "ask":  "1.28107",
+                                                       "observedAt":  1793052075,
+                                                       "observedAtUTC":  "2026-10-26T22:01:15.0000000Z",
+                                                       "ageSeconds":  891
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "TRY":  {
+                                   "unit":  "TRY per USD",
+                                   "deviationBps":  "0.7839948494104444839884531723",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "49.7773",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/TRY",
+                                                       "rate":  "49.7773",
+                                                       "bid":  "49.7723",
+                                                       "ask":  "49.7823",
+                                                       "observedAt":  1793052074,
+                                                       "observedAtUTC":  "2026-10-26T22:01:14.0000000Z",
+                                                       "ageSeconds":  892
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               },
+                       "USD":  {
+                                   "status":  "USD_IDENTITY",
+                                   "marketPrice":  "1",
+                                   "sources":  [
+
+                                               ],
+                                   "approvedForOracle":  false
+                               },
+                       "ZAR":  {
+                                   "unit":  "ZAR per USD",
+                                   "deviationBps":  "3.624750141474726664208993300",
+                                   "approvedForOracle":  false,
+                                   "marketPrice":  "16.65445",
+                                   "status":  "SINGLE_SOURCE_ONLY",
+                                   "sources":  [
+                                                   {
+                                                       "provider":  "AwesomeAPI",
+                                                       "pair":  "USD/ZAR",
+                                                       "rate":  "16.65445",
+                                                       "bid":  "16.6378",
+                                                       "ask":  "16.6711",
+                                                       "observedAt":  1793052076,
+                                                       "observedAtUTC":  "2026-10-26T22:01:16.0000000Z",
+                                                       "ageSeconds":  890
+                                                   }
+                                               ],
+                                   "displayStatus":  "SOURCE_DELAYED"
+                               }
+                   },
+    "collectedAt":  "2026-10-26T22:21:07.5541060+00:00",
+    "windowsCheckedAt":  "2026-10-26T22:26:08.2731978+00:00",
+    "approvedForOracle":  false,
+    "approvedForMint":  false
+}

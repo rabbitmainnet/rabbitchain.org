@@ -14,8 +14,15 @@ import RabbitFaucetPanel from '../components/RabbitFaucetPanel'
 import RabbitLiquidityPanel from '../components/RabbitLiquidityPanel'
 import RabbitTokenFactoryPanel from '../components/RabbitTokenFactoryPanel'
 import RabbitLaunchpoolPanel from '../components/RabbitLaunchpoolPanel'
+import RabbitFXPanel from '../components/RabbitFXPanel'
 
 const tools = {
+  fx: {
+    icon: Coins,
+    label: 'GLOBAL FX',
+    title: 'Rabbit Global FX',
+    intro: 'Explore fxUSD, four verified smart contracts and the future of synthetic world currencies. Experimental Rabbit Testnet beta.',
+  },
   swap: { icon: Repeat2, label: 'SWAP', title: 'Rabbit Swap', intro: 'Trade Rabbit Testnet assets through the verified RabbitSwap Router and live liquidity pools.' },
   liquidity: { icon: Waves, label: 'LIQUIDITY', title: 'Liquidity', intro: 'Create and manage RabbitSwap liquidity positions. Permissionless pairs are supported by the Testnet contracts.' },
   launchpool: { icon: Flame, label: 'LAUNCHPOOL', title: 'Launchpool', intro: 'Discover official launch campaigns and participation windows in one place.' },
@@ -33,7 +40,7 @@ const tools = {
 }
 
 const toolOrder = ['swap', 'liquidity', 'staking', 'bridge', 'p2p', 'vrf', 'factory', 'launchpool', 'faucet']
-const testnetToolOrder = ['swap', 'liquidity', 'factory', 'launchpool', 'vrf', 'faucet']
+const testnetToolOrder = ['swap', 'liquidity', 'factory', 'fx', 'launchpool', 'vrf', 'faucet']
 
 
 function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwork, networkKey, toast }) {
@@ -41,6 +48,17 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
   const Icon = entry.icon
   const network = PLATFORM_NETWORKS[networkKey] || PLATFORM_NETWORKS.testnet
   const statusText = platformModuleStatus(networkKey, tool)
+
+  if (tool === 'fx') {
+    return (
+      <RabbitFXPanel
+        walletState={walletState}
+        onConnect={onConnect}
+        onSwitchNetwork={() => onSwitchNetwork?.(NETWORKS.testnet)}
+        networkKey={networkKey}
+      />
+    )
+  }
 
   if (tool === 'swap') {
     return (
@@ -440,7 +458,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
 
         <p className="product-disclaimer">
           Rabbit VRF protocol rules activated at block 136193 after DKG preparation at 136065.
-          V2.4.16 includes authenticated VRF relay with VRF economics and WorkSeat admission active from block 320,000; WorkSeat liveness V2 activates at block 323,800. Any user or contract can request randomness without mining. Testnet requests can remain pending;
+          V2.4.15 includes authenticated VRF relay with new VRF economics and WorkSeat admission scheduled at Testnet block 320,000. Any user or contract can request randomness without mining. Testnet requests can remain pending;
           use randomness only after canonical completion has been verified.
         </p>
       </div>
@@ -614,7 +632,7 @@ export default function Platform({ walletState, walletProvider, onConnect, onAdd
           <div className="platform-v2-window">
             <div className="platform-v2-window-head"><div><img src="/rabbit-mark.png" alt="" /><span><b>RABBIT PLATFORM</b><small>{networkName.toUpperCase()} WORKSPACE · CHAIN ID {networkChainId}</small></span></div><b>{platformConfig.status}</b></div>
             <div className="platform-v2-wallet"><div><span>CONNECTED WALLET</span><strong>{walletState?.account ? `${walletState.account.slice(0, 8)}…${walletState.account.slice(-6)}` : 'Not connected'}</strong></div><button onClick={onConnect}>{walletState?.account ? 'Manage' : 'Connect'}</button></div>
-            <div className="platform-v2-module-list">{visibleTools.map((key, index) => { const Icon = tools[key].icon; return <Link to={`/platform/${key}`} key={key}><span>0{index + 1}</span><Icon size={18} /><div><b>{tools[key].title}</b><small>{tools[key].intro}</small></div><em>{platformModuleStatus(platformNetwork, key)}</em><ArrowUpRight size={15} /></Link> })}</div>
+            <div className="platform-v2-module-list">{visibleTools.map((key, index) => { const Icon = tools[key].icon; return <Link to={`/platform/${key}`} key={key}><span>0{index + 1}</span><Icon size={18} /><div><b>{tools[key].title}</b><small>{tools[key].intro}</small></div><em>{key === 'fx' ? 'EXPERIMENTAL' : platformModuleStatus(platformNetwork, key)}</em><ArrowUpRight size={15} /></Link> })}</div>
           </div>
         </div>
       </section>

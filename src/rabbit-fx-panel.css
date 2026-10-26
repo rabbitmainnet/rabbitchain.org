@@ -1,0 +1,45 @@
+
+.rabbit-fx-product { width:100%; min-width:0; }
+.rabbit-fx-product__body { padding:clamp(18px,3vw,34px); }
+.rabbit-fx-product__intro {display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:24px}
+.rabbit-fx-product__kicker,.rabbit-fx-product__section-head span {font-size:11px;letter-spacing:1.6px;font-weight:800;color:#16b988}
+.rabbit-fx-product__intro h1 {margin:10px 0;font-size:clamp(28px,4vw,44px);letter-spacing:-1.3px}
+.rabbit-fx-product__intro h1 em {font-style:normal;color:#16b988}
+.rabbit-fx-product__intro p,.rabbit-fx-product__section p {opacity:.72;line-height:1.65}
+.rabbit-fx-product__network {white-space:nowrap;font-size:11px;letter-spacing:.8px;border:1px solid #dfe5ee;padding:12px;border-radius:10px}
+.rabbit-fx-product__network b {margin-left:8px}
+.rabbit-fx-product__warning {display:flex;gap:12px;align-items:flex-start;background:#fff9ed;border:1px solid #f0ddaa;border-radius:12px;padding:15px;color:#604b24}
+.rabbit-fx-product__warning p {margin:0;line-height:1.65;font-size:13px}
+.rabbit-fx-product__toolbar {display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:22px 0}
+.rabbit-fx-product__toolbar>div:first-child {display:grid;gap:5px}
+.rabbit-fx-product__toolbar span {font-size:10px;letter-spacing:1.2px;opacity:.65}
+.rabbit-fx-product__toolbar strong {font-size:14px}
+.rabbit-fx-product__toolbar-actions {display:flex;gap:9px;flex-wrap:wrap}
+.rabbit-fx-product__toolbar-actions button {display:inline-flex;align-items:center;gap:7px}
+.rabbit-fx-product__error {padding:12px;border-radius:10px;color:#8e3131;background:#fff0f0}
+.rabbit-fx-product__metrics {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rabbit-fx-product__metrics article,.rabbit-fx-product__operations article {border:1px solid #e2e6ef;border-radius:13px;padding:20px;background:#fff;min-width:0}
+.rabbit-fx-product__metrics article {display:grid;gap:10px}
+.rabbit-fx-product__metrics small,.rabbit-fx-product__metrics span {font-size:11px;opacity:.66}
+.rabbit-fx-product__metrics strong {font-size:clamp(18px,2vw,28px);word-break:break-word}
+.rabbit-fx-product__section {margin-top:35px}
+.rabbit-fx-product__section-head {display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:16px}
+.rabbit-fx-product__section-head h2 {margin:6px 0 0;font-size:24px}
+.rabbit-fx-product__section-head small {font-size:11px;color:#16b988;font-weight:800}
+.rabbit-fx-product__operations {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.rabbit-fx-product__operations h3 {margin:0 0 6px}
+.rabbit-fx-product__operations p {font-size:13px;min-height:23px}
+.rabbit-fx-product__operations button {border:1px solid #e1e5ed;background:#f1f3f7;color:#83899a;padding:11px 14px;border-radius:9px;cursor:not-allowed;width:100%}
+.rabbit-fx-product__contracts {display:grid;gap:9px}
+.rabbit-fx-product__contracts a {display:flex;gap:14px;align-items:center;border:1px solid #e1e6ee;border-radius:11px;padding:15px;text-decoration:none;color:inherit;background:#fff}
+.rabbit-fx-product__contracts a>div {display:grid;gap:4px;min-width:150px}
+.rabbit-fx-product__contracts small {color:#16b988}
+.rabbit-fx-product__contracts code {font-size:11px;overflow-wrap:anywhere;flex:1}
+.rabbit-fx-product__contracts a:hover {border-color:#16b988}
+.rabbit-fx-product__foot {font-size:12px;opacity:.7;line-height:1.8;margin-top:26px}
+@media(max-width:750px) {
+ .rabbit-fx-product__intro {align-items:flex-start;flex-direction:column}
+ .rabbit-fx-product__metrics {grid-template-columns:1fr}
+ .rabbit-fx-product__operations {grid-template-columns:1fr}
+ .rabbit-fx-product__contracts a {align-items:flex-start;flex-wrap:wrap}
+}

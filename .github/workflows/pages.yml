@@ -47,6 +47,7 @@ jobs:
             docs
             platform
             platform/swap
+            platform/fx
             embed/swap
             embed/liquidity
             embed/factory

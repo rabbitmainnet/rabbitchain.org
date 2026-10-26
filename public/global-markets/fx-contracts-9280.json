@@ -1,0 +1,192 @@
+﻿{
+    "project":  "Rabbit Global Markets",
+    "network":  "Rabbit Chain Testnet",
+    "chainId":  9280,
+    "rpc":  "https://rpc-testnet.rabbitchain.org",
+    "oracleV7":  "0xE8D1675cCe79586F044793e577033235D7A4035C",
+    "simulatedUSD":  "tRUSD",
+    "totalMarkets":  20,
+    "totalContracts":  60,
+    "markets":  [
+                    {
+                        "currency":  "AED",
+                        "symbol":  "fxAED",
+                        "vault":  "0x336417e02271031f02223cc145516cf3930e5078",
+                        "token":  "0x39b830f4dcdefda10865bf1258c7e88ddca4593a",
+                        "backstop":  "0x5a460934f9e5c93dfbc242769cd3ce1061359d60",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "ARS",
+                        "symbol":  "fxARS",
+                        "vault":  "0xBEa55bf9b0Ea3815Aad518ae4b843fC73021a136",
+                        "token":  "0xa47fcf48dd6d9c7e26e1137f7e3417b76628d7a9",
+                        "backstop":  "0x2e2e92246c68db6e29d9ce075af22e4714c03ba0",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "AUD",
+                        "symbol":  "fxAUD",
+                        "vault":  "0xea3182121f88720e489A537ed0b01Fc6d8a2eae2",
+                        "token":  "0x63c8701e560729daa6d67c7d2a436e9a24728b2e",
+                        "backstop":  "0x2f17d1487dd5870c4f018a38c47ec9037b91ed07",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "BRL",
+                        "symbol":  "fxBRL",
+                        "vault":  "0x6256047aF682773cdbCcB0bd3eB7aDD17Aa0e41b",
+                        "token":  "0x5c6016ba6929e01fa76880b5c4fecb40a7a33627",
+                        "backstop":  "0xae5ada9762047cd67336a127bcf27e4860d6cec2",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "CAD",
+                        "symbol":  "fxCAD",
+                        "vault":  "0xC070188d9a2055bC794ed2b824E2A01Ab593E850",
+                        "token":  "0x063927cf0bcb618013ac197aeeff360c0433d3ec",
+                        "backstop":  "0x1a0c4ec4529d8e4ffee123c226ef3e53d5334673",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "CHF",
+                        "symbol":  "fxCHF",
+                        "vault":  "0x6652f303c93a0A82d595857B568b496b9E0C97C4",
+                        "token":  "0xbbb5a7afbfcde01581bdfcfc1675d9761507ebb7",
+                        "backstop":  "0x66da2c7e601f6e553cdadc8caf8366349b85aa38",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "CNY",
+                        "symbol":  "fxCNY",
+                        "vault":  "0xaC96Fc5e726840008B0d5e76A59b895f5C73b61A",
+                        "token":  "0x2339b190aeaee7d885a1bcf14e25269de21870f0",
+                        "backstop":  "0x59a89625629c09f8cd60a26fb256ba72bb690b2a",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "EUR",
+                        "symbol":  "fxEUR",
+                        "vault":  "0x260D8FB8c46C876aD6751F9F855B3D2EB3741B08",
+                        "token":  "0xcaa8de65256892d8b11680cf4fbb44b954820fb7",
+                        "backstop":  "0xea1e1c2fa5a3277f9c3c7319f08ec4faf4da739d",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "GBP",
+                        "symbol":  "fxGBP",
+                        "vault":  "0xA952dD420b815a87b83865A3f522055fDA01F9F5",
+                        "token":  "0xbd7d5320b45bfe81b3b55e6a8bce2731969e6034",
+                        "backstop":  "0xaeb4cc6f89a1d4e0a0e294db4675c038d7d4330c",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "INR",
+                        "symbol":  "fxINR",
+                        "vault":  "0x74AFd1f6186EB1b7bc875cDE12eB1C14EA49eCc0",
+                        "token":  "0xcb55d7b4a0ea2e406fb2375ab3202d1d7248574b",
+                        "backstop":  "0x2708ea965effb2c10bc4c23dddfad1c33fb689b7",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "JPY",
+                        "symbol":  "fxJPY",
+                        "vault":  "0xBAf4CaDc8651b1502d80a4411A81b1d723617f46",
+                        "token":  "0x21dd96213cc08e7ef810b6ebd122abce1e92378f",
+                        "backstop":  "0xe866826d4e9194cc78764adf8e8328270371ad86",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "KRW",
+                        "symbol":  "fxKRW",
+                        "vault":  "0xB8C1b698148430F712f2a785839929B41340acE7",
+                        "token":  "0x545827d55a5c0fe81bb26684e62119797f800dcb",
+                        "backstop":  "0x469f57c20f5b8a229d34cf5041dfb04358b60004",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "MXN",
+                        "symbol":  "fxMXN",
+                        "vault":  "0x206C4D5478c465A5747036c78fD1cA0606fA73d1",
+                        "token":  "0xd0e1b02d7c5bb816846a115ecee6ddfbbbb9cecc",
+                        "backstop":  "0x86ddd12503149e0681d2c2a03a2084b379a737a5",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "NZD",
+                        "symbol":  "fxNZD",
+                        "vault":  "0x23212910F109748dF7e5fcA54a8fCA90a97218b8",
+                        "token":  "0xe902bb412672414943684b537ad74cac9819eeb8",
+                        "backstop":  "0xe55e08fc72b6becb596c968255653863ee3d5c29",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "RUB",
+                        "symbol":  "fxRUB",
+                        "vault":  "0x3633be4E2e8Db27b412273674e2b3d5eC58c8144",
+                        "token":  "0xb8b061ac92b80971bcb01e0eda452bb5e953c250",
+                        "backstop":  "0x086e42286c72e44b3ab3570c0193f46fda298743",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "SAR",
+                        "symbol":  "fxSAR",
+                        "vault":  "0x1fb2F1f48eEd7B3f131A31baf19E4E23303B2694",
+                        "token":  "0xa3f297ea90cf3bc2c0647f7119e2249bb1d69350",
+                        "backstop":  "0x2f3a9ba053bc4c19a54c03208ca61c6c4af4e42e",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "SGD",
+                        "symbol":  "fxSGD",
+                        "vault":  "0x323DEb242Cd62d818F3f2543587f1B7050b83208",
+                        "token":  "0xa669abb40f12c11d0daf1e408c92d1564471f65a",
+                        "backstop":  "0xd8006b6cbad3d047b1f94ca98015ee36ffe22d20",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "TRY",
+                        "symbol":  "fxTRY",
+                        "vault":  "0xde99fB471b597a8D30A9A2A574E9E843DE117174",
+                        "token":  "0x950f6c4602ea2de907001f2b9c66f6a4265b71b2",
+                        "backstop":  "0x64e1e21f7ab93808c888c642f1180e39fe4c1cb4",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "USD",
+                        "symbol":  "fxUSD",
+                        "vault":  "0x4f8b12a65452d83B9eDf869cA9Bec7DE245Db689",
+                        "token":  "0xa31bce5c70baf6dd1a72759fe50cb865c0656c37",
+                        "backstop":  "0x48a462b0edfe53943fb46b3c1bac3aa827a7d8d2",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    },
+                    {
+                        "currency":  "ZAR",
+                        "symbol":  "fxZAR",
+                        "vault":  "0x15825999A8aad6213781728d3068CA5a115714a3",
+                        "token":  "0xc835c225e15967a937ac8757760a0e0ba68f87ba",
+                        "backstop":  "0x166764a714b3ed1f84133d0427ff67517347e098",
+                        "mintEnabled":  false,
+                        "status":  "VERIFIED"
+                    }
+                ]
+}
