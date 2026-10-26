@@ -1,8 +1,8 @@
 import { NETWORKS } from './networks'
 
-export const RELEASE_TAG = 'v2.4.15'
-export const RELEASE_COMMIT = '0ed187dffbe7a516ccc4f9196c6a6b165c8a6500'
-export const REQUIRED_VERSION = 'V2.4.15'
+export const RELEASE_TAG = 'v2.4.16'
+export const RELEASE_COMMIT = 'd9815e734239a021e0faa51d5e58c58457888db5'
+export const REQUIRED_VERSION = 'V2.4.16'
 export const STABILIZATION_BLOCK = 50500
 export const FAIRNESS_BLOCK = 73000
 export const LIVENESS_V3_BLOCK = 77000
@@ -10,8 +10,9 @@ export const LIVENESS_V4_BLOCK = 97991
 export const LIVENESS_V5_BLOCK = 115000
 export const LIVENESS_V6_BLOCK = 115022
 
-// Historical activations remain unchanged; the v2.4.15 Testnet fork is scheduled at 320000.
+// Historical activations remain unchanged; WorkSeat liveness V2 activates at 323800.
 export const FORK_2414_BLOCK = 320000
+export const WORK_SEAT_LIVENESS_V2_BLOCK = 323800
 export const VRF_AVAILABILITY_V2_BLOCK = 173057
 export const VRF_DKG_PREPARATION_BLOCK = 136065
 export const VRF_LIVENESS_BLOCK = 136193
@@ -20,10 +21,10 @@ export const MINING_REWARD_V5_BLOCK = 153601
 export const GENESIS_SHA256 = '4970159f077b62b7aa9bde1f81cb61ae837b42ef64861d7b23241e1af4d75c9f'
 
 export const RELEASE_URL =
-  'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.4.15'
+  'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.4.16'
 
 export const RELEASE_DOWNLOAD_BASE =
-  'https://github.com/rabbitmainnet/rabbit-geth/releases/download/v2.4.15'
+  'https://github.com/rabbitmainnet/rabbit-geth/releases/download/v2.4.16'
 
 export const DOWNLOADS = [
   {
@@ -31,32 +32,32 @@ export const DOWNLOADS = [
     platform: 'Windows',
     architecture: 'AMD64',
     format: 'ZIP',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.15-windows-amd64.zip`,
-    sha256: '3523c5cb605d2ad7d7e464e8a340b8698df84675ad73bce7840905735172b14d',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.16-windows-amd64.zip`,
+    sha256: '4fb21d4853b0dff7fc9f7bca7a0359d9554f67a3240550d4a92cab6add30be9b',
   },
   {
     key: 'linux-amd64',
     platform: 'Linux',
     architecture: 'AMD64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.15-linux-amd64.tar.gz`,
-    sha256: 'bdc5875f4239a3c33c6ba13179b459a2cec3060a8dce584e92c70a7d413b1fa0',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.16-linux-amd64.tar.gz`,
+    sha256: '9ef9dfdbff77ecd37879f628534ec198b503da961ea2c16e1765fd871a8721fa',
   },
   {
     key: 'darwin-amd64',
     platform: 'macOS',
     architecture: 'Intel / AMD64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.15-darwin-amd64.tar.gz`,
-    sha256: 'b92e39bd4e76e93ebe4508c35babffa496d580af648eecdbe3c8591eee88c6e2',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.16-darwin-amd64.tar.gz`,
+    sha256: '19c8b6eceb92c331293c316e19dfe278d30f6d2b9ac5d18e43ef9c9ef307e9af',
   },
   {
     key: 'darwin-arm64',
     platform: 'macOS',
     architecture: 'Apple Silicon / ARM64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.15-darwin-arm64.tar.gz`,
-    sha256: 'e9efa24d7f453953ed4b1f4ad0c4594a789179a6cd434e4c38fcaaf3391d217a',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.16-darwin-arm64.tar.gz`,
+    sha256: 'a9558b629748995dfdc80994003424afa106718b67082c13fb4ae4cf7054b036',
   },
 ]
 
@@ -86,6 +87,7 @@ export const RELEASE = {
   forkBlock: FORK_2414_BLOCK,
   vrfEconomicsV2Block: FORK_2414_BLOCK,
   workSeatAdmissionV2Block: FORK_2414_BLOCK,
+  workSeatLivenessV2Block: WORK_SEAT_LIVENESS_V2_BLOCK,
 }
 
 export function releaseLabel() {
