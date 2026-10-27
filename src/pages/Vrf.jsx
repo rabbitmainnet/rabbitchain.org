@@ -91,7 +91,7 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
     }
 
     check()
-    const timer = setInterval(check, 3000)
+    const timer = setInterval(check, 1000)
 
     return () => {
       cancelled = true
