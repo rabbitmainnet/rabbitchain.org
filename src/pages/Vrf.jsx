@@ -103,61 +103,134 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
 
   return (
     <div style={{
-      padding: '14px 18px',
-      margin: '14px 0',
+      padding: '22px',
+      margin: '16px 0',
       border: '1px solid #e1e3ed',
-      borderRadius: 12,
+      borderRadius: 18,
       background: '#fff'
     }}>
       <div style={{
-        fontSize: 11,
-        color: '#777b90',
-        fontWeight: 700
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: 10
       }}>
-        RABBIT VRF  VERIFIED NODE TELEMETRY
+        <strong style={{ fontSize: 12, color: '#15162b' }}>
+          RABBIT VRF  VERIFIED PERFORMANCE
+        </strong>
+        {result && (
+          <span style={{
+            padding: '5px 10px',
+            background: '#e8f8ef',
+            color: '#16845b',
+            borderRadius: 20,
+            fontSize: 11,
+            fontWeight: 700
+          }}>
+            PROOFHASH MATCHED
+          </span>
+        )}
       </div>
 
       {result ? (
         <>
-          <strong style={{
-            display: 'block',
-            marginTop: 8,
-            fontSize: 30,
-            color: '#16845b',
-            fontVariantNumeric: 'tabular-nums'
-          }}>
-            {result.collectMs.toFixed(3)} ms
-          </strong>
+          <div style={{ marginTop: 22 }}>
+            <div style={{ color: '#777b90', fontSize: 12 }}>
+              Threshold proof collection processing
+            </div>
 
-          <small>
-            Internal threshold-proof collection processing.
-          </small>
+            <div style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              flexWrap: 'wrap',
+              gap: 8,
+              marginTop: 7
+            }}>
+              <strong style={{
+                color: '#08a650',
+                fontSize: 38,
+                fontWeight: 800,
+                fontVariantNumeric: 'tabular-nums'
+              }}>
+                {(result.collectMs / 1000).toFixed(3)}
+              </strong>
+              <span style={{ color: '#565b69', fontSize: 16 }}>
+                seconds
+              </span>
+            </div>
 
-          <div style={{
-            marginTop: 12,
-            fontWeight: 700,
-            fontVariantNumeric: 'tabular-nums'
-          }}>
-            {result.observedMs.toFixed(3)} ms
+            <div style={{
+              marginTop: 5,
+              color: '#08a650',
+              fontWeight: 700,
+              fontSize: 13
+            }}>
+               {Math.round(result.collectMs)} milliseconds of measured processing
+            </div>
           </div>
 
-          <small>
-            First logged contribution validation to proof readiness.
-            This interval may include waiting time.
-          </small>
-
           <div style={{
-            marginTop: 10,
-            color: '#16845b',
-            fontSize: 12
+            marginTop: 22,
+            paddingTop: 18,
+            borderTop: '1px solid #e7e9ef',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: 20
           }}>
-            ProofHash matched on-chain.
-            Source: Rabbit RPC node.
+            <div>
+              <div style={{ color: '#777b90', fontSize: 12 }}>
+                Observed proof readiness
+              </div>
+              <strong style={{
+                display: 'block',
+                marginTop: 7,
+                fontSize: 21,
+                fontVariantNumeric: 'tabular-nums'
+              }}>
+                {(result.observedMs / 1000).toFixed(3)} s
+              </strong>
+            </div>
+
+            <div>
+              <div style={{ color: '#777b90', fontSize: 12 }}>
+                End-to-end browser response
+              </div>
+              <strong style={{
+                display: 'block',
+                marginTop: 7,
+                fontSize: 14
+              }}>
+                See Request Status below
+              </strong>
+            </div>
           </div>
+
+          <p style={{
+            color: '#777b90',
+            fontSize: 12,
+            margin: '18px 0 0',
+            lineHeight: 1.6
+          }}>
+            Node-measured collection processing and observed proof
+            readiness are separate timings. The readiness interval
+            may include waiting. End-to-end fulfillment is shown
+            in Request Status. ProofHash matched on-chain.
+          </p>
         </>
       ) : (
-        <div style={{ marginTop: 8, color: '#777b90' }}>
-          Awaiting matching RPC telemetry...
+        <div style={{ marginTop: 15 }}>
+          <div style={{ color: '#777b90', fontSize: 14 }}>
+            Waiting for matching node telemetry...
+          </div>
+          <small style={{
+            display: 'block',
+            marginTop: 7,
+            color: '#777b90'
+          }}>
+            Randomness requests and on-chain verification continue
+            independently of telemetry availability.
+          </small>
         </div>
       )}
     </div>
