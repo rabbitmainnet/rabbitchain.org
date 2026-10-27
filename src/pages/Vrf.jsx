@@ -37,70 +37,62 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
     }
 
     let cancelled = false
-    const configured = import.meta.env.VITE_RABBIT_VRF_TELEMETRY_URL
-    const localPreview =
-      ['127.0.0.1', 'localhost'].includes(window.location.hostname) &&
-      window.location.port === '5188'
-    const base = localPreview
-      ? 'http://127.0.0.1:8768'
-      : (configured || 'https://rabbit-vrf-telemetry.fernandoaugusto780.workers.dev')
+    const base = 'https://rpc-testnet.rabbitchain.org'
 
     setResult(null)
-    // Public static evidence is used when no telemetry API is configured.
 
     const check = async () => {
       try {
         const response = await fetch(
-          `${base ? `${base.replace(/\/$/, '')}/api/vrf/telemetry/${requestId}` : `/vrf-telemetry/${requestId}.json`}`,
+          `${base}/api/vrf/telemetry/${requestId}`,
           { cache: 'no-store' }
         )
+
         if (!response.ok) return
 
         const data = await response.json()
-        const evidence = data.evidence
-        const milliseconds = data.measurement?.observedToProofMs
-        const proofShort = data.measurement?.proofShort
 
         if (
-          !Number.isFinite(milliseconds) ||
-          milliseconds < 0 ||
+          data.status !== 'matched' ||
           data.requestId?.toLowerCase() !== requestId.toLowerCase()
+        ) return
+
+        const collectMs = Number(data.collectProcessingMs)
+        const observedMs = Number(data.firstValidationToProofMs)
+
+        if (
+          !Number.isFinite(collectMs) ||
+          !Number.isFinite(observedMs) ||
+          collectMs < 0 ||
+          observedMs < 0
         ) return
 
         const chain = await readCoordinator('getRequest', [requestId])
         const chainProof = String(chain[9]).toLowerCase()
         const chainRandomness = String(chain[8]).toLowerCase()
+        const proofShort = String(data.proofShort || '').toLowerCase()
 
         const onChainValid =
           Number(chain[10]) === 2 &&
-          /^0x(?!0{64}$)[0-9a-f]{64}$/i.test(chainProof) &&
-          /^0x(?!0{64}$)[0-9a-f]{64}$/i.test(chainRandomness)
+          /^0x(?!0{64}$)[0-9a-f]{64}$/.test(chainProof) &&
+          /^0x(?!0{64}$)[0-9a-f]{64}$/.test(chainRandomness)
 
-        const logProofMatches =
-          typeof proofShort === 'string' &&
-          /^[0-9a-f]{6}\.\.[0-9a-f]{6}$/i.test(proofShort) &&
-          chainProof.slice(2, 8) === proofShort.slice(0, 6).toLowerCase() &&
-          chainProof.slice(-6) === proofShort.slice(-6).toLowerCase()
+        const hashMatches =
+          /^[0-9a-f]{6}\.\.[0-9a-f]{6}$/.test(proofShort) &&
+          chainProof.slice(2, 8) === proofShort.slice(0, 6) &&
+          chainProof.slice(-6) === proofShort.slice(-6)
 
-        const savedEvidenceMatches =
-          evidence?.requestId?.toLowerCase() === requestId.toLowerCase() &&
-          chainProof === String(evidence.proofHash).toLowerCase() &&
-          chainRandomness === String(evidence.randomness).toLowerCase()
-
-        const confirmed =
-          onChainValid && logProofMatches &&
-          (!evidence || savedEvidenceMatches)
-
-        if (!cancelled && confirmed) {
-          setResult({ milliseconds, evidence })
+        if (!cancelled && onChainValid && hashMatches) {
+          setResult({ collectMs, observedMs })
         }
       } catch {
-        // Keep on-chain status independent of telemetry availability.
+        // On-chain request remains independent of telemetry.
       }
     }
 
     check()
     const timer = setInterval(check, 3000)
+
     return () => {
       cancelled = true
       clearInterval(timer)
@@ -117,25 +109,55 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
       borderRadius: 12,
       background: '#fff'
     }}>
-      <div style={{ fontSize: 11, color: '#777b90', fontWeight: 700 }}>
-        THRESHOLD PROOF GENERATION
+      <div style={{
+        fontSize: 11,
+        color: '#777b90',
+        fontWeight: 700
+      }}>
+        RABBIT VRF  VERIFIED NODE TELEMETRY
       </div>
+
       {result ? (
         <>
           <strong style={{
-            display: 'block', marginTop: 6, fontSize: 30,
-            color: '#16845b', fontVariantNumeric: 'tabular-nums'
+            display: 'block',
+            marginTop: 8,
+            fontSize: 30,
+            color: '#16845b',
+            fontVariantNumeric: 'tabular-nums'
           }}>
-            {(result.milliseconds / 1000).toFixed(3)} s
+            {result.collectMs.toFixed(3)} ms
           </strong>
+
           <small>
-            Node-observed first contribution to proof readiness.
-            ProofHash and randomness matched on-chain.
+            Internal threshold-proof collection processing.
           </small>
+
+          <div style={{
+            marginTop: 12,
+            fontWeight: 700,
+            fontVariantNumeric: 'tabular-nums'
+          }}>
+            {result.observedMs.toFixed(3)} ms
+          </div>
+
+          <small>
+            First logged contribution validation to proof readiness.
+            This interval may include waiting time.
+          </small>
+
+          <div style={{
+            marginTop: 10,
+            color: '#16845b',
+            fontSize: 12
+          }}>
+            ProofHash matched on-chain.
+            Source: Rabbit RPC node.
+          </div>
         </>
       ) : (
-        <div style={{ marginTop: 7, color: '#777b90' }}>
-          Measurement unavailable
+        <div style={{ marginTop: 8, color: '#777b90' }}>
+          Awaiting matching RPC telemetry...
         </div>
       )}
     </div>
