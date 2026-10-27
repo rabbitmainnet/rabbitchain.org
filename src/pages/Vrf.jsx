@@ -27,6 +27,120 @@ import { NETWORKS } from '../config/networks'
 import { RABBIT_VRF } from '../config/vrf'
 import PlatformNetworkSwitch from '../components/PlatformNetworkSwitch'
 
+function VrfProofTelemetry({ requestId, readCoordinator }) {
+  const [result, setResult] = useState(null)
+
+  useEffect(() => {
+    if (!/^0x[0-9a-f]{64}$/i.test(requestId || '')) {
+      setResult(null)
+      return
+    }
+
+    let cancelled = false
+    const configured = import.meta.env.VITE_RABBIT_VRF_TELEMETRY_URL
+    const localPreview =
+      ['127.0.0.1', 'localhost'].includes(window.location.hostname) &&
+      window.location.port === '5188'
+    const base = localPreview
+      ? 'http://127.0.0.1:8768'
+      : (configured || '')
+
+    setResult(null)
+    if (!base) return
+
+    const check = async () => {
+      try {
+        const response = await fetch(
+          `${base.replace(/\/$/, '')}/api/vrf/telemetry/${requestId}`,
+          { cache: 'no-store' }
+        )
+        if (!response.ok) return
+
+        const data = await response.json()
+        const evidence = data.evidence
+        const milliseconds = data.measurement?.observedToProofMs
+        const proofShort = data.measurement?.proofShort
+
+        if (
+          !Number.isFinite(milliseconds) ||
+          milliseconds < 0 ||
+          data.requestId?.toLowerCase() !== requestId.toLowerCase()
+        ) return
+
+        const chain = await readCoordinator('getRequest', [requestId])
+        const chainProof = String(chain[9]).toLowerCase()
+        const chainRandomness = String(chain[8]).toLowerCase()
+
+        const onChainValid =
+          Number(chain[10]) === 2 &&
+          /^0x(?!0{64}$)[0-9a-f]{64}$/i.test(chainProof) &&
+          /^0x(?!0{64}$)[0-9a-f]{64}$/i.test(chainRandomness)
+
+        const logProofMatches =
+          typeof proofShort === 'string' &&
+          /^[0-9a-f]{6}\.\.[0-9a-f]{6}$/i.test(proofShort) &&
+          chainProof.slice(2, 8) === proofShort.slice(0, 6).toLowerCase() &&
+          chainProof.slice(-6) === proofShort.slice(-6).toLowerCase()
+
+        const savedEvidenceMatches =
+          evidence?.requestId?.toLowerCase() === requestId.toLowerCase() &&
+          chainProof === String(evidence.proofHash).toLowerCase() &&
+          chainRandomness === String(evidence.randomness).toLowerCase()
+
+        const confirmed =
+          onChainValid && logProofMatches &&
+          (!evidence || savedEvidenceMatches)
+
+        if (!cancelled && confirmed) {
+          setResult({ milliseconds, evidence })
+        }
+      } catch {
+        // Keep on-chain status independent of telemetry availability.
+      }
+    }
+
+    check()
+    const timer = setInterval(check, 3000)
+    return () => {
+      cancelled = true
+      clearInterval(timer)
+    }
+  }, [requestId])
+
+  if (!/^0x[0-9a-f]{64}$/i.test(requestId || '')) return null
+
+  return (
+    <div style={{
+      padding: '14px 18px',
+      margin: '14px 0',
+      border: '1px solid #e1e3ed',
+      borderRadius: 12,
+      background: '#fff'
+    }}>
+      <div style={{ fontSize: 11, color: '#777b90', fontWeight: 700 }}>
+        THRESHOLD PROOF GENERATION
+      </div>
+      {result ? (
+        <>
+          <strong style={{
+            display: 'block', marginTop: 6, fontSize: 30,
+            color: '#16845b', fontVariantNumeric: 'tabular-nums'
+          }}>
+            {(result.milliseconds / 1000).toFixed(3)} s
+          </strong>
+          <small>
+            Node-observed first contribution to proof readiness.
+            ProofHash and randomness matched on-chain.
+          </small>
+        </>
+      ) : (
+        <div style={{ marginTop: 7, color: '#777b90' }}>
+          Measurement unavailable
+        </div>
+      )}
+    </div>
+  )
+}
 const DEV_QUICKSTART = "import {\n  createPublicClient, createWalletClient, custom, http,\n  defineChain, parseAbi, decodeEventLog,\n} from 'viem';\n\nconst rabbit = defineChain({\n  id: 9280, name: 'Rabbit Testnet',\n  nativeCurrency: { name: 'Test Rabbit', symbol: 'tRAB', decimals: 18 },\n  rpcUrls: { default: { http: ['https://rpc-testnet.rabbitchain.org'] } },\n});\nconst coordinator = '0xdfc21aea108e3f527e5f236ebf354dc8262719da';\nconst abi = parseAbi([\n  'function quoteRequestFee(uint32 callbackGasLimit) view returns (uint256)',\n  'function requestRandomness(uint32 callbackGasLimit, bytes32 appDataHash) payable returns (bytes32)',\n  'function getRequest(bytes32 requestId) view returns (address requester, uint64 requesterNonce, uint64 requestBlock, uint64 epoch, uint64 round, uint32 callbackGasLimit, uint256 feePaid, bytes32 appDataHash, bytes32 randomness, bytes32 proofHash, uint8 status)',\n  'event RandomnessRequested(bytes32 indexed requestId, address indexed requester, uint64 indexed requesterNonce, uint32 callbackGasLimit, bytes32 appDataHash, uint256 feePaid)',\n]);\nconst client = createPublicClient({ chain: rabbit, transport: http() });\n\n// Call from a user gesture, after selecting Rabbit Testnet in the wallet.\nexport async function submitVrf(appDataHash = `0x${'00'.repeat(32)}`) {\n  if (!window.ethereum) throw new Error('Connect an EVM wallet first');\n  const wallet = createWalletClient({ chain: rabbit, transport: custom(window.ethereum) });\n  const [account] = await wallet.requestAddresses();\n  if (await wallet.getChainId() !== rabbit.id) throw new Error('Switch to Rabbit Testnet');\n  const fee = await client.readContract({ address: coordinator, abi,\n    functionName: 'quoteRequestFee', args: [0] });\n  const hash = await wallet.writeContract({ account, address: coordinator, abi,\n    functionName: 'requestRandomness', args: [0, appDataHash], value: fee });\n  // Persist hash immediately; a timeout is not proof of failure.\n  return { hash, account };\n}\n\nexport async function recoverRequest(hash) {\n  const receipt = await client.getTransactionReceipt({ hash });\n  if (receipt.status !== 'success') throw new Error('Request transaction reverted');\n  for (const log of receipt.logs) {\n    if (log.address.toLowerCase() !== coordinator) continue;\n    try {\n      const event = decodeEventLog({ abi, data: log.data, topics: log.topics });\n      if (event.eventName === 'RandomnessRequested') return event.args.requestId;\n    } catch { /* Ignore other coordinator events. */ }\n  }\n  throw new Error('No request event in this receipt');\n}\n\nexport async function readVrf(requestId) {\n  const value = await client.readContract({ address: coordinator, abi,\n    functionName: 'getRequest', args: [requestId] });\n  return { requester: value[0], requestBlock: value[2], feePaid: value[6],\n    randomness: value[8], proofHash: value[9], status: Number(value[10]) };\n}\n// Poll readVrf(requestId) with backoff until status === 2.\n// On RPC errors, retain hash/requestId and retry; do not submit again.\n"
 
 const ZERO_HASH = `0x${'00'.repeat(32)}`
@@ -507,7 +621,7 @@ export default function Vrf({
   }, [vrfRequestClocks])
 
   useEffect(() => {
-    const timer = setInterval(() => setClock(Date.now()), 1000)
+    const timer = setInterval(() => setClock(Date.now()), 100)
     return () => clearInterval(timer)
   }, [])
 
@@ -552,7 +666,7 @@ export default function Vrf({
       try {
         let id = vrfTiming.id
 
-        if (!id) {
+        if (!id || !Number.isFinite(vrfTiming.startedAt)) {
           const receipt = await rpc('eth_getTransactionReceipt', [hash])
           if (cancelled) return
 
@@ -566,15 +680,23 @@ export default function Vrf({
               return
             }
 
-            id = requestIdFromReceipt(receipt)
-            if (id) {
-              setVrfTiming(previous =>
-                previous?.hash === hash && !previous.id
-                  ? { ...previous, id }
-                  : previous
-              )
-              setRequestId(id)
+            const includedBlock = await rpc('eth_getBlockByNumber', [receipt.blockNumber, false])
+            const includedAt = chainNumber(includedBlock?.timestamp) * 1000
+            if (!Number.isFinite(includedAt) || includedAt <= 0) {
+              throw new Error('Request block timestamp unavailable')
             }
+            id = id || requestIdFromReceipt(receipt)
+            setVrfTiming(previous =>
+              previous?.hash === hash
+                ? {
+                    ...previous,
+                    id: previous.id || id,
+                    startedAt: Number.isFinite(previous.startedAt)
+                      ? previous.startedAt : includedAt,
+                  }
+                : previous
+            )
+            if (id) setRequestId(id)
           }
         }
 
@@ -582,11 +704,16 @@ export default function Vrf({
           const result = await readCoordinator('getRequest', [id])
           if (cancelled) return
 
-          if (Number(result[10]) === 2) {
+          if (
+            Number(result[10]) === 2 &&
+            /^0x(?!0{64}$)[0-9a-f]{64}$/i.test(String(result[8])) &&
+            /^0x(?!0{64}$)[0-9a-f]{64}$/i.test(String(result[9]))
+          ) {
             setVrfTiming(previous =>
               previous?.hash === hash &&
               (!previous.id || previous.id.toLowerCase() === id.toLowerCase()) &&
-              previous.finishedAt === null
+              previous.finishedAt === null &&
+               Number.isFinite(previous.startedAt)
                 ? { ...previous, id, finishedAt: Date.now() }
                 : previous
             )
@@ -596,7 +723,7 @@ export default function Vrf({
       } catch {
         // Temporary RPC errors do not invalidate the transaction.
       } finally {
-        if (!cancelled) timer = setTimeout(check, 5000)
+        if (!cancelled) timer = setTimeout(check, 1000)
       }
     }
 
@@ -606,7 +733,7 @@ export default function Vrf({
       cancelled = true
       clearTimeout(timer)
     }
-  }, [vrfTiming?.hash, vrfTiming?.id, vrfTiming?.finishedAt])
+  }, [vrfTiming?.hash, vrfTiming?.id, vrfTiming?.startedAt, vrfTiming?.finishedAt])
 
   const connected = Boolean(walletState?.account)
   const correctNetwork = chainNumber(walletState?.chainId) === NETWORKS.testnet.chainId
@@ -664,9 +791,17 @@ export default function Vrf({
 
       if (sequence !== inspectionSequence.current) return
 
-      if (Number(status) === 2) {
+      if (
+        Number(status) === 2 &&
+        /^0x(?!0{64}$)[0-9a-f]{64}$/i.test(String(randomness)) &&
+        /^0x(?!0{64}$)[0-9a-f]{64}$/i.test(String(proofHash))
+      ) {
         setVrfTiming(previous => {
-          if (!previous || previous.finishedAt !== null) return previous
+          if (
+            !previous ||
+            previous.finishedAt !== null ||
+            !Number.isFinite(previous.startedAt)
+          ) return previous
 
           const sameId =
             previous.id?.toLowerCase() === clean.toLowerCase()
@@ -809,7 +944,7 @@ export default function Vrf({
       setVrfTiming({
         hash,
         id: null,
-        startedAt: Date.now(),
+        startedAt: null,
         finishedAt: null,
       })
       try { localStorage.setItem('rabbit-vrf-last-transaction', hash) } catch { /* Optional. */ }
@@ -824,10 +959,17 @@ export default function Vrf({
         throw new Error('Transaction confirmed, but RandomnessRequested was not found.')
       }
 
+      const includedBlock = await rpc('eth_getBlockByNumber', [receipt.blockNumber, false])
+      const includedAt = chainNumber(includedBlock?.timestamp) * 1000
       setRequestId(emittedRequestId)
       setVrfTiming(previous =>
         previous?.hash === hash
-          ? { ...previous, id: emittedRequestId }
+          ? {
+              ...previous,
+              id: emittedRequestId,
+              startedAt: Number.isFinite(includedAt) && includedAt > 0
+                ? includedAt : previous.startedAt,
+            }
           : previous
       )
       await inspect(emittedRequestId)
@@ -1032,6 +1174,7 @@ export default function Vrf({
       </div>
       <div id="vrf-panel-create" role="tabpanel" aria-labelledby="vrf-tab-create" hidden={activeTab !== 'create'}>
       <section className="platform-v2-product" id="playground">
+
         <div className="shell platform-v2-product-head">
           <div>
             <span className="section-kicker">NEW REQUEST</span>
@@ -1103,11 +1246,11 @@ export default function Vrf({
               {buttonLabel}
             </button>
 
+            <VrfProofTelemetry readCoordinator={readCoordinator} requestId={vrfTiming?.id} />
             {vrfTiming && (() => {
-              const elapsed = Math.max(
-                0,
-                (vrfTiming.finishedAt ?? clock) - vrfTiming.startedAt
-              )
+              const elapsed = Number.isFinite(vrfTiming.startedAt)
+                ? Math.max(0, (vrfTiming.finishedAt ?? clock) - vrfTiming.startedAt)
+                : 0
               const minutes = String(Math.floor(elapsed / 60000)).padStart(2, '0')
               const seconds = String(Math.floor((elapsed % 60000) / 1000)).padStart(2, '0')
               const tenths = Math.floor((elapsed % 1000) / 100)
@@ -1117,9 +1260,9 @@ export default function Vrf({
                 ? 'Transaction failed'
                 : done
                   ? 'Fulfilled'
-                  : vrfTiming.id
-                    ? 'Pending'
-                    : 'Confirming'
+                  : !Number.isFinite(vrfTiming.startedAt)
+                    ? 'Confirming'
+                    : 'Pending'
 
               return (
                 <div style={{
@@ -1300,6 +1443,7 @@ export default function Vrf({
 
                   <div className="wide">
                     <span>PROOF HASH</span>
+                    <VrfProofTelemetry readCoordinator={readCoordinator} requestId={requestId} />
                     <code className="vrf-full-hash">{request.proofHash}</code>
                     {Number(request.status) === 2 && <button className="copy-button vrf-copy" type="button" onClick={() => copyValue(request.proofHash)}>Copy proof hash</button>}
                     <small>A proof hash identifies the proof; this page reads on-chain state and does not independently verify its cryptography.</small>
@@ -1323,7 +1467,101 @@ export default function Vrf({
           <article><span>03 · READ</span><h3>Use the completed result</h3><p>Call getRequest(requestId). Wait for status 2, then use randomness. Status 1 means pending; retry the read without sending another request.</p><code>getRequest → status 2 → randomness</code></article>
         </div>
         <div className="shell vrf-explain-box"><div><span>CURRENT V1 INTEGRATION</span><h3>Read the result; do not wait for a callback.</h3><p>The supported request path uses callbackGasLimit = 0. Fulfillment updates coordinator state. Your application reads getRequest and handles settlement separately. proofHash identifies the protocol proof; it is not the complete proof payload.</p></div><div><span>NETWORK & COST</span><h3>Rabbit Testnet · 9280</h3><p>Use the coordinator address shown in the request panel and the public Rabbit Testnet RPC. The protocol quote is denominated in native tRAB. Gas is additional. The tRUSD pricing target is not an ERC-20 payment instruction.</p></div></div>
-        <details className="shell vrf-developer-details"><summary>JavaScript example · send a request and read the result</summary><p>Install viem in your application. This browser example assumes an injected EVM wallet. For WalletConnect, pass your connected wallet's EIP-1193 provider to custom().</p><pre className="vrf-sdk-code" style={{padding:24, borderRadius:14, background:"#f3f1fa", color:"#40445a", overflowX:"auto", fontSize:12, lineHeight:1.8}}>{DEV_QUICKSTART}</pre><p>Call submitVrf from a user action, persist its hash, then call recoverRequest once the receipt is available. Persist that requestId and periodically call readVrf. Handle rejected signatures, reverted transactions and temporary RPC errors separately.</p></details>
+                <section className="shell vrf-developer-details" id="vrf-performance-guide" style={{
+          marginTop: 24, marginBottom: 24, padding: 24,
+          border: '1px solid #e1e3ed', borderRadius: 14,
+          background: '#fff'
+        }}>
+          <span className="section-kicker">PUBLIC TESTNET  DEVELOPER VERIFICATION</span>
+          <h2>VRF performance: measure every stage.</h2>
+          <p>
+            Rabbit VRF produces threshold proofs separately from the block
+            that records canonical fulfillment. Fast proof generation does not
+            imply equally fast on-chain confirmation. These are distinct
+            metrics and must not be presented as the same latency.
+          </p>
+
+          <div className="vrf-guide-grid">
+            <article>
+              <h3>01  Threshold proof generation</h3>
+              <p>
+                Node-observed time from the first logged inbound contribution
+                to local proof readiness. This excludes any waiting before
+                that first contribution, transaction inclusion and on-chain
+                finalization. It is not a full request latency or a service
+                level guarantee.
+              </p>
+            </article>
+            <article>
+              <h3>02  On-chain response</h3>
+              <p>
+                Approximate browser-observed delay until the coordinator
+                returns status 2 and nonzero randomness and proofHash.
+                Block production, RPC polling and clock differences influence
+                the measurement. Rabbit Testnet targets approximately
+                ten-second blocks; actual intervals vary.
+              </p>
+            </article>
+            <article>
+              <h3>03  Match the evidence</h3>
+              <p>
+                Inspect the request ID, on-chain randomness and proofHash.
+                When available, node telemetry can be associated with this
+                canonical result. A matching hash does not independently
+                authenticate the node clock or verify the underlying
+                threshold cryptographic proof.
+              </p>
+            </article>
+          </div>
+
+          <h3>Integrate safely with Rabbit Testnet</h3>
+          <ol>
+            <li>
+              Query quoteRequestFee(0) for the current native tRAB fee.
+              Transaction gas is additional. The tRUSD figure is a
+              pricing reference, not an ERC-20 payment.
+            </li>
+            <li>
+              Call requestRandomness(0, appDataHash) with the quoted
+              msg.value. Keep the transaction hash and recover requestId
+              from the RandomnessRequested event.
+            </li>
+            <li>
+              Poll getRequest(requestId). Status 1 means pending.
+              Consume randomness only when status equals 2 and the
+              canonical proofHash and randomness are nonzero.
+            </li>
+            <li>
+              Inspect optional performance telemetry separately.
+              Missing telemetry does not invalidate a fulfilled
+              on-chain result. Do not request again solely because
+              a measurement is missing or the RPC is temporarily slow.
+            </li>
+          </ol>
+
+          <p>
+            <strong>Trust boundary:</strong> The public coordinator
+            provides canonical fulfillment state. Node timing is an
+            operational observation, not a consensus-certified timestamp.
+            The exposed proofHash is a commitment or identifier, not the
+            complete threshold proof payload. Independent cryptographic
+            verification requires the protocol proof and its verifier.
+          </p>
+          <p>
+            <strong>Cost and transparency:</strong> Testnet fees are
+            charged in tRAB according to the live coordinator quote.
+            Gas is additional. Compare VRF services only with equivalent
+            network conditions, finality definitions and cost components.
+            Do not treat individual fast observations as guaranteed latency.
+          </p>
+          <p>
+            <strong>Availability:</strong> Measurements are shown only
+            where a matching telemetry record is available. Until the
+            telemetry API is deployed and independently monitored, local
+            development measurements are not a public monitoring service.
+          </p>
+        </section>
+<details className="shell vrf-developer-details"><summary>JavaScript example · send a request and read the result</summary><p>Install viem in your application. This browser example assumes an injected EVM wallet. For WalletConnect, pass your connected wallet's EIP-1193 provider to custom().</p><pre className="vrf-sdk-code" style={{padding:24, borderRadius:14, background:"#f3f1fa", color:"#40445a", overflowX:"auto", fontSize:12, lineHeight:1.8}}>{DEV_QUICKSTART}</pre><p>Call submitVrf from a user action, persist its hash, then call recoverRequest once the receipt is available. Persist that requestId and periodically call readVrf. Handle rejected signatures, reverted transactions and temporary RPC errors separately.</p></details>
         <details className="shell vrf-developer-details"><summary>Production checklist · recovery, security and fair draws</summary>
         <div className="shell vrf-guide-grid">
           <article><h3>Commit your context</h3><p>For a real round, compute appDataHash from immutable inputs with abi.encode: application address, round ID and participants or rules. Store the same context in your application before seeing the result. Zero hash is suitable for a protocol test.</p></article>
