@@ -135,7 +135,7 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
 
       {result ? (
         <>
-          <div style={{ marginTop: 22 }}>
+          <div style={{ marginTop: 10 }}>
             <div style={{ color: '#777b90', fontSize: 12 }}>
               Threshold proof collection processing
             </div>
@@ -149,7 +149,7 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
             }}>
               <strong style={{
                 color: '#08a650',
-                fontSize: 38,
+                fontSize: 30,
                 fontWeight: 800,
                 fontVariantNumeric: 'tabular-nums'
               }}>
@@ -171,7 +171,7 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
           </div>
 
           <div style={{
-            marginTop: 22,
+            marginTop: 10,
             paddingTop: 18,
             borderTop: '1px solid #e7e9ef',
             display: 'grid',
@@ -1269,69 +1269,65 @@ export default function Vrf({
         </div>
       </section>
 
-      <section className="platform-v2-hero vrf-v2-hero">
-        <div className="shell platform-v2-hero-grid">
-          <div className="platform-v2-copy">
-            <img className="vrf-workspace-logo" src="/rabbit-vrf-logo.png" alt="Rabbit VRF" />
-            <span className="hero-eyebrow"><i /> RABBIT VRF · TESTNET LIVE</span>
-
-            <h1>
-              Verifiable randomness.
-              <em> Native to Rabbit.</em>
-            </h1>
-
-            <p>
-              Rabbit VRF exposes consensus-secured randomness directly to EVM applications
-              without a centralized randomness API or trusted oracle operator.
-              Anyone can request randomness on Rabbit Testnet. No mining or node
-              setup is required. Submit a request, follow its status and inspect the on-chain result.
-            </p>
-
-            <div className="hero-ctas">
-              <a className="button primary" href="#playground" onClick={() => setActiveTab('create')}>
-                New request <ArrowRight size={15} />
-              </a>
-              <a className="button secondary" href="#developer-start" onClick={() => setActiveTab('developers')}>
-                Developer integration
-              </a>
-            </div>
-
-            <div className="platform-principles">
-              <span><ShieldCheck size={15} /> Protocol active</span>
-              <span><Network size={15} /> Chain ID 9280</span>
-              <span><Wallet size={15} /> EVM wallet compatible</span>
-            </div>
-          </div>
-
-          <div className="protocol-map vrf-hero-map">
-            <div className="protocol-map-head">
-              <div><ShieldCheck size={16} /><b>RABBIT VRF</b></div>
-              <span>TESTNET LIVE</span>
-            </div>
-
-            <div className="protocol-map-body vrf-hero-body">
-              <img
-                className="vrf-hero-logo"
-                src="/rabbit-vrf-logo.png"
-                alt="Rabbit VRF"
-              />
-
-              <div className="vrf-hero-status">
-                <span>VERIFIABLE RANDOM FUNCTION</span>
-                <strong>Consensus-secured randomness for Rabbit Chain.</strong>
-                <small>For games, NFT reveals, draws and EVM applications.</small>
-              </div>
-            </div>
-
-            <div className="protocol-map-foot">
-              <div><span>NETWORK</span><strong>Rabbit Testnet</strong></div>
-              <div><span>CHAIN ID</span><strong>9280</strong></div>
-              <div><span>BASE TARGET</span><strong>0.005 tRUSD from block 320,000</strong></div>
-              <div><span>STATUS</span><strong>PUBLIC TESTNET</strong></div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section className="platform-v2-hero vrf-v2-hero" style={{padding: '18px 0'}}>
+  <div className="shell" style={{
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 22
+  }}>
+    <img
+      src="/rabbit-vrf-logo.png"
+      alt="Rabbit VRF"
+      style={{
+        width: 112,
+        maxWidth: '100%',
+        height: 'auto',
+        objectFit: 'contain',
+        flexShrink: 0
+      }}
+    />
+    <div style={{flex: '1 1 300px', minWidth: 0}}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: 10,
+        marginBottom: 5
+      }}>
+        <strong style={{fontSize: 17}}>Rabbit VRF</strong>
+        <span style={{
+          fontSize: 10,
+          fontWeight: 700,
+          color: '#16845b',
+          background: '#e8f8ef',
+          padding: '5px 10px',
+          borderRadius: 20
+        }}>
+          TESTNET LIVE
+        </span>
+      </div>
+      <h1 style={{
+        fontSize: 'clamp(21px, 2.4vw, 30px)',
+        lineHeight: 1.2,
+        margin: '4px 0 8px'
+      }}>
+        Verifiable randomness.
+        <em> Native to Rabbit.</em>
+      </h1>
+      <p style={{
+        margin: 0,
+        fontSize: 13,
+        lineHeight: 1.6,
+        maxWidth: 740
+      }}>
+        Request on-chain randomness, track fulfillment and
+        verify results directly on Rabbit Testnet.
+        No mining or node setup required.
+      </p>
+    </div>
+  </div>
+</section>
 
       <div className="shell vrf-workspace-tabs" role="tablist" aria-label="VRF workspace">
         {[['create','New request'],['requests','My requests'],['developers','Developers']].map(([key,label]) => <button key={key} id={`vrf-tab-${key}`} role="tab" aria-selected={activeTab === key} aria-controls={`vrf-panel-${key}`} onClick={() => setActiveTab(key)}>{label}</button>)}
