@@ -894,7 +894,7 @@ export default function Vrf({
       if (busy) return
       busy = true
       try { await inspect(trackedId) } finally { busy = false }
-    }, 10000)
+    }, 2000)
     return () => clearInterval(timer)
   }, [trackedId, request?.requestId, request?.status])
 
