@@ -141,6 +141,151 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
     </div>
   )
 }
+function VrfOnchainMonitor({ requestId }) {
+  const [monitor, setMonitor] = useState(null)
+  const [record, setRecord] = useState(null)
+
+  useEffect(() => {
+    if (!/^0x[0-9a-f]{64}$/i.test(requestId || '')) {
+      setMonitor(null)
+      setRecord(null)
+      return
+    }
+
+    let cancelled = false
+
+    const base =
+      'https://rabbit-vrf-telemetry.fernandoaugusto780.workers.dev'
+
+    async function refresh() {
+      try {
+        const [statusResponse, requestResponse] =
+          await Promise.all([
+            fetch(`${base}/api/vrf/onchain/status`, {
+              cache: 'no-store'
+            }),
+            fetch(`${base}/api/vrf/onchain/${requestId}`, {
+              cache: 'no-store'
+            })
+          ])
+
+        const status = statusResponse.ok
+          ? await statusResponse.json()
+          : null
+
+        const data = requestResponse.ok
+          ? await requestResponse.json()
+          : null
+
+        if (cancelled) return
+
+        setMonitor(
+          status?.status === 'ok' ? status : null
+        )
+
+        setRecord(
+          data?.requestId?.toLowerCase() ===
+          requestId.toLowerCase()
+            ? data
+            : null
+        )
+      } catch {
+        if (!cancelled) {
+          setMonitor(null)
+          setRecord(null)
+        }
+      }
+    }
+
+    setMonitor(null)
+    setRecord(null)
+
+    refresh()
+
+    const timer = setInterval(refresh, 60000)
+
+    return () => {
+      cancelled = true
+      clearInterval(timer)
+    }
+  }, [requestId])
+
+  if (!/^0x[0-9a-f]{64}$/i.test(requestId || '')) {
+    return null
+  }
+
+  return (
+    <div style={{
+      padding: '14px 18px',
+      margin: '12px 0',
+      background: '#ffffff',
+      border: '1px solid #e1e3ed',
+      borderRadius: 12
+    }}>
+      <div style={{
+        fontSize: 11,
+        fontWeight: 700,
+        color: '#777b90'
+      }}>
+        CLOUDFLARE  ON-CHAIN MONITOR
+      </div>
+
+      <div style={{
+        marginTop: 8,
+        fontWeight: 700
+      }}>
+        {record
+          ? record.fulfilled
+            ? 'Fulfilled  observed on-chain'
+            : 'Request observed  awaiting fulfillment'
+          : monitor
+            ? 'Request not in current monitor history'
+            : 'Monitor status unavailable'}
+      </div>
+
+      {record && (
+        <div style={{
+          marginTop: 8,
+          fontSize: 13
+        }}>
+          <div>
+            Request block: {record.requestBlock ?? ''}
+          </div>
+          <div>
+            Last checked: {record.observedAt || ''}
+          </div>
+        </div>
+      )}
+
+      {monitor && (
+        <div style={{
+          marginTop: 8,
+          fontSize: 12,
+          color: '#777b90'
+        }}>
+          <div>
+            Monitor block: {monitor.head}
+          </div>
+          <div>
+            Last update: {monitor.updatedAt || ''}
+          </div>
+        </div>
+      )}
+
+      <small style={{
+        display: 'block',
+        marginTop: 10,
+        color: '#777b90'
+      }}>
+        Independent Cloudflare observation of Rabbit
+        Testnet blockchain state. This is not a
+        measurement of internal threshold proof
+        generation time. The coordinator contract
+        remains authoritative for request status.
+      </small>
+    </div>
+  )
+}
 const DEV_QUICKSTART = "import {\n  createPublicClient, createWalletClient, custom, http,\n  defineChain, parseAbi, decodeEventLog,\n} from 'viem';\n\nconst rabbit = defineChain({\n  id: 9280, name: 'Rabbit Testnet',\n  nativeCurrency: { name: 'Test Rabbit', symbol: 'tRAB', decimals: 18 },\n  rpcUrls: { default: { http: ['https://rpc-testnet.rabbitchain.org'] } },\n});\nconst coordinator = '0xdfc21aea108e3f527e5f236ebf354dc8262719da';\nconst abi = parseAbi([\n  'function quoteRequestFee(uint32 callbackGasLimit) view returns (uint256)',\n  'function requestRandomness(uint32 callbackGasLimit, bytes32 appDataHash) payable returns (bytes32)',\n  'function getRequest(bytes32 requestId) view returns (address requester, uint64 requesterNonce, uint64 requestBlock, uint64 epoch, uint64 round, uint32 callbackGasLimit, uint256 feePaid, bytes32 appDataHash, bytes32 randomness, bytes32 proofHash, uint8 status)',\n  'event RandomnessRequested(bytes32 indexed requestId, address indexed requester, uint64 indexed requesterNonce, uint32 callbackGasLimit, bytes32 appDataHash, uint256 feePaid)',\n]);\nconst client = createPublicClient({ chain: rabbit, transport: http() });\n\n// Call from a user gesture, after selecting Rabbit Testnet in the wallet.\nexport async function submitVrf(appDataHash = `0x${'00'.repeat(32)}`) {\n  if (!window.ethereum) throw new Error('Connect an EVM wallet first');\n  const wallet = createWalletClient({ chain: rabbit, transport: custom(window.ethereum) });\n  const [account] = await wallet.requestAddresses();\n  if (await wallet.getChainId() !== rabbit.id) throw new Error('Switch to Rabbit Testnet');\n  const fee = await client.readContract({ address: coordinator, abi,\n    functionName: 'quoteRequestFee', args: [0] });\n  const hash = await wallet.writeContract({ account, address: coordinator, abi,\n    functionName: 'requestRandomness', args: [0, appDataHash], value: fee });\n  // Persist hash immediately; a timeout is not proof of failure.\n  return { hash, account };\n}\n\nexport async function recoverRequest(hash) {\n  const receipt = await client.getTransactionReceipt({ hash });\n  if (receipt.status !== 'success') throw new Error('Request transaction reverted');\n  for (const log of receipt.logs) {\n    if (log.address.toLowerCase() !== coordinator) continue;\n    try {\n      const event = decodeEventLog({ abi, data: log.data, topics: log.topics });\n      if (event.eventName === 'RandomnessRequested') return event.args.requestId;\n    } catch { /* Ignore other coordinator events. */ }\n  }\n  throw new Error('No request event in this receipt');\n}\n\nexport async function readVrf(requestId) {\n  const value = await client.readContract({ address: coordinator, abi,\n    functionName: 'getRequest', args: [requestId] });\n  return { requester: value[0], requestBlock: value[2], feePaid: value[6],\n    randomness: value[8], proofHash: value[9], status: Number(value[10]) };\n}\n// Poll readVrf(requestId) with backoff until status === 2.\n// On RPC errors, retain hash/requestId and retry; do not submit again.\n"
 
 const ZERO_HASH = `0x${'00'.repeat(32)}`
@@ -1247,6 +1392,7 @@ export default function Vrf({
             </button>
 
             <VrfProofTelemetry readCoordinator={readCoordinator} requestId={vrfTiming?.id} />
+            <VrfOnchainMonitor requestId={vrfTiming?.id} />
             {vrfTiming && (() => {
               const elapsed = Number.isFinite(vrfTiming.startedAt)
                 ? Math.max(0, (vrfTiming.finishedAt ?? clock) - vrfTiming.startedAt)
@@ -1444,6 +1590,7 @@ export default function Vrf({
                   <div className="wide">
                     <span>PROOF HASH</span>
                     <VrfProofTelemetry readCoordinator={readCoordinator} requestId={requestId} />
+                    <VrfOnchainMonitor requestId={requestId} />
                     <code className="vrf-full-hash">{request.proofHash}</code>
                     {Number(request.status) === 2 && <button className="copy-button vrf-copy" type="button" onClick={() => copyValue(request.proofHash)}>Copy proof hash</button>}
                     <small>A proof hash identifies the proof; this page reads on-chain state and does not independently verify its cryptography.</small>
