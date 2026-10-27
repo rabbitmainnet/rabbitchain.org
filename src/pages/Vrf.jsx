@@ -27,7 +27,7 @@ import { NETWORKS } from '../config/networks'
 import { RABBIT_VRF } from '../config/vrf'
 import PlatformNetworkSwitch from '../components/PlatformNetworkSwitch'
 
-function VrfProofTelemetry({ requestId, readCoordinator }) {
+function VrfProofTelemetry({ requestId, readCoordinator, vrfTiming, clock }) {
   const [result, setResult] = useState(null)
 
   useEffect(() => {
@@ -99,140 +99,148 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
     }
   }, [requestId])
 
-  if (!/^0x[0-9a-f]{64}$/i.test(requestId || '')) return null
+  const hasRequest = /^0x[0-9a-f]{64}$/i.test(requestId || '')
+  if (!hasRequest && !vrfTiming) return null
+
+  const elapsed = vrfTiming && Number.isFinite(vrfTiming.startedAt)
+    ? Math.max(0, (vrfTiming.finishedAt ?? clock) - vrfTiming.startedAt)
+    : 0
+
+  const minutes = String(Math.floor(elapsed / 60000)).padStart(2, '0')
+  const seconds = String(Math.floor((elapsed % 60000) / 1000)).padStart(2, '0')
+  const tenths = Math.floor((elapsed % 1000) / 100)
+
+  const failed = Boolean(vrfTiming?.failed)
+  const done = vrfTiming?.finishedAt != null && !failed
+
+  const metrics = [
+    {
+      label: 'PROOF COLLECTION',
+      value: result ? `${(result.collectMs / 1000).toFixed(3)} s` : '',
+      note: 'Node-measured processing',
+      color: '#08a650'
+    },
+    {
+      label: 'PROOF READINESS',
+      value: result ? `${(result.observedMs / 1000).toFixed(3)} s` : '',
+      note: 'Observed interval; may include waiting',
+      color: '#171729'
+    },
+    {
+      label: done ? 'BROWSER RESPONSE' : 'BROWSER ELAPSED',
+      value: vrfTiming ? `${minutes}:${seconds}.${tenths}` : '',
+      note: 'Approximate; includes RPC detection delay',
+      color: '#171729'
+    }
+  ]
 
   return (
     <div style={{
-      padding: '22px',
-      margin: '16px 0',
+      margin: '10px 0',
+      padding: '14px 18px',
+      background: '#fff',
       border: '1px solid #e1e3ed',
-      borderRadius: 18,
-      background: '#fff'
+      borderRadius: 14
     }}>
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         flexWrap: 'wrap',
-        gap: 10
+        gap: 10,
+        marginBottom: 13
       }}>
-        <strong style={{ fontSize: 12, color: '#15162b' }}>
-          RABBIT VRF  VERIFIED PERFORMANCE
+        <strong style={{ fontSize: 12, color: '#171729' }}>
+          Rabbit VRF  Verified Performance
         </strong>
-        {result && (
-          <span style={{
-            padding: '5px 10px',
-            background: '#e8f8ef',
-            color: '#16845b',
-            borderRadius: 20,
-            fontSize: 11,
-            fontWeight: 700
-          }}>
-            PROOFHASH MATCHED
-          </span>
-        )}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+          {result && (
+            <span style={{
+              padding: '5px 9px',
+              borderRadius: 20,
+              background: '#e8f8ef',
+              color: '#16845b',
+              fontSize: 10,
+              fontWeight: 800
+            }}>
+              PROOFHASH MATCHED
+            </span>
+          )}
+          {vrfTiming && (
+            <span style={{
+              padding: '5px 9px',
+              borderRadius: 20,
+              background: failed ? '#fff1f1' : done ? '#edf8f2' : '#f3f0fc',
+              color: failed ? '#b42318' : done ? '#16845b' : '#6846bd',
+              fontSize: 10,
+              fontWeight: 800
+            }}>
+              {failed ? 'Failed' : done ? 'Fulfilled' : 'Pending'}
+            </span>
+          )}
+        </div>
       </div>
 
-      {result ? (
-        <>
-          <div style={{ marginTop: 10 }}>
-            <div style={{ color: '#777b90', fontSize: 12 }}>
-              Threshold proof collection processing
-            </div>
-
-            <div style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              flexWrap: 'wrap',
-              gap: 8,
-              marginTop: 7
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+        gap: 12
+      }}>
+        {metrics.map((metric) => (
+          <div key={metric.label} style={{ padding: '3px 0', minWidth: 0 }}>
+            <span style={{
+              display: 'block',
+              fontSize: 10,
+              fontWeight: 750,
+              color: '#777b90',
+              letterSpacing: '0.04em'
             }}>
-              <strong style={{
-                color: '#08a650',
-                fontSize: 30,
-                fontWeight: 800,
-                fontVariantNumeric: 'tabular-nums'
-              }}>
-                {(result.collectMs / 1000).toFixed(3)}
-              </strong>
-              <span style={{ color: '#565b69', fontSize: 16 }}>
-                seconds
-              </span>
-            </div>
-
-            <div style={{
+              {metric.label}
+            </span>
+            <strong style={{
+              display: 'block',
+              marginTop: 6,
+              fontSize: 23,
+              fontWeight: 800,
+              color: metric.color,
+              fontVariantNumeric: 'tabular-nums',
+              overflowWrap: 'anywhere'
+            }}>
+              {metric.value}
+            </strong>
+            <small style={{
+              display: 'block',
               marginTop: 5,
-              color: '#08a650',
-              fontWeight: 700,
-              fontSize: 13
+              color: '#777b90',
+              fontSize: 10,
+              lineHeight: 1.4
             }}>
-               {Math.round(result.collectMs)} milliseconds of measured processing
-            </div>
+              {metric.note}
+            </small>
           </div>
+        ))}
+      </div>
 
-          <div style={{
-            marginTop: 10,
-            paddingTop: 18,
-            borderTop: '1px solid #e7e9ef',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: 20
-          }}>
-            <div>
-              <div style={{ color: '#777b90', fontSize: 12 }}>
-                Observed proof readiness
-              </div>
-              <strong style={{
-                display: 'block',
-                marginTop: 7,
-                fontSize: 21,
-                fontVariantNumeric: 'tabular-nums'
-              }}>
-                {(result.observedMs / 1000).toFixed(3)} s
-              </strong>
-            </div>
-
-            <div>
-              <div style={{ color: '#777b90', fontSize: 12 }}>
-                End-to-end browser response
-              </div>
-              <strong style={{
-                display: 'block',
-                marginTop: 7,
-                fontSize: 14
-              }}>
-                See Request Status below
-              </strong>
-            </div>
-          </div>
-
-          <p style={{
-            color: '#777b90',
-            fontSize: 12,
-            margin: '18px 0 0',
-            lineHeight: 1.6
-          }}>
-            Node-measured collection processing and observed proof
-            readiness are separate timings. The readiness interval
-            may include waiting. End-to-end fulfillment is shown
-            in Request Status. ProofHash matched on-chain.
-          </p>
-        </>
-      ) : (
-        <div style={{ marginTop: 15 }}>
-          <div style={{ color: '#777b90', fontSize: 14 }}>
-            Waiting for matching node telemetry...
-          </div>
-          <small style={{
-            display: 'block',
-            marginTop: 7,
-            color: '#777b90'
-          }}>
-            Randomness requests and on-chain verification continue
-            independently of telemetry availability.
-          </small>
-        </div>
-      )}
+      <div style={{
+        marginTop: 12,
+        paddingTop: 9,
+        borderTop: '1px solid #ececf2',
+        color: '#777b90',
+        fontSize: 10,
+        lineHeight: 1.5
+      }}>
+        {failed
+          ? 'Transaction reverted.'
+          : done
+            ? 'Randomness ready on-chain.'
+            : vrfTiming?.id
+              ? 'Waiting for VRF fulfillment.'
+              : 'Waiting for request confirmation.'}
+        {' '}
+        {!result && hasRequest
+          ? 'Matching node telemetry is not available yet.'
+          : 'Processing, readiness and browser response measure different intervals.'}
+      </div>
     </div>
   )
 }
@@ -389,6 +397,7 @@ const VRF_PLATFORM_NAV = [
   { key: 'swap', title: 'Rabbit Swap', icon: Repeat2, to: '/platform/swap' },
   { key: 'liquidity', title: 'Liquidity', icon: Waves, to: '/platform/liquidity' },
   { key: 'factory', title: 'Token Factory', icon: Factory, to: '/platform/factory' },
+  { key: 'fx', title: 'Rabbit Global FX', icon: Repeat2, to: '/platform/fx' },
   { key: 'launchpool', title: 'Launchpool', icon: Flame, to: '/platform/launchpool' },
   { key: 'vrf', title: 'Rabbit VRF', icon: ShieldCheck, to: '/vrf' },
   { key: 'faucet', title: 'Faucet', icon: Droplets, to: '/platform/faucet' },
@@ -1269,64 +1278,22 @@ export default function Vrf({
         </div>
       </section>
 
-      <section className="platform-v2-hero vrf-v2-hero" style={{padding: '18px 0'}}>
-  <div className="shell" style={{
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: 22
-  }}>
-    <img
-      src="/rabbit-vrf-logo.png"
-      alt="Rabbit VRF"
-      style={{
-        width: 112,
-        maxWidth: '100%',
-        height: 'auto',
-        objectFit: 'contain',
-        flexShrink: 0
-      }}
-    />
-    <div style={{flex: '1 1 300px', minWidth: 0}}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: 10,
-        marginBottom: 5
-      }}>
-        <strong style={{fontSize: 17}}>Rabbit VRF</strong>
-        <span style={{
-          fontSize: 10,
-          fontWeight: 700,
-          color: '#16845b',
-          background: '#e8f8ef',
-          padding: '5px 10px',
-          borderRadius: 20
-        }}>
-          TESTNET LIVE
-        </span>
-      </div>
-      <h1 style={{
-        fontSize: 'clamp(21px, 2.4vw, 30px)',
-        lineHeight: 1.2,
-        margin: '4px 0 8px'
-      }}>
-        Verifiable randomness.
-        <em> Native to Rabbit.</em>
-      </h1>
-      <p style={{
-        margin: 0,
-        fontSize: 13,
-        lineHeight: 1.6,
-        maxWidth: 740
-      }}>
-        Request on-chain randomness, track fulfillment and
-        verify results directly on Rabbit Testnet.
-        No mining or node setup required.
-      </p>
-    </div>
-  </div>
+      <section className="vrf-v2-hero" style={{
+  background: '#ffffff',
+  padding: '24px 16px',
+  textAlign: 'center'
+}}>
+  <img
+    src="/rabbit-vrf-logo.png"
+    alt="Rabbit VRF"
+    style={{
+      display: 'block',
+      width: 240,
+      maxWidth: '80%',
+      height: 'auto',
+      margin: '0 auto'
+    }}
+  />
 </section>
 
       <div className="shell vrf-workspace-tabs" role="tablist" aria-label="VRF workspace">
@@ -1482,123 +1449,9 @@ export default function Vrf({
               {buttonLabel}
             </button>
 
-            <VrfProofTelemetry readCoordinator={readCoordinator} requestId={vrfTiming?.id} />
+            <VrfProofTelemetry readCoordinator={readCoordinator} requestId={vrfTiming?.id} vrfTiming={vrfTiming} clock={clock} />
 
-            {vrfTiming && (() => {
-              const elapsed = Number.isFinite(vrfTiming.startedAt)
-                ? Math.max(0, (vrfTiming.finishedAt ?? clock) - vrfTiming.startedAt)
-                : 0
-              const minutes = String(Math.floor(elapsed / 60000)).padStart(2, '0')
-              const seconds = String(Math.floor((elapsed % 60000) / 1000)).padStart(2, '0')
-              const tenths = Math.floor((elapsed % 1000) / 100)
-              const failed = Boolean(vrfTiming.failed)
-              const done = vrfTiming.finishedAt !== null && !failed
-              const label = failed
-                ? 'Transaction failed'
-                : done
-                  ? 'Fulfilled'
-                  : !Number.isFinite(vrfTiming.startedAt)
-                    ? 'Confirming'
-                    : 'Pending'
 
-              return (
-                <div style={{
-                  margin: '14px 0',
-                  padding: '15px 18px',
-                  background: '#fff',
-                  border: '1px solid #e1e3ed',
-                  borderRadius: 12,
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 12,
-                    flexWrap: 'wrap',
-                  }}>
-                    <strong style={{
-                      color: '#171729',
-                      fontSize: 13,
-                    }}>
-                      Rabbit VRF · Request status
-                    </strong>
-                    <span style={{
-                      padding: '5px 10px',
-                      borderRadius: 7,
-                      background: failed
-                        ? '#fff1f1'
-                        : done
-                          ? '#edf8f2'
-                          : '#f3f0fc',
-                      color: failed
-                        ? '#b42318'
-                        : done
-                          ? '#16845b'
-                          : '#6846bd',
-                      fontSize: 11,
-                      fontWeight: 700,
-                    }}>
-                      {label}
-                    </span>
-                  </div>
-
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                    gap: 12,
-                    marginTop: 14,
-                  }}>
-                    <div>
-                      <div style={{
-                        fontSize: 10,
-                        letterSpacing: '0.06em',
-                        color: '#777b90',
-                        marginBottom: 4,
-                      }}>
-                        {done ? 'OBSERVED RESPONSE TIME' : 'ELAPSED TIME'}
-                      </div>
-                      <div style={{
-                        color: '#171729',
-                        fontSize: 31,
-                        fontWeight: 750,
-                        fontVariantNumeric: 'tabular-nums',
-                        lineHeight: 1.15,
-                      }}>
-                        {minutes}:{seconds}
-                        <span style={{
-                          fontSize: 17,
-                          color: '#777b90',
-                        }}>.{tenths}</span>
-                      </div>
-                    </div>
-
-                    <span style={{
-                      fontSize: 12,
-                      color: '#70758a',
-                    }}>
-                      {failed
-                        ? 'Transaction reverted'
-                        : done
-                          ? 'Randomness ready'
-                          : vrfTiming.id
-                            ? 'Waiting for VRF'
-                            : 'Waiting for confirmation'}
-                    </span>
-                  </div>
-
-                  <div style={{
-                    marginTop: 11,
-                    color: '#9699a8',
-                    fontSize: 10,
-                    lineHeight: 1.5,
-                  }}>
-                    Browser-observed timing · Approximate, includes RPC detection delay
-                  </div>
-                </div>
-              )
-            })()}
 
             {transactionHash && (
               <p className="vrf-transaction" role="status">

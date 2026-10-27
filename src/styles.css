@@ -9125,3 +9125,96 @@ footer {
 .rabbit-lp-v2 .rabbit-trade-more { border:1px solid #e6e2ef; border-radius:13px; padding:12px 14px; margin:10px 0; }
 .rabbit-lp-v2 .rabbit-trade-more > summary { cursor:pointer; font-size:13px; font-weight:750; color:#594472; padding:6px 0; }
 .rabbit-lp-v2 .rabbit-trade-more[open] > summary { margin-bottom:12px; }
+
+
+/* RABBIT PLATFORM NAVIGATION STICKY CORRECTION */
+@media (min-width: 821px) {
+  main.platform-product-page {
+    overflow: visible !important;
+  }
+
+  .platform-product-page .platform-product-shell {
+    overflow: visible !important;
+    align-items: stretch;
+  }
+
+  .platform-product-page .platform-sidebar {
+    position: sticky !important;
+    top: 76px !important;
+    align-self: start !important;
+    height: auto !important;
+    z-index: 50 !important;
+  }
+}
+
+/* RABBIT_VRF_NAV_WHITE_STICKY_20261027 */
+
+/* Allow the VRF navigation to remain sticky. */
+main:has(.vrf-platform-toolbar),
+.vrf-workspace-clean {
+  overflow: visible !important;
+}
+
+/* Follow page scroll below the Rabbit header. */
+.vrf-platform-toolbar {
+  position: sticky !important;
+  top: 76px !important;
+  z-index: 50 !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #e4e5ec;
+}
+
+/* White request tabs, preserving the purple active line. */
+.vrf-workspace-tabs,
+.vrf-workspace-clean .vrf-workspace-tabs {
+  background: #ffffff !important;
+}
+
+/* Compact performance and status presentation. */
+.vrf-workspace-clean .vrf-workspace-tabs + section {
+  background-color: #ffffff;
+}
+
+@media (max-width: 820px) {
+  .vrf-platform-toolbar {
+    top: 64px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .vrf-platform-toolbar {
+    top: 60px !important;
+  }
+  .vrf-platform-toolbar nav {
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+  }
+}
+/* RABBIT VRF - FULL WIDTH WHITE TABS */
+body:has(.vrf-workspace-tabs) .vrf-workspace-tabs,
+body:has(.vrf-workspace-tabs) .vrf-workspace-tabs::before,
+body:has(.vrf-workspace-tabs) .vrf-workspace-tabs::after {
+  background: #ffffff !important;
+}
+
+body:has(.vrf-workspace-tabs) .vrf-workspace-tabs {
+  box-shadow: none !important;
+}
+
+
+/* RABBIT VRF - WHITE FULL WIDTH WORKSPACE TABS */
+body:has(.vrf-workspace-tabs) .vrf-workspace-tabs {
+  background: #fff !important;
+}
+
+body:has(.vrf-workspace-tabs) .vrf-workspace-tabs.shell {
+  width: 100% !important;
+  max-width: none !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+  box-sizing: border-box !important;
+}
+
+body:has(.vrf-workspace-tabs) .vrf-workspace-tabs > * {
+  background-color: #fff;
+}
