@@ -1414,7 +1414,7 @@ export default function Vrf({
             </button>
 
             <VrfProofTelemetry readCoordinator={readCoordinator} requestId={vrfTiming?.id} />
-            <VrfOnchainMonitor requestId={vrfTiming?.id} />
+
             {vrfTiming && (() => {
               const elapsed = Number.isFinite(vrfTiming.startedAt)
                 ? Math.max(0, (vrfTiming.finishedAt ?? clock) - vrfTiming.startedAt)
@@ -1612,7 +1612,7 @@ export default function Vrf({
                   <div className="wide">
                     <span>PROOF HASH</span>
                     <VrfProofTelemetry readCoordinator={readCoordinator} requestId={requestId} />
-                    <VrfOnchainMonitor requestId={requestId} />
+
                     <code className="vrf-full-hash">{request.proofHash}</code>
                     {Number(request.status) === 2 && <button className="copy-button vrf-copy" type="button" onClick={() => copyValue(request.proofHash)}>Copy proof hash</button>}
                     <small>A proof hash identifies the proof; this page reads on-chain state and does not independently verify its cryptography.</small>
