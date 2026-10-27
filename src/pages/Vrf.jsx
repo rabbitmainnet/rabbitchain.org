@@ -1533,7 +1533,6 @@ export default function Vrf({
 
                   <div className="wide">
                     <span>PROOF HASH</span>
-                    <VrfProofTelemetry readCoordinator={readCoordinator} requestId={requestId} />
 
                     <code className="vrf-full-hash">{request.proofHash}</code>
                     {Number(request.status) === 2 && <button className="copy-button vrf-copy" type="button" onClick={() => copyValue(request.proofHash)}>Copy proof hash</button>}
