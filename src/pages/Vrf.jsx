@@ -43,7 +43,7 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
       window.location.port === '5188'
     const base = localPreview
       ? 'http://127.0.0.1:8768'
-      : (configured || '')
+      : (configured || 'https://rabbit-vrf-telemetry.fernandoaugusto780.workers.dev')
 
     setResult(null)
     // Public static evidence is used when no telemetry API is configured.
