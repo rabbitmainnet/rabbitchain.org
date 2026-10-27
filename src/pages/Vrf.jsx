@@ -1408,7 +1408,7 @@ export default function Vrf({
 
               <div>
                 <span>PRICING TARGET</span>
-                <strong>0.005 tRUSD from block 320,000</strong>
+                <strong>0.005 tRUSD</strong>
                 <small>Converted by the protocol to native tRAB</small>
               </div>
             </div>
