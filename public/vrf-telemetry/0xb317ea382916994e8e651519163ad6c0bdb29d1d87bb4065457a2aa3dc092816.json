@@ -1,0 +1,32 @@
+{
+    "requestId":  "0xb317ea382916994e8e651519163ad6c0bdb29d1d87bb4065457a2aa3dc092816",
+    "source":  "Rabbit Core local node",
+    "measurement":  {
+                        "logAvailable":  true,
+                        "firstObserved":  "10-26 23:55:45.251",
+                        "proofReady":  "10-26 23:55:45.803",
+                        "proofShort":  "0322dd..a339bd",
+                        "observedToProofMs":  552.0
+                    },
+    "evidence":  {
+                     "schemaVersion":  1,
+                     "network":  "Rabbit Chain Testnet",
+                     "chainId":  9280,
+                     "requestId":  "0xb317ea382916994e8e651519163ad6c0bdb29d1d87bb4065457a2aa3dc092816",
+                     "evidenceType":  "node-log-observation",
+                     "observedDate":  "2026-10-26",
+                     "firstObservedContribution":  "23:55:45.251",
+                     "proofReadyAt":  "23:55:45.803",
+                     "observedToProofMs":  552,
+                     "finalCollectionPhaseMs":  192.4782,
+                     "source":  "Rabbit Core v2.4.16 node log",
+                     "methodology":  "First logged inbound validation to local proof readiness",
+                     "proofHashPrefix":  "0322dd",
+                     "proofHashSuffix":  "a339bd",
+                     "proofHash":  "0x0322dd969dcd0e085d3bb14f952ac734eb11c6aac8feb0962acbc5876ca339bd",
+                     "randomness":  "0x7f54287494efe197702bb62cf6276376d537670ad82a4ce54ee12f04b00ac0a2",
+                     "onChainStatus":  "FULFILLED",
+                     "verificationMethod":  "eth_call getRequest(bytes32) at latest; proofHash prefix/suffix matched node log"
+                 },
+    "note":  "Tempo observado no log do no. Nao equivale ao tempo de confirmacao on-chain."
+}

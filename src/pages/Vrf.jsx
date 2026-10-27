@@ -46,12 +46,12 @@ function VrfProofTelemetry({ requestId, readCoordinator }) {
       : (configured || '')
 
     setResult(null)
-    if (!base) return
+    // Public static evidence is used when no telemetry API is configured.
 
     const check = async () => {
       try {
         const response = await fetch(
-          `${base.replace(/\/$/, '')}/api/vrf/telemetry/${requestId}`,
+          `${base ? `${base.replace(/\/$/, '')}/api/vrf/telemetry/${requestId}` : `/vrf-telemetry/${requestId}.json`}`,
           { cache: 'no-store' }
         )
         if (!response.ok) return
