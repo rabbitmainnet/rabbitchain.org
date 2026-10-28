@@ -96,7 +96,7 @@ export default function Mining() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.4.16 <ArrowRight size={15} />
+                Rabbit Core V2.4.17 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -105,7 +105,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.4.16</b>
+              <b>V2.4.17</b>
             </div>
 
             <pre><code>
@@ -127,8 +127,8 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <p>V2.4.16 retains automatic verified blockchain bootstrap for fresh installations. Rabbit Core downloads the official multipart snapshot, validates its integrity and synchronizes the remaining blocks before mining. Existing installations retain their blockchain and encrypted wallet.</p>
-            <h2>Rabbit Core V2.4.16 simplifies joining the public Testnet. New miners create or reuse their encrypted wallet, automatically download and verify the official blockchain bootstrap, synchronize remaining blocks and begin LCQ participation. Existing miners retain their chain history, wallets and WorkSeats. Previous VRF relay, recovery and consensus improvements remain supported. WorkSeat liveness V2 activates at Testnet block 323,800, correcting fallback bookkeeping for admitted WorkSeats. VRF economics and WorkSeat admission remain active from block 320,000.</h2>
+            <p>V2.4.17 fixes startup schedule loading and peer disconnections caused by locally unknown VRF requests. It introduces no new fork and retains automatic verified blockchain bootstrap for fresh installations. Rabbit Core downloads the official multipart snapshot, validates its integrity and synchronizes the remaining blocks before mining. Existing installations retain their blockchain and encrypted wallet.</p>
+            <h2>Rabbit Core V2.4.17 simplifies joining the public Testnet. New miners create or reuse their encrypted wallet, automatically download and verify the official blockchain bootstrap, synchronize remaining blocks and begin LCQ participation. Existing miners retain their chain history, wallets and WorkSeats. Previous VRF relay, recovery and consensus improvements remain supported. WorkSeat liveness V2 has been active since Testnet block 323,800, correcting fallback bookkeeping for admitted WorkSeats. VRF economics and WorkSeat admission remain active from block 320,000.</h2>
 
             <p>
               Existing miners only need to close the previous Rabbit Core, extract
@@ -138,7 +138,7 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.4.16</a>
+          <a className="button light" href="#downloads">Download V2.4.17</a>
         </div>
       </section>
 
@@ -646,10 +646,10 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.4.16 is an in-place Testnet upgrade. Keep your existing
+              Rabbit Core V2.4.17 is an in-place Testnet upgrade. Keep your existing
               Rabbit Testnet datadir, blockchain data, wallet/keystore, node identity
               and persistent participation / consensus state. Do not reset or delete
-              them. Close the previous Rabbit Core normally, verify the V2.4.16 package
+              them. Close the previous Rabbit Core normally, verify the V2.4.17 package
               SHA-256, extract it into a new software directory and continue using the
               existing Testnet data.
             </p>
