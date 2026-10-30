@@ -423,6 +423,14 @@ export default function App() {
               }
             />
             <Route
+              path="/embed/launchpool"
+              element={<ExplorerPlatformTools tool="launchpool" toast={toast} />}
+            />
+            <Route
+              path="/embed/vrf"
+              element={<ExplorerPlatformTools tool="vrf" toast={toast} />}
+            />
+            <Route
               path="/embed/mining"
               element={<Mining />}
             />

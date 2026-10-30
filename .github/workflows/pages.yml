@@ -53,6 +53,8 @@ jobs:
             embed/factory
             embed/faucet
             embed/mining
+            embed/launchpool
+            embed/vrf
             platform/liquidity
             platform/staking
             platform/launchpool

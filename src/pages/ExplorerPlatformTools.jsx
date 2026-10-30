@@ -5,9 +5,24 @@ import RabbitFaucetPanel from '../components/RabbitFaucetPanel'
 import RabbitLiquidityPanel from '../components/RabbitLiquidityPanel'
 import RabbitTokenFactoryPanel from '../components/RabbitTokenFactoryPanel'
 
+import RabbitLaunchpoolPanel from '../components/RabbitLaunchpoolPanel'
+import Vrf from './Vrf'
+
+function ExplorerVrf(props) {
+  return <Vrf {...props} onAddNetwork={props.onSwitchNetwork} />
+}
+
 const RABBIT_CHAIN_ID = 9280
 
 const TOOLS = {
+  launchpool: {
+    title: 'Rabbit Launchpool',
+    Component: RabbitLaunchpoolPanel,
+  },
+  vrf: {
+    title: 'Rabbit VRF',
+    Component: ExplorerVrf,
+  },
   faucet: {
     title: 'Rabbit Faucet',
     Component: RabbitFaucetPanel,
