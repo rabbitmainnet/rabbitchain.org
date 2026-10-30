@@ -9220,31 +9220,7 @@ body:has(.vrf-workspace-tabs) .vrf-workspace-tabs > * {
 }
 
 
-/* RABBIT_VRF_EMBED_TOOLBAR_V1 */
-.rabbit-explorer-embed .vrf-platform-toolbar-inner {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  box-sizing: border-box;
-}
-.rabbit-explorer-embed .vrf-platform-toolbar-inner > nav {
-  display: flex !important;
-  flex: 1 1 100% !important;
-  flex-wrap: wrap !important;
-  gap: 8px 14px !important;
-  min-width: 0 !important;
-}
-.rabbit-explorer-embed .vrf-platform-toolbar-inner > nav a {
-  white-space: nowrap;
-}
-.rabbit-explorer-embed .vrf-toolbar-network-switch {
-  position: static !important;
-  inset: auto !important;
-  transform: none !important;
-  flex: 0 0 auto !important;
-  margin-left: auto !important;
+/* RABBIT_VRF_EMBED_HIDE_TOOLBAR_V2 */
+.rabbit-explorer-embed .vrf-platform-toolbar {
+  display: none !important;
 }
