@@ -42,7 +42,7 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.7</strong>
-            <p>Current software: Rabbit Core Testnet V2.4.18</p>
+            <p>Current software: Rabbit Core Testnet V2.4.19</p>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -57,14 +57,14 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="Whitepaper protocol history and the current Core release are tracked together."
-          text="Whitepaper v1.7 documents the current public Testnet while preserving earlier LCQ consensus and protocol activation history; the current software release is Rabbit Core V2.4.18. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 on the public Testnet. Availability V2 activated at block 173,057 in V2.4.6. V2.4.18 includes authenticated VRF relay while preserving historical fork heights; WorkSeat liveness V2 has been active since Testnet block 323,800. The V5 mining reward correction remains active from block 153,601. From block 320,000 the VRF base target is US$0.005 equivalent, with 50% development allocation, 30% validated signers and 20% fulfillment producer. Mining rewards remain 70/30. The downloadable v1.7 document is a historical reference; this page records the v2.4.18 addendum. Protocol activation does not prove every request has completed."
+          text="Whitepaper v1.7 documents the current public Testnet while preserving earlier LCQ consensus and protocol activation history; the current software release is Rabbit Core V2.4.19. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 on the public Testnet. Availability V2 activated at block 173,057 in V2.4.6. V2.4.19 includes authenticated VRF relay while preserving historical fork heights; WorkSeat liveness V2 has been active since Testnet block 323,800. The V5 mining reward correction remains active from block 153,601. From block 320,000 the VRF base target is US$0.005 equivalent, with 50% development allocation, 30% validated signers and 20% fulfillment producer. Mining rewards remain 70/30. The downloadable v1.7 document is a historical reference; this page records the v2.4.19 addendum. Protocol activation does not prove every request has completed."
         />
 
         <div className="resource-grid">
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.4.18</h3>
+            <h3>Rabbit Core V2.4.19</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -104,7 +104,7 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.4.18</h3>
+            <h3>Rabbit Core V2.4.19</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -194,7 +194,7 @@ export default function Whitepaper() {
             Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Current Rabbit Core V2.4.18 release <ArrowUpRight size={14} />
+            Current Rabbit Core V2.4.19 release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>

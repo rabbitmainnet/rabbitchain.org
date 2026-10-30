@@ -458,7 +458,7 @@ function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwo
 
         <p className="product-disclaimer">
           Rabbit VRF protocol rules activated at block 136193 after DKG preparation at 136065.
-          V2.4.18 includes authenticated VRF relay with startup and peer connection fixes. VRF economics and WorkSeat admission remain active from Testnet block 320,000; WorkSeat liveness V2 remains active from block 323,800. No new fork is introduced. Any user or contract can request randomness without mining. Testnet requests can remain pending;
+          V2.4.19 includes authenticated VRF relay with startup and peer connection fixes. VRF economics and WorkSeat admission remain active from Testnet block 320,000; WorkSeat liveness V2 remains active from block 323,800. No new fork is introduced. Any user or contract can request randomness without mining. Testnet requests can remain pending;
           use randomness only after canonical completion has been verified.
         </p>
       </div>
