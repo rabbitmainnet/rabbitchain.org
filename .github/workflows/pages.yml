@@ -58,6 +58,7 @@ jobs:
             platform/liquidity
             platform/staking
             platform/launchpool
+            launchpool
             platform/factory
             platform/bridge
             platform/p2p

@@ -96,7 +96,7 @@ export default function Mining() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.4.22 <ArrowRight size={15} />
+                Rabbit Core V2.4.23 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -105,7 +105,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.4.22</b>
+              <b>V2.4.23</b>
             </div>
 
             <pre><code>
@@ -127,8 +127,8 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <p>V2.4.22 validates the Rabbit RandomX runtime profile, restores existing consensus activation settings before engine startup, and validates recovery checkpoint registry roots before caching restored state. It retains earlier synchronization retry and authenticated VRF relay improvements. This software update introduces no new fork and preserves existing chain data, wallets and participation state. A successful upgrade does not guarantee uninterrupted synchronization or absence of penalties.</p>
-            <h2>Rabbit Core V2.4.22 simplifies joining the public Testnet. New miners create or reuse their encrypted wallet, automatically download and verify the official blockchain bootstrap, synchronize remaining blocks and begin LCQ participation. Existing miners retain their chain history, wallets and WorkSeats. Previous VRF relay, recovery and consensus improvements remain supported. WorkSeat liveness V2 has been active since Testnet block 323,800, correcting fallback bookkeeping for admitted WorkSeats. VRF economics and WorkSeat admission remain active from block 320,000.</h2>
+            <p>V2.4.23 accelerates LQC state reconstruction on restart, retains additional recovery checkpoints, removes the former 4,096-block local recovery limit and cancels reconstruction during shutdown. New installations use a verified snapshot at block 385,509: approximately 7.49 GiB to download, followed by extraction and synchronization of remaining blocks. Existing wallets and blockchain data are preserved. No new fork is introduced. Recovery after abrupt process termination was tested on a disposable Windows copy; this is not a guarantee against every power-loss or storage failure.</p>
+            <h2>Faster restart recovery. A recent bootstrap for new miners.</h2>
 
             <p>
               Existing miners only need to close the previous Rabbit Core, extract
@@ -138,7 +138,7 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.4.22</a>
+          <a className="button light" href="#downloads">Download V2.4.23</a>
         </div>
       </section>
 
@@ -646,10 +646,10 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.4.22 is an in-place Testnet upgrade. Keep your existing
+              Rabbit Core V2.4.23 is an in-place Testnet upgrade. Keep your existing
               Rabbit Testnet datadir, blockchain data, wallet/keystore, node identity
               and persistent participation / consensus state. Do not reset or delete
-              them. Close the previous Rabbit Core normally, verify the V2.4.22 package
+              them. Close the previous Rabbit Core normally, verify the V2.4.23 package
               SHA-256, extract it into a new software directory and continue using the
               existing Testnet data.
             </p>
