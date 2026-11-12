@@ -252,7 +252,7 @@ export default function Home({ walletState, walletProvider, onConnect, onAddNetw
           </div>
 
           <div className="home-v2-reward">
-            <div className="home-v2-reward-copy"><span>BLOCK ECONOMICS</span><strong>One block. Two consensus roles.</strong><p>The protocol recognizes producer and committee participation explicitly.</p></div>
+            <div className="home-v2-reward-copy"><span>BLOCK ECONOMICS</span><strong>One block. Two consensus roles.</strong><p>This split applies when an eligible committee exists.</p></div>
             <div className="reward-meter" aria-label="70 percent producer and 30 percent committee reward split">
               <div className="producer"><b>70%</b><span>PRODUCER</span></div>
               <div className="committee"><b>30%</b><span>COMMITTEE</span></div>

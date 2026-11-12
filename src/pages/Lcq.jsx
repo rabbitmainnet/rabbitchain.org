@@ -76,7 +76,7 @@ export default function Lcq() {
 
       <section className="lcq-v2-reward" id="rewards">
         <div className="shell">
-          <div className="lcq-v2-reward-head"><div><span className="section-kicker">BLOCK ECONOMICS</span><h2>One block. Two consensus roles.</h2></div><p>The reward model recognizes the selected producer and committee participation explicitly.</p></div>
+          <div className="lcq-v2-reward-head"><div><span className="section-kicker">BLOCK ECONOMICS</span><h2>One block. Two consensus roles.</h2></div><p>The 70/30 split applies when an eligible committee exists. An eligible producer can receive the full subsidy without a committee. Emergency registry fallback with zero eligible WorkSeats can advance the chain without minting the normal subsidy.</p></div>
           <div className="reward-meter large"><div className="producer"><b>70%</b><span>PRODUCER</span><small>selected block opportunity</small></div><div className="committee"><b>30%</b><span>COMMITTEE</span><small>consensus participation</small></div></div>
         </div>
       </section>

@@ -96,7 +96,7 @@ export default function Mining() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.4.23 <ArrowRight size={15} />
+                Rabbit Core V2.4.25 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -105,7 +105,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.4.23</b>
+              <b>V2.4.25</b>
             </div>
 
             <pre><code>
@@ -127,7 +127,7 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <p>V2.4.23 accelerates LQC state reconstruction on restart, retains additional recovery checkpoints, removes the former 4,096-block local recovery limit and cancels reconstruction during shutdown. New installations use a verified snapshot at block 385,509: approximately 7.49 GiB to download, followed by extraction and synchronization of remaining blocks. Existing wallets and blockchain data are preserved. No new fork is introduced. Recovery after abrupt process termination was tested on a disposable Windows copy; this is not a guarantee against every power-loss or storage failure.</p>
+            <p>V2.4.25 improves synchronization recovery and VRF DKG message handling. Fresh installations use the verified snapshot at block 385,509 (approximately 7.49 GiB compressed), then synchronize the remaining canonical blocks. Existing installations reuse their Testnet data directory and encrypted wallet.</p>
             <h2>Faster restart recovery. A recent bootstrap for new miners.</h2>
 
             <p>
@@ -138,7 +138,7 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.4.23</a>
+          <a className="button light" href="#downloads">Download V2.4.25</a>
         </div>
       </section>
 
@@ -646,10 +646,10 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.4.23 is an in-place Testnet upgrade. Keep your existing
+              Rabbit Core V2.4.25 is an in-place Testnet upgrade. Keep your existing
               Rabbit Testnet datadir, blockchain data, wallet/keystore, node identity
               and persistent participation / consensus state. Do not reset or delete
-              them. Close the previous Rabbit Core normally, verify the V2.4.23 package
+              them. Close the previous Rabbit Core normally, verify the V2.4.25 package
               SHA-256, extract it into a new software directory and continue using the
               existing Testnet data.
             </p>
@@ -695,8 +695,10 @@ export default function Mining() {
             <h2>Producer and committee rewards are visible in Rabbit Miner.</h2>
 
             <p>
-              The configured Testnet block reward is 1.2 tRAB: 70% for the producer
-              and 30% for eligible committee participation. The included mining fix corrects V5-header
+              The configured Testnet block subsidy is 1.2 tRAB. With an eligible committee,
+              the producer receives 70% and committee participation accounts for 30%.
+              Without an eligible committee, an eligible producer can receive the full subsidy.
+              The historical V5 mining fix corrects header
               reward settlement from block 153,601; earlier blocks are not repaid
               automatically. Verify actual credits against canonical state.
             </p>

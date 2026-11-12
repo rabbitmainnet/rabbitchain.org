@@ -1,3 +1,4 @@
+import { canonicalFor, metaFor } from './config/route-meta'
 import ReleaseNotice from './components/ReleaseNotice'
 import RabbitLaunchpoolPanel from './components/RabbitLaunchpoolPanel'
 import { lazy, Suspense, useEffect, useState } from 'react'
@@ -46,39 +47,10 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const TermsConditions = lazy(() => import('./pages/TermsConditions'))
 const RiskDisclosure = lazy(() => import('./pages/RiskDisclosure'))
 
-const META = {
-  '/': ['Rabbit Chain — LCQ Layer 1', 'Rabbit Chain is a permissionless EVM Layer 1 powered by LCQ Consensus. One wallet. One fair chance.'],
-  '/testnet': ['Rabbit Testnet — Chain ID 9280', 'Connect a wallet, add Rabbit Testnet and follow the official public launch path.'],
-  '/mainnet': ['Rabbit Mainnet — Chain ID 928', 'Rabbit Mainnet is the production network planned after public Testnet validation.'],
-  '/lcq': ['LCQ Consensus — Rabbit Chain', 'Work, eligibility, live queue, producer opportunity and committee participation on Rabbit Chain.'],
-  '/mining': ['Mining — Rabbit Chain', 'Download Rabbit Core V2.4.23 for Rabbit Testnet. Automatic verified blockchain bootstrap, encrypted wallet setup, verified packages and safe upgrades preserving your existing wallet and blockchain data. Live block import and fork recovery coordination, retaining bounded retries and confirmed VRF reward reporting. No new fork; activation remains block 323,800.'],
-  '/nodes': ['Run a Node — Rabbit Chain', 'Operate independent Rabbit P2P and RPC infrastructure.'],
-  '/developers': ['Developers — Rabbit Chain', 'Rabbit EVM, JSON-RPC, wallet and developer integration resources.'],
-  '/docs': ['Documentation — Rabbit Chain', 'Official Rabbit Chain protocol and network documentation.'],
-  '/platform': ['Rabbit Platform', 'Official wallet-connected application layer for Rabbit Chain.'],
-  '/vrf': ['Rabbit VRF — Verifiable Randomness', 'Rabbit VRF is the native verifiable randomness protocol for Rabbit Chain. Test the live public Testnet coordinator and inspect canonical VRF requests.'],
-  '/rab': ['RAB — Rabbit Chain Native Asset', 'Rabbit Testnet uses tRAB; the future Rabbit Mainnet will use RAB.'],
-  '/security': ['Security — Rabbit Chain', 'Official Rabbit Chain domain, wallet and release verification guidance.'],
-  '/releases': ['Releases — Rabbit Chain', 'Official Rabbit Core V2.4.23 with automatic bootstrap, verified downloads, SHA-256 hashes and safe upgrade instructions. Live block import and fork recovery coordination, retaining bounded retries and confirmed VRF reward reporting. No new fork; activation remains block 323,800.'],
-  '/about': ['About Rabbit Chain', 'Rabbit Chain project principles, architecture and public launch model.'],
-  '/whitepaper': ['Whitepaper — Rabbit Chain', 'Rabbit Chain technical architecture, LCQ consensus history and Rabbit Core V2.4.23 authenticated VRF relay, preserving prior Testnet history.'],
-  '/community': ['Community — Rabbit Chain', 'Official Rabbit Chain GitHub, X, Discord, Instagram, Facebook and community resources.'],
-  '/status': ['Network Status — Rabbit Chain', 'Official Rabbit Testnet RPC, WebSocket, explorer, downloads and planned-service status.'],
-  '/privacy-policy': ['Privacy Policy — Rabbit Chain', 'Rabbit Chain privacy policy.'],
-  '/terms-and-conditions': ['Terms & Conditions — Rabbit Chain', 'Rabbit Chain terms and conditions.'],
-  '/risk-disclosure': ['Risk Disclosure — Rabbit Chain', 'Rabbit Chain network, software and digital-asset risk disclosures.'],
-}
-
-function metaFor(pathname) {
-  if (pathname.startsWith('/platform/')) return ['Rabbit Platform — Rabbit Chain', 'Wallet-connected Rabbit Platform module. Service availability is shown explicitly.']
-  return META[pathname] || ['Rabbit Chain', 'Rabbit Chain official network portal.']
-}
-
 function updateMeta(pathname) {
   const [title, description] = metaFor(pathname)
   document.title = title
-  const canonicalPath = pathname === '/' ? '/' : `${pathname.endsWith('/') ? pathname.slice(0, -1) : pathname}/`
-  const canonical = `https://rabbitchain.org${canonicalPath}`
+  const canonical = canonicalFor(pathname)
   const set = (selector, attr, value) => { const element = document.querySelector(selector); if (element) element.setAttribute(attr, value) }
   set('meta[name="description"]', 'content', description)
   set('meta[property="og:title"]', 'content', title)

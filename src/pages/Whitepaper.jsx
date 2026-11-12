@@ -6,6 +6,8 @@ import SectionHeader from '../components/SectionHeader'
 const WHITEPAPER_REPO = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper'
 const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.7.pdf'
 const WHITEPAPER_ODT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.7.odt'
+const TESTNET_ADDENDUM = `${WHITEPAPER_REPO}/blob/main/docs/Testnet-V2.4.25-Technical-Addendum.pdf`
+const TESTNET_ADDENDUM_ODT = `${WHITEPAPER_REPO}/blob/main/docs/Testnet-V2.4.25-Technical-Addendum.odt`
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
 const LIVENESS_V3_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.3.0-Liveness-V3-Upgrade.md'
@@ -42,7 +44,9 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.7</strong>
-            <p>Current software: Rabbit Core Testnet V2.4.23</p>
+            <p>Current software: Rabbit Core Testnet V2.4.25</p>
+            <a href={TESTNET_ADDENDUM} target="_blank" rel="noreferrer">V2.4.25 technical addendum (PDF) <ArrowUpRight size={14} /></a>
+            <a href={TESTNET_ADDENDUM_ODT} target="_blank" rel="noreferrer">V2.4.25 technical addendum (ODT) <ArrowUpRight size={14} /></a>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -57,14 +61,14 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="Whitepaper protocol history and the current Core release are tracked together."
-          text="Whitepaper v1.7 documents the current public Testnet while preserving earlier LCQ consensus and protocol activation history; the current software release is Rabbit Core V2.4.23. Rabbit VRF DKG preparation started at block 136,065, and Rabbit VRF plus the VRF liveness rules activated at block 136,193 on the public Testnet. Availability V2 activated at block 173,057 in V2.4.6. V2.4.23 includes authenticated VRF relay while preserving historical fork heights; WorkSeat liveness V2 has been active since Testnet block 323,800. The V5 mining reward correction remains active from block 153,601. From block 320,000 the VRF base target is US$0.005 equivalent, with 50% development allocation, 30% validated signers and 20% fulfillment producer. Mining rewards remain 70/30. The downloadable v1.7 document is a historical reference; this page records the v2.4.23 addendum. Protocol activation does not prove every request has completed."
+          text="The historical Whitepaper v1.7 and the V2.4.25 technical addendum cover the protocol and its current client separately. The addendum documents Work V2 admission, LCQ eligibility and rewards, verified bootstrap, synchronization recovery and the limits of Testnet VRF evidence."
         />
 
         <div className="resource-grid">
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.4.23</h3>
+            <h3>Rabbit Core V2.4.25</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -104,7 +108,7 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.4.23</h3>
+            <h3>Rabbit Core V2.4.25</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -160,9 +164,8 @@ export default function Whitepaper() {
             <span>REWARDS</span>
             <h3>70% producer · 30% committee</h3>
             <p>
-              Each canonical block divides the configured protocol reward between
-              the scheduled producer and the eligible committee: 70% to the producer
-              and 30% to the committee.
+              The WorkSeat subsidy is split 70% to the producer and 30% to the committee
+              when an eligible committee exists.
             </p>
           </article>
 
@@ -194,7 +197,7 @@ export default function Whitepaper() {
             Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Current Rabbit Core V2.4.23 release <ArrowUpRight size={14} />
+            Current Rabbit Core V2.4.25 release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>
