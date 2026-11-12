@@ -8,7 +8,7 @@ Rabbit Chain is a permissionless EVM Layer 1 powered by Live Consensus Queue (LC
 
 Rabbit Core Testnet v2.4.25 source: https://github.com/rabbitmainnet/rabbit-geth/tree/4f502f971c3b3166be14da6e25fbc7c531404d42
 Official packages and SHA-256 checksums: https://rabbitchain.org/releases/
-Historical Whitepaper v1.7 and the v2.4.25 technical addendum: https://rabbitchain.org/whitepaper/
+Whitepaper v1.8 for Rabbit Core v2.4.25: https://rabbitchain.org/whitepaper/
 
 Fresh installations prepare an encrypted wallet, verify and resume the official multipart bootstrap at block 385509 (approximately 7.49 GiB compressed), then synchronize the remaining canonical blocks. Upgrades reuse the existing data directory, encrypted wallet, node identity and participation state. Extracting the program elsewhere does not relocate the data directory.
 

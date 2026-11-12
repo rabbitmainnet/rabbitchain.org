@@ -13,7 +13,7 @@ const META = {
   '/security': ['Security — Rabbit Chain', 'Official Rabbit Chain domain, wallet and release verification guidance.'],
   '/releases': ['Releases — Rabbit Chain', 'Official Rabbit Core V2.4.25 with automatic bootstrap, verified downloads, SHA-256 hashes and safe upgrade instructions. Includes synchronization recovery improvements and preserves the historical activation schedule.'],
   '/about': ['About Rabbit Chain', 'Rabbit Chain project principles, architecture and public launch model.'],
-  '/whitepaper': ['Whitepaper — Rabbit Chain', 'Read the historical Whitepaper v1.7 and the Rabbit Core V2.4.25 technical addendum.'],
+  '/whitepaper': ['Whitepaper — Rabbit Chain', 'Read Whitepaper v1.8, the consolidated Rabbit Core V2.4.25 edition.'],
   '/community': ['Community — Rabbit Chain', 'Official Rabbit Chain GitHub, X, Discord, Instagram, Facebook and community resources.'],
   '/status': ['Network Status — Rabbit Chain', 'Official Rabbit Testnet RPC, WebSocket, explorer, downloads and planned-service status.'],
   '/privacy-policy': ['Privacy Policy — Rabbit Chain', 'Rabbit Chain privacy policy.'],

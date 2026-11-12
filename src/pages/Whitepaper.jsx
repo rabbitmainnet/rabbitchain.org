@@ -4,9 +4,10 @@ import { ArrowRight, ArrowUpRight, BookOpen, FileText, ShieldCheck } from 'lucid
 import SectionHeader from '../components/SectionHeader'
 
 const WHITEPAPER_REPO = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper'
-const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.7.pdf'
-const WHITEPAPER_ODT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.7.odt'
+const WHITEPAPER_PDF = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.8.pdf'
+const WHITEPAPER_ODT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Rabbit-Chain-Whitepaper-v1.8.odt'
 const TESTNET_ADDENDUM = `${WHITEPAPER_REPO}/blob/main/docs/Testnet-V2.4.25-Technical-Addendum.pdf`
+const HISTORICAL_PDF = `${WHITEPAPER_REPO}/blob/main/docs/Rabbit-Chain-Whitepaper-v1.7.pdf`
 const TESTNET_ADDENDUM_ODT = `${WHITEPAPER_REPO}/blob/main/docs/Testnet-V2.4.25-Technical-Addendum.odt`
 const STABILIZATION_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.3-Stabilization-Report.md'
 const FAIRNESS_REPORT = 'https://github.com/rabbitmainnet/rabbit-chain-whitepaper/blob/main/docs/Testnet-V2.2.5-Fairness-Liveness-Upgrade.md'
@@ -19,21 +20,21 @@ export default function Whitepaper() {
       <section className="page-hero whitepaper-hero">
         <div className="shell page-hero-grid">
           <div className="page-hero-copy">
-            <span className="hero-eyebrow"><i /> OFFICIAL TECHNICAL WHITEPAPER · v1.7</span>
-            <h1>Public Testnet V2 <em>Technical Edition v1.7.</em></h1>
+            <span className="hero-eyebrow"><i /> OFFICIAL TECHNICAL WHITEPAPER · v1.8</span>
+            <h1>Public Testnet V2 <em>Technical Edition v1.8.</em></h1>
             <p>
               Rabbit Chain is a permissionless, EVM-compatible Layer 1 built around
               Live Consensus Queue (LCQ). Work qualifies participation; canonical
-              eligible wallets receive at most one WorkSeat per epoch, and the
+              eligible wallets hold at most one persistent WorkSeat, and the
               deterministic LCQ queue schedules block production.
             </p>
 
             <div className="hero-ctas">
               <a className="button primary" href={WHITEPAPER_PDF} target="_blank" rel="noreferrer">
-                Whitepaper PDF v1.7 <ArrowUpRight size={14} />
+                Whitepaper PDF v1.8 <ArrowUpRight size={14} />
               </a>
               <a className="button secondary" href={WHITEPAPER_ODT} target="_blank" rel="noreferrer">
-                Whitepaper ODT v1.7 <ArrowUpRight size={14} />
+                Whitepaper ODT v1.8 <ArrowUpRight size={14} />
               </a>
               <a className="button secondary" href={WHITEPAPER_REPO} target="_blank" rel="noreferrer">
                 Source repository <ArrowUpRight size={14} />
@@ -43,10 +44,11 @@ export default function Whitepaper() {
 
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
-            <strong>Technical Whitepaper v1.7</strong>
+            <strong>Technical Whitepaper v1.8</strong>
             <p>Current software: Rabbit Core Testnet V2.4.25</p>
             <a href={TESTNET_ADDENDUM} target="_blank" rel="noreferrer">V2.4.25 technical addendum (PDF) <ArrowUpRight size={14} /></a>
             <a href={TESTNET_ADDENDUM_ODT} target="_blank" rel="noreferrer">V2.4.25 technical addendum (ODT) <ArrowUpRight size={14} /></a>
+            <a href={HISTORICAL_PDF} target="_blank" rel="noreferrer">Historical Whitepaper v1.7 (PDF) <ArrowUpRight size={14} /></a>
             <section>
               <span>CHAIN ID 9280</span>
               <span>LCQ CONSENSUS</span>
@@ -61,7 +63,7 @@ export default function Whitepaper() {
         <SectionHeader
           eyebrow="CURRENT RELEASED NETWORK"
           title="Whitepaper protocol history and the current Core release are tracked together."
-          text="The historical Whitepaper v1.7 and the V2.4.25 technical addendum cover the protocol and its current client separately. The addendum documents Work V2 admission, LCQ eligibility and rewards, verified bootstrap, synchronization recovery and the limits of Testnet VRF evidence."
+          text="Whitepaper v1.8 integrates the V2.4.25 technical addendum and documents Work V2 admission, LCQ eligibility and rewards, verified bootstrap, synchronization recovery and the limits of Testnet VRF evidence."
         />
 
         <div className="resource-grid">
@@ -260,7 +262,7 @@ export default function Whitepaper() {
 
         <div className="hero-ctas">
           <a className="button primary" href={WHITEPAPER_PDF} target="_blank" rel="noreferrer">
-            Read the full v1.5 paper <ArrowUpRight size={14} />
+            Read the full v1.8 Whitepaper <ArrowUpRight size={14} />
           </a>
           <Link className="button secondary" to="/docs">
             Explore Docs <ArrowRight size={14} />
