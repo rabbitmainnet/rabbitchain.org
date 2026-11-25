@@ -20,7 +20,7 @@ import RabbitAnimalDrawPanel from '../components/RabbitAnimalDrawPanel'
 
 const tools = {
   'animal-draw-pool': { icon: Coins, label: 'ANIMAL DRAW POOL', title: 'Animal Draw Liquidity', intro: 'Track capital, profits, losses and available liquidity withdrawals in the V5 testnet laboratory.' },
-  'animal-draw': { icon: ShieldCheck, label: 'ANIMAL DRAW', title: 'Rabbit Animal Draw', intro: '24 hourly UTC testnet contests backed by Rabbit VRF. Explore draws, place test bets and check on-chain results.' },
+  'animal-draw': { icon: ShieldCheck, label: 'ANIMAL DRAW', title: 'Rabbit Animal Draw', intro: '24 hourly UTC testnet contests backed by Rabbit VRF. Preview only while payout and keeper checks are completed.' },
   fx: {
     icon: Coins,
     label: 'GLOBAL FX',
@@ -48,7 +48,7 @@ const testnetToolOrder = ['swap', 'liquidity', 'factory', 'fx', 'launchpool', 'v
 
 
 function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwork, networkKey, toast }) {
-  if (tool === 'animal-draw-pool') return <RabbitAnimalDrawInvestorPanel walletState={walletState} onConnect={onConnect} networkKey={networkKey} />
+  if (tool === 'animal-draw-pool') return <RabbitAnimalDrawInvestorPanel walletState={walletState} walletProvider={walletProvider} onConnect={onConnect} networkKey={networkKey} />
   if (tool === 'animal-draw') return <RabbitAnimalDrawPanel walletState={walletState} walletProvider={walletProvider} onConnect={onConnect} onSwitchNetwork={onSwitchNetwork} networkKey={networkKey} />
   const entry = tools[tool]
   const Icon = entry.icon

@@ -1,0 +1,14 @@
+
+.rad-pool-banner{margin:16px 0 18px;padding:20px;border:1px solid rgba(160,92,240,.23);border-radius:18px;background:linear-gradient(110deg,rgba(168,85,247,.09),rgba(59,130,246,.04))}
+.rad-pool-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.rad-pool-heading small{font-size:10px;font-weight:700;letter-spacing:.14em;color:#9450de}
+.rad-pool-heading h2{font-size:21px;margin:5px 0;color:inherit}
+.rad-pool-heading p{font-size:12px;opacity:.75;max-width:660px;margin:3px 0 10px}
+.rad-pool-heading a{display:inline-flex;align-items:center;gap:7px;padding:10px 14px;border-radius:11px;background:#6e3dd8;color:#fff;text-decoration:none;font-weight:700;font-size:12px}
+.rad-pool-currencies{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.rad-pool-currency{padding:14px;border:1px solid rgba(155,125,204,.18);border-radius:12px;background:rgba(255,255,255,.58);min-width:0}
+.rad-pool-currency>strong{font-size:15px}
+.rad-pool-currency>div{display:flex;justify-content:space-between;gap:8px;align-items:baseline;margin-top:8px;flex-wrap:wrap}
+.rad-pool-currency span{font-size:12px;opacity:.72}
+.rad-pool-currency b{font-size:17px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.rad-pool-currencies{grid-template-columns:1fr}.rad-pool-heading a{width:100%;justify-content:center}}

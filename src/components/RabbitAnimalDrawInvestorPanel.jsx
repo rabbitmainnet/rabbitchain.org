@@ -43,8 +43,8 @@ const display=(v,decimals=18)=>{if(v===undefined||v===null)return '—';const s=
 const errorText=e=>e?.shortMessage||e?.cause?.shortMessage||e?.message||String(e)
 const readable=(text)=>typeof text==='string'&&text.length>300?text.slice(0,300)+'…':text
 
-export default function RabbitAnimalDrawInvestorPanel({ walletState, onConnect, networkKey }){
- const account=walletState?.account||null
+export default function RabbitAnimalDrawInvestorPanel({ walletState, walletProvider, onConnect, networkKey }){
+ const account=walletState?.account||walletState?.address||null
  const chain=Number(walletState?.chainId)
  const correctNetwork=networkKey==='testnet'&&chain===9280
  const canTest=Boolean(ENABLE_WRITES&&correctNetwork&&account)
@@ -93,11 +93,17 @@ export default function RabbitAnimalDrawInvestorPanel({ walletState, onConnect, 
       ])
       const exit=exitId>0n?await read('exits',[addr,exitId]):null
       const value=supply>0n?nav*shares/supply:0n
-      const walletBalance=symbol==='tRAB'?await rpc.getBalance({address:account}):await rpc.readContract({address:TRUSD,abi:tokenAbi,functionName:'balanceOf',args:[account]})
-      return {symbol,shares,supply,nav,maximum,rewards,reserve,winnings,value,exitId,exit,head,tail,walletBalance}
+      return {symbol,shares,supply,nav,maximum,rewards,reserve,winnings,value,exitId,exit,head,tail}
     }))
+    // Wallet balances must not depend on all pool-position RPC calls succeeding.
+    // A temporary failure reading one statistic must not disable deposits.
+    const walletEntries=await Promise.allSettled([
+      rpc.getBalance({address:account}),
+      rpc.readContract({address:TRUSD,abi:tokenAbi,functionName:'balanceOf',args:[account]})
+    ])
     const data={},wallets={},errs={}
-    entries.forEach((entry,i)=>{const sym=i===0?'tRAB':'tRUSD';if(entry.status==='fulfilled'){data[sym]=entry.value;wallets[sym]=entry.value.walletBalance}else{errs[sym]=readable(errorText(entry.reason))}})
+    entries.forEach((entry,i)=>{const sym=i===0?'tRAB':'tRUSD';if(entry.status==='fulfilled'){data[sym]=entry.value}else{errs[sym+' position']=readable(errorText(entry.reason))}})
+    walletEntries.forEach((entry,i)=>{const sym=i===0?'tRAB':'tRUSD';if(entry.status==='fulfilled'){wallets[sym]=entry.value}else{errs[sym+' wallet']=readable(errorText(entry.reason))}})
     setPositions(data);setBalances(wallets);setReadErrors(errs)
    }catch(e){setReadErrors({general:readable(errorText(e))})}
    finally{setLoading(false)}
@@ -111,8 +117,8 @@ export default function RabbitAnimalDrawInvestorPanel({ walletState, onConnect, 
  }
  const send=async(target,functionName,args=[],value=0n,abi=poolAbi)=>{
    if(!canTest)throw Error('Connect a wallet on Rabbit Testnet 9280 to transact.')
-   const provider=window.ethereum
-   if(!provider?.request)throw Error('MetaMask is required.')
+   const provider=walletProvider?.request?walletProvider:(typeof window!=='undefined'?window.ethereum:null)
+   if(!provider?.request)throw Error('Connect a compatible EVM wallet to continue.')
    if(BigInt(await provider.request({method:'eth_chainId'}))!==9280n)throw Error('Select Rabbit Testnet 9280 in MetaMask.')
    const wallets=await provider.request({method:'eth_accounts'})
    if(!wallets.some(a=>a.toLowerCase()===account.toLowerCase()))throw Error('Select your connected Rabbit test wallet in MetaMask.')
@@ -205,9 +211,10 @@ export default function RabbitAnimalDrawInvestorPanel({ walletState, onConnect, 
        <div className="rad-pro-operation-head"><span className="rad-pro-operation-icon"><ArrowDownToLine size={20}/></span><div><h2>Deposit Liquidity</h2><p>Add {asset} to the pool and receive LP shares.</p></div></div>
        <label className="rad-pro-field"><span>Amount to deposit</span><div className="rad-pro-amount"><input type="text" inputMode="decimal" aria-label="Deposit amount" value={amount} onChange={e=>setAmount(e.target.value)} placeholder="0.00"/><strong>{asset}</strong></div></label>
        <div className="rad-pro-form-caption"><span>Wallet: {balances[asset]!==undefined?display(balances[asset],d):'—'} {asset}</span><span>Deposits are limited by wallet balance and contract rules</span></div>
+       {!selected&&connected&&<p className="rad-pro-alert warn"><Info size={15}/> Pool-position data is temporarily unavailable. Deposits are independently validated on-chain before signing.</p>}
        {asset==='tRUSD'&&!tokenActive&&<p className="rad-pro-alert warn"><Info size={15}/> tRUSD is not active in the Token Registry. Registration requires the administrator.</p>}
-       <button type="button" className="rad-pro-primary" disabled={!canWrite||!selected||!amount.trim()||(asset==='tRUSD'&&!tokenActive)} onClick={()=>perform('deposit')}>{pending?'Transaction pending…':!canTest?'Connect Rabbit Testnet':asset==='tRUSD'?'Approve if needed & Deposit':'Deposit '+asset}</button>
-       <p className="rad-pro-small">Every write is simulated before MetaMask requests approval. This is testnet only.</p>
+       <button type="button" className="rad-pro-primary" disabled={!canWrite||!amount.trim()||(asset==='tRUSD'&&!tokenActive)} onClick={()=>perform('deposit')}>{pending?'Transaction pending…':!canTest?'Connect Rabbit Testnet':asset==='tRUSD'?'Approve if needed & Deposit':'Deposit '+asset}</button>
+       <p className="rad-pro-small">Transactions are simulated before your connected wallet requests approval. Testnet only.</p>
       </section>
       <section className="rad-pro-operation">
        <div className="rad-pro-operation-head"><span className="rad-pro-operation-icon"><ArrowUpFromLine size={20}/></span><div><h2>Withdraw Liquidity</h2><p>Redeem available capital or join the FIFO exit queue.</p></div></div>

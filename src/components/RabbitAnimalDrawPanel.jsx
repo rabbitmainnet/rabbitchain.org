@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CalendarDays, Clock3, ExternalLink, Info, LockKeyhole, ShieldCheck, Ticket, Wallet, Zap, ArrowRight, CheckCircle2, Search, RefreshCw, ChevronRight } from 'lucide-react'
 import { createPublicClient, createWalletClient, custom, http, parseAbi, parseAbiItem, formatUnits, parseUnits, decodeEventLog } from 'viem'
 import './rabbit-animal-draw.css'
+import './rabbit-animal-draw-liquidity.css'
 
 const CONTRACT='0x71aACe928DaAc5c3Cb85B615E587C1Ba98F94f9c'
 const DRAW='0xb08c08DDeEa325D2b3C9E15F0E6923333199B27C'
@@ -33,6 +34,7 @@ const ABI=parseAbi([
 ])
 const REGISTRY='0x09172Df9932579E6737C66cA5B5dC9689DDB6391'
 const REGISTRY_ABI=parseAbi(['function isBettingEnabled(address) view returns(bool)'])
+const POOL_ABI=parseAbi(['function capitalNAV(address) view returns(uint256)','function reserved(address) view returns(uint256)','function outstandingWinnings(address) view returns(uint256)'])
 const DRAW_ABI=parseAbi([
  'function firstRoundId() view returns(uint256)',
  'function mayPlaceBet(uint256,address) view returns(bool)',
@@ -168,6 +170,27 @@ async function fetchPlayerTickets(address){
 
 export default function RabbitAnimalDrawPanel({walletState,walletProvider,onConnect,onSwitchNetwork,networkKey='testnet'}){
  const [now,setNow]=useState(Date.now())
+ const [poolSnapshot,setPoolSnapshot]=useState({loading:true,values:{},error:''})
+
+ useEffect(()=>{
+   let alive=true
+   const refresh=async()=>{
+     const result=await Promise.allSettled([['tRAB',ZERO],['tRUSD',TOKEN]].map(async ([symbol,asset])=>{
+       const [nav,reserved,winnings]=await Promise.all([
+         client.readContract({address:CONTRACT,abi:POOL_ABI,functionName:'capitalNAV',args:[asset]}),
+         client.readContract({address:CONTRACT,abi:POOL_ABI,functionName:'reserved',args:[asset]}),
+         client.readContract({address:CONTRACT,abi:POOL_ABI,functionName:'outstandingWinnings',args:[asset]})
+       ])
+       return {symbol,nav,protected:reserved+winnings}
+     }))
+     if(!alive)return
+     const values={};result.forEach((r,i)=>{if(r.status==='fulfilled')values[r.value.symbol]=r.value})
+     setPoolSnapshot({loading:false,values,error:Object.keys(values).length===0?'Pool data temporarily unavailable.':''})
+   }
+   refresh();const id=setInterval(refresh,60000)
+   return ()=>{alive=false;clearInterval(id)}
+ },[])
+
  const [day,setDay]=useState('')
  const [selectedRound,setSelectedRound]=useState(null)
  const [roundQuery,setRoundQuery]=useState('')
@@ -369,6 +392,11 @@ export default function RabbitAnimalDrawPanel({walletState,walletProvider,onConn
   <p role="status" className="rad-note">{V5_READ_ONLY?'Testnet · Betting transactions are disabled in this build.':'RABBIT TESTNET · Real on-chain test transactions · Bankroll and prize reserves govern acceptance.'}</p>
   <div className="rad-kicker"><span className="rad-dot"/> RABBIT PLATFORM <span className="rad-sep">/</span> ANIMAL DRAW <span className="rad-tag">TESTNET 9280</span></div>
   <div className="rad-hero rad-hero-v2"><div><p className="rad-eyebrow">24 GLOBAL DRAWS A DAY · VERIFIED RABBIT VRF</p><h1>Rabbit <span>Animal Draw.</span></h1><p className="rad-subtitle">25 animal groups. One global hourly contest. Find draws, follow on-chain results, and keep your tickets together.</p><div className="rad-hero-actions"><a href={`${EXPLORER}/address/${CONTRACT}?tab=contract`} target="_blank" rel="noopener noreferrer" className="rad-primary">V5 testnet contracts <ExternalLink size={15}/></a><a href="/platform/vrf" className="rad-outline">Explore Rabbit VRF <ArrowRight size={15}/></a></div></div><div className="rad-hero-animal"><img src="/animal-draw/rabbit-animal-draw-logo.webp" alt="Rabbit Animal Draw official neon logo"/><div>25 ANIMAL GROUPS <span>·</span> 24 DRAWS / DAY</div></div></div>
+  <div className="rad-pool-banner" aria-label="On-chain liquidity pool balances">
+    <div className="rad-pool-heading"><div><small>LIVE ON-CHAIN LIQUIDITY</small><h2>Liquidity backing the draws</h2><p>Pool capital (NAV), with reserved bets and outstanding prizes shown separately. Testnet values are not real money.</p></div><a href="/platform/animal-draw-investors">Provide Liquidity <ArrowRight size={15}/></a></div>
+    <div className="rad-pool-currencies">{['tRAB','tRUSD'].map(sym=>{const x=poolSnapshot.values[sym];const dec=sym==='tRUSD'?6:18;return <div className="rad-pool-currency" key={sym}><strong>{sym}</strong><div><span>Pool capital (NAV)</span><b>{x?formatAmount(x.nav,dec===6?0:1):'—'}</b></div><div><span>Protected obligations</span><b>{x?formatAmount(x.protected,dec===6?0:1):'—'}</b></div></div>})}</div>
+    {poolSnapshot.loading&&<small>Loading live liquidity data…</small>}{poolSnapshot.error&&<small role="status">{poolSnapshot.error}</small>}
+  </div>
   <div className="rad-next-draw-banner" role="timer" aria-label="Upcoming UTC contest countdown">
     <div><small>NEXT OPEN CONTEST</small><strong>#{betRoundId} · {dateUTC(betTS)}</strong><span>Betting closes {dateUTC(betTS-120000)} · Local {localDate(betTS)}</span></div>
     <div className="rad-next-draw-timers">
