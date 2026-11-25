@@ -364,3 +364,37 @@
 .rad-shell #rad-bet-builder .rad-mode-grid button:focus-visible,.rad-animal-current button:focus-visible{outline:3px solid #914fe5;outline-offset:2px}
 @media(max-width:1050px){.rad-shell #rad-bet-builder .rad-mode-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){.rad-shell #rad-bet-builder .rad-mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rad-animal-current{flex-wrap:wrap}.rad-animal-current button{width:100%;justify-content:center}}
+
+/* V9 results spotlight: immediately below the hero, maintaining original on-chain behavior. */
+.rad-shell .rad-live-highlight{
+  margin:16px 0 18px;
+  padding:clamp(18px,2.2vw,30px);
+  border:1px solid #d9c3fa;
+  background:radial-gradient(ellipse at 90% 0%,rgba(157,89,238,.20),transparent 56%),linear-gradient(125deg,#fffaff 0%,#f4edff 100%);
+  box-shadow:0 12px 32px rgba(112,62,171,.095);
+}
+.rad-shell .rad-live-head h2{font-size:clamp(24px,2.7vw,33px);letter-spacing:-.035em}
+.rad-shell .rad-live-results{gap:clamp(8px,1vw,16px);margin-top:20px}
+.rad-shell .rad-live-prize{padding:16px 10px 17px;gap:8px;border-radius:18px;min-height:248px;justify-content:flex-start}
+.rad-shell .rad-live-prize:first-child{border:2px solid #9753e9;background:linear-gradient(180deg,#fff,#f8f0ff);box-shadow:0 9px 25px rgba(114,57,197,.13)}
+.rad-shell .rad-live-prize span{font-size:11px;letter-spacing:.03em}
+.rad-shell .rad-live-prize img{width:100%;max-width:175px;height:clamp(112px,12vw,157px);object-fit:contain;filter:drop-shadow(0 8px 9px rgba(85,40,120,.16))}
+.rad-shell .rad-live-prize:first-child img{max-width:190px;transform:scale(1.055)}
+.rad-shell .rad-live-prize strong{font-size:clamp(24px,2.8vw,34px);line-height:1.08}
+.rad-shell .rad-live-prize small{font-size:clamp(10px,1vw,12px)}
+.rad-shell .rad-result-navigation{margin-top:14px}
+@media(max-width:900px){
+ .rad-shell .rad-live-prize{min-height:220px;padding:12px 6px;gap:6px}
+ .rad-shell .rad-live-prize img{height:105px}
+ .rad-shell .rad-live-prize:first-child img{transform:scale(1.025)}
+}
+@media(max-width:620px){
+ .rad-shell .rad-live-highlight{padding:16px 12px}
+ .rad-shell .rad-live-results{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .rad-shell .rad-live-prize{min-height:200px;padding:12px 8px}
+ .rad-shell .rad-live-prize img{height:116px}
+ .rad-shell .rad-live-prize strong{font-size:28px}
+ .rad-shell .rad-live-prize:first-child{grid-column:1 / -1;min-height:205px}
+ .rad-shell .rad-live-prize:first-child img{height:148px;max-width:180px}
+ .rad-shell .rad-live-head h2{font-size:25px}
+}
