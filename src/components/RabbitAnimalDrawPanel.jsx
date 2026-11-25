@@ -420,6 +420,20 @@ export default function RabbitAnimalDrawPanel({walletState,walletProvider,onConn
  const refreshEverything=async()=>{await Promise.all([loadRound(),refreshLatest(),refreshTickets(),refreshAllowance()])}
  // Navigation only: preserve existing forms, contract reads and signing flow.
  const jumpTo=section=>{const target=document.getElementById(`rad-${section}`);const disclosure=target?.closest('details.rad-disclosure');if(disclosure)disclosure.open=true;target?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
+ // Open the collapsed public ticket explorer before requesting the on-chain receipt.
+ // This is read-only and does not send another bet or wallet transaction.
+ const openCreatedTicket=async id=>{
+   const ticketNumber=String(id)
+   setTicketIdQuery(ticketNumber)
+   setTicketLookup({loading:true,item:null,error:''})
+   jumpTo('ticket-lookup')
+   try{
+     const item=await fetchPublicTicket(BigInt(ticketNumber))
+     setTicketLookup({loading:false,item,error:''})
+   }catch(error){
+     setTicketLookup({loading:false,item:null,error:error?.shortMessage||error?.message||'Unable to retrieve ticket. Please try Find Ticket.'})
+   }
+ }
  const matchingAnimals=ANIMALS.map((name,i)=>({name,i})).filter(({name,i})=>`${name} ${pad(i+1)} ${groupNumbers(i+1)}`.toLowerCase().includes(animalQuery.trim().toLowerCase()))
  const selectQuickAnimal=i=>{setAnimal(i);setGameType(0)}
  const ticketCounts={all:tickets.items.length,pending:0,settled:0,won:0}
@@ -509,13 +523,14 @@ export default function RabbitAnimalDrawPanel({walletState,walletProvider,onConn
     {validationError&&<p className="rad-inline-warning">{validationError}</p>}
     {address&&walletOnTestnet&&currency==='tRUSD'&&stakeRaw>0n&&(allowance===null||allowance<stakeRaw)?<button className="rad-wallet" type="button" disabled={V5_READ_ONLY||busy||Boolean(validationError)||tokenBalance!==null&&tokenBalance<stakeRaw} onClick={doApprove}><ShieldCheck size={16}/>{busy?'Processing…':'1 · Approve tRUSD'}</button>:<button className="rad-wallet" type="button" disabled={V5_READ_ONLY||busy||!address||!walletOnTestnet||Boolean(validationError)||currency==='tRUSD'&&tokenBalance!==null&&stakeRaw>tokenBalance} onClick={doBet}><Ticket size={17}/>{busy?'Processing…':currency==='tRUSD'?'2 · Place Bet':'Place Bet'}</button>}
     <p className="rad-note"><Info size={14}/> Everything happens here: connect MetaMask, approve tRUSD only if needed, place your bet and track your ticket below. Each transaction requires your confirmation. Testnet assets only.</p>
-    {tx.message&&<div className={`rad-tx-state ${tx.step}`} role="status"><strong>{tx.step==='success'?'Confirmed':tx.step==='error'?'Action failed':'Transaction status'}</strong><span>{tx.message}</span>{tx.ticketId&&<><b>Ticket #{tx.ticketId}</b><button type="button" className="rad-view-created-ticket" onClick={async()=>{setTicketIdQuery(String(tx.ticketId));setTicketLookup({loading:true,item:null,error:''});try{const item=await fetchPublicTicket(BigInt(tx.ticketId));setTicketLookup({loading:false,item,error:''});document.getElementById('ticket-lookup')?.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){setTicketLookup({loading:false,item:null,error:e.message||'Unable to load ticket.'})}}}>View my ticket details <ChevronRight size={14}/></button></>}{tx.hash&&<a target="_blank" rel="noreferrer" href={`${EXPLORER}/tx/${tx.hash}`}>View transaction <ExternalLink size={13}/></a>}</div>}
+    {tx.message&&<div className={`rad-tx-state ${tx.step}`} role="status"><strong>{tx.step==='success'?'Confirmed':tx.step==='error'?'Action failed':'Transaction status'}</strong><span>{tx.message}</span>{tx.ticketId&&<><b>Ticket #{tx.ticketId}</b><button type="button" className="rad-view-created-ticket" onClick={()=>{void openCreatedTicket(tx.ticketId)}}>View my ticket details <ChevronRight size={14}/></button></>}{tx.hash&&<a target="_blank" rel="noreferrer" href={`${EXPLORER}/tx/${tx.hash}`}>View transaction <ExternalLink size={13}/></a>}</div>}
     </div>
     <details className="rad-disclosure"><summary><strong>Find a ticket by ID</strong><span>Public lookup, results and settlement details</span><ChevronRight size={18}/></summary>
     <div className="rad-panel rad-ticket-explorer" id="rad-ticket-lookup"><span id="ticket-lookup" className="rad-anchor" aria-hidden="true"/>
       <div className="rad-section-head"><div><small>05 / TICKET EXPLORER</small><h2>Find a ticket by number</h2></div><Search size={21}/></div>
       <p className="rad-note">Enter a ticket ID to view the original bet, chosen animals or numbers, official draw results, and settlement. No wallet connection required. Ticket records are public on-chain.</p>
       <form className="rad-search" onSubmit={lookupTicket}><Search size={18}/><input value={ticketIdQuery} onChange={e=>setTicketIdQuery(e.target.value)} placeholder="Ticket number, e.g. 3" inputMode="numeric" aria-label="Ticket ID"/><button type="submit" disabled={ticketLookup.loading}>{ticketLookup.loading?'Searching…':'Find Ticket'}</button></form>
+      {ticketLookup.loading&&<p className="rad-note" role="status">Loading ticket #{ticketIdQuery} from Rabbit Testnet…</p>}
       {ticketLookup.error&&<p className="rad-error" role="alert">{ticketLookup.error}</p>}
       {ticketLookup.item&&<TicketReceipt ticket={ticketLookup.item} onViewResults={searchMyTicket}/>}
     </div>
