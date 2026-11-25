@@ -65,3 +65,302 @@
 .rad-receipt-results b{font-size:12px;color:#59318a}.rad-receipt-results small{font-size:9px;color:#746780;line-height:1.4}
 @media(max-width:650px){.rad-receipt-results>div{grid-template-columns:repeat(3,minmax(0,1fr))}.rad-receipt-grid{grid-template-columns:1fr}.rad-receipt .rad-ticket-card-top{gap:9px;align-items:flex-start}.rad-receipt .rad-ticket-state{max-width:50%}}
 .rad-view-created-ticket{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:10px 14px;border:0;border-radius:9px;background:#7541c0;color:#fff;font-size:12px;font-weight:800;cursor:pointer}
+
+
+/* RabbitAnimalDraw art refresh — preserves the existing official light UI and behavior. */
+.rad-animals-v2 button{
+  border-radius:16px;
+  background:linear-gradient(165deg,#ffffff 4%,#fbf8ff 72%,#f4ecff 100%);
+  border:1px solid #e8dff4;
+  box-shadow:0 5px 18px rgba(93,48,158,.045);
+  transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+.rad-animals-v2 button:hover{
+  transform:translateY(-2px);
+  border-color:#b893ed;
+  box-shadow:0 12px 26px rgba(112,59,175,.12);
+}
+.rad-animals-v2 button.active{
+  background:linear-gradient(160deg,#fff,#f6edff 75%,#f1e6ff);
+  border-color:#7c43d2;
+  box-shadow:0 0 0 2px rgba(124,67,210,.12),0 12px 26px rgba(112,59,175,.13);
+}
+.rad-animals-v2 button:focus-visible{outline:3px solid #a86cf3;outline-offset:3px}
+.rad-animals-v2 img{
+  width:min(100%,144px);
+  max-width:144px;
+  height:119px;
+  filter:drop-shadow(0 9px 11px rgba(63,30,100,.14));
+  transition:transform .2s ease;
+}
+.rad-animals-v2 button:hover img{transform:translateY(-3px) scale(1.045)}
+.rad-animals-v2 .rad-animal-index{font-variant-numeric:tabular-nums;color:#7843bd}
+.rad-animals-v2 strong{color:#39234f;letter-spacing:.01em}
+.rad-live-prize,.rad-result-card{
+  background:linear-gradient(170deg,#fff 20%,#faf6ff 100%);
+  border-color:#e6d8f3;
+  box-shadow:0 5px 18px rgba(93,48,158,.045);
+}
+.rad-live-prize:first-child,.rad-result-card:first-child{
+  background:linear-gradient(165deg,#fff 25%,#f2e7ff 100%);
+  border-color:#a36cdd;
+}
+.rad-live-prize img,.rad-result-card img{filter:drop-shadow(0 7px 8px rgba(69,38,109,.11))}
+@media(prefers-reduced-motion:reduce){
+  .rad-animals-v2 button,.rad-animals-v2 img{transition:none}
+  .rad-animals-v2 button:hover,.rad-animals-v2 button:hover img{transform:none}
+}
+@media(max-width:650px){
+  .rad-animals-v2 button{border-radius:13px}
+  .rad-animals-v2 img{max-width:100%;height:84px}
+}
+
+/* Rabbit Animal Draw UX dashboard — additive styles only; keeps legacy sections intact. */
+.rad-command{margin:18px 0 22px;padding:24px;border:1px solid #e3d7f4;border-radius:22px;background:linear-gradient(145deg,#fff 28%,#f9f4ff 100%);box-shadow:0 10px 30px rgba(77,36,129,.055)}
+.rad-command-heading{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:18px}
+.rad-command-overline{font-size:10px;font-weight:850;letter-spacing:.13em;color:#7942c4;display:inline-flex;align-items:center;gap:7px}
+.rad-command h2{margin:5px 0 5px;font-size:clamp(20px,2.7vw,26px);letter-spacing:-.04em;color:#25143c}
+.rad-command-heading p{margin:0;font-size:12px;color:#776a86;line-height:1.65}
+.rad-command-refresh{border:1px solid #dcccfa;background:white;color:#7542b7;border-radius:10px;padding:11px 13px;display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:750;white-space:nowrap}
+.rad-command-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:15px}
+.rad-command-stats>div{min-width:0;padding:14px 13px;border:1px solid #eae2f1;border-radius:13px;background:#fff;display:flex;flex-direction:column;gap:5px}
+.rad-command-stats small{font-size:9px;letter-spacing:.09em;color:#8e6baa;font-weight:850}
+.rad-command-stats strong{font-size:clamp(13px,1.6vw,19px);letter-spacing:-.025em;color:#332045;overflow-wrap:anywhere}
+.rad-command-stats span{font-size:10px;color:#8a7c99;line-height:1.4}
+.rad-command-stats .rad-command-timer{font-variant-numeric:tabular-nums;color:#7742cf}
+.rad-command-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.rad-command-grid>button{display:flex;align-items:center;gap:10px;text-align:left;min-width:0;padding:13px 11px;border:1px solid #e7dcf1;border-radius:13px;background:white;color:#49305b;transition:border-color .18s,transform .18s,box-shadow .18s}
+.rad-command-grid>button:hover{border-color:#ab75e5;transform:translateY(-2px);box-shadow:0 6px 16px rgba(116,69,169,.11)}
+.rad-command-icon{width:39px;height:39px;flex:0 0 auto;display:grid;place-items:center;border-radius:11px;color:#8847cf;background:#f4ebff;overflow:hidden}
+.rad-command-icon img{max-width:100%;height:36px;object-fit:contain}
+.rad-command-grid>button>span:nth-child(2){display:flex;flex-direction:column;min-width:0;gap:5px;flex:1}
+.rad-command-grid b{font-size:12px;color:#35214c;line-height:1.3}
+.rad-command-grid small{font-size:10px;line-height:1.35;color:#81728e}
+.rad-command-grid>button>svg{flex:0 0 auto;color:#9369c5}
+.rad-command-links{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:18px;padding-top:15px;border-top:1px solid #ece4f3}
+.rad-command-links span{font-size:11px;color:#82758e}
+.rad-command-links button,.rad-command-links a{background:#f9f5ff;border:1px solid #e7dcf4;border-radius:999px;padding:8px 11px;color:#7044b7;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:750}
+.rad-command-safety{display:flex;align-items:center;gap:7px;margin:13px 0 0;color:#837791;font-size:10px}
+.rad-animal-tools{display:flex;gap:10px;align-items:center;margin:-6px 0 17px;flex-wrap:wrap}
+.rad-animal-tools label{flex:1;min-width:170px;display:flex;align-items:center;gap:10px;padding:10px 13px;background:#fcfaff;border:1px solid #e4d8ee;border-radius:10px;color:#8e65bf}
+.rad-animal-tools input{width:100%;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:12px;color:#382049}
+.rad-animal-tools span{font-size:11px;color:#826e94}
+.rad-animal-tools>button{padding:8px 11px;border-radius:8px;border:1px solid #d9c4ee;background:white;color:#7547b7;font-size:11px;font-weight:700}
+.rad-animal-noresults{border:1px dashed #d6c4e8;border-radius:10px;padding:20px;text-align:center;color:#795f8d;font-size:12px}
+.rad-stake-presets{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:-11px 0 20px}
+.rad-stake-presets span{font-size:9px;letter-spacing:.09em;font-weight:800;color:#786688;margin-right:2px}
+.rad-stake-presets button{font-size:11px;padding:8px 10px;border:1px solid #e5d8f1;border-radius:9px;background:#fff;color:#6941a5}
+.rad-stake-presets button.active{border-color:#9754da;background:#f0e6ff;color:#6432af;font-weight:850}
+.rad-shell [id^="rad-"]{scroll-margin-top:115px}
+.rad-anchor{display:block;height:0;visibility:hidden}
+.rad-shell button:focus-visible,.rad-shell a:focus-visible,.rad-shell input:focus-visible{outline:3px solid #8b47d2;outline-offset:3px}
+@media(max-width:1100px){.rad-command-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:750px){.rad-command{padding:17px}.rad-command-heading{align-items:flex-start;flex-direction:column}.rad-command-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:470px){.rad-command-grid{grid-template-columns:1fr}.rad-command-links{gap:6px}.rad-command-stats>div{padding:11px}.rad-command-safety{align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){.rad-command-grid>button{transition:none}.rad-command-grid>button:hover{transform:none}}
+
+/* Dashboard V3: progressive workflow; visual-only extensions to V5 app */
+.rad-workflow{display:flex;align-items:center;justify-content:space-between;gap:9px;margin:18px 0 23px;padding:14px 17px;border:1px solid #e5daf2;border-radius:15px;background:#fbf8ff;color:#655076;font-size:11px;font-weight:700}
+.rad-workflow span{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}.rad-workflow b{width:23px;height:23px;flex:0 0 23px;display:grid;place-items:center;border-radius:50%;background:#eee2fc;color:#743db9;font-size:11px}.rad-workflow>svg{color:#bba6d2}
+.rad-command-context{margin-top:14px;border-radius:12px;padding:12px 15px;background:linear-gradient(90deg,#f0e6ff,#fff);border:1px solid #e6d8f8;display:flex;justify-content:space-between;align-items:center;gap:10px}.rad-command-context>div{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.rad-command-context b{font-size:12px;color:#492875}.rad-command-context small{font-size:11px;color:#806995}.rad-command-context>button{display:inline-flex;align-items:center;gap:5px;background:#7542d2;color:white;border:0;border-radius:9px;padding:10px 13px;font-size:11px;font-weight:800;white-space:nowrap}
+.rad-mode-picker{padding:14px;border:1px solid #e7dff2;border-radius:14px;margin-bottom:18px;background:#fcfaff}.rad-mode-picker-title{display:flex;justify-content:space-between;gap:8px;margin-bottom:11px;align-items:center}.rad-mode-picker-title strong{font-size:10px;letter-spacing:.08em;color:#7545b5}.rad-mode-picker-title span{font-size:10px;color:#9882a8}.rad-mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.rad-mode-grid button{border:1px solid #e6dcf0;background:white;border-radius:11px;min-height:62px;padding:10px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:5px;text-align:left;color:#53376c}.rad-mode-grid button b{font-size:12px}.rad-mode-grid button small{font-size:10px;color:#857291}.rad-mode-grid button:hover{border-color:#ae7be1}.rad-mode-grid button.active{border-color:#9151d4;background:#f4ebff;box-shadow:inset 0 0 0 1px #9151d4}.rad-mode-grid button.active b{color:#6b2fbb}
+.rad-ticket-preview-v3{border:1px solid #dbc6f3;background:linear-gradient(140deg,#faf5ff,#fff)}.rad-ticket-preview-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.rad-ticket-preview-title span{font-size:10px;font-weight:750;color:#8663a8}
+.rad-ticket-filters{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 17px}.rad-ticket-filters button{border:1px solid #e5d8ef;background:white;border-radius:999px;padding:9px 12px;display:flex;gap:9px;align-items:center;color:#67457e;font-size:12px;font-weight:750}.rad-ticket-filters button span{background:#f1ebf8;padding:2px 7px;border-radius:999px;color:#74518d;font-variant-numeric:tabular-nums}.rad-ticket-filters button.active{background:#7441c6;color:#fff;border-color:#7441c6}.rad-ticket-filters button.active span{background:#ffffff32;color:#fff}
+.rad-shell .rad-mode-grid button:focus-visible,.rad-shell .rad-ticket-filters button:focus-visible{outline:3px solid #8b47d2;outline-offset:3px}
+@media(max-width:760px){.rad-workflow{justify-content:flex-start;flex-wrap:wrap}.rad-workflow span{white-space:normal}.rad-workflow>svg{display:none}.rad-command-context{flex-direction:column;align-items:stretch}.rad-command-context>button{justify-content:center}}
+@media(max-width:420px){.rad-workflow{display:grid;grid-template-columns:1fr 1fr}.rad-mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rad-mode-picker-title{flex-direction:column;align-items:flex-start}}
+
+/* V4 archive navigation: retains the official Rabbit light theme. */
+.rad-result-navigation{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:17px;padding:10px;border:1px solid #e7d9fa;border-radius:13px;background:rgba(255,255,255,.62)}
+.rad-result-navigation button,.rad-archive-view,.rad-calendar-heading button{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:10px 12px;border:1px solid #d7bfef;border-radius:9px;background:#fff;color:#753cb7;font-weight:750;font-size:12px;cursor:pointer}
+.rad-result-navigation button:disabled{opacity:.43;cursor:not-allowed}
+.rad-result-navigation>span{margin:auto;display:flex;flex-direction:column;align-items:center;font-size:13px;font-weight:850;color:#39265a}
+.rad-result-navigation>span small{font-weight:500;color:#877b98;font-size:10px}
+.rad-result-navigation .rad-latest-link{background:#f5effe}
+.rad-archive-pending{display:flex;align-items:center;gap:10px;margin-top:18px;padding:18px;background:#fff;border:1px dashed #d6bcef;border-radius:12px;color:#765e97;font-size:12px;line-height:1.55}
+.rad-archive-view{margin-top:12px}
+.rad-calendar-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;color:#6c5587;font-size:12px}
+.rad-calendar-heading button{padding:8px 10px;white-space:nowrap}
+.rad-days button{display:flex;flex-direction:column;align-items:center;gap:5px}
+.rad-days button small{font-size:9px;color:#9a83b5}
+.rad-days button.active small{color:#7743ae}
+@media(max-width:650px){.rad-result-navigation{gap:5px}.rad-result-navigation button{padding:8px;font-size:11px}.rad-result-navigation>span{order:-1;width:100%;margin:0 0 6px}.rad-calendar-heading{align-items:flex-start;flex-direction:column}.rad-archive-pending{align-items:flex-start}}
+
+/* Dashboard V5 — compact original-theme experience, with truthful on-chain scheduling */
+.rad-shell.rad-enhanced{padding-top:20px;padding-bottom:45px}
+.rad-shell .rad-hero-v2{min-height:190px;padding:24px 30px;margin-top:14px;grid-template-columns:minmax(0,1fr) 175px;gap:15px}
+.rad-shell .rad-hero h1{font-size:clamp(30px,3.5vw,43px);margin:6px 0 8px}
+.rad-shell .rad-subtitle{max-width:650px}
+.rad-shell .rad-hero-v2 .rad-hero-animal img{height:145px;width:165px}
+.rad-shell .rad-hero-v2 .rad-hero-animal div{font-size:8px}
+.rad-shell .rad-pool-banner{margin:12px 0;padding:14px 18px}
+.rad-shell .rad-pool-heading{gap:10px}
+.rad-shell .rad-pool-currencies{gap:10px}
+.rad-shell .rad-next-draw-banner{margin:10px 0;padding:13px 17px}
+.rad-shell .rad-live-highlight{margin:12px 0;padding:17px 19px}
+.rad-shell .rad-live-results{gap:8px;margin-top:12px}
+.rad-shell .rad-live-prize{padding:9px 6px;gap:5px}
+.rad-shell .rad-live-prize img{height:74px}
+.rad-shell .rad-live-head h2{font-size:23px}
+.rad-shell .rad-command{padding:16px 18px;margin:12px 0}
+.rad-shell .rad-command-heading{margin-bottom:11px}
+.rad-shell .rad-command-heading p{display:none}
+.rad-shell .rad-command h2{font-size:19px}
+.rad-shell .rad-command-stats,.rad-shell .rad-command-context,.rad-shell .rad-workflow,.rad-shell .rad-metrics{display:none}
+.rad-shell .rad-command-grid>button{padding:10px}
+.rad-shell .rad-command-links{margin-top:10px;padding-top:10px}
+.rad-shell .rad-command-safety{margin-top:8px}
+.rad-shell .rad-main{gap:14px;grid-template-columns:minmax(0,1fr) minmax(310px,350px)}
+.rad-shell .rad-content,.rad-shell .rad-bet{gap:12px}
+.rad-shell .rad-panel{padding:18px}
+.rad-shell .rad-next-row{padding:12px 15px}
+.rad-shell .rad-section-head{margin-bottom:14px}
+.rad-shell .rad-section-head h2{font-size:22px}
+.rad-shell .rad-disclosure{border:1px solid #e6daf4;border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 5px 17px rgba(63,37,111,.035)}
+.rad-shell .rad-disclosure>summary{display:flex;align-items:center;gap:10px;list-style:none;padding:16px 18px;cursor:pointer;color:#54317b}
+.rad-shell .rad-disclosure>summary::-webkit-details-marker{display:none}
+.rad-shell .rad-disclosure>summary strong{font-size:13px}
+.rad-shell .rad-disclosure>summary span{flex:1;font-size:11px;color:#887696;line-height:1.5}
+.rad-shell .rad-disclosure>summary svg{transition:transform .15s;flex:none}
+.rad-shell .rad-disclosure[open]>summary svg{transform:rotate(90deg)}
+.rad-shell .rad-disclosure[open]>summary{background:#f9f5ff;border-bottom:1px solid #ecdefa}
+.rad-shell .rad-disclosure>.rad-panel{border:0;box-shadow:none;border-radius:0}
+.rad-shell .rad-disclosure:focus-within{border-color:#b18be5}
+.rad-calendar-v5{background:linear-gradient(135deg,#fcfaff,#fff);border:1px solid #e7ddf1;border-radius:15px;padding:13px}
+.rad-calendar-v5-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.rad-calendar-v5-head>div:first-child{display:flex;flex-direction:column;gap:3px}
+.rad-calendar-v5-head strong{font-size:13px;color:#473060}
+.rad-calendar-v5-head small{font-size:10px;color:#82728e}
+.rad-week-switch{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.rad-week-switch button{border:1px solid #dfcff3;border-radius:8px;padding:7px 10px;background:#fff;color:#7441b3;display:flex;align-items:center;justify-content:center;min-height:32px}
+.rad-week-switch button:disabled{opacity:.42;cursor:not-allowed}
+.rad-week-switch span{font-size:11px;color:#614977;font-weight:750;white-space:nowrap}
+.rad-week-switch .rad-week-today{font-size:10px;font-weight:750;color:#fff;background:#8145d7;border-color:#8145d7}
+.rad-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.rad-weekdays button{min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;border:1px solid #e7ddf1;border-radius:10px;background:white;color:#6c5a80;padding:9px 2px;transition:border-color .15s,background .15s}
+.rad-weekdays button b{font-size:11px}
+.rad-weekdays button span{font-size:17px;font-weight:850;color:#3d285c;font-variant-numeric:tabular-nums}
+.rad-weekdays button small{font-size:9px;color:#9a8caa}
+.rad-weekdays button.active{background:#f0e6ff;border-color:#974fda;box-shadow:inset 0 0 0 1px #974fda}
+.rad-weekdays button.active span,.rad-weekdays button.active b{color:#6b35b1}
+.rad-time-select-wrap{display:grid;grid-template-columns:110px minmax(0,1fr);align-items:center;gap:8px 13px;margin-top:12px}
+.rad-time-select-wrap label{font-size:10px;font-weight:850;color:#76599a;letter-spacing:.05em}
+.rad-time-select-wrap select{width:100%;padding:12px 12px;background:white;border:1px solid #d9c7ee;border-radius:10px;font-size:13px;color:#48266b}
+.rad-time-select-wrap small{grid-column:2;color:#89799a;font-size:10px}
+.rad-future-warning{margin-top:12px;display:flex;gap:9px;align-items:center;border:1px solid #f0d9aa;background:#fffaf0;border-radius:11px;padding:11px;color:#7b6028;font-size:11px;line-height:1.55}
+.rad-future-warning span{flex:1}
+.rad-future-warning button{border:1px solid #e4c78e;background:white;color:#75512b;font-weight:750;border-radius:8px;padding:8px 10px;font-size:10px;white-space:nowrap}
+.rad-shell .rad-animals-v2{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.rad-shell .rad-animals-v2 button{min-height:145px;padding:8px 5px}
+.rad-shell .rad-animals-v2 img{height:83px;margin-top:12px}
+.rad-shell .rad-animals-v2 strong{font-size:11px}
+.rad-shell .rad-animals-v2 small{font-size:9px}
+.rad-guide-disclosure{margin-top:16px}
+@media(max-width:980px){.rad-shell .rad-main{grid-template-columns:1fr}.rad-shell .rad-bet{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.rad-shell .rad-hero-v2{grid-template-columns:1fr;padding:20px}.rad-shell .rad-hero-v2 .rad-hero-animal{display:none}.rad-shell .rad-bet{grid-template-columns:1fr}.rad-shell .rad-command-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rad-shell .rad-animals-v2{grid-template-columns:repeat(4,minmax(0,1fr))}.rad-shell .rad-next-draw-banner{flex-wrap:wrap}}
+@media(max-width:470px){.rad-shell .rad-command-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rad-shell .rad-command-grid small{display:none}.rad-shell .rad-command-icon{width:28px;height:28px;flex-basis:28px}.rad-shell .rad-command-grid svg{display:none}.rad-shell .rad-weekdays{gap:3px}.rad-weekdays button{padding:7px 1px}.rad-weekdays button b{font-size:10px}.rad-weekdays button span{font-size:15px}.rad-weekdays button small{font-size:8px}.rad-time-select-wrap{grid-template-columns:1fr}.rad-time-select-wrap small{grid-column:1}.rad-shell .rad-animals-v2{grid-template-columns:repeat(3,minmax(0,1fr))}.rad-shell .rad-disclosure>summary{align-items:flex-start;flex-wrap:wrap}.rad-shell .rad-disclosure>summary span{flex-basis:70%}.rad-future-warning{flex-wrap:wrap}.rad-shell .rad-live-prize img{height:56px}}
+
+
+/* V6: One clear, full-width flow — day/hour -> visible animals -> ticket -> results.
+   This changes only presentation; contract actions/eligibility remain unchanged. */
+.rad-shell .rad-main{display:flex;flex-direction:column;gap:15px;align-items:stretch}
+.rad-shell .rad-main>.rad-content,.rad-shell .rad-main>.rad-bet{display:contents}
+.rad-main .rad-content>* , .rad-main .rad-bet>*{order:6;min-width:0;width:100%}
+.rad-main #rad-draw-explorer{order:1}
+.rad-main .rad-animals-always{order:2;min-width:0}
+.rad-main #rad-bet-builder{order:3}
+.rad-main .rad-results-disclosure{order:4}
+.rad-main .rad-bet>details{order:5}
+.rad-animals-always{border:1px solid #e4d8f4;border-radius:18px;overflow:hidden;background:#fff}
+.rad-animals-always>.rad-panel{border:0!important;box-shadow:none!important}
+.rad-v6-shortcuts{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:12px 0;padding:9px;border:1px solid #e8def4;border-radius:14px;background:#faf7ff}
+.rad-v6-shortcuts button{border:1px solid #e0d2f2;border-radius:9px;background:white;color:#67439c;font-size:12px;font-weight:750;padding:10px 13px;display:inline-flex;gap:7px;align-items:center;justify-content:center}
+.rad-v6-shortcuts button:hover{background:#f4eaff;border-color:#ae87e1}
+.rad-animals-always .rad-animals-v2{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.rad-animals-always .rad-animals-v2 button{min-height:171px;padding:10px;text-align:center;align-items:center}
+.rad-animals-always .rad-animals-v2 img{height:108px;max-width:100%;margin:0}
+.rad-animals-always .rad-animals-v2 strong{font-size:13px}
+.rad-animals-always .rad-animals-v2 small{font-size:10px}
+.rad-animals-always .rad-animal-index{align-self:flex-start}
+.rad-animals-always .rad-picked{margin-top:12px;padding:12px 15px;font-weight:700}
+.rad-shell #rad-bet-builder{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 20px;align-items:start;padding:23px}
+.rad-shell #rad-bet-builder>.rad-section-head,.rad-shell #rad-bet-builder>.rad-bet-round,.rad-shell #rad-bet-builder>.rad-mode-picker,.rad-shell #rad-bet-builder>.rad-pick-inputs,.rad-shell #rad-bet-builder>.rad-summary,.rad-shell #rad-bet-builder>.rad-ticket-preview,.rad-shell #rad-bet-builder>.rad-wallet,.rad-shell #rad-bet-builder>.rad-inline-warning,.rad-shell #rad-bet-builder>.rad-connected,.rad-shell #rad-bet-builder>.rad-allowance,.rad-shell #rad-bet-builder>.rad-note,.rad-shell #rad-bet-builder>.rad-tx-state{grid-column:1/-1}
+.rad-shell #rad-bet-builder>.rad-field{margin:0;min-width:0}
+.rad-shell #rad-bet-builder>.rad-stake-presets{margin-top:13px}
+.rad-shell #rad-bet-builder>.rad-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 20px;margin:0;padding:14px 0}
+.rad-shell #rad-bet-builder>.rad-summary>div{background:#faf7ff;border-radius:8px;padding:9px;gap:7px}
+.rad-shell #rad-bet-builder>.rad-wallet{max-width:520px;justify-self:center}
+.rad-shell #rad-bet-builder>.rad-ticket-preview{margin:0}
+.rad-shell .rad-hero-v2{min-height:155px;padding:18px 23px}
+.rad-shell .rad-hero-v2 .rad-hero-animal img{height:115px;width:140px}
+.rad-shell .rad-pool-banner{padding:11px 14px;margin:8px 0}
+.rad-shell .rad-live-highlight{padding:14px 17px;margin:9px 0}
+.rad-shell .rad-live-prize img{height:62px}
+.rad-shell .rad-next-draw-banner{padding:10px 15px;margin:7px 0}
+.rad-shell #rad-draw-explorer .rad-next-row{padding:10px 13px;margin-bottom:9px}
+.rad-shell #rad-draw-explorer .rad-calendar-v5{padding:10px}
+.rad-shell #rad-draw-explorer .rad-weekdays button{padding:7px 2px}
+.rad-shell #rad-draw-explorer .rad-time-select-wrap{margin-top:8px}
+@media(max-width:850px){.rad-animals-always .rad-animals-v2{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:650px){
+ .rad-shell #rad-bet-builder{grid-template-columns:1fr;padding:16px;gap:12px}
+ .rad-shell #rad-bet-builder>*{grid-column:1/-1}
+ .rad-shell #rad-bet-builder>.rad-summary{grid-template-columns:1fr}
+ .rad-animals-always .rad-animals-v2{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .rad-animals-always .rad-animals-v2 button{min-height:136px;padding:7px 3px}
+ .rad-animals-always .rad-animals-v2 img{height:76px}
+ .rad-v6-shortcuts{gap:5px}
+ .rad-v6-shortcuts button{flex:1 1 30%;padding:9px 7px;font-size:10px}
+}
+@media(max-width:380px){.rad-animals-always .rad-animals-v2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* V7: simpler, first-time-player friendly booking and wagering flow. */
+.rad-shell .rad-hero-v2{grid-template-columns:minmax(0,1fr) minmax(190px,270px);min-height:205px;padding:20px 28px;align-items:center}
+.rad-shell .rad-hero-v2 .rad-hero-animal img{height:205px;width:min(100%,250px);max-height:205px;filter:drop-shadow(0 14px 18px rgba(108,50,180,.18))}
+.rad-calendar-v7{border:1px solid #e7dcf2;border-radius:15px;background:#fbf9ff;padding:16px;display:grid;gap:13px}
+.rad-calendar-v7-title{display:flex;justify-content:space-between;flex-wrap:wrap;gap:7px;align-items:center}
+.rad-calendar-v7-title strong{font-size:15px;color:#39214e}
+.rad-calendar-v7-title span{font-size:11px;color:#806692}
+.rad-open-days{display:flex;gap:9px;flex-wrap:wrap}
+.rad-open-days button{display:flex;gap:5px;align-items:center;border:1px solid #e5d6f4;background:#fff;border-radius:11px;padding:10px 13px;cursor:pointer;color:#553b6e;font-size:12px}
+.rad-open-days button strong{font-size:12px}
+.rad-open-days button.active,.rad-open-hours button.active{border-color:#8645d6;background:#f1e7ff;box-shadow:inset 0 0 0 1px #8645d6}
+.rad-open-hours{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;max-height:155px;overflow-y:auto;scrollbar-width:thin;padding-right:3px}
+.rad-open-hours button{min-width:0;border:1px solid #e4d8ef;border-radius:10px;background:#fff;cursor:pointer;padding:9px 4px;display:grid;gap:3px;color:#3e245a}
+.rad-open-hours button b{font-size:13px;white-space:nowrap}.rad-open-hours button b small{font-size:8px;font-weight:600;color:#8d70aa}
+.rad-open-hours button span{font-size:9px;color:#806b91}.rad-open-hours button:hover{border-color:#a66de2}
+.rad-open-foot{display:flex;align-items:center;gap:6px;color:#816e90;font-size:10px}
+.rad-history-lookup{margin:0 0 11px;border:1px solid #e6dcef;border-radius:11px;background:#fff}
+.rad-history-lookup>summary{display:flex;gap:7px;align-items:center;padding:9px 12px;color:#6a4795;font-weight:700;font-size:11px;cursor:pointer;list-style:none}
+.rad-history-lookup>summary::-webkit-details-marker{display:none}
+.rad-history-lookup .rad-search{margin:0 10px 10px}
+.rad-extra-games{grid-column:1/-1;padding:0 0 5px}
+.rad-extra-games>summary{cursor:pointer;font-size:11px;font-weight:700;color:#7642af;padding:8px 0}
+.rad-extra-games>.rad-field{margin:8px 0 0}
+.rad-shell #rad-bet-builder>.rad-mode-picker{grid-column:1/-1}
+.rad-shell #rad-bet-builder>.rad-extra-games{grid-column:1/-1}
+.rad-shell #rad-bet-builder .rad-mode-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.rad-shell #rad-bet-builder .rad-mode-grid button{min-height:57px}
+.rad-shell #rad-draw-explorer .rad-next-row{padding:12px 15px;margin:0 0 12px}
+.rad-shell #rad-bet-builder>.rad-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.rad-open-hours{grid-template-columns:repeat(4,minmax(0,1fr))}.rad-shell #rad-bet-builder>.rad-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.rad-shell .rad-hero-v2{grid-template-columns:minmax(0,1fr) 135px;padding:16px}.rad-shell .rad-hero-v2 .rad-hero-animal{display:flex;flex-direction:column}.rad-shell .rad-hero-v2 .rad-hero-animal img{width:130px;height:145px;max-height:145px}.rad-shell .rad-hero-v2 .rad-hero-animal div{display:none}.rad-calendar-v7{padding:11px}.rad-open-hours{grid-template-columns:repeat(4,minmax(0,1fr));max-height:156px}.rad-shell #rad-bet-builder .rad-mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.rad-shell .rad-hero-v2{grid-template-columns:1fr}.rad-shell .rad-hero-v2 .rad-hero-animal{display:flex;align-items:center}.rad-shell .rad-hero-v2 .rad-hero-animal img{width:175px;height:135px}.rad-open-hours{grid-template-columns:repeat(3,minmax(0,1fr))}.rad-shell #rad-bet-builder>.rad-summary{grid-template-columns:1fr}}
+
+/* V8: Ticket first, animals immediately after; all ten on-chain game modes visible. */
+.rad-shell .rad-main #rad-bet-builder{order:2}
+.rad-shell .rad-main .rad-animals-always{order:3}
+.rad-shell #rad-bet-builder .rad-mode-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.rad-shell #rad-bet-builder .rad-mode-grid button{min-height:76px;padding:11px;border-radius:12px}
+.rad-shell #rad-bet-builder .rad-mode-grid button b{font-size:12px;line-height:1.3}
+.rad-shell #rad-bet-builder .rad-mode-grid button small{font-size:10px;line-height:1.3}
+.rad-animal-current{display:flex;align-items:center;justify-content:space-between;gap:12px;grid-column:1/-1;padding:12px 14px;background:#f9f5ff;border:1px solid #e1d1f8;border-radius:13px}
+.rad-animal-current div{display:flex;flex-direction:column;gap:3px}
+.rad-animal-current span{font-size:10px;font-weight:800;letter-spacing:.07em;color:#8658bd}
+.rad-animal-current strong{font-size:15px;color:#302047}
+.rad-animal-current small{font-size:11px;color:#7e6697}
+.rad-animal-current button{display:inline-flex;align-items:center;gap:5px;border:1px solid #a677e8;color:#6e32b2;background:white;border-radius:10px;padding:10px 12px;font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap}
+.rad-animal-current button:hover{background:#eee0ff}
+.rad-shell #rad-bet-builder .rad-mode-grid button:focus-visible,.rad-animal-current button:focus-visible{outline:3px solid #914fe5;outline-offset:2px}
+@media(max-width:1050px){.rad-shell #rad-bet-builder .rad-mode-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.rad-shell #rad-bet-builder .rad-mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rad-animal-current{flex-wrap:wrap}.rad-animal-current button{width:100%;justify-content:center}}
