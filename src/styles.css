@@ -9224,3 +9224,20 @@ body:has(.vrf-workspace-tabs) .vrf-workspace-tabs > * {
 .rabbit-explorer-embed .vrf-platform-toolbar {
   display: none !important;
 }
+
+/* Rabbit Animal Draw discovery from the dedicated Rabbit VRF page. */
+.vrf-platform-toolbar-inner>nav{max-width:100%;min-width:0;overflow-x:auto;scrollbar-width:thin;overscroll-behavior-x:contain}
+.vrf-platform-toolbar-inner>nav a{flex:0 0 auto}
+.vrf-platform-toolbar-inner>nav a[href="/platform/animal-draw"],
+.vrf-platform-toolbar-inner>nav a[href="/platform/animal-draw-pool"]{color:#7841bc;font-weight:850}
+.vrf-platform-toolbar-inner>nav a[href="/platform/animal-draw"]:hover,
+.vrf-platform-toolbar-inner>nav a[href="/platform/animal-draw-pool"]:hover{background:#f8f2ff}
+.vrf-animal-draw-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px!important;margin:16px auto 10px;border:1px solid #e3d0f6;border-radius:16px;background:linear-gradient(115deg,#fcf8ff,#f3f0ff)}
+.vrf-animal-draw-cta>div:first-child{display:flex;flex-direction:column;gap:5px;min-width:0}
+.vrf-animal-draw-cta strong{color:#3e285a;font-size:14px}
+.vrf-animal-draw-cta span{color:#756888;font-size:12px;line-height:1.5}
+.vrf-animal-draw-cta-actions{display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0}
+.vrf-animal-draw-cta-actions a{display:inline-flex;align-items:center;gap:7px;border-radius:9px;border:1px solid #d3bfe7;background:#fff;color:#69419c;font-size:12px;font-weight:800;padding:11px 14px;text-decoration:none}
+.vrf-animal-draw-cta-actions a:first-child{background:#7542c5;color:#fff;border-color:#7542c5}
+@media(max-width:1350px){.vrf-platform-toolbar-inner>nav{justify-content:flex-start;padding-right:14px}}
+@media(max-width:700px){.vrf-animal-draw-cta{flex-direction:column;align-items:stretch;padding:14px!important}.vrf-animal-draw-cta-actions a{justify-content:center}.vrf-platform-toolbar-inner>nav{justify-content:flex-start}}

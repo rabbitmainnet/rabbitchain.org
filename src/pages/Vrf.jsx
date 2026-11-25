@@ -400,6 +400,8 @@ const VRF_PLATFORM_NAV = [
   { key: 'fx', title: 'Rabbit Global FX', icon: Repeat2, to: '/platform/fx' },
   { key: 'launchpool', title: 'Launchpool', icon: Flame, to: '/platform/launchpool' },
   { key: 'vrf', title: 'Rabbit VRF', icon: ShieldCheck, to: '/vrf' },
+  { key: 'animal-draw', title: 'Animal Draw', icon: ShieldCheck, to: '/platform/animal-draw' },
+  { key: 'animal-draw-pool', title: 'Liquidity Providers', icon: Wallet, to: '/platform/animal-draw-pool' },
   { key: 'faucet', title: 'Faucet', icon: Droplets, to: '/platform/faucet' },
 ]
 
@@ -1298,6 +1300,16 @@ export default function Vrf({
 
       <div className="shell vrf-workspace-tabs" role="tablist" aria-label="VRF workspace">
         {[['create','New request'],['requests','My requests'],['developers','Developers']].map(([key,label]) => <button key={key} id={`vrf-tab-${key}`} role="tab" aria-selected={activeTab === key} aria-controls={`vrf-panel-${key}`} onClick={() => setActiveTab(key)}>{label}</button>)}
+      </div>
+      <div className="vrf-animal-draw-cta shell" role="region" aria-label="Try Rabbit Animal Draw on Testnet">
+        <div>
+          <strong>Try verifiable randomness in a live testnet game</strong>
+          <span>Rabbit Animal Draw · 25 animal groups · 24 UTC contests every day</span>
+        </div>
+        <div className="vrf-animal-draw-cta-actions">
+          <Link to="/platform/animal-draw">Play on Testnet <ArrowRight size={15} /></Link>
+          <Link to="/platform/animal-draw-pool">Liquidity Providers</Link>
+        </div>
       </div>
       <div id="vrf-panel-requests" role="tabpanel" aria-labelledby="vrf-tab-requests" hidden={activeTab !== 'requests'}>
       <section className="platform-v2-product vrf-dashboard" id="my-requests">

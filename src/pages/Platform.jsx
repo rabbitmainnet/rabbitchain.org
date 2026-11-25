@@ -9,14 +9,18 @@ import { RABBIT_VRF } from '../config/vrf'
 import { PLATFORM_NETWORKS, platformModuleStatus } from '../config/platform'
 import { usePlatformNetwork } from '../hooks/usePlatformNetwork'
 import PlatformNetworkSwitch from '../components/PlatformNetworkSwitch'
+import RabbitAnimalDrawInvestorPanel from '../components/RabbitAnimalDrawInvestorPanel'
 import RabbitSwapPanel from '../components/RabbitSwapPanel'
 import RabbitFaucetPanel from '../components/RabbitFaucetPanel'
 import RabbitLiquidityPanel from '../components/RabbitLiquidityPanel'
 import RabbitTokenFactoryPanel from '../components/RabbitTokenFactoryPanel'
 import RabbitLaunchpoolPanel from '../components/RabbitLaunchpoolPanel'
 import RabbitFXPanel from '../components/RabbitFXPanel'
+import RabbitAnimalDrawPanel from '../components/RabbitAnimalDrawPanel'
 
 const tools = {
+  'animal-draw-pool': { icon: Coins, label: 'ANIMAL DRAW POOL', title: 'Animal Draw Liquidity', intro: 'Track capital, profits, losses and available liquidity withdrawals in the V5 testnet laboratory.' },
+  'animal-draw': { icon: ShieldCheck, label: 'ANIMAL DRAW', title: 'Rabbit Animal Draw', intro: '24 hourly UTC testnet contests backed by Rabbit VRF. Explore draws, place test bets and check on-chain results.' },
   fx: {
     icon: Coins,
     label: 'GLOBAL FX',
@@ -39,11 +43,13 @@ const tools = {
   },
 }
 
-const toolOrder = ['swap', 'liquidity', 'staking', 'bridge', 'p2p', 'vrf', 'factory', 'launchpool', 'faucet']
-const testnetToolOrder = ['swap', 'liquidity', 'factory', 'fx', 'launchpool', 'vrf', 'faucet']
+const toolOrder = ['animal-draw-pool', 'swap', 'liquidity', 'staking', 'bridge', 'p2p', 'vrf', 'factory', 'launchpool', 'faucet']
+const testnetToolOrder = ['swap', 'liquidity', 'factory', 'fx', 'launchpool', 'vrf', 'animal-draw', 'animal-draw-pool', 'faucet']
 
 
 function ToolPanel({ tool, walletState, walletProvider, onConnect, onSwitchNetwork, networkKey, toast }) {
+  if (tool === 'animal-draw-pool') return <RabbitAnimalDrawInvestorPanel walletState={walletState} onConnect={onConnect} networkKey={networkKey} />
+  if (tool === 'animal-draw') return <RabbitAnimalDrawPanel walletState={walletState} walletProvider={walletProvider} onConnect={onConnect} onSwitchNetwork={onSwitchNetwork} networkKey={networkKey} />
   const entry = tools[tool]
   const Icon = entry.icon
   const network = PLATFORM_NETWORKS[networkKey] || PLATFORM_NETWORKS.testnet
