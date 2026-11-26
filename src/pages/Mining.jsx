@@ -96,7 +96,7 @@ export default function Mining() {
 
             <div className="hero-ctas">
               <a className="button primary" href="#downloads">
-                Rabbit Core V2.4.25 <ArrowRight size={15} />
+                Rabbit Core V2.4.26 <ArrowRight size={15} />
               </a>
               <Link className="button secondary" to="/lcq">How LCQ works</Link>
             </div>
@@ -105,7 +105,7 @@ export default function Mining() {
           <div className="terminal-card">
             <div className="terminal-head">
               <span>rabbit-core</span>
-              <b>V2.4.25</b>
+              <b>V2.4.26</b>
             </div>
 
             <pre><code>
@@ -127,7 +127,7 @@ export default function Mining() {
 
           <div>
             <span>CURRENT TESTNET RELEASE</span>
-            <p>V2.4.25 improves synchronization recovery and VRF DKG message handling. Fresh installations use the verified snapshot at block 385,509 (approximately 7.49 GiB compressed), then synchronize the remaining canonical blocks. Existing installations reuse their Testnet data directory and encrypted wallet.</p>
+            <p>V2.4.26 strengthens LCQ/P2P recovery and bounded future-block handling while retaining earlier VRF DKG improvements. Fresh installations use the verified snapshot at block 385,509 (approximately 7.49 GiB compressed), then synchronize the remaining canonical blocks. Existing installations reuse their Testnet data directory and encrypted wallet.</p>
             <h2>Faster restart recovery. A recent bootstrap for new miners.</h2>
 
             <p>
@@ -138,7 +138,7 @@ export default function Mining() {
             </p>
           </div>
 
-          <a className="button light" href="#downloads">Download V2.4.25</a>
+          <a className="button light" href="#downloads">Download V2.4.26</a>
         </div>
       </section>
 
@@ -646,10 +646,10 @@ export default function Mining() {
             <HardDrive size={22} />
             <h3>Local chain recovery</h3>
             <p>
-              Rabbit Core V2.4.25 is an in-place Testnet upgrade. Keep your existing
+              Rabbit Core V2.4.26 is an in-place Testnet upgrade. Keep your existing
               Rabbit Testnet datadir, blockchain data, wallet/keystore, node identity
               and persistent participation / consensus state. Do not reset or delete
-              them. Close the previous Rabbit Core normally, verify the V2.4.25 package
+              them. Close the previous Rabbit Core normally, verify the V2.4.26 package
               SHA-256, extract it into a new software directory and continue using the
               existing Testnet data.
             </p>

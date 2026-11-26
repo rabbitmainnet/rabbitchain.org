@@ -1,8 +1,8 @@
 import { NETWORKS } from './networks'
 
-export const RELEASE_TAG = 'v2.4.25'
-export const RELEASE_COMMIT = '4f502f971c3b3166be14da6e25fbc7c531404d42'
-export const REQUIRED_VERSION = 'V2.4.25'
+export const RELEASE_TAG = 'v2.4.26-testnet'
+export const RELEASE_COMMIT = '3933ca2ef2c8ec3c38b4819614310b4b9975eb8d'
+export const REQUIRED_VERSION = 'V2.4.26'
 export const STABILIZATION_BLOCK = 50500
 export const FAIRNESS_BLOCK = 73000
 export const LIVENESS_V3_BLOCK = 77000
@@ -10,7 +10,7 @@ export const LIVENESS_V4_BLOCK = 97991
 export const LIVENESS_V5_BLOCK = 115000
 export const LIVENESS_V6_BLOCK = 115022
 
-// Historical activations remain unchanged; WorkSeat liveness V2 activated at 323800; v2.4.25 adds no new fork.
+// Historical activations remain unchanged; WorkSeat liveness V2 activated at 323800; v2.4.26 introduces no new fork.
 export const FORK_2414_BLOCK = 320000
 export const WORK_SEAT_LIVENESS_V2_BLOCK = 323800
 export const VRF_AVAILABILITY_V2_BLOCK = 173057
@@ -21,10 +21,10 @@ export const MINING_REWARD_V5_BLOCK = 153601
 export const GENESIS_SHA256 = '4970159f077b62b7aa9bde1f81cb61ae837b42ef64861d7b23241e1af4d75c9f'
 
 export const RELEASE_URL =
-  'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.4.25'
+  'https://github.com/rabbitmainnet/rabbit-geth/releases/tag/v2.4.26-testnet'
 
 export const RELEASE_DOWNLOAD_BASE =
-  'https://github.com/rabbitmainnet/rabbit-geth/releases/download/v2.4.25'
+  'https://github.com/rabbitmainnet/rabbit-geth/releases/download/v2.4.26-testnet'
 
 export const DOWNLOADS = [
   {
@@ -32,32 +32,32 @@ export const DOWNLOADS = [
     platform: 'Windows',
     architecture: 'AMD64',
     format: 'ZIP',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.25-windows-amd64.zip`,
-    sha256: '7f6f9803245d85d231cb9f7f2073cfda5ed59a7271ec15c8b412451339adab80',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.26-windows-amd64.zip`,
+    sha256: '09d32fa2d913e3df8b31ac1d37c2f8775f524466c943665967f90d771b7cdd03',
   },
   {
     key: 'linux-amd64',
     platform: 'Linux',
     architecture: 'AMD64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.25-linux-amd64.tar.gz`,
-    sha256: 'bd1dd3b3bd38f362179ef48f6fe6ef6fc0380a0387042d2f052d096e5dbea9fa',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.26-linux-amd64.tar.gz`,
+    sha256: '306ee387159481b49f61ede57c1e9c4a889b7b48aeed9b37aacbdc5bfe2e8770',
   },
   {
     key: 'darwin-amd64',
     platform: 'macOS',
     architecture: 'Intel / AMD64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.25-darwin-amd64.tar.gz`,
-    sha256: '3b45a4a092d85871860de024dc6aff2b147fd7d19a85317d5d501fda9b747a0c',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.26-darwin-amd64.tar.gz`,
+    sha256: 'e08a9fd8a660158f917ffe22b4d4d3d5622846c6ce2ee2b86825ecbce8178fb1',
   },
   {
     key: 'darwin-arm64',
     platform: 'macOS',
     architecture: 'Apple Silicon / ARM64',
     format: 'TAR.GZ',
-    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.25-darwin-arm64.tar.gz`,
-    sha256: '64ed6b1c295ae97f86c3d5e69096d51954eca700adc95c2bb615292312f7db0c',
+    url: `${RELEASE_DOWNLOAD_BASE}/rabbit-core-testnet-v2.4.26-darwin-arm64.tar.gz`,
+    sha256: 'cd8aa259d6858fbd833524b635c95fdd10159a9aa6f9e628b164025dddb49389',
   },
 ]
 
