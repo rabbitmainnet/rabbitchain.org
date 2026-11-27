@@ -6,7 +6,7 @@ Official X: https://x.com/rabbit_mainnet
 
 Rabbit Chain is a permissionless EVM Layer 1 powered by Live Consensus Queue (LCQ). Rabbit Chain Testnet is live, with Chain ID and Network ID 9280 and native test asset tRAB. Mainnet has yet to launch.
 
-Rabbit Core Testnet v2.4.26 source: https://github.com/rabbitmainnet/rabbit-geth/tree/3933ca2ef2c8ec3c38b4819614310b4b9975eb8d
+Rabbit Core Testnet v2.4.27 public test build source: https://github.com/rabbitmainnet/rabbit-geth/tree/95f65767bd39b2fccad49f355b7f47b9271ca82e
 Official packages and SHA-256 checksums: https://rabbitchain.org/releases/
 Whitepaper v1.8 (originally documenting Rabbit Core v2.4.25): https://rabbitchain.org/whitepaper/
 
@@ -16,7 +16,7 @@ RandomX Work V2 admission is wallet-bound. ADMISSION_PENDING awaits canonical ac
 
 The 70/30 block subsidy allocation applies when an eligible committee exists. The producer may receive the full subsidy when no eligible committee exists. Emergency registry fallback with zero eligible WorkSeats can advance the chain without minting the normal subsidy.
 
-V2.4.26 includes synchronization recovery and miner cancellation changes, DKG artifact replay changes and revised VRF finalization gossip. The historical activation schedule is preserved: VRF DKG preparation at 136065, VRF protocol and liveness at 136193, Availability V2 at 173057, VRF economics V2 and WorkSeat admission V2 at 320000, and WorkSeat liveness V2 at 323800. VRF fulfillment must be verified against canonical request status and proof. Laboratory results do not establish public-network performance.
+V2.4.27 starts LCQ head retrieval at the peer handshake, stops failed header lookups from keeping stale announcements in the production gate, and prevents requested backfill cancellations from immediately retriggering recovery. The historical activation schedule is preserved: VRF DKG preparation at 136065, VRF protocol and liveness at 136193, Availability V2 at 173057, VRF economics V2 and WorkSeat admission V2 at 320000, and WorkSeat liveness V2 at 323800. VRF fulfillment must be verified against canonical request status and proof. Laboratory results do not establish public-network performance.
 
 Testnet RPC: https://rpc-testnet.rabbitchain.org
 Testnet WebSocket: wss://rpc-testnet.rabbitchain.org/ws

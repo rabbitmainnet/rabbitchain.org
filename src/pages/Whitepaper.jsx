@@ -45,7 +45,7 @@ export default function Whitepaper() {
           <div className="whitepaper-card">
             <div><img src="/rabbit-mark.png" alt="" /><span>RABBIT CHAIN</span></div>
             <strong>Technical Whitepaper v1.8</strong>
-            <p>Current software: Rabbit Core Testnet V2.4.26</p>
+            <p>Public Testnet pre-release: Rabbit Core V2.4.27</p>
             <a href={TESTNET_ADDENDUM} target="_blank" rel="noreferrer">V2.4.25 technical addendum (PDF) <ArrowUpRight size={14} /></a>
             <a href={TESTNET_ADDENDUM_ODT} target="_blank" rel="noreferrer">V2.4.25 technical addendum (ODT) <ArrowUpRight size={14} /></a>
             <a href={HISTORICAL_PDF} target="_blank" rel="noreferrer">Historical Whitepaper v1.7 (PDF) <ArrowUpRight size={14} /></a>
@@ -70,7 +70,7 @@ export default function Whitepaper() {
           <article>
             <BookOpen size={22} />
             <span>RELEASE</span>
-            <h3>Rabbit Core V2.4.26</h3>
+            <h3>Rabbit Core V2.4.27</h3>
             <p>
               Source commit:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -110,7 +110,7 @@ export default function Whitepaper() {
           <article>
             <ShieldCheck size={22} />
             <span>VERIFIED PACKAGES</span>
-            <h3>Rabbit Core V2.4.26</h3>
+            <h3>Rabbit Core V2.4.27</h3>
             <p>
               Windows AMD64 SHA-256:<br />
               <code style={{ wordBreak: 'break-all' }}>
@@ -199,7 +199,7 @@ export default function Whitepaper() {
             Historical V2.2.5 record <ArrowUpRight size={14} />
           </a>
           <a className="button secondary" href={CORE_RELEASE} target="_blank" rel="noreferrer">
-            Current Rabbit Core V2.4.26 release <ArrowUpRight size={14} />
+            Rabbit Core V2.4.27 public Testnet pre-release <ArrowUpRight size={14} />
           </a>
         </div>
       </section>

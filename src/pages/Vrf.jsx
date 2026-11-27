@@ -2235,7 +2235,7 @@ function settleRound(
             <p>
               Protocol rules activated on Testnet at block 136,193, after DKG
               preparation at 136,065. Availability V2 activated at block 173,057.
-              V2.4.26 retains authenticated VRF relay through public peers and updates DKG artifact replay and finalization gossip. Verify canonical fulfillment and the proof for each request.
+              V2.4.27 retains authenticated VRF relay through public peers, DKG artifact replay and verified finalization gossip. Verify canonical fulfillment and the proof for each request.
               WorkSeat liveness V2 has been active since Testnet block 323,800. Users and contracts do not need to mine to request randomness.
               Request submission and a successful transaction receipt do not prove
               fulfillment: inspect the request and wait for canonical completion.
